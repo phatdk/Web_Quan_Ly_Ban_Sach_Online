@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookShop.DAL", "BookShop.DAL\BookShop.DAL.csproj", "{33B445FF-0858-46F5-8B9A-A5CE61B39FFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookShop.DAL", "BookShop.DAL\BookShop.DAL.csproj", "{33B445FF-0858-46F5-8B9A-A5CE61B39FFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookShop.API", "BookShop.API\BookShop.API.csproj", "{AAC23903-7125-4EE5-9A03-85D72112D2CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookShop.Web.Client", "BookShop.Web.Client\BookShop.Web.Client.csproj", "{CBB2B77F-6116-4C73-814D-63E65D95B1A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{33B445FF-0858-46F5-8B9A-A5CE61B39FFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33B445FF-0858-46F5-8B9A-A5CE61B39FFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33B445FF-0858-46F5-8B9A-A5CE61B39FFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAC23903-7125-4EE5-9A03-85D72112D2CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAC23903-7125-4EE5-9A03-85D72112D2CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAC23903-7125-4EE5-9A03-85D72112D2CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAC23903-7125-4EE5-9A03-85D72112D2CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBB2B77F-6116-4C73-814D-63E65D95B1A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBB2B77F-6116-4C73-814D-63E65D95B1A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBB2B77F-6116-4C73-814D-63E65D95B1A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBB2B77F-6116-4C73-814D-63E65D95B1A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
