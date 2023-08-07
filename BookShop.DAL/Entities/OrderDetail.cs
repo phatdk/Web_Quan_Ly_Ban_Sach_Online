@@ -19,10 +19,10 @@ namespace BookShop.DAL.Entities
 		//foreign key
 		public int Id_Order { get; set; }
 		public int Id_Product { get; set; }
-		public Order Order { get; set; }
-		public Product Product { get; set; }
+		public virtual Order Order { get; set; }
+		public virtual Product Product { get; set; }
 
 		//reference
-		public List<Evaluate> Evaluate { get; set; }
+		public virtual List<Evaluate> Evaluates { get; set; }
 	}
 }

@@ -16,15 +16,16 @@ namespace BookShop.DAL.Entities
 		public string Name { get; set; }	
 		public int Quantity { get; set; }
 		public int Price { get; set; }
+		public string? Description { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public int Status { get; set; }
 		
 		//refenrence
-		public List<Image> Images { get; set; }
-		public List<ProductBook> ProductBooks { get; set; }
-		public List<ProductPromotion> ProductPromotions { get; set; }
-		public List<WishList> WishLists { get; set; }
-		public List<CartDetail> CartDetails { get; set; }
-		public List<OrderDetail> OrderDetails { get; set; }
+		public virtual List<Image> Images { get; set; }
+		public virtual List<ProductBook> ProductBooks { get; set; }
+		public virtual List<ProductPromotion> ProductPromotions { get; set; }
+		public virtual List<WishList> WishLists { get; set; }
+		public virtual List<CartDetail> CartDetails { get; set; }
+		public virtual List<OrderDetail> OrderDetails { get; set; }
 	}
 }

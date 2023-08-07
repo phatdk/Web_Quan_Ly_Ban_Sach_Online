@@ -20,6 +20,6 @@ namespace BookShop.DAL.Entities
 
 		//foreign key
 		public int Id_Product { get; set; }
-		public Product Product { get; set; }
+		public virtual Product Product { get; set; }
 	}
 }

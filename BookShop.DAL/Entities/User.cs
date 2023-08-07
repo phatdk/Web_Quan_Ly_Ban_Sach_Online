@@ -24,13 +24,13 @@ namespace BookShop.DAL.Entities
 		public int Status { get; set; }
 
 		//foreign key
-		public Cart Cart { get; set; }
-		public WalletPoint WalletPoint { get; set; }
+		public virtual Cart Cart { get; set; }
+		public virtual WalletPoint WalletPoint { get; set; }
 
 		//reference
-		public List<WishList> WishLists { get; set; }
-		public List<Evaluate> Evaluates { get; set; }
-		public List<Order> Orders { get; set; }
-		public List<UserPromotion> UserPromotions { get; set; }
+		public virtual List<WishList> WishLists { get; set; }
+		public virtual List<Evaluate> Evaluates { get; set; }
+		public virtual List<Order> Orders { get; set; }
+		public virtual List<UserPromotion> UserPromotions { get; set; }
 	}
 }

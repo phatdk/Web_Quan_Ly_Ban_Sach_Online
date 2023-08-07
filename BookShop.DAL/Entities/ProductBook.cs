@@ -17,8 +17,8 @@ namespace BookShop.DAL.Entities
 		
 		//foreign key
 		public int Id_Product { get; set; }
-		public int Id_Book { get; set; }
-		public Product Product { get; set; }
-		public Book Book { get; set; }
+		public int Id_BookDetail { get; set; }
+		public virtual Product Product { get; set; }
+		public virtual BookDetail BookDetail { get; set; }
 	}
 }

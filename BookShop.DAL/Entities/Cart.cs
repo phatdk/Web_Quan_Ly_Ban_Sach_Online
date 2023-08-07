@@ -16,9 +16,9 @@ namespace BookShop.DAL.Entities
 		public int Status { get; set; }
 		
 		//foreign key 
-		public User User { get; set; }
+		public virtual User User { get; set; }
 
 		//reference
-		public List<CartDetail> CartDetails { get; set; }
+		public virtual List<CartDetail> CartDetails { get; set; }
 	}
 }

@@ -19,6 +19,6 @@ namespace BookShop.DAL.Entities
 
 		//foreign key
 		public int Id_Order { get; set; }
-		public Order Order { get; set; }
+		public virtual Order Order { get; set; }
 	}
 }

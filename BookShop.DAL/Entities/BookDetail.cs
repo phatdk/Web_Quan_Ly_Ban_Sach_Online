@@ -31,11 +31,11 @@ namespace BookShop.DAL.Entities
 		public int Id_Supplier { get; set; }
 		public int Id_Book { get; set; }
 		public int Id_Language { get; set; }
-		public Supplier Supplier { get; set; }
-		public Book Book { get; set; }
-		public Language Language { get; set; }
+		public virtual Supplier Supplier { get; set; }
+		public virtual Book Book { get; set; }
+		public virtual Language Language { get; set; }
 
 		//reference
-		public List<ProductBook> ProductBooks { get; set; }
+		public virtual List<ProductBook> ProductBooks { get; set; }
 	}
 }

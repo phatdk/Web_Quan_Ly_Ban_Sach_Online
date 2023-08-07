@@ -20,8 +20,8 @@ namespace BookShop.DAL.Entities
 		//foreign key
 		public int Id_User { get; set; }
 		public int Id_Parents { get; set; }
-		public WalletPoint WalletPoint { get; set; }
-		public Order Order { get; set; }
-		public Promotion Promotion { get; set; }
+		public virtual WalletPoint WalletPoint { get; set; }
+		public virtual Order Order { get; set; }
+		public virtual Promotion Promotion { get; set; }
 	}
 }

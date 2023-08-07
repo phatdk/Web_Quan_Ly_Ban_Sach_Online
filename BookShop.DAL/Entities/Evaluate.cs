@@ -21,11 +21,11 @@ namespace BookShop.DAL.Entities
 		public int? Id_Parents { get; set; }
 		public int Id_User { get; set; }
 		public int Id_Book { get; set; }
-		public Evaluate Parents { get; set; }
-		public User User { get; set; }
-		public OrderDetail OrderDetail { get; set; }
+		public virtual Evaluate Parents { get; set; }
+		public virtual User User { get; set; }
+		public virtual OrderDetail OrderDetail { get; set; }
 
 		//reference
-		public List<Evaluate> Evaluates { get; set; }
+		public virtual List<Evaluate> Evaluates { get; set; }
 	}
 }

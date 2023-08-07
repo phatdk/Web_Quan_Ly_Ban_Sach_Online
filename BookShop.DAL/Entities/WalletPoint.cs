@@ -15,7 +15,10 @@ namespace BookShop.DAL.Entities
 		public DateTime CreatedDate { get; set; }
 		public int Status { get; set; }
 
+		//foreignkey
+		public User User { get; set; }
+
 		//reference
-		public List<PointTransactionsHistory> PointTransactionsHistories { get; set; }
+		public virtual List<PointTransactionsHistory> PointTransactionsHistories { get; set; }
 	}
 }

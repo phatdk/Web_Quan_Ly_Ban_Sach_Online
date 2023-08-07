@@ -22,11 +22,11 @@ namespace BookShop.DAL.Entities
 
 		//foreign key
 		public int Id_Collection { get; set; }
-		public CollectionBook CollectionBook { get; set; }
+		public virtual CollectionBook CollectionBook { get; set; }
 
 		//reference
-		public List<BookDetail> bookDetails { get; set; }
-		public List<BookAuthor> BookAuthors { get; set; }
-		public List<BookGenre> bookGenres { get; set; }
+		public virtual List<BookDetail> BookDetails { get; set; }
+		public virtual List<BookAuthor> BookAuthors { get; set; }
+		public virtual List<BookGenre> BookGenres { get; set; }
 	}
 }

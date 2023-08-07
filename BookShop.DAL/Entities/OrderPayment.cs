@@ -20,7 +20,7 @@ namespace BookShop.DAL.Entities
 		//foreign key
 		public int Id_Order { get; set; }
 		public int Id_Payment { get; set; }
-		public Order Order { get; set; }
-		public PaymentForm PaymentForm { get; set; }
+		public virtual Order Order { get; set; }
+		public virtual PaymentForm PaymentForm { get; set; }
 	}
 }

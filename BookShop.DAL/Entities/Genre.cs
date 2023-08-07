@@ -13,15 +13,16 @@ namespace BookShop.DAL.Entities
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
+		[MaxLength(50)]
 		public string Name { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public int Index { get; set; }
 		
 		//foreign key
 		public int Id_Category { get; set; }
-		public Category Category { get; set; }
+		public virtual Category Category { get; set; }
 
 		//reference
-		public List<BookGenre> BookGenres { get; set; }
+		public virtual List<BookGenre> BookGenres { get; set; }
 	}
 }

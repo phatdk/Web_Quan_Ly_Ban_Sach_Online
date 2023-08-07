@@ -28,11 +28,12 @@ namespace BookShop.DAL.Entities
 
 		//foreign key
 		public int Id_Type { get; set; }
-		public PromotionType PromotionType { get; set; }
+		public virtual PromotionType PromotionType { get; set; }
 
 		//reference
-		public List<ProductPromotion> ProductPromotions { get; set; }
-		public List<UserPromotion> UserPromotions { get; set; }	
-		public List<PointTransactionsHistory> PointTransactionsHistorys { get; set;}
+		public virtual List<Order> Orders { get; set; }
+		public virtual List<ProductPromotion> ProductPromotions { get; set; }
+		public virtual List<UserPromotion> UserPromotions { get; set; }	
+		public virtual List<PointTransactionsHistory> PointTransactionsHistories { get; set;}
 	}
 }
