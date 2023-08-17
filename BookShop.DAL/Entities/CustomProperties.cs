@@ -17,7 +17,7 @@ namespace BookShop.DAL.Entities
 		
 		//foreign key
 		public int Id_Shop { get; set; }
-		public Shop Shop { get; set; }
+		public virtual Shop Shop { get; set; }
 
 		//reference
 		public virtual List<PropertyValue> PropertyValues { get; set; }

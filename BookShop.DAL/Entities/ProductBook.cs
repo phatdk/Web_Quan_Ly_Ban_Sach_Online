@@ -19,6 +19,6 @@ namespace BookShop.DAL.Entities
 		public int Id_Product { get; set; }
 		public int Id_BookDetail { get; set; }
 		public virtual Product Product { get; set; }
-		public virtual BookDetail BookDetail { get; set; }
+		public virtual Book Book { get; set; }
 	}
 }

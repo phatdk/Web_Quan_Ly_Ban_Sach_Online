@@ -215,42 +215,17 @@ namespace BookShop.DAL.Migrations
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Index = table.Column<int>(type: "int", nullable: false),
-                    Id_Category = table.Column<int>(type: "int", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                    Id_Category = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Genres", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Genres_Categories_CategoryId",
-                        column: x => x.CategoryId,
+                        name: "FK_Genres_Categories_Id_Category",
+                        column: x => x.Id_Category,
                         principalTable: "Categories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Books",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ISBN = table.Column<string>(type: "varchar(20)", nullable: true),
-                    Title = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(255)", nullable: true),
-                    Reader = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Id_Collection = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Books", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Books_CollectionBooks_Id_Collection",
-                        column: x => x.Id_Collection,
-                        principalTable: "CollectionBooks",
-                        principalColumn: "Id");
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -327,6 +302,56 @@ namespace BookShop.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Books",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ISBN = table.Column<string>(type: "varchar(20)", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(255)", nullable: true),
+                    Reader = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
+                    ImportPrice = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    PageSize = table.Column<string>(type: "varchar(50)", nullable: false),
+                    Pages = table.Column<int>(type: "int", nullable: false),
+                    Cover = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    PublicationDate = table.Column<string>(type: "varchar(50)", nullable: false),
+                    Weight = table.Column<int>(type: "int", nullable: false),
+                    Widght = table.Column<int>(type: "int", nullable: false),
+                    Length = table.Column<int>(type: "int", nullable: false),
+                    Height = table.Column<int>(type: "int", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Id_Collection = table.Column<int>(type: "int", nullable: true),
+                    Id_Supplier = table.Column<int>(type: "int", nullable: false),
+                    Id_Language = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Books", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Books_CollectionBooks_Id_Collection",
+                        column: x => x.Id_Collection,
+                        principalTable: "CollectionBooks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Books_Languages_Id_Language",
+                        column: x => x.Id_Language,
+                        principalTable: "Languages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Books_Suppliers_Id_Supplier",
+                        column: x => x.Id_Supplier,
+                        principalTable: "Suppliers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Carts",
                 columns: table => new
                 {
@@ -388,104 +413,6 @@ namespace BookShop.DAL.Migrations
                         name: "FK_WishLists_Users_Id_User",
                         column: x => x.Id_User,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BookAuthors",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Id_Book = table.Column<int>(type: "int", nullable: false),
-                    Id_Author = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BookAuthors", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_BookAuthors_Authors_Id_Author",
-                        column: x => x.Id_Author,
-                        principalTable: "Authors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_BookAuthors_Books_Id_Book",
-                        column: x => x.Id_Book,
-                        principalTable: "Books",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BookDetails",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Price = table.Column<int>(type: "int", nullable: false),
-                    ImportPrice = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    PageSize = table.Column<string>(type: "varchar(50)", nullable: false),
-                    Pages = table.Column<int>(type: "int", nullable: false),
-                    Cover = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    PublicationDate = table.Column<string>(type: "varchar(50)", nullable: false),
-                    Weight = table.Column<int>(type: "int", nullable: false),
-                    Widght = table.Column<int>(type: "int", nullable: false),
-                    Length = table.Column<int>(type: "int", nullable: false),
-                    Height = table.Column<int>(type: "int", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Id_Supplier = table.Column<int>(type: "int", nullable: false),
-                    Id_Book = table.Column<int>(type: "int", nullable: false),
-                    Id_Language = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BookDetails", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_BookDetails_Books_Id_Supplier",
-                        column: x => x.Id_Supplier,
-                        principalTable: "Books",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_BookDetails_Languages_Id_Language",
-                        column: x => x.Id_Language,
-                        principalTable: "Languages",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_BookDetails_Suppliers_Id_Supplier",
-                        column: x => x.Id_Supplier,
-                        principalTable: "Suppliers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BookGenre",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Id_Book = table.Column<int>(type: "int", nullable: false),
-                    Id_Genre = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BookGenre", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_BookGenre_Books_Id_Book",
-                        column: x => x.Id_Book,
-                        principalTable: "Books",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_BookGenre_Genres_Id_Genre",
-                        column: x => x.Id_Genre,
-                        principalTable: "Genres",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -611,6 +538,85 @@ namespace BookShop.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BookAuthors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id_Book = table.Column<int>(type: "int", nullable: false),
+                    Id_Author = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookAuthors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BookAuthors_Authors_Id_Author",
+                        column: x => x.Id_Author,
+                        principalTable: "Authors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BookAuthors_Books_Id_Book",
+                        column: x => x.Id_Book,
+                        principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BookGenre",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id_Book = table.Column<int>(type: "int", nullable: false),
+                    Id_Genre = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookGenre", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BookGenre_Books_Id_Book",
+                        column: x => x.Id_Book,
+                        principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BookGenre_Genres_Id_Genre",
+                        column: x => x.Id_Genre,
+                        principalTable: "Genres",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductBooks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Id_Product = table.Column<int>(type: "int", nullable: false),
+                    Id_BookDetail = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductBooks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductBooks_Books_Id_BookDetail",
+                        column: x => x.Id_BookDetail,
+                        principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductBooks_Products_Id_Product",
+                        column: x => x.Id_Product,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CartDetails",
                 columns: table => new
                 {
@@ -632,33 +638,6 @@ namespace BookShop.DAL.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CartDetails_Products_Id_Product",
-                        column: x => x.Id_Product,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductBooks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Id_Product = table.Column<int>(type: "int", nullable: false),
-                    Id_BookDetail = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductBooks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProductBooks_BookDetails_Id_BookDetail",
-                        column: x => x.Id_BookDetail,
-                        principalTable: "BookDetails",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProductBooks_Products_Id_Product",
                         column: x => x.Id_Product,
                         principalTable: "Products",
                         principalColumn: "Id",
@@ -795,8 +774,7 @@ namespace BookShop.DAL.Migrations
                         name: "FK_Evaluates_Evaluates_Id_Parents",
                         column: x => x.Id_Parents,
                         principalTable: "Evaluates",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Evaluates_OrderDetails_Id_Book",
                         column: x => x.Id_Book,
@@ -822,16 +800,6 @@ namespace BookShop.DAL.Migrations
                 column: "Id_Book");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookDetails_Id_Language",
-                table: "BookDetails",
-                column: "Id_Language");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BookDetails_Id_Supplier",
-                table: "BookDetails",
-                column: "Id_Supplier");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_BookGenre_Id_Book",
                 table: "BookGenre",
                 column: "Id_Book");
@@ -845,6 +813,16 @@ namespace BookShop.DAL.Migrations
                 name: "IX_Books_Id_Collection",
                 table: "Books",
                 column: "Id_Collection");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Books_Id_Language",
+                table: "Books",
+                column: "Id_Language");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Books_Id_Supplier",
+                table: "Books",
+                column: "Id_Supplier");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CartDetails_Id_Product",
@@ -877,9 +855,9 @@ namespace BookShop.DAL.Migrations
                 column: "Id_User");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Genres_CategoryId",
+                name: "IX_Genres_Id_Category",
                 table: "Genres",
-                column: "CategoryId");
+                column: "Id_Category");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Images_Id_Product",
@@ -1048,7 +1026,7 @@ namespace BookShop.DAL.Migrations
                 name: "WalletPoints");
 
             migrationBuilder.DropTable(
-                name: "BookDetails");
+                name: "Books");
 
             migrationBuilder.DropTable(
                 name: "CustomProperties");
@@ -1063,7 +1041,7 @@ namespace BookShop.DAL.Migrations
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "Books");
+                name: "CollectionBooks");
 
             migrationBuilder.DropTable(
                 name: "Languages");
@@ -1079,9 +1057,6 @@ namespace BookShop.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "CollectionBooks");
 
             migrationBuilder.DropTable(
                 name: "PromotionTypes");
