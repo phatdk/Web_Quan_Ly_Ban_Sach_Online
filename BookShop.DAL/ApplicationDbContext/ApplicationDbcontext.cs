@@ -16,7 +16,6 @@ namespace BookShop.DAL.ApplicationDbContext
 		public virtual DbSet<Author> Authors { get; set; }
 		public virtual DbSet<Book> Books { get; set; }
 		public virtual DbSet<BookAuthor> BookAuthors { get; set; }
-		public virtual DbSet<BookDetail> BookDetails { get; set; }
 		public virtual DbSet<Cart> Carts { get; set; }
 		public virtual DbSet<CartDetail> CartDetails { get; set; }
 		public virtual DbSet<Category> Categories { get; set; }
@@ -49,8 +48,9 @@ namespace BookShop.DAL.ApplicationDbContext
 		{
 			if (!optionsBuilder.IsConfigured)
 			{
-				optionsBuilder.UseSqlServer("Data Source=DESKTOP-L9TSC4C\\SQLEXPRESS;Initial Catalog=BookShop.Datn;Integrated Security=True; Encrypt = True; TrustServerCertificate = True;");
-			}
+				optionsBuilder.UseSqlServer("Data Source=Duy;Initial Catalog=BookStore;Integrated Security=False;Persist Security Info=False;User ID=Duy;Password=12345;Trust Server Certificate=True");
+
+            }
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)

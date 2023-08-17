@@ -20,6 +20,6 @@ namespace BookShop.DAL.Entities
 		public int Status { get; set; }
 
 		//reference
-		public virtual List<BookDetail> BookDetails { get; set; }
+		public virtual List<Book> Books { get; set; }
 	}
 }

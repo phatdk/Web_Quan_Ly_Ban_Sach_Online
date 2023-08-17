@@ -17,8 +17,13 @@ namespace BookShop.DAL.Configuration
 			builder.Property(x => x.Title).HasColumnType("nvarchar(50)");
 			builder.Property(x => x.Reader).HasColumnType("nvarchar(50)");
 			builder.Property(x => x.Description).HasColumnType("nvarchar(255)");
+			builder.Property(x => x.PageSize).HasColumnType("varchar(50)");
+			builder.Property(x => x.Cover).HasColumnType("nvarchar(50)");
+			builder.Property(x => x.PublicationDate).HasColumnType("varchar(50)");
 
-			builder.HasOne(x=>x.CollectionBook).WithMany(x=>x.Books).HasForeignKey(x=>x.Id_Collection).OnDelete(DeleteBehavior.NoAction);
+			builder.HasOne(x=>x.CollectionBook).WithMany(x=>x.Books).HasForeignKey(x=>x.Id_Collection).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
+			builder.HasOne(x => x.Supplier).WithMany(x => x.Books).HasForeignKey(x => x.Id_Supplier).OnDelete(DeleteBehavior.Restrict);
+			builder.HasOne(x => x.Language).WithMany(x => x.Books).HasForeignKey(x => x.Id_Language).OnDelete(DeleteBehavior.Restrict);
 		}
 	}
 }

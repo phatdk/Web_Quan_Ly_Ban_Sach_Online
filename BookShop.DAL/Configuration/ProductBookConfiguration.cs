@@ -14,7 +14,7 @@ namespace BookShop.DAL.Configuration
 		public void Configure(EntityTypeBuilder<ProductBook> builder)
 		{
 			builder.HasOne(x=>x.Product).WithMany(x=>x.ProductBooks).HasForeignKey(x=>x.Id_Product).OnDelete(DeleteBehavior.Cascade);
-			builder.HasOne(x=>x.BookDetail).WithMany(x=>x.ProductBooks).HasForeignKey(x=>x.Id_BookDetail).OnDelete(DeleteBehavior.Cascade);
+			builder.HasOne(x=>x.Book).WithMany(x=>x.ProductBooks).HasForeignKey(x=>x.Id_BookDetail).OnDelete(DeleteBehavior.Cascade);
 		}
 	}
 }
