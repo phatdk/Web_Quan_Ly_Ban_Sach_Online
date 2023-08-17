@@ -97,67 +97,6 @@ namespace BookShop.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("ISBN")
-                        .HasColumnType("varchar(20)");
-
-                    b.Property<int>("Id_Collection")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Reader")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id_Collection");
-
-                    b.ToTable("Books");
-                });
-
-            modelBuilder.Entity("BookShop.DAL.Entities.BookAuthor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("Id_Author")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id_Book")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id_Author");
-
-                    b.HasIndex("Id_Book");
-
-                    b.ToTable("BookAuthors");
-                });
-
-            modelBuilder.Entity("BookShop.DAL.Entities.BookDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<string>("Cover")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
@@ -165,10 +104,16 @@ namespace BookShop.DAL.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<int>("Height")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id_Book")
+                    b.Property<string>("ISBN")
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<int?>("Id_Collection")
                         .HasColumnType("int");
 
                     b.Property<int>("Id_Language")
@@ -200,8 +145,16 @@ namespace BookShop.DAL.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<string>("Reader")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("Weight")
                         .HasColumnType("int");
@@ -211,11 +164,36 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Id_Collection");
+
                     b.HasIndex("Id_Language");
 
                     b.HasIndex("Id_Supplier");
 
-                    b.ToTable("BookDetails");
+                    b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("BookShop.DAL.Entities.BookAuthor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Id_Author")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_Book")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id_Author");
+
+                    b.HasIndex("Id_Book");
+
+                    b.ToTable("BookAuthors");
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.BookGenre", b =>
@@ -401,9 +379,6 @@ namespace BookShop.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -420,7 +395,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("Id_Category");
 
                     b.ToTable("Genres");
                 });
@@ -496,7 +471,7 @@ namespace BookShop.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(2550");
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -1100,10 +1075,25 @@ namespace BookShop.DAL.Migrations
                     b.HasOne("BookShop.DAL.Entities.CollectionBook", "CollectionBook")
                         .WithMany("Books")
                         .HasForeignKey("Id_Collection")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("BookShop.DAL.Entities.Language", "Language")
+                        .WithMany("Books")
+                        .HasForeignKey("Id_Language")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BookShop.DAL.Entities.Supplier", "Supplier")
+                        .WithMany("Books")
+                        .HasForeignKey("Id_Supplier")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("CollectionBook");
+
+                    b.Navigation("Language");
+
+                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.BookAuthor", b =>
@@ -1123,33 +1113,6 @@ namespace BookShop.DAL.Migrations
                     b.Navigation("Author");
 
                     b.Navigation("Book");
-                });
-
-            modelBuilder.Entity("BookShop.DAL.Entities.BookDetail", b =>
-                {
-                    b.HasOne("BookShop.DAL.Entities.Language", "Language")
-                        .WithMany("BookDetails")
-                        .HasForeignKey("Id_Language")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("BookShop.DAL.Entities.Book", "Book")
-                        .WithMany("BookDetails")
-                        .HasForeignKey("Id_Supplier")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BookShop.DAL.Entities.Supplier", "Supplier")
-                        .WithMany("BookDetails")
-                        .HasForeignKey("Id_Supplier")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("Language");
-
-                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.BookGenre", b =>
@@ -1223,7 +1186,7 @@ namespace BookShop.DAL.Migrations
                     b.HasOne("BookShop.DAL.Entities.Evaluate", "Parents")
                         .WithMany("Evaluates")
                         .HasForeignKey("Id_Parents")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("BookShop.DAL.Entities.User", "User")
                         .WithMany("Evaluates")
@@ -1242,8 +1205,8 @@ namespace BookShop.DAL.Migrations
                 {
                     b.HasOne("BookShop.DAL.Entities.Category", "Category")
                         .WithMany("Genres")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("Id_Category")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -1346,7 +1309,7 @@ namespace BookShop.DAL.Migrations
 
             modelBuilder.Entity("BookShop.DAL.Entities.ProductBook", b =>
                 {
-                    b.HasOne("BookShop.DAL.Entities.BookDetail", "BookDetail")
+                    b.HasOne("BookShop.DAL.Entities.Book", "Book")
                         .WithMany("ProductBooks")
                         .HasForeignKey("Id_BookDetail")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1358,7 +1321,7 @@ namespace BookShop.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("BookDetail");
+                    b.Navigation("Book");
 
                     b.Navigation("Product");
                 });
@@ -1473,13 +1436,8 @@ namespace BookShop.DAL.Migrations
                 {
                     b.Navigation("BookAuthors");
 
-                    b.Navigation("BookDetails");
-
                     b.Navigation("BookGenres");
-                });
 
-            modelBuilder.Entity("BookShop.DAL.Entities.BookDetail", b =>
-                {
                     b.Navigation("ProductBooks");
                 });
 
@@ -1515,7 +1473,7 @@ namespace BookShop.DAL.Migrations
 
             modelBuilder.Entity("BookShop.DAL.Entities.Language", b =>
                 {
-                    b.Navigation("BookDetails");
+                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Order", b =>
@@ -1577,7 +1535,7 @@ namespace BookShop.DAL.Migrations
 
             modelBuilder.Entity("BookShop.DAL.Entities.Supplier", b =>
                 {
-                    b.Navigation("BookDetails");
+                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.User", b =>
