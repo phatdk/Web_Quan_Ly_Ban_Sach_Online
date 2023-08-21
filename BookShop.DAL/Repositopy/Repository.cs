@@ -1,4 +1,5 @@
 ﻿using BookShop.DAL.ApplicationDbContext;
+using BookShop.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BookShop.DAL.Repositopy
 {
-    public partial class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public partial  class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         protected readonly ApplicationDbcontext _applicationDbcontext;
         public Repository() 
@@ -32,6 +33,17 @@ namespace BookShop.DAL.Repositopy
         public async Task<TEntity> GetByIdAsync(int id)
         {
             var obj = await _applicationDbcontext.Set<TEntity>().FindAsync(id);
+            return obj;
+        }
+
+		public async Task<TEntity> RemoveAsync(int id)
+		{
+            var obj = await _applicationDbcontext.Set<TEntity>().FindAsync(id);
+            if (obj != null)
+            {
+                _applicationDbcontext.Set<TEntity>().Remove(obj);
+                await _applicationDbcontext.SaveChangesAsync();
+            }
             return obj;
         }
 
