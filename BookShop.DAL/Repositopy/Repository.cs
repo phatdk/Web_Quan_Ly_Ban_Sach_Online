@@ -45,9 +45,9 @@ namespace BookShop.DAL.Repositopy
                 await _applicationDbcontext.SaveChangesAsync();
             }
             return obj;
-		}
+        }
 
-		public async Task<TEntity> UpdateAsync(int id, TEntity updatedEntity)
+        public async Task<TEntity> UpdateAsync(int id, TEntity updatedEntity)
         {
             var existingEntity = await _applicationDbcontext.Set<TEntity>().FindAsync(id);
 
