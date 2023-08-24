@@ -1,6 +1,7 @@
 ﻿using BLL.ConfigurationModel.AuthorModel;
 using BLL.ConfigurationModel.UserModel;
 using BLL.IService.IAuthorService;
+using BookShop.DAL.ApplicationDbContext;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;
 using System;
@@ -14,9 +15,9 @@ namespace BLL.Service.AuthoService
     public class AuthorService : IAuthorService
     {
         protected readonly IRepository<Author> _repository;
-        public AuthorService(IRepository<Author> repository)
+        public AuthorService()
         {
-            _repository = repository;
+            _repository = new Repository<Author>();
         }
         public async Task<bool> Add(CreateAuthorModel requet)
         {

@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace BookShop.DAL.Repositopy
 {
-    public partial  interface IRepository<TEntity> where TEntity : class
+    public partial  interface IRepository<T> where T : class
     {
-        Task<TEntity> CreateAsync(TEntity entity);
-        Task<TEntity> UpdateAsync(int id,TEntity entity);
-        Task<List<TEntity>> GetAllAsync();
-        Task<TEntity> GetByIdAsync(int id);
-        Task<TEntity> RemoveAsync(int id);
+        Task<T> CreateAsync(T entity);
+        Task<T> UpdateAsync(int id,T entity);
+        Task<List<T>> GetAllAsync();
+        Task<T> GetByIdAsync(int id);
+        Task<T> RemoveAsync(int id);
     }
 }

@@ -9,52 +9,54 @@ using System.Threading.Tasks;
 
 namespace BookShop.DAL.Repositopy
 {
-    public partial  class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public partial  class Repository<T> : IRepository<T> where T : class
     {
-        protected readonly ApplicationDbcontext _applicationDbcontext;
-        public Repository() 
+        protected readonly ApplicationDbcontext _context;
+
+		public Repository()
+		{
+			_context = new ApplicationDbcontext();
+		}
+
+		public async Task<T> CreateAsync(T entity)
         {
-            _applicationDbcontext = new ApplicationDbcontext();
-        }
-        public async Task<TEntity> CreateAsync(TEntity entity)
-        {
-            _applicationDbcontext.Set<TEntity>().Add(entity);
-            await _applicationDbcontext.SaveChangesAsync();
+            _context.Set<T>().Add(entity);
+            await _context.SaveChangesAsync();
             return entity;
         }
 
 
-        public async Task<List<TEntity>> GetAllAsync()
+        public async Task<List<T>> GetAllAsync()
         {
-         var obj = await  _applicationDbcontext.Set<TEntity>().ToListAsync();
+            var obj = await  _context.Set<T>().ToListAsync();
             return obj;
         }
 
-        public async Task<TEntity> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(int id)
         {
-            var obj = await _applicationDbcontext.Set<TEntity>().FindAsync(id);
+            var obj = await _context.Set<T>().FindAsync(id);
             return obj;
         }
 
-		public async Task<TEntity> RemoveAsync(int id)
+		public async Task<T> RemoveAsync(int id)
 		{
-            var obj = await _applicationDbcontext.Set<TEntity>().FindAsync(id);
+            var obj = await _context.Set<T>().FindAsync(id);
             if (obj != null)
             {
-                _applicationDbcontext.Set<TEntity>().Remove(obj);
-                await _applicationDbcontext.SaveChangesAsync();
+                _context.Set<T>().Remove(obj);
+                await _context.SaveChangesAsync();
             }
             return obj;
         }
 
-        public async Task<TEntity> UpdateAsync(int id, TEntity updatedEntity)
+        public async Task<T> UpdateAsync(int id, T updatedEntity)
         {
-            var existingEntity = await _applicationDbcontext.Set<TEntity>().FindAsync(id);
+            var existingEntity = await _context.Set<T>().FindAsync(id);
 
             if (existingEntity != null)
             {
-                _applicationDbcontext.Entry(existingEntity).CurrentValues.SetValues(updatedEntity);
-                await _applicationDbcontext.SaveChangesAsync();
+                _context.Entry(existingEntity).CurrentValues.SetValues(updatedEntity);
+                await _context.SaveChangesAsync();
             }
 
             return existingEntity;

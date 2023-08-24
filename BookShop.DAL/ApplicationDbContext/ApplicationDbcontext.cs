@@ -48,7 +48,7 @@ namespace BookShop.DAL.ApplicationDbContext
 		{
 			if (!optionsBuilder.IsConfigured)
 			{
-				optionsBuilder.UseSqlServer("Data Source=Duy;Initial Catalog=BookStore;Integrated Security=False;Persist Security Info=False;User ID=Duy;Password=12345;Trust Server Certificate=True");
+				optionsBuilder.UseSqlServer("Data Source=DESKTOP-L9TSC4C\\SQLEXPRESS;Initial Catalog=BookShop.Datn;Integrated Security=True");
 
             }
 		}
