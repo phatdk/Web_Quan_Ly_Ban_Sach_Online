@@ -1,5 +1,4 @@
-using BLL.IService.IAuthorService;
-using BLL.Service.AuthoService;
+
 using BookShop.BLL.IService.IBookAuthorService;
 using BookShop.BLL.IService.IBookService;
 using BookShop.BLL.Service.BookAuthorService;
@@ -16,8 +15,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
-builder.Services.AddScoped<IAuthorService, AuthorService>();
-
+//builder.Services.AddScoped<IAuthorService, AuthorService>();
+//builder.Services.AddScoped<IRepository<Book>,Repository<Book>>();
+builder.Services.AddScoped<IBookService, BookService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
