@@ -1,5 +1,9 @@
-﻿using BLL.IService.IAuthorService;
+﻿
+using BookShop.BLL.ConfigurationModel.BookModel;
+using BookShop.BLL.IService.IBookAuthorService;
 using BookShop.BLL.IService.IBookService;
+using BookShop.DAL.Entities;
+using BookShop.DAL.Repositopy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,23 +13,26 @@ namespace BookShop.API.Controller
 	[ApiController]
 	public class TestAPIController : ControllerBase
 	{
-		public IBookService _BookService;
-		public IAuthorService _AuthorService;
+		
+		
+		protected readonly IBookService _BookService;
+		protected readonly IBookAuthorService _BookAuthorService;
 
-		public TestAPIController(IBookService BookService,
-			IAuthorService AuthorService
+		public TestAPIController(
+			IBookService BookService, IBookAuthorService BookAuthorService
 			)
 		{
-			_AuthorService = AuthorService;
+			_BookAuthorService = BookAuthorService;
 			_BookService = BookService;
 		}
 
 		
-		[HttpGet("getalldauthor")]
-		public async Task<IActionResult> getauthor() {
-			var ok = await _AuthorService.Getall();
-			return Ok(ok);
-		} 
-			
-    }
+		[HttpGet("getall")]
+		public async Task<IActionResult> Getall()
+		{
+			var ok = await _BookAuthorService.GetAllBooksAuthor();
+		 return Ok(ok);
+		}
+		
+	}
 }

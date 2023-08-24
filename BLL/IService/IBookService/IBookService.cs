@@ -1,5 +1,4 @@
-﻿using BLL.ConfigurationModel.AuthorModel;
-using BLL.ConfigurationModel.UserModel;
+﻿
 using BookShop.BLL.ConfigurationModel.BookAuthorModel;
 using BookShop.BLL.ConfigurationModel.BookModel;
 using BookShop.DAL.Entities;

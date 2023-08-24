@@ -1,4 +1,5 @@
 ﻿using BookShop.BLL.ConfigurationModel.BookAuthorModel;
+using BookShop.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace BookShop.BLL.IService.IBookAuthorService
 {
 	public interface IBookAuthorService
 	{
-		public Task<List<BookAuthorModel>> GetAllBooksAuthor();
+		public Task<List<BookAuthor>> GetAllBooksAuthor();
 	}
 }

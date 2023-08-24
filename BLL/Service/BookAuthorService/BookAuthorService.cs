@@ -12,11 +12,11 @@ namespace BookShop.BLL.Service.BookAuthorService
 {
 	public class BookAuthorService : IBookAuthorService
 	{
-		protected readonly IRepository<BookAuthorModel> _repository;
+		protected readonly IRepository<BookAuthor> _repository;
 		public BookAuthorService() {
-			_repository = new Repository<BookAuthorModel>();
+			_repository = new Repository<BookAuthor>();
 		}	
-		public async Task<List<BookAuthorModel>> GetAllBooksAuthor()
+		public async Task<List<BookAuthor>> GetAllBooksAuthor()
 		{
 			return await _repository.GetAllAsync();
 		}

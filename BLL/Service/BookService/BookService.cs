@@ -15,16 +15,16 @@ namespace BookShop.BLL.Service.BookService
 	public class BookService : IBookService
 	{
 		protected readonly IRepository<Book> _bookRepository;
-		protected readonly IBookAuthorService _bookAuthorService;
+		protected readonly IRepository<BookAuthor>_bookAuthorService;
 		protected readonly IRepository<Author> _authorRepository;
-        public BookService(IRepository<Book> bookRepository, IBookAuthorService bookAuthorService,
-			IRepository<Author> authorRepository)
+        public BookService()
         {
-			_authorRepository = authorRepository;
-            _bookRepository = bookRepository;
-			_bookAuthorService = bookAuthorService;
+			
+			_authorRepository = new Repository<Author>();
+			_bookRepository = new Repository<Book>();
+			_bookAuthorService = new Repository<BookAuthor>();
         }
-		public async bool Add(CreateBookModel requet)
+		public async Task<bool> Add(CreateBookModel requet)
 		{
 			try
 			{
@@ -47,11 +47,11 @@ namespace BookShop.BLL.Service.BookService
 					Widght = requet.Widght,
 					CreatedDate = DateTime.UtcNow,
 					Status = 1,
-					Id_Collection	= requet.Id_Collection,
+					Id_Collection = requet.Id_Collection,
 					Id_Supplier = requet.Id_Supplier,
 					Id_Language = requet.Id_Language,
 				};
-			await _bookRepository.AddOneAsync(obj);
+			await _bookRepository.CreateAsync(obj);
 				return true;
 			}
 			catch (Exception)
@@ -65,7 +65,7 @@ namespace BookShop.BLL.Service.BookService
 		{
 			if (id != null)
 			{
-				await _bookRepository.DeleteOneAsync(id);
+				await _bookRepository.RemoveAsync(id);
 				return true;
 			}
 			return false;
@@ -80,7 +80,7 @@ namespace BookShop.BLL.Service.BookService
 		{
 			var book = await _bookRepository.GetAllAsync();
 			var author = await _authorRepository.GetAllAsync();
-			var bookauthor = await _bookAuthorService.GetAllBooksAuthor();
+			var bookauthor = await _bookAuthorService.GetAllAsync();
 			var query = from pa in bookauthor join 
 							b in book on pa.Id_Book equals b.Id
 							join a in author on pa.Id_Author equals a.Id
@@ -93,7 +93,7 @@ namespace BookShop.BLL.Service.BookService
 		{
 			var book = await _bookRepository.GetAllAsync();
 			var author = await _authorRepository.GetAllAsync();
-			var bookauthor = await _bookAuthorService.GetAllBooksAuthor();
+			var bookauthor = await _bookAuthorService.GetAllAsync();
 			var query = from pa in bookauthor
 						join
 							b in book on pa.Id_Book equals b.Id
@@ -126,6 +126,11 @@ namespace BookShop.BLL.Service.BookService
 
 				return false;
 			}
+		}
+
+		Task<List<Book>> IBookService.Getall()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
