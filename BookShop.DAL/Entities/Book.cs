@@ -34,9 +34,7 @@ namespace BookShop.DAL.Entities
 		//foreign key
 		public int? Id_Collection { get; set; }
 		public int Id_Supplier { get; set; }
-		public int Id_Language { get; set; }
 		public virtual Supplier Supplier { get; set; }
-		public virtual Language Language { get; set; }
 		public virtual CollectionBook? CollectionBook { get; set; }
 
 		//reference
