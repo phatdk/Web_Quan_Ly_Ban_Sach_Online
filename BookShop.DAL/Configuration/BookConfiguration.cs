@@ -23,7 +23,6 @@ namespace BookShop.DAL.Configuration
 
 			builder.HasOne(x=>x.CollectionBook).WithMany(x=>x.Books).HasForeignKey(x=>x.Id_Collection).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
 			builder.HasOne(x => x.Supplier).WithMany(x => x.Books).HasForeignKey(x => x.Id_Supplier).OnDelete(DeleteBehavior.Restrict);
-			builder.HasOne(x => x.Language).WithMany(x => x.Books).HasForeignKey(x => x.Id_Language).OnDelete(DeleteBehavior.Restrict);
 		}
 	}
 }

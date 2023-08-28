@@ -49,7 +49,6 @@ namespace BookShop.BookShop.BLL.Service.BookService
 					Status = 1,
 					Id_Collection	= requet.Id_Collection,
 					Id_Supplier = requet.Id_Supplier,
-					Id_Language = requet.Id_Language,
 				};
 			await _bookRepository.CreateAsync(obj);
 				return true;

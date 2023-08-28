@@ -59,20 +59,35 @@ namespace BookShop.BLL.Service.AuthoService
             }
         }
 
-        public async Task<List<Author>> Getall()
+        public async Task<List<AuthorModel>> Getall()
         {
             var obj = await _repository.GetAllAsync();
             var query = from p in obj
                         orderby p.Index ascending
-                        select p;
+                        select new AuthorModel()
+                        { 
+                            Id = p.Id,
+                            Name = p.Name,
+                            Status = p.Status,
+                            CreatedDate = p.CreatedDate,
+                            Img = p.Img,
+                            Index= p.Index,
+                        };
             return query.ToList();
         }
 
-        public async Task<Author> GetbyId(int id)
+        public async Task<AuthorModel> GetbyId(int id)
         {
 
             var obj = await _repository.GetByIdAsync(id);
-            return obj;
+            return new AuthorModel() {
+				Id = obj.Id,
+				Name = obj.Name,
+				Status = obj.Status,
+				CreatedDate = obj.CreatedDate,
+				Img = obj.Img,
+				Index = obj.Index,
+			};
 
         }
 

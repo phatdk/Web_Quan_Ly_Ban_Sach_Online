@@ -24,7 +24,6 @@ namespace BookShop.DAL.ApplicationDbContext
 		public virtual DbSet<Evaluate> Evaluates { get; set; }
 		public virtual DbSet<Genre> Genres { get; set; }
 		public virtual DbSet<Image> Images { get; set; }
-		public virtual DbSet<Language> Languages { get; set; }
 		public virtual DbSet<News> News { get; set; }
 		public virtual DbSet<Order> Orders { get; set; }
 		public virtual DbSet<OrderDetail> OrderDetails { get; set; }
