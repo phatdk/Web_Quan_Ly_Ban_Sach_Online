@@ -1,6 +1,6 @@
-﻿using BookShop.BLL.ConfigurationModel.BookModel;
-using BookShop.BLL.IService.IBookAuthorService;
-using BookShop.BLL.IService.IBookService;
+﻿using BookShop.BookShop.BLL.ConfigurationModel.BookModel;
+using BookShop.BookShop.BLL.IService.IBookAuthorService;
+using BookShop.BookShop.BLL.IService.IBookService;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;
 using System;
@@ -10,7 +10,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookShop.BLL.Service.BookService
+namespace BookShop.BookShop.BLL.Service.BookService
 {
 	public class BookService : IBookService
 	{
@@ -24,7 +24,7 @@ namespace BookShop.BLL.Service.BookService
             _bookRepository = bookRepository;
 			_bookAuthorService = bookAuthorService;
         }
-		public async bool Add(CreateBookModel requet)
+		public async Task<bool> Add(CreateBookModel requet)
 		{
 			try
 			{
@@ -51,7 +51,7 @@ namespace BookShop.BLL.Service.BookService
 					Id_Supplier = requet.Id_Supplier,
 					Id_Language = requet.Id_Language,
 				};
-			await _bookRepository.AddOneAsync(obj);
+			await _bookRepository.CreateAsync(obj);
 				return true;
 			}
 			catch (Exception)
@@ -65,13 +65,13 @@ namespace BookShop.BLL.Service.BookService
 		{
 			if (id != null)
 			{
-				await _bookRepository.DeleteOneAsync(id);
+				await _bookRepository.RemoveAsync(id);
 				return true;
 			}
 			return false;
 		}
 
-		public async Task<IEnumerable<Book>> Getall()
+		public async Task<List<Book>> Getall()
 		{
 			return await _bookRepository.GetAllAsync();
 		}

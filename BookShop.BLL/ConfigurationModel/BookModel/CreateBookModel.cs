@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookShop.BLL.ConfigurationModel.BookModel
+namespace BookShop.BookShop.BLL.ConfigurationModel.BookModel
 {
 	public class CreateBookModel
 	{

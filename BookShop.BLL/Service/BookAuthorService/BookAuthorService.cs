@@ -1,5 +1,5 @@
-﻿using BookShop.BLL.ConfigurationModel.BookAuthorModel;
-using BookShop.BLL.IService.IBookAuthorService;
+﻿using BookShop.BookShop.BLL.ConfigurationModel.BookAuthorModel;
+using BookShop.BookShop.BLL.IService.IBookAuthorService;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookShop.BLL.Service.BookAuthorService
+namespace BookShop.BookShop.BLL.Service.BookAuthorService
 {
 	public class BookAuthorService : IBookAuthorService
 	{

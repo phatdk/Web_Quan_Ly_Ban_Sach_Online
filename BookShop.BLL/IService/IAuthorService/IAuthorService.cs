@@ -1,5 +1,5 @@
-﻿using BLL.ConfigurationModel.AuthorModel;
-using BLL.ConfigurationModel.UserModel;
+﻿using BookShop.BLL.ConfigurationModel.AuthorModel;
+using BookShop.BLL.ConfigurationModel.UserModel;
 using BookShop.DAL.Entities;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.IService.IAuthorService
+namespace BookShop.BLL.IService.IAuthorService
 {
 	public interface IAuthorService
 	{

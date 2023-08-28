@@ -1,5 +1,5 @@
-﻿using BLL.ConfigurationModel.UserModel;
-using BLL.IService.IAuthorService;
+﻿using BookShop.BLL.ConfigurationModel.UserModel;
+using BookShop.BLL.IService.IAuthorService;
 using BookShop.DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 

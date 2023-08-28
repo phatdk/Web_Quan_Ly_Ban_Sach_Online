@@ -1,6 +1,6 @@
-﻿using BLL.ConfigurationModel.AuthorModel;
-using BLL.ConfigurationModel.UserModel;
-using BLL.IService.IAuthorService;
+﻿using BookShop.BLL.ConfigurationModel.AuthorModel;
+using BookShop.BLL.ConfigurationModel.UserModel;
+using BookShop.BLL.IService.IAuthorService;
 using BookShop.DAL.ApplicationDbContext;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.Service.AuthoService
+namespace BookShop.BLL.Service.AuthoService
 {
     public class AuthorService : IAuthorService
     {

@@ -1,11 +1,11 @@
-﻿using BookShop.BLL.ConfigurationModel.BookAuthorModel;
+﻿using BookShop.BookShop.BLL.ConfigurationModel.BookAuthorModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookShop.BLL.IService.IBookAuthorService
+namespace BookShop.BookShop.BLL.IService.IBookAuthorService
 {
 	public interface IBookAuthorService
 	{

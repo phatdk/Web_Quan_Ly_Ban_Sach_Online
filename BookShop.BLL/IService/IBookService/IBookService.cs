@@ -1,7 +1,7 @@
-﻿using BLL.ConfigurationModel.AuthorModel;
-using BLL.ConfigurationModel.UserModel;
-using BookShop.BLL.ConfigurationModel.BookAuthorModel;
-using BookShop.BLL.ConfigurationModel.BookModel;
+﻿using BookShop.BLL.ConfigurationModel.AuthorModel;
+using BookShop.BLL.ConfigurationModel.UserModel;
+using BookShop.BookShop.BLL.ConfigurationModel.BookAuthorModel;
+using BookShop.BookShop.BLL.ConfigurationModel.BookModel;
 using BookShop.DAL.Entities;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookShop.BLL.IService.IBookService
+namespace BookShop.BookShop.BLL.IService.IBookService
 {
 	public interface IBookService
 	{
