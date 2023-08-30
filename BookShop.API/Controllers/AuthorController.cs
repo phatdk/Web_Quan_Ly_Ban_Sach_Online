@@ -1,5 +1,5 @@
 ﻿using BookShop.BLL.ConfigurationModel.UserModel;
-using BookShop.BLL.IService.IAuthorService;
+using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.API.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class AuthorController : ControllerBase
 	{

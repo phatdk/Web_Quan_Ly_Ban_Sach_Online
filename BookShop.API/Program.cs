@@ -1,5 +1,5 @@
-using BookShop.BLL.IService.IAuthorService;
-using BookShop.BLL.Service.AuthoService;
+using BookShop.BLL.IService;
+using BookShop.BLL.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
