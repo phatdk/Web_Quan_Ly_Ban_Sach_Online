@@ -11,8 +11,8 @@ namespace BookShop.BLL.IService.IAuthorService
 {
 	public interface IAuthorService
 	{
-		public Task<List<Author>> Getall();
-		public Task<Author> GetbyId(int id);
+		public Task<List<AuthorModel>> Getall();
+		public Task<AuthorModel> GetbyId(int id);
 		public Task<bool> Update(int id,UpdateAuthorModel requet);
 		public Task<bool> Delete(int id);
 		public Task<bool> Add(CreateAuthorModel requet);
