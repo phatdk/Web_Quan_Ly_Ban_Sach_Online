@@ -50,7 +50,7 @@ namespace BookShop.BLL.Service.OrderService
 				var code = GenerateCode(13);
 				var obj = new Order()
 				{
-					Code = GenerateCode(13).ToString(),
+					Code = code.ToString(),
 					Receiver = model.Receiver,
 					Phone = model.Phone,
 					AcceptDate = model.AcceptDate,
