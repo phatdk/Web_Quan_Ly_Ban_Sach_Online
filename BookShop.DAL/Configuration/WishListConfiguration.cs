@@ -13,6 +13,7 @@ namespace BookShop.DAL.Configuration
 	{
 		public void Configure(EntityTypeBuilder<WishList> builder)
 		{
+			builder.HasKey(x => new { x.Id_Product, x.Id_User });
 			builder.HasOne(x=>x.User).WithMany(x=>x.WishLists).HasForeignKey(x=>x.Id_User).OnDelete(DeleteBehavior.Cascade);
 			builder.HasOne(x=>x.Product).WithMany(x=>x.WishLists).HasForeignKey(x=>x.Id_Product).OnDelete(DeleteBehavior.Cascade);
 		}
