@@ -1,12 +1,16 @@
-﻿using BookShop.BLL.ConfigurationModel.UserModel;
+﻿using BookShop.BLL.ConfigurationModel.Collection;
+using BookShop.BLL.ConfigurationModel.UserModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace BookShop.BLL.Service
 {
@@ -55,24 +59,86 @@ namespace BookShop.BLL.Service
 			}
 		}
 
-		public Task<List<UserModel>> Getall()
+		public async Task<List<UserModel>> Getall()
 		{
-			throw new NotImplementedException();
+			var obj = await _Userrepository.GetAllAsync();
+			var query = from c in obj
+
+						select new UserModel()
+						{
+							Gender = c.Gender,
+							Id = c.Id,
+							Name = c.Name,
+							Status = c.Status,
+							CreatedDate = c.CreatedDate,
+							Email = c.Email,
+							Phone = c.Phone,
+							UserName = c.UserName,
+							Password = c.Password,
+						};
+			return query.ToList();
 		}
 
-		public Task<UserModel> GetbyId(int id)
+		public async Task<UserModel> GetbyId(int id)
 		{
-			throw new NotImplementedException();
+			var obj = await _Userrepository.GetByIdAsync(id);
+			return new UserModel()
+			{
+				Gender = obj.Gender,
+				Id = obj.Id,
+				Name = obj.Name,
+				Status = obj.Status,
+				CreatedDate = obj.CreatedDate,
+				Email = obj.Email,
+				Phone = obj.Phone,
+				UserName = obj.UserName,
+				Password = obj.Password,
+			};
 		}
 
-		public Task<bool> remove(int id)
+		public async Task<bool> remove(int id)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				var obj = await _Userrepository.GetByIdAsync(id);
+				if (obj != null)
+				{
+					await _Userrepository.RemoveAsync(id);
+					return true;
+				}
+				return false;
+			}
+			catch (Exception)
+			{
+
+				return false;
+			}
 		}
 
-		public Task<bool> update(int id, UpdateUserModel requet)
+		public async Task<bool> update(int id, UpdateUserModel requet)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				var obj = await _Userrepository.GetByIdAsync(id);
+				if (obj != null)
+				{
+					obj.Name = requet.Name;
+					obj.Birth = requet.Birth;
+					obj.Gender = requet.Gender;
+					obj.Email = requet.Email;
+					obj.Phone = requet.Phone;
+					obj.Password = requet.Password;
+					obj.CreatedDate = DateTime.Now;
+					obj.Status = requet.Status;
+					await _Userrepository.UpdateAsync(id, obj);
+					return true;
+				}
+				return false;
+			}
+			catch (Exception)
+			{
+				return false;
+			}
 		}
 	}
 }
