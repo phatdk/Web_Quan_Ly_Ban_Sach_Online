@@ -1,5 +1,5 @@
-﻿using BookShop.BookShop.BLL.ConfigurationModel.BookAuthorModel;
-using BookShop.BookShop.BLL.IService.IBookAuthorService;
+﻿using BookShop.BLL.IService;
+using BookShop.BookShop.BLL.ConfigurationModel.BookAuthorModel;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;
 using System;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BookShop.BookShop.BLL.Service.BookAuthorService
 {
-	public class BookAuthorService : IBookAuthorService
+    public class BookAuthorService : IBookAuthorService
 	{
 		protected readonly IRepository<BookAuthorModel> _repository;
 		public BookAuthorService() {

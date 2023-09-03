@@ -1,6 +1,6 @@
 ﻿using BookShop.BLL.ConfigurationModel.AuthorModel;
 using BookShop.BLL.ConfigurationModel.UserModel;
-using BookShop.BLL.IService.IAuthorService;
+using BookShop.BLL.IService;
 using BookShop.DAL.ApplicationDbContext;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;

@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookShop.BookShop.BLL.IService.IBookAuthorService
+namespace BookShop.BLL.IService
 {
-	public interface IBookAuthorService
-	{
-		public Task<List<BookAuthorModel>> GetAllBooksAuthor();
-	}
+    public interface IBookAuthorService
+    {
+        public Task<List<BookAuthorModel>> GetAllBooksAuthor();
+    }
 }

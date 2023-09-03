@@ -1,4 +1,5 @@
-using BookShop.BLL.IService.IAuthorService;
+using BookShop.BLL.IService;
+using BookShop.BLL.Service;
 using BookShop.BLL.Service.AuthoService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IAuthorService, AuthorService>();
+builder.Services.AddScoped<ICollectionService, CollectionService>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 

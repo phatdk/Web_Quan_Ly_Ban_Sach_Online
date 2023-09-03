@@ -1,5 +1,5 @@
 ﻿using BookShop.BLL.ConfigurationModel.UserModel;
-using BookShop.BLL.IService.IAuthorService;
+using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,29 +7,36 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.API.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class AuthorController : ControllerBase
 	{
 		public IAuthorService _service;
-
-		public AuthorController(IAuthorService service)
+		public ICollectionService _collectionService;
+		public IUserService _userService;
+		public AuthorController(IAuthorService service, ICollectionService collectionService, IUserService userService)
 		{
 			_service = service;
+			_collectionService = collectionService;
+			_userService = userService;
 		}
-
-		// GET: api/<AuthorController>
-		[HttpGet]
-		public IEnumerable<string> Get()
+		[HttpGet("collection")]
+		public async Task<IActionResult> Getallss()
 		{
-			return new string[] { "value1", "value2" };
+			var ok = await _collectionService.Getall();
+			return Ok(ok);
 		}
-
 		// GET api/<AuthorController>/5
 		[HttpGet("{id}")]
 		public string Get(int id)
 		{
 			return "value";
+		}
+		[HttpPost("add/user")]
+		public async Task<IActionResult> add([FromBody] CreateUserModel model)
+		{
+			var obj = await _userService.add(model);
+		 return Ok(obj);
 		}
 
 		// POST api/<AuthorController>
@@ -44,16 +51,6 @@ namespace BookShop.API.Controllers
 			else return BadRequest();
 		}
 
-		// PUT api/<AuthorController>/5
-		[HttpPut("{id}")]
-		public void Put(int id, [FromBody] string value)
-		{
-		}
-
-		// DELETE api/<AuthorController>/5
-		[HttpDelete("{id}")]
-		public void Delete(int id)
-		{
-		}
+	
 	}
 }
