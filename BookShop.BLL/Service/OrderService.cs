@@ -1,6 +1,5 @@
 ﻿using BookShop.BLL.ConfigurationModel.OrderModel;
 using BookShop.BLL.IService;
-using BookShop.BLL.IService.IOrderDetailService;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;
 using System;
