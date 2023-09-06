@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookShop.BookShop.BLL.ConfigurationModel.BookAuthorModel
+namespace BookShop.BLL.ConfigurationModel.BookGenreModel
 {
-	public class BookAuthorModel
+	public class EditBookGenreModel
 	{
-		public int Id { get; set; }
 		public int Id_Book { get; set; }
-		public int Id_Author { get; set; }
+		public int Id_Genre { get; set; }
 	}
 }

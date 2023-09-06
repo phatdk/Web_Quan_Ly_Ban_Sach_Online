@@ -19,6 +19,7 @@ namespace BookShop.DAL.Entities
 		public string? Description { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public int Status { get; set; }
+		public int Type { get; set; } // 0 là bán lẻ, 1 là bán combo
 		
 		//refenrence
 		public virtual List<Image> Images { get; set; }

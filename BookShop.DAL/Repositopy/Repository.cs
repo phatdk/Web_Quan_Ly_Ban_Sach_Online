@@ -49,7 +49,7 @@ namespace BookShop.DAL.Repositopy
             return obj;
         }
 
-        public async Task<T> UpdateAsync(int id, T updatedEntity)
+		public async Task<T> UpdateAsync(int id, T updatedEntity)
         {
             var existingEntity = await _context.Set<T>().FindAsync(id);
 

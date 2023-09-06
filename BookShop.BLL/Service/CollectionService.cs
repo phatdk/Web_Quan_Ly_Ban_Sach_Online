@@ -19,7 +19,7 @@ namespace BookShop.BLL.Service
 		{
 			_collectionRepository = new Repository<CollectionBook>();
 		}
-		public async Task<bool> add(CreateCollectionModel requet)
+		public async Task<bool> Add(CreateCollectionModel requet)
 		{
 			try
 			{
@@ -54,7 +54,7 @@ namespace BookShop.BLL.Service
 			return query.ToList();
 		}
 
-		public async Task<CollectionModel> GetbyId(int id)
+		public async Task<CollectionModel> GetById(int id)
 		{
 			var obj = await _collectionRepository.GetByIdAsync(id);
 
@@ -68,7 +68,7 @@ namespace BookShop.BLL.Service
 
 		}
 
-		public async Task<bool> remove(int id)
+		public async Task<bool> Delete(int id)
 		{
 			try
 			{
@@ -87,7 +87,7 @@ namespace BookShop.BLL.Service
 			}
 		}
 
-		public async Task<bool> update(int id, UpdateCollectionModel requet)
+		public async Task<bool> Update(int id, UpdateCollectionModel requet)
 		{
 			try
 			{

@@ -1,4 +1,5 @@
-﻿using BookShop.BLL.ConfigurationModel.UserModel;
+﻿using BookShop.BLL.ConfigurationModel.AuthorModel;
+using BookShop.BLL.ConfigurationModel.UserModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +21,14 @@ namespace BookShop.API.Controllers
 
 		// GET: api/<AuthorController>
 		[HttpGet]
-		public IEnumerable<string> Get()
+		public async Task<List<AuthorModel>> Get(string? page)
 		{
-			return new string[] { "value1", "value2" };
+			if (page != null)
+			{
+				int pageIndex = int.Parse(page);
+
+				return (await _service.Getall()).Skip((pageIndex - 1) * 2).Take(2).ToList();
+			}else return await _service.Getall();
 		}
 
 		// GET api/<AuthorController>/5

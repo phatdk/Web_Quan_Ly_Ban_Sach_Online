@@ -674,6 +674,9 @@ namespace BookShop.DAL.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Products");
@@ -687,7 +690,7 @@ namespace BookShop.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("Id_BookDetail")
+                    b.Property<int>("Id_Book")
                         .HasColumnType("int");
 
                     b.Property<int>("Id_Product")
@@ -698,7 +701,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id_BookDetail");
+                    b.HasIndex("Id_Book");
 
                     b.HasIndex("Id_Product");
 
@@ -1017,16 +1020,24 @@ namespace BookShop.DAL.Migrations
 
             modelBuilder.Entity("BookShop.DAL.Entities.WishList", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("Id_Product")
                         .HasColumnType("int");
 
                     b.Property<int>("Id_User")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                    b.HasKey("Id");
 
-                    b.HasKey("Id_Product", "Id_User");
+                    b.HasIndex("Id_Product");
 
                     b.HasIndex("Id_User");
 
@@ -1266,7 +1277,7 @@ namespace BookShop.DAL.Migrations
                 {
                     b.HasOne("BookShop.DAL.Entities.Book", "Book")
                         .WithMany("ProductBooks")
-                        .HasForeignKey("Id_BookDetail")
+                        .HasForeignKey("Id_Book")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

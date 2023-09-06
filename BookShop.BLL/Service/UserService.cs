@@ -25,7 +25,7 @@ namespace BookShop.BLL.Service
 			_CartRepository = new Repository<Cart>();
 			_Userrepository = new Repository<User>();
         }
-        public async Task<bool> add(CreateUserModel requet)
+        public async Task<bool> Add(CreateUserModel requet)
 		{
 			try
 			{
@@ -79,7 +79,7 @@ namespace BookShop.BLL.Service
 			return query.ToList();
 		}
 
-		public async Task<UserModel> GetbyId(int id)
+		public async Task<UserModel> GetById(int id)
 		{
 			var obj = await _Userrepository.GetByIdAsync(id);
 			return new UserModel()
@@ -96,7 +96,7 @@ namespace BookShop.BLL.Service
 			};
 		}
 
-		public async Task<bool> remove(int id)
+		public async Task<bool> Delete(int id)
 		{
 			try
 			{
@@ -115,7 +115,7 @@ namespace BookShop.BLL.Service
 			}
 		}
 
-		public async Task<bool> update(int id, UpdateUserModel requet)
+		public async Task<bool> Update(int id, UpdateUserModel requet)
 		{
 			try
 			{

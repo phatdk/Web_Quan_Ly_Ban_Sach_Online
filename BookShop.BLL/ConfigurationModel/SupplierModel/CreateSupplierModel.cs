@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookShop.BLL.ConfigurationModel.BookGenreCategoryModel
+namespace BookShop.BLL.ConfigurationModel.SupplierModel
 {
-	public class CreateCategoryModel
+	public class CreateSupplierModel
 	{
 		public string Name { get; set; }
-		public DateTime CreatedDate { get; set; }
+		public int Index { get; set; }
 		public int Status { get; set; }
 	}
 }

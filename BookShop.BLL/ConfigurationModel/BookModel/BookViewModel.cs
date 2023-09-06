@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace BookShop.BLL.ConfigurationModel.BookModel
 {
-	public class UpdateBookModel
+	public class BookViewModel
 	{
+		public int Id { get; set; }
 		public string? ISBN { get; set; }
 		public string Title { get; set; }
 		public string? Description { get; set; }
@@ -25,6 +26,10 @@ namespace BookShop.BLL.ConfigurationModel.BookModel
 		public int Height { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public int Status { get; set; }
+
+		//join properties
+		public string CollectionName { get; set; }
+		public string SupplierName { get; set; }
 
 		//foreign key
 		public int? Id_Collection { get; set; }

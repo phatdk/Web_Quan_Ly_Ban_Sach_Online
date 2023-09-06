@@ -1,5 +1,5 @@
 ﻿using BookShop.BLL.IService;
-using BookShop.BookShop.BLL.ConfigurationModel.BookModel;
+using BookShop.BLL.ConfigurationModel.BookModel;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;
 using System;
@@ -11,120 +11,150 @@ using System.Threading.Tasks;
 
 namespace BookShop.BLL.Service
 {
-    public class BookService : IBookService
-    {
-        protected readonly IRepository<Book> _bookRepository;
-        protected readonly IBookAuthorService _bookAuthorService;
-        protected readonly IRepository<Author> _authorRepository;
-        public BookService(IRepository<Book> bookRepository, IBookAuthorService bookAuthorService,
-            IRepository<Author> authorRepository)
-        {
-            _authorRepository = authorRepository;
-            _bookRepository = bookRepository;
-            _bookAuthorService = bookAuthorService;
-        }
-        public async Task<bool> Add(CreateBookModel requet)
-        {
-            try
-            {
-                var obj = new Book()
-                {
-                    ISBN = requet.ISBN,
-                    Title = requet.Title,
-                    Description = requet.Description,
-                    Reader = requet.Reader,
-                    Price = requet.Price,
-                    ImportPrice = requet.ImportPrice,
-                    Quantity = requet.Quantity,
-                    PageSize = requet.PageSize,
-                    Pages = requet.Pages,
-                    Cover = requet.Cover,
-                    PublicationDate = requet.PublicationDate,
-                    Weight = requet.Weight,
-                    Height = requet.Height,
-                    Length = requet.Length,
-                    Widght = requet.Widght,
-                    CreatedDate = DateTime.UtcNow,
-                    Status = 1,
-                    Id_Collection = requet.Id_Collection,
-                    Id_Supplier = requet.Id_Supplier,
-                };
-                await _bookRepository.CreateAsync(obj);
-                return true;
-            }
-            catch (Exception)
-            {
+	public class BookService : IBookService
+	{
+		protected readonly IRepository<Book> _bookRepository;
+		protected readonly IRepository<CollectionBook> _collectionRepository;
+		protected readonly IRepository<Supplier> _supplierRepository;
+		public BookService()
+		{
+			_bookRepository = new Repository<Book>();
+			_collectionRepository = new Repository<CollectionBook>();
+			_supplierRepository = new Repository<Supplier>();
+		}
+		public async Task<bool> Add(CreateBookModel requet)
+		{
+			try
+			{
+				var obj = new Book()
+				{
+					ISBN = requet.ISBN,
+					Title = requet.Title,
+					Description = requet.Description,
+					Reader = requet.Reader,
+					Price = requet.Price,
+					ImportPrice = requet.ImportPrice,
+					Quantity = requet.Quantity,
+					PageSize = requet.PageSize,
+					Pages = requet.Pages,
+					Cover = requet.Cover,
+					PublicationDate = requet.PublicationDate,
+					Weight = requet.Weight,
+					Height = requet.Height,
+					Length = requet.Length,
+					Widght = requet.Widght,
+					CreatedDate = DateTime.Now,
+					Status = 1,
+					Id_Collection = requet.Id_Collection,
+					Id_Supplier = requet.Id_Supplier,
+				};
+				await _bookRepository.CreateAsync(obj);
+				return true;
+			}
+			catch (Exception)
+			{
 
-                return false;
-            }
-        }
+				return false;
+			}
+		}
 
-        public async Task<bool> Delete(int id)
-        {
-            if (id != null)
-            {
-                await _bookRepository.RemoveAsync(id);
-                return true;
-            }
-            return false;
-        }
+		public async Task<bool> Delete(int id)
+		{
+			try
+			{
+				await _bookRepository.RemoveAsync(id);
+				return true;
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+		}
 
-        public async Task<List<Book>> Getall()
-        {
-            return await _bookRepository.GetAllAsync();
-        }
+		public async Task<bool> Update(int id, UpdateBookModel requet)
+		{
+			try
+			{
+				await _bookRepository.RemoveAsync(id);
+				return true;
+			}
+			catch (Exception)
+			{
 
-        public async Task<List<Author>> GetAuthorAsync(int BookId)
-        {
-            var book = await _bookRepository.GetAllAsync();
-            var author = await _authorRepository.GetAllAsync();
-            var bookauthor = await _bookAuthorService.GetAllBooksAuthor();
-            var query = from pa in bookauthor
-                        join
-                            b in book on pa.Id_Book equals b.Id
-                        join a in author on pa.Id_Author equals a.Id
-                        where b.Id == BookId
-                        select a;
-            return query.ToList();
-        }
+				return false;
+			}
+		}
 
-        public async Task<List<Book>> GetBooksAsync(int AuthorId)
-        {
-            var book = await _bookRepository.GetAllAsync();
-            var author = await _authorRepository.GetAllAsync();
-            var bookauthor = await _bookAuthorService.GetAllBooksAuthor();
-            var query = from pa in bookauthor
-                        join
-                            b in book on pa.Id_Book equals b.Id
-                        join a in author on pa.Id_Author equals a.Id
-                        where a.Id == AuthorId
-                        select b;
-            return query.ToList();
-        }
+		public async Task<List<BookViewModel>> Getall()
+		{
+			var books = await _bookRepository.GetAllAsync();
+			var suppliers = await _supplierRepository.GetAllAsync();
+			var collections = await _collectionRepository.GetAllAsync();
+			var objlist = (from a in books
+						   join b in suppliers on a.Id_Supplier equals b.Id
+						   join c in collections on a.Id_Collection equals c.Id into t
+						   from c in t.DefaultIfEmpty()
+						   select new BookViewModel()
+						   {
+							   Id = a.Id,
+							   Title = a.Title,
+							   Reader = a.Reader,
+							   Price = a.Price,
+							   ImportPrice = a.ImportPrice,
+							   Quantity = a.Quantity,
+							   PageSize = a.PageSize,
+							   Pages = a.Pages,
+							   Cover = a.Cover,
+							   PublicationDate = a.PublicationDate,
+							   Description = a.Description,
+							   Weight = a.Weight,
+							   Widght = a.Widght,
+							   Length = a.Length,
+							   Height = a.Height,
+							   CreatedDate = a.CreatedDate,
+							   Status = a.Status,
+							   Id_Collection = a.Id_Collection,
+							   Id_Supplier = a.Id_Supplier,
+							   CollectionName = c.Name != null ? c.Name : "No collection",
+							   SupplierName = b.Name,
+						   }).ToList();
+			return objlist;
+		}
 
-
-
-        public async Task<Book> GetbyId(int id)
-        {
-            return await _bookRepository.GetByIdAsync(id);
-        }
-
-        public async Task<bool> Update(int id, UpdateBookModel requet)
-        {
-            try
-            {
-                if (id != null)
-                {
-                    await _bookRepository.RemoveAsync(id);
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception)
-            {
-
-                return false;
-            }
-        }
-    }
+		public async Task<BookViewModel> GetById(int id)
+		{
+			var books = (await _bookRepository.GetAllAsync()).Where(c=>c.Id == id);
+			var suppliers = await _supplierRepository.GetAllAsync();
+			var collections = await _collectionRepository.GetAllAsync();
+			var objlist = (from a in books
+						   join b in suppliers on a.Id_Supplier equals b.Id
+						   join c in collections on a.Id_Collection equals c.Id into t
+						   from c in t.DefaultIfEmpty()
+						   select new BookViewModel()
+						   {
+							   Id = a.Id,
+							   Title = a.Title,
+							   Reader = a.Reader,
+							   Price = a.Price,
+							   ImportPrice = a.ImportPrice,
+							   Quantity = a.Quantity,
+							   PageSize = a.PageSize,
+							   Pages = a.Pages,
+							   Cover = a.Cover,
+							   PublicationDate = a.PublicationDate,
+							   Description = a.Description,
+							   Weight = a.Weight,
+							   Widght = a.Widght,
+							   Length = a.Length,
+							   Height = a.Height,
+							   CreatedDate = a.CreatedDate,
+							   Status = a.Status,
+							   Id_Collection = a.Id_Collection,
+							   Id_Supplier = a.Id_Supplier,
+							   CollectionName = c.Name != null ? c.Name : "No collection",
+							   SupplierName = b.Name,
+						   }).FirstOrDefault();
+			return objlist;
+		}
+	}
 }

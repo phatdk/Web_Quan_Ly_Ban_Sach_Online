@@ -1,5 +1,5 @@
 ﻿using BookShop.BLL.ConfigurationModel.AuthorModel;
-using BookShop.BLL.ConfigurationModel.BookGenreCategoryModel;
+using BookShop.BLL.ConfigurationModel.CategoryModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;
@@ -19,7 +19,7 @@ namespace BookShop.BLL.Service.BookGenreCategoryService
 		{
 			_repository = new Repository<Category>();
 		}
-		public async Task<bool> add(CreateCategoryModel requet)
+		public async Task<bool> Add(CreateCategoryModel requet)
 		{
 			try
 			{
@@ -51,7 +51,7 @@ namespace BookShop.BLL.Service.BookGenreCategoryService
 			return query.ToList();
 		}
 
-		public async Task<CategoryModel> GetbyId(int id)
+		public async Task<CategoryModel> GetById(int id)
 		{
 			var obj = await _repository.GetByIdAsync(id);
 			
@@ -64,7 +64,7 @@ namespace BookShop.BLL.Service.BookGenreCategoryService
 			
 		}
 
-		public async Task<bool> remove(int id)
+		public async Task<bool> Delete(int id)
 		{
 			try
 			{
@@ -83,7 +83,7 @@ namespace BookShop.BLL.Service.BookGenreCategoryService
 			}
 		}
 
-		public async Task<bool> update(int id, UpdateCategoryModel requet)
+		public async Task<bool> Update(int id, UpdateCategoryModel requet)
 		{
 			try
 			{

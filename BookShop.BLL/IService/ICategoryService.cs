@@ -1,4 +1,4 @@
-﻿using BookShop.BLL.ConfigurationModel.BookGenreCategoryModel;
+﻿using BookShop.BLL.ConfigurationModel.CategoryModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +10,11 @@ namespace BookShop.BLL.IService
     public interface ICategoryService
     {
 
-        public Task<bool> add(CreateCategoryModel requet);
-        public Task<bool> remove(int id);
-        public Task<bool> update(int id, UpdateCategoryModel requet);
+        public Task<bool> Add(CreateCategoryModel requet);
+        public Task<bool> Delete(int id);
+        public Task<bool> Update(int id, UpdateCategoryModel requet);
         public Task<List<CategoryModel>> Getall();
-        public Task<CategoryModel> GetbyId(int id);
+        public Task<CategoryModel> GetById(int id);
 
 
     }

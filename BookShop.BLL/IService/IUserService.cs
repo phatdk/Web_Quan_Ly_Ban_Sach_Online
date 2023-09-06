@@ -10,10 +10,10 @@ namespace BookShop.BLL.IService
 {
 	public interface IUserService
 	{
-		public Task<bool> add(CreateUserModel requet);
-		public Task<bool> remove(int id);
-		public Task<bool> update(int id, UpdateUserModel requet);
+		public Task<bool> Add(CreateUserModel requet);
+		public Task<bool> Delete(int id);
+		public Task<bool> Update(int id, UpdateUserModel requet);
 		public Task<List<UserModel>> Getall();
-		public Task<UserModel> GetbyId(int id);
+		public Task<UserModel> GetById(int id);
 	}
 }
