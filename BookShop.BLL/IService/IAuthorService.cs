@@ -12,7 +12,7 @@ namespace BookShop.BLL.IService
     public interface IAuthorService
     {
         public Task<List<AuthorModel>> Getall();
-        public Task<AuthorModel> GetbyId(int id);
+        public Task<AuthorModel> GetById(int id);
         public Task<bool> Update(int id, UpdateAuthorModel requet);
         public Task<bool> Delete(int id);
         public Task<bool> Add(CreateAuthorModel requet);

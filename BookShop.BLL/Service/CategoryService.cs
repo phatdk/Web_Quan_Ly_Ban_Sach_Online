@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BookShop.BLL.Service.BookGenreCategoryService
 {
-    public class CategoryService : ICategoryService
+	public class CategoryService : ICategoryService
 	{
 		protected readonly IRepository<Category> _repository;
 		public CategoryService()
@@ -38,30 +38,29 @@ namespace BookShop.BLL.Service.BookGenreCategoryService
 			}
 		}
 
-		public async Task<List<CategoryModel>> Getall()
+		public async Task<List<CategoryModel>> GetAll()
 		{
 			var obj = await _repository.GetAllAsync();
-			var query = from c in obj
-						select new CategoryModel()
-						{
-							Id = c.Id,
-							Name = c.Name,
-							Status = c.Status,
-						};
-			return query.ToList();
+			var query = (from c in obj
+						 select new CategoryModel()
+						 {
+							 Id = c.Id,
+							 Name = c.Name,
+							 Status = c.Status,
+						 }).ToList();
+			return query;
 		}
 
 		public async Task<CategoryModel> GetById(int id)
 		{
 			var obj = await _repository.GetByIdAsync(id);
-			
-					return new CategoryModel()
-						{
-							Id = obj.Id,
-							Name = obj.Name,
-							Status = obj.Status,
-						};
-			
+
+			return new CategoryModel()
+			{
+				Id = obj.Id,
+				Name = obj.Name,
+				Status = obj.Status,
+			};
 		}
 
 		public async Task<bool> Delete(int id)

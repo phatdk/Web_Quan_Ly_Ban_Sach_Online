@@ -11,16 +11,14 @@ using System.Threading.Tasks;
 
 namespace BookShop.BLL.Service.BookGenreCategoryService
 {
-    public class GenreService : IGenreService
+	public class GenreService : IGenreService
 	{
 		protected readonly IRepository<Genre> _repository;
-		protected readonly IRepository<Category> _categoryRepository;
         public GenreService()
         {
             _repository = new Repository<Genre>();
-			_categoryRepository = new Repository<Category>();
         }
-        public async Task<bool> add(CreateGenreModel requet)
+        public async Task<bool> Add(CreateGenreModel requet)
 		{
 			try
 			{
@@ -41,12 +39,10 @@ namespace BookShop.BLL.Service.BookGenreCategoryService
 			}
 		}
 
-		public async Task<List<GenreModel>> Getall()
+		public async Task<List<GenreModel>> GetAll()
 		{
 			var obj = await _repository.GetAllAsync();
-			var objcate = await	_categoryRepository.GetAllAsync();
 			var query = from g in obj
-						join c in objcate on g.Id_Category equals c.Id
 						select new GenreModel()
 						{
 							Id = g.Id,
@@ -58,7 +54,7 @@ namespace BookShop.BLL.Service.BookGenreCategoryService
 			return query.ToList();
 		}
 
-		public async Task<GenreModel> GetbyId(int id)
+		public async Task<GenreModel> GetById(int id)
 		{
 			var obj = await _repository.GetByIdAsync(id);
 
@@ -72,7 +68,7 @@ namespace BookShop.BLL.Service.BookGenreCategoryService
 			};
 		}
 
-		public async Task<bool> remove(int id)
+		public async Task<bool> Delete(int id)
 		{
 			try
 			{
@@ -91,7 +87,7 @@ namespace BookShop.BLL.Service.BookGenreCategoryService
 			}
 		}
 
-		public async Task<bool> update(int id, updateGenreModel requet)
+		public async Task<bool> Update(int id, updateGenreModel requet)
 		{
 			try
 			{
@@ -111,6 +107,21 @@ namespace BookShop.BLL.Service.BookGenreCategoryService
 
 				return false;
 			}
+		}
+
+		public async Task<List<GenreModel>> GetByCategory(int categoryId)
+		{
+			var genres = await _repository.GetAllAsync();
+			var query = from g in genres
+						select new GenreModel()
+						{
+							Id = g.Id,
+							Name = g.Name,
+							CreatedDate = g.CreatedDate,
+							Id_Category = g.Id_Category,
+							Index = g.Index,
+						};
+			return query.ToList();
 		}
 	}
 }

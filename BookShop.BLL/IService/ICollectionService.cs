@@ -13,7 +13,7 @@ namespace BookShop.BLL.IService
 		public Task<bool> Add(CreateCollectionModel requet);
 		public Task<bool> Delete(int id);
 		public Task<bool> Update(int id, UpdateCollectionModel requet);
-		public Task<List<CollectionModel>> Getall();
+		public Task<List<CollectionModel>> GetAll();
 		public Task<CollectionModel> GetById(int id);
 	}
 }

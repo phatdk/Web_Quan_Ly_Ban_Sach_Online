@@ -85,7 +85,7 @@ namespace BookShop.BLL.Service
 			}
 		}
 
-		public async Task<List<BookViewModel>> Getall()
+		public async Task<List<BookViewModel>> GetAll()
 		{
 			var books = await _bookRepository.GetAllAsync();
 			var suppliers = await _supplierRepository.GetAllAsync();

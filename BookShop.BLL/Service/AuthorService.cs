@@ -76,7 +76,7 @@ namespace BookShop.BLL.Service
             return query.ToList();
         }
 
-        public async Task<AuthorModel> GetbyId(int id)
+        public async Task<AuthorModel> GetById(int id)
         {
 
             var obj = await _repository.GetByIdAsync(id);

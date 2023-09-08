@@ -13,7 +13,7 @@ namespace BookShop.BLL.IService
         public Task<bool> Add(CreateCategoryModel requet);
         public Task<bool> Delete(int id);
         public Task<bool> Update(int id, UpdateCategoryModel requet);
-        public Task<List<CategoryModel>> Getall();
+        public Task<List<CategoryModel>> GetAll();
         public Task<CategoryModel> GetById(int id);
 
 

@@ -16,6 +16,7 @@ namespace BookShop.DAL.Entities
 		[MaxLength(50)]
 		public string Name { get; set; }
 		public int Index { get; set; }
+		public string? Img { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public int Status { get; set; }
 

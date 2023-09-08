@@ -40,7 +40,7 @@ namespace BookShop.BLL.Service
 			}
 		}
 
-		public async Task<List<CollectionModel>> Getall()
+		public async Task<List<CollectionModel>> GetAll()
 		{
 			var obj = await _collectionRepository.GetAllAsync();
 			var query = from c in obj

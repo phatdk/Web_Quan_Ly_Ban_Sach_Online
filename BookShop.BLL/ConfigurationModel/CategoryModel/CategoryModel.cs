@@ -13,5 +13,8 @@ namespace BookShop.BLL.ConfigurationModel.CategoryModel
         public string Name { get; set; }
         public DateTime CreatedDate { get; set; }
         public int Status { get; set; }
+
+        //list
+        public List<GenreModel.GenreModel> genres { get; set; }
     }
 }
