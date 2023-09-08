@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookShop.BLL.ConfigurationModel.PropertyValue
+namespace BookShop.BLL.ConfigurationModel.PropertyValueModel
 {
 	public class UpdateValueModel
 	{

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BookShop.BLL.ConfigurationModel.AuthorModel;
+using BookShop.BLL.ConfigurationModel.GenreModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,5 +36,9 @@ namespace BookShop.BLL.ConfigurationModel.BookModel
 		//foreign key
 		public int? Id_Collection { get; set; }
 		public int Id_Supplier { get; set; }
+
+		// list
+		public List<AuthorModel.AuthorModel> authorModels { get; set; }
+		public List<GenreModel.GenreModel> genreModels { get; set; }
 	}
 }

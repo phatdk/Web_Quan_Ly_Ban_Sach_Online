@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookShop.BLL.ConfigurationModel.PropertyValue
+namespace BookShop.BLL.ConfigurationModel.PropertyValueModel
 {
-	public class CreateValueModel
+	public class ValueViewModel
 	{
+		public int Id { get; set; }
 		public string Value { get; set; }
 		public int Status { get; set; }
-		public int Id_Prperty { get; set; }
+		public int Id_Property { get; set; }
 	}
 }

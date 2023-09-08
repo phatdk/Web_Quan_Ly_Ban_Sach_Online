@@ -1,4 +1,4 @@
-﻿using BookShop.BLL.ConfigurationModel.BookGenreCategoryModel;
+﻿using BookShop.BLL.ConfigurationModel.GenreModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;

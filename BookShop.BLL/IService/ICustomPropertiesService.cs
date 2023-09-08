@@ -1,4 +1,4 @@
-﻿using BookShop.BLL.ConfigurationModel.CustomProperties;
+﻿using BookShop.BLL.ConfigurationModel.CustomPropertiesModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;

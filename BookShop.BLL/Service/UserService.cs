@@ -1,4 +1,4 @@
-﻿using BookShop.BLL.ConfigurationModel.Collection;
+﻿using BookShop.BLL.ConfigurationModel.CollectionBookModel;
 using BookShop.BLL.ConfigurationModel.UserModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookShop.BLL.ConfigurationModel.Collection
+namespace BookShop.BLL.ConfigurationModel.CollectionBookModel
 {
 	public class CollectionModel
 	{

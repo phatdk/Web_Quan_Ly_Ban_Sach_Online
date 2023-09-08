@@ -14,6 +14,5 @@ namespace BookShop.BLL.ConfigurationModel.AuthorModel
 		public int Index { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public int Status { get; set; }
-
 	}
 }

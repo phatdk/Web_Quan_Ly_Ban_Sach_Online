@@ -1,4 +1,4 @@
-﻿using BookShop.BLL.ConfigurationModel.PropertyValue;
+﻿using BookShop.BLL.ConfigurationModel.PropertyValueModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;

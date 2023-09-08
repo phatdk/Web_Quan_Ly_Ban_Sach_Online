@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookShop.BLL.ConfigurationModel.BookGenreCategoryModel
+namespace BookShop.BLL.ConfigurationModel.GenreModel
 {
 	public class CreateGenreModel
 	{

@@ -1,4 +1,4 @@
-﻿using BookShop.BLL.ConfigurationModel.BookGenreCategoryModel;
+﻿using BookShop.BLL.ConfigurationModel.GenreModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
