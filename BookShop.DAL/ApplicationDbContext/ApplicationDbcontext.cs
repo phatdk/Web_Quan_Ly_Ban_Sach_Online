@@ -56,23 +56,23 @@ namespace BookShop.DAL.ApplicationDbContext
 		{
 			modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 			modelBuilder.Entity<Admin>().HasData(
-					new Admin { Id = 0, Name = "Admin", Phone = "0000000000", Email = "example@gmail.com", Password = "1", Role = 0, CreatedDate = DateTime.Now, Status = 1 }
+					new Admin { Id = 1, Name = "Admin", Phone = "0000000000", Email = "example@gmail.com", Password = "1", Role = 0, CreatedDate = DateTime.Now, Status = 1 }
 				);
 			modelBuilder.Entity<User>().HasData(
-					new User { Id = 0, Name = "Khách vẵng lai", UserName = "customer", Password = "1", CreatedDate = DateTime.Now, Status = 1 }
+					new User { Id = 1, Name = "Khách vẵng lai", UserName = "customer", Password = "1", CreatedDate = DateTime.Now, Status = 1 }
 				);
 			modelBuilder.Entity<Shop>().HasData(
-				new Shop { Id = 0, ShopName = "Wild Rose", About = "Một số thông tin về shop" }
+				new Shop { Id = 1, ShopName = "Wild Rose", About = "Một số thông tin về shop" }
 				);
 			modelBuilder.Entity<CustomProperties>().HasData(
-				new CustomProperties { Id = 0, propertyName = "Logo" },
-				new CustomProperties { Id = 1, propertyName = "Banner" },
-				new CustomProperties { Id = 2, propertyName = "Event banner" }
+				new CustomProperties { Id = 1, propertyName = "Logo" },
+				new CustomProperties { Id = 2, propertyName = "Banner" },
+				new CustomProperties { Id = 3, propertyName = "Event banner" }
 				);
 			modelBuilder.Entity<PromotionType>().HasData(
-				new PromotionType { Id = 0, Name = "Khuyến mại theo đơn" },
-				new PromotionType { Id = 1, Name = "Khuyến mại theo sản phẩm" },
-				new PromotionType { Id = 2, Name = "Khuyến mại đổi điểm" }
+				new PromotionType { Id = 1, Name = "Khuyến mại theo đơn" },
+				new PromotionType { Id = 2, Name = "Khuyến mại theo sản phẩm" },
+				new PromotionType { Id = 3, Name = "Khuyến mại đổi điểm" }
 				);
 		}
 	}
