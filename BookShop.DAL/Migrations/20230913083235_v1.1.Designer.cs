@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookShop.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbcontext))]
-    [Migration("20230910115410_v1.1")]
+    [Migration("20230913083235_v1.1")]
     partial class v11
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,7 +65,7 @@ namespace BookShop.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2023, 9, 10, 18, 54, 9, 807, DateTimeKind.Local).AddTicks(197),
+                            CreatedDate = new DateTime(2023, 9, 13, 15, 32, 35, 434, DateTimeKind.Local).AddTicks(9291),
                             Email = "example@gmail.com",
                             Name = "Admin",
                             Password = "1",
@@ -347,19 +347,19 @@ namespace BookShop.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            Id_Shop = 0,
+                            Id_Shop = 1,
                             propertyName = "Logo"
                         },
                         new
                         {
                             Id = 2,
-                            Id_Shop = 0,
+                            Id_Shop = 1,
                             propertyName = "Banner"
                         },
                         new
                         {
                             Id = 3,
-                            Id_Shop = 0,
+                            Id_Shop = 1,
                             propertyName = "Event banner"
                         });
                 });
@@ -783,14 +783,14 @@ namespace BookShop.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AmountReduct")
+                    b.Property<int?>("AmountReduct")
                         .HasColumnType("int");
 
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("nvarchar(13)");
 
-                    b.Property<int>("Condition")
+                    b.Property<int?>("Condition")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
@@ -809,7 +809,7 @@ namespace BookShop.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("PercentReduct")
+                    b.Property<int?>("PercentReduct")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -822,6 +822,9 @@ namespace BookShop.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StorageTerm")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -892,8 +895,11 @@ namespace BookShop.DAL.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<string>("Value")
+                    b.Property<string>("Value1")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Value2")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1036,7 +1042,7 @@ namespace BookShop.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2023, 9, 10, 18, 54, 9, 807, DateTimeKind.Local).AddTicks(300),
+                            CreatedDate = new DateTime(2023, 9, 13, 15, 32, 35, 434, DateTimeKind.Local).AddTicks(9482),
                             Name = "Khách vẵng lai",
                             Password = "1",
                             Status = 1,

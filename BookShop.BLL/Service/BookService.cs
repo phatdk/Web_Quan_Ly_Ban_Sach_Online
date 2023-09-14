@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BookShop.BLL.Service
 {
-	public class BookService : IBookService
+    public class BookService : IBookService
 	{
 		protected readonly IRepository<Book> _bookRepository;
 		protected readonly IRepository<CollectionBook> _collectionRepository;
@@ -156,5 +156,20 @@ namespace BookShop.BLL.Service
 						   }).FirstOrDefault();
 			return objlist;
 		}
-	}
+
+        public Task<List<List<BookViewModel>>> GetByAuthor(int authorId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<List<BookViewModel>>> GetByGenre(int genrerId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<BookViewModel>> GetByCollection(int collectrionId)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

@@ -41,10 +41,5 @@ namespace BookShop.DAL.Entities
 		public virtual List<BookAuthor> BookAuthors { get; set; }
 		public virtual List<BookGenre> BookGenres { get; set; }
 		public virtual List<ProductBook> ProductBooks { get; set; }
-
-
-		//foreign key
-
-		//reference
 	}
 }
