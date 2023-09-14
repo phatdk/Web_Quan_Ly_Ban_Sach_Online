@@ -24,7 +24,8 @@ namespace BookShop.BLL.Service
 			{
 				var obj = new PropertyValue()
 				{
-					Value = model.Value,
+					Value1 = model.Value1,
+					Value2 = model.Value2,
 					Status = model.Status,
 					Id_Property = model.Id_Prperty,
 				};
@@ -50,7 +51,8 @@ namespace BookShop.BLL.Service
 			{
 				var obj = new ValueViewModel()
 				{
-					Value = item.Value,
+					Value1 = item.Value1,
+					Value2 = item.Value2,
 					Status = item.Status,
 					Id = item.Id,
 					Id_Property = item.Id_Property,
@@ -65,7 +67,8 @@ namespace BookShop.BLL.Service
 			try
 			{
 				var obj = await _repository.GetByIdAsync(id);
-				obj.Value = model.Value;
+				obj.Value1 = model.Value1;
+				obj.Value2 = model.Value2;
 				obj.Status = model.Status;
 				await _repository.UpdateAsync(id, obj);
 				return true;

@@ -1,4 +1,5 @@
 ﻿using BookShop.BLL.ConfigurationModel.OrderDetailModel;
+using BookShop.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace BookShop.BLL.IService
     {
         public Task<List<OrderDetailViewModel>> GetByOrder(int orderId);
         public Task<bool> Add(CreateOrderDetailModel model);
+        public Task<bool> AddRange(CreateOrderDetailModel model, List<CartDetail> ListItem);
         public Task<bool> Update(int id, UpdateOrderDetailModel model);
         public Task<bool> Delete(int id);
     }

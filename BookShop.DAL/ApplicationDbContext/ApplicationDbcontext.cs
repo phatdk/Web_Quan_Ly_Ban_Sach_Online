@@ -65,9 +65,9 @@ namespace BookShop.DAL.ApplicationDbContext
 				new Shop { Id = 1, ShopName = "Wild Rose", About = "Một số thông tin về shop" }
 				);
 			modelBuilder.Entity<CustomProperties>().HasData(
-				new CustomProperties { Id = 1, propertyName = "Logo" },
-				new CustomProperties { Id = 2, propertyName = "Banner" },
-				new CustomProperties { Id = 3, propertyName = "Event banner" }
+				new CustomProperties { Id = 1, propertyName = "Logo", Id_Shop = 1 },
+				new CustomProperties { Id = 2, propertyName = "Banner", Id_Shop = 1 },
+				new CustomProperties { Id = 3, propertyName = "Event banner", Id_Shop = 1 }
 				);
 			modelBuilder.Entity<PromotionType>().HasData(
 				new PromotionType { Id = 1, Name = "Khuyến mại theo đơn" },
