@@ -53,6 +53,7 @@ namespace BookShop.BLL.Service
                     Name = model.Name,
                     Code = model.Code,
                     Condition = model.Condition,
+                    StorageTerm = model.StorageTerm,
                     AmountReduct = model.AmountReduct,
                     PercentReduct = model.PercentReduct,
                     ReductMax = model.ReductMax,
@@ -92,6 +93,7 @@ namespace BookShop.BLL.Service
                                Name = a.Name,
                                Code = a.Code,
                                Condition = a.Condition,
+                               StorageTerm = a.StorageTerm,
                                PercentReduct = a.PercentReduct,
                                AmountReduct = a.AmountReduct,
                                ReductMax = a.ReductMax,
@@ -119,6 +121,7 @@ namespace BookShop.BLL.Service
                                Name = a.Name,
                                Code = a.Code,
                                Condition = a.Condition,
+                               StorageTerm = a.StorageTerm,
                                PercentReduct = a.PercentReduct,
                                AmountReduct = a.AmountReduct,
                                ReductMax = a.ReductMax,
@@ -146,6 +149,7 @@ namespace BookShop.BLL.Service
                                Name = a.Name,
                                Code = a.Code,
                                Condition = a.Condition,
+                               StorageTerm = a.StorageTerm,
                                PercentReduct = a.PercentReduct,
                                AmountReduct = a.AmountReduct,
                                ReductMax = a.ReductMax,
@@ -173,6 +177,7 @@ namespace BookShop.BLL.Service
                                Name = a.Name,
                                Code = a.Code,
                                Condition = a.Condition,
+                               StorageTerm = a.StorageTerm,
                                PercentReduct = a.PercentReduct,
                                AmountReduct = a.AmountReduct,
                                ReductMax = a.ReductMax,
@@ -200,6 +205,7 @@ namespace BookShop.BLL.Service
                                Name = a.Name,
                                Code = a.Code,
                                Condition = a.Condition,
+                               StorageTerm = a.StorageTerm,
                                PercentReduct = a.PercentReduct,
                                AmountReduct = a.AmountReduct,
                                ReductMax = a.ReductMax,
@@ -223,6 +229,7 @@ namespace BookShop.BLL.Service
                 obj.Name = model.Name;
                 obj.Code = model.Code;
                 obj.Condition = model.Condition;
+                obj.StorageTerm = model.StorageTerm;
                 obj.AmountReduct = model.AmountReduct;
                 obj.PercentReduct = model.PercentReduct;
                 obj.ReductMax = model.ReductMax;

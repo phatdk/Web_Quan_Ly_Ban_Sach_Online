@@ -13,7 +13,8 @@ namespace BookShop.DAL.Configuration
 	{
 		public void Configure(EntityTypeBuilder<PropertyValue> builder)
 		{
-			builder.Property(x => x.Value).HasColumnType("nvarchar(max)");
+			builder.Property(x => x.Value1).HasColumnType("nvarchar(max)");
+			builder.Property(x => x.Value2).HasColumnType("nvarchar(max)").IsRequired(false);
 
 			builder.HasOne(x=>x.CustomProperties).WithMany(x=>x.PropertyValues).HasForeignKey(x=>x.Id_Property).OnDelete(DeleteBehavior.Cascade);
 		}

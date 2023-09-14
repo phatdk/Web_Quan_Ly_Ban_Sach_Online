@@ -14,6 +14,7 @@ namespace BookShop.BLL.Service
     {
         private readonly IRepository<OrderDetail> _orderDetailRepository;
         private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<CartDetail> _CartDetailRepository;
 
         public OrderDetailService()
         {
@@ -33,6 +34,26 @@ namespace BookShop.BLL.Service
                     Price = model.Price,
                 };
                 await _orderDetailRepository.CreateAsync(obj);
+                return true;
+            }
+            catch (Exception ex) { return true; }
+        }
+        public async Task<bool> AddRange(CreateOrderDetailModel model, List<CartDetail>ListItem)
+        {
+            try
+            {
+                foreach (var item in ListItem)
+                {
+                    var obj = new OrderDetail()
+                    {
+                        Id_Order = model.Id_Order,
+                        Id_Product = item.Id_Product,
+                        Quantity = item.Quantity,
+                        Price =(await _productRepository.GetByIdAsync(model.Id_Product)).Price,
+                    };
+                    await _orderDetailRepository.CreateAsync(obj);
+                }
+                
                 return true;
             }
             catch (Exception ex) { return true; }

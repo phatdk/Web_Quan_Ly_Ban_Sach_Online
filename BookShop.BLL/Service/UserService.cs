@@ -18,6 +18,7 @@ namespace BookShop.BLL.Service
 	{
 		protected readonly IRepository<User> _Userrepository;
 		protected readonly IRepository<Cart> _CartRepository;
+		protected readonly IRepository<WalletPoint> _WalletPointRepository;
 		protected readonly IRepository<WishList> _WishListRepository;
         public UserService()
         {
@@ -50,7 +51,15 @@ namespace BookShop.BLL.Service
 
 				
 				await _CartRepository.CreateAsync(cart);
-				return true;
+
+                var walletPoint = new WalletPoint()
+                {
+                    Id_User = obj.Id,
+                };
+
+
+                await _WalletPointRepository.CreateAsync(walletPoint);
+                return true;
 			}
 			catch (Exception)
 			{
