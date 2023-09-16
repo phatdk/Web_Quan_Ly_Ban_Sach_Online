@@ -36,9 +36,9 @@ namespace BookShop.BLL.Service
                     Birth = requet.Birth,
                     Gender = requet.Gender,
                     Email = requet.Email,
-                    Phone = requet.Phone,
+                  //  Phone = requet.Phone,
                     UserName = requet.UserName,
-                    Password = requet.Password,
+                    //Password = requet.Password,
                     CreatedDate = DateTime.Now,
                     Status = 1,
                 };
@@ -81,9 +81,9 @@ namespace BookShop.BLL.Service
                             Status = c.Status,
                             CreatedDate = c.CreatedDate,
                             Email = c.Email,
-                            Phone = c.Phone,
+                           // Phone = c.Phone,
                             UserName = c.UserName,
-                            Password = c.Password,
+                           // Password = c.Password,
                         };
             return query.ToList();
         }
@@ -99,9 +99,9 @@ namespace BookShop.BLL.Service
                 Status = obj.Status,
                 CreatedDate = obj.CreatedDate,
                 Email = obj.Email,
-                Phone = obj.Phone,
+               // Phone = obj.Phone,
                 UserName = obj.UserName,
-                Password = obj.Password,
+              //  Password = obj.Password,
             };
         }
 
@@ -135,8 +135,8 @@ namespace BookShop.BLL.Service
                     obj.Birth = requet.Birth;
                     obj.Gender = requet.Gender;
                     obj.Email = requet.Email;
-                    obj.Phone = requet.Phone;
-                    obj.Password = requet.Password;
+                    //obj.Phone = requet.Phone;
+                   // obj.Password = requet.Password;
                     obj.CreatedDate = DateTime.Now;
                     obj.Status = requet.Status;
                     await _Userrepository.UpdateAsync(id, obj);

@@ -58,19 +58,6 @@ namespace BookShop.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Admins");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedDate = new DateTime(2023, 9, 13, 15, 32, 35, 434, DateTimeKind.Local).AddTicks(9291),
-                            Email = "example@gmail.com",
-                            Name = "Admin",
-                            Password = "1",
-                            Phone = "0000000000",
-                            Role = 0,
-                            Status = 1
-                        });
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Author", b =>
@@ -340,26 +327,6 @@ namespace BookShop.DAL.Migrations
                     b.HasIndex("Id_Shop");
 
                     b.ToTable("CustomProperties");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Id_Shop = 1,
-                            propertyName = "Logo"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Id_Shop = 1,
-                            propertyName = "Banner"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Id_Shop = 1,
-                            propertyName = "Event banner"
-                        });
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Evaluate", b =>
@@ -426,6 +393,131 @@ namespace BookShop.DAL.Migrations
                     b.HasIndex("Id_Category");
 
                     b.ToTable("Genres");
+                });
+
+            modelBuilder.Entity("BookShop.DAL.Entities.Identity.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("BookShop.DAL.Entities.Identity.RoleClaims", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RoleClaims");
+                });
+
+            modelBuilder.Entity("BookShop.DAL.Entities.Identity.UserClaims", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserClaims");
+                });
+
+            modelBuilder.Entity("BookShop.DAL.Entities.Identity.UserLogins", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserLogins");
+                });
+
+            modelBuilder.Entity("BookShop.DAL.Entities.Identity.UserRoles", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("RoleId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserRoles");
+                });
+
+            modelBuilder.Entity("BookShop.DAL.Entities.Identity.UserTokens", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("LoginProvider", "UserId", "Name");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserTokens");
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Image", b =>
@@ -854,29 +946,6 @@ namespace BookShop.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PromotionTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Khuyến mại theo đơn",
-                            Status = 0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Khuyến mại theo sản phẩm",
-                            Status = 0
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Khuyến mại đổi điểm",
-                            Status = 0
-                        });
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.PropertyValue", b =>
@@ -954,14 +1023,6 @@ namespace BookShop.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Shops");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            About = "Một số thông tin về shop",
-                            ShopName = "Wild Rose"
-                        });
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Supplier", b =>
@@ -1002,8 +1063,14 @@ namespace BookShop.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("Birth")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -1011,41 +1078,52 @@ namespace BookShop.DAL.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("varchar(50)");
 
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("Gender")
                         .HasColumnType("int");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
-                        .HasColumnType("varchar(13)");
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedDate = new DateTime(2023, 9, 13, 15, 32, 35, 434, DateTimeKind.Local).AddTicks(9482),
-                            Name = "Khách vẵng lai",
-                            Password = "1",
-                            Status = 1,
-                            UserName = "customer"
-                        });
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.UserPromotion", b =>
@@ -1260,6 +1338,48 @@ namespace BookShop.DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("BookShop.DAL.Entities.Identity.RoleClaims", b =>
+                {
+                    b.HasOne("BookShop.DAL.Entities.Identity.Role", null)
+                        .WithMany("RoleClaims")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BookShop.DAL.Entities.Identity.UserLogins", b =>
+                {
+                    b.HasOne("BookShop.DAL.Entities.User", null)
+                        .WithMany("UserLogins")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BookShop.DAL.Entities.Identity.UserRoles", b =>
+                {
+                    b.HasOne("BookShop.DAL.Entities.Identity.Role", null)
+                        .WithMany("_RoleUser")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookShop.DAL.Entities.User", null)
+                        .WithMany("_RoleUser")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BookShop.DAL.Entities.Identity.UserTokens", b =>
+                {
+                    b.HasOne("BookShop.DAL.Entities.User", null)
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Image", b =>
@@ -1521,6 +1641,13 @@ namespace BookShop.DAL.Migrations
                     b.Navigation("BookGenres");
                 });
 
+            modelBuilder.Entity("BookShop.DAL.Entities.Identity.Role", b =>
+                {
+                    b.Navigation("RoleClaims");
+
+                    b.Navigation("_RoleUser");
+                });
+
             modelBuilder.Entity("BookShop.DAL.Entities.Order", b =>
                 {
                     b.Navigation("OrderDetails");
@@ -1592,12 +1719,18 @@ namespace BookShop.DAL.Migrations
 
                     b.Navigation("Orders");
 
+                    b.Navigation("UserLogins");
+
                     b.Navigation("UserPromotions");
+
+                    b.Navigation("UserRoles");
 
                     b.Navigation("WalletPoint")
                         .IsRequired();
 
                     b.Navigation("WishLists");
+
+                    b.Navigation("_RoleUser");
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.WalletPoint", b =>
