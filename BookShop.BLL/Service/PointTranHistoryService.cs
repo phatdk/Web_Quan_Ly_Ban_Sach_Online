@@ -15,25 +15,40 @@ namespace BookShop.BLL.Service
         private readonly IRepository<PointTransactionsHistory> _historyRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<Promotion> _promotionRepository;
-        public PointTranHistoryService()
+        private readonly IRepository<WalletPoint> _WalletPointRepository;
+
+        public PointTranHistoryService(IRepository<PointTransactionsHistory> historyRepository, IRepository<Order> orderRepository, IRepository<Promotion> promotionRepository, IRepository<WalletPoint> walletPointRepository)
         {
-            _historyRepository = new Repository<PointTransactionsHistory>();
-            _orderRepository = new Repository<Order>();
-            _promotionRepository = new Repository<Promotion>();
+            _historyRepository = historyRepository;
+            _orderRepository = orderRepository;
+            _promotionRepository = promotionRepository;
+            _WalletPointRepository = walletPointRepository;
         }
+
         public async Task<bool> Add(CreatePointTranHistoryModel model)
         {
             try
             {
+                var wallpoint = await _WalletPointRepository.GetByIdAsync(model.Id_User);
+                if (wallpoint == null)
+                {
+                    return false;
+                }
                 var obj = new PointTransactionsHistory()
                 {
                     Point_Amount_Userd = model.PointUserd,
-                    Remaining = model.Remaining,
+                    Remaining = wallpoint.Point - model.PointUserd,
                     CreatedDate = DateTime.Now,
                     Id_User = model.Id_User,
                     Id_Parents = model.Id_Parents,
                 };
-                await _historyRepository.CreateAsync(obj);
+                var PointTransaction = await _historyRepository.CreateAsync(obj);
+                if (PointTransaction == null)
+                {
+                    return false;
+                }
+                wallpoint.Point = PointTransaction.Remaining;
+                await _WalletPointRepository.UpdateAsync(wallpoint.Id_User, wallpoint);
                 return true;
             }
             catch (Exception ex) { return false; }
