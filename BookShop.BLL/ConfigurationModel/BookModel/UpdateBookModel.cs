@@ -8,6 +8,7 @@ namespace BookShop.BLL.ConfigurationModel.BookModel
 {
 	public class UpdateBookModel
 	{
+		public int Id { get; set; }
 		public string? ISBN { get; set; }
 		public string Title { get; set; }
 		public string? Description { get; set; }
@@ -29,5 +30,8 @@ namespace BookShop.BLL.ConfigurationModel.BookModel
 		//foreign key
 		public int? Id_Collection { get; set; }
 		public int Id_Supplier { get; set; }
-	}
+
+        public List<AuthorModel.AuthorModel> authorModels { get; set; }
+        public List<GenreModel.GenreModel> genreModels { get; set; }
+    }
 }
