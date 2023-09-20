@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookShop.DAL.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,7 @@ namespace BookShop.BLL.ConfigurationModel.OrderDetailModel
 		//foreign key
 		public int Id_Order { get; set; }
 		public int Id_Product { get; set; }
+
+		
 	}
 }

@@ -15,13 +15,20 @@ namespace BookShop.BLL.Service
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<User> _userRepository;
         private readonly IRepository<Promotion> _promotionRepository;
+        private readonly IRepository<OrderDetail> _OrderDetailRepository;
+        private readonly IRepository<CartDetail> _CartDetailRepository;
+        private readonly IRepository<Product> _productRepository;
 
-        public OrderService()
+        public OrderService(IRepository<Product> productRepository, IRepository<Order> orderRepository, IRepository<User> userRepository, IRepository<Promotion> promotionRepository, IRepository<OrderDetail> orderDetailRepository, IRepository<CartDetail> cartDetailRepository)
         {
-            _orderRepository = new Repository<Order>();
-            _userRepository = new Repository<User>();
-            _promotionRepository = new Repository<Promotion>();
+            _orderRepository = orderRepository;
+            _userRepository = userRepository;
+            _promotionRepository = promotionRepository;
+            _OrderDetailRepository = orderDetailRepository;
+            _CartDetailRepository = cartDetailRepository;
+            _productRepository = productRepository;
         }
+
         public async Task<string> GenerateCode(int length)
         {
             // Khởi tạo đối tượng Random
@@ -42,7 +49,7 @@ namespace BookShop.BLL.Service
             return GenerateCode(length).ToString();
         }
 
-        public async Task<bool> Add(CreateOrderModel model)
+        public async Task<bool> Add(CreateOrderModel model, List<CartDetail> ListItem)
         {
             try
             {
@@ -68,7 +75,22 @@ namespace BookShop.BLL.Service
                     Id_User = model.Id_User,
                     Id_Promotion = model.Id_Promotion,
                 };
-                await _orderRepository.CreateAsync(obj);
+                var ObjStatus = await _orderRepository.CreateAsync(obj);
+                if (ObjStatus!=null)
+                {
+
+                    foreach (var item in ListItem)
+                    {
+                      await  _OrderDetailRepository.CreateAsync(new OrderDetail()
+                        {
+                            Id_Order = ObjStatus.Id,
+                            Id_Product = item.Id_Product,
+                            Price = (await _productRepository.GetByIdAsync(item.Id_Product)).Price,
+                            Quantity = item.Quantity,
+                      });
+                    }
+                   
+                }
                 return true;
             }
             catch (Exception ex) { return false; }
