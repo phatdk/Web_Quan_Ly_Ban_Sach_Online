@@ -62,7 +62,8 @@ namespace BookShop.BLL.Service
             var users = await _userRepository.GetAllAsync();
             var objlist = (from a in evaluates
                            join b in users on a.Id_User equals b.Id into t
-                           from b in t.DefaultIfEmpty()
+                           from b in t.DefaultIfEmpty()                          
+                           where a.Id_Parents == null //điều kiện: id_parents = null sẽ lấy đánh giá chính
                            select new EvaluateViewModel()
                            {
                                Id = a.Id,
@@ -118,11 +119,13 @@ namespace BookShop.BLL.Service
 
         public async Task<List<EvaluateViewModel>> GetChild(int parentsId)
         {
+            
             var evaluates = (await _evaluateRepository.GetAllAsync()).Where(c => c.Id_Parents == parentsId);
             var users = await _userRepository.GetAllAsync();
             var objlist = (from a in evaluates
                            join b in users on a.Id_User equals b.Id into t
                            from b in t.DefaultIfEmpty()
+                           
                            select new EvaluateViewModel()
                            {
                                Id = a.Id,

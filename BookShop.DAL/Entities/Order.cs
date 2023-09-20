@@ -29,9 +29,12 @@ namespace BookShop.DAL.Entities
 		public int City { get; set; }
 		public int District { get; set; }
 		public int Commune { get; set; }
-
-		//foreign key
-		public int Id_User { get; set; }
+        //Thêm
+        public bool IsUsePoint { get; set; }
+        public int PointUsed { get; set; }
+        public int PointAmount { get; set; }
+        //foreign key
+        public int Id_User { get; set; }
 		public int Id_Promotion { get; set; }
 		public virtual User User { get; set; }
 		public virtual Promotion Promotion { get; set; }
