@@ -27,5 +27,8 @@ namespace BookShop.BLL.ConfigurationModel.BookModel
 		public int Status { get; set; }
 		public int? Id_Collection { get; set; }
 		public int Id_Supplier { get; set; }
+
+		public List<AuthorModel.AuthorModel> authorModels { get; set; }
+		public List<GenreModel.GenreModel> genreModels { get; set; }
 	}
 }
