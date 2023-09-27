@@ -293,14 +293,14 @@ namespace BookShop.BLL.Service
                         await _imageRepository.UpdateAsync(img.Id, img);
                     }
                 }
-                foreach(var item in model.bookViewModels)
-                {
-                    var listpb = (await _productBookRepository.GetAllAsync()).Where(x=>x.Id_Product == obj.Id);
-                    foreach(var pb in listpb)
-                    {
-                        if()
-                    }
-                }
+                //foreach(var item in model.bookViewModels)
+                //{
+                //    var listpb = (await _productBookRepository.GetAllAsync()).Where(x=>x.Id_Product == obj.Id);
+                //    foreach(var pb in listpb)
+                //    {
+                //        if()
+                //    }
+                //}
                 return true;
             }
             catch (Exception ex) { return false; }
