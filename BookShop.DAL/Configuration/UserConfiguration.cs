@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace BookShop.DAL.Configuration
 {
-	public class UserConfiguration : IEntityTypeConfiguration<User>
+	public class UserConfiguration : IEntityTypeConfiguration<Userr>
 	{
-		public void Configure(EntityTypeBuilder<User> builder)
+		public void Configure(EntityTypeBuilder<Userr> builder)
 		{
 			builder.Property(x => x.Name).HasColumnType("nvarchar(50)");
 			builder.Property(x => x.Birth).IsRequired(false);

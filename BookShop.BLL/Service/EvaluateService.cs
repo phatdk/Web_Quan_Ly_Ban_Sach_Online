@@ -14,12 +14,12 @@ namespace BookShop.BLL.Service
     public class EvaluateService : IEvaluateService
     {
         private readonly IRepository<Evaluate> _evaluateRepository;
-        private readonly IRepository<User> _userRepository;
+        private readonly IRepository<Userr> _userRepository;
 
         public EvaluateService()
         {
             _evaluateRepository = new Repository<Evaluate>();
-            _userRepository = new Repository<User>();
+            _userRepository = new Repository<Userr>();
         }
 
         public async Task<bool> Add(CreateEvaluateModel model)
@@ -62,7 +62,8 @@ namespace BookShop.BLL.Service
             var users = await _userRepository.GetAllAsync();
             var objlist = (from a in evaluates
                            join b in users on a.Id_User equals b.Id into t
-                           from b in t.DefaultIfEmpty()
+                           from b in t.DefaultIfEmpty()                          
+                           where a.Id_Parents == null //điều kiện: id_parents = null sẽ lấy đánh giá chính
                            select new EvaluateViewModel()
                            {
                                Id = a.Id,
@@ -118,11 +119,13 @@ namespace BookShop.BLL.Service
 
         public async Task<List<EvaluateViewModel>> GetChild(int parentsId)
         {
+            
             var evaluates = (await _evaluateRepository.GetAllAsync()).Where(c => c.Id_Parents == parentsId);
             var users = await _userRepository.GetAllAsync();
             var objlist = (from a in evaluates
                            join b in users on a.Id_User equals b.Id into t
                            from b in t.DefaultIfEmpty()
+                           
                            select new EvaluateViewModel()
                            {
                                Id = a.Id,

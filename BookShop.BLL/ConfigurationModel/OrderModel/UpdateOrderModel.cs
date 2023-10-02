@@ -23,5 +23,9 @@ namespace BookShop.BLL.ConfigurationModel.OrderModel
 		public int District { get; set; }
 		public int Commune { get; set; }
 		public int Id_Promotion { get; set; }
-	}
+        //Order
+        public bool IsUsePoint { get; set; }
+        public int PointUsed { get; set; }
+        public int PointAmount { get; set; }
+    }
 }

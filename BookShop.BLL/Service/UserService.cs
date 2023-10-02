@@ -16,7 +16,7 @@ namespace BookShop.BLL.Service
 {
     public class UserService : IUserService
     {
-        protected readonly IRepository<User> _Userrepository;
+        protected readonly IRepository<Userr> _Userrepository;
         protected readonly IRepository<Cart> _CartRepository;
         protected readonly IRepository<WalletPoint> _WalletPointRepository;
         protected readonly IRepository<WishList> _WishListRepository;
@@ -24,13 +24,13 @@ namespace BookShop.BLL.Service
         {
             _WishListRepository = new Repository<WishList>();
             _CartRepository = new Repository<Cart>();
-            _Userrepository = new Repository<User>();
+            _Userrepository = new Repository<Userr>();
         }
         public async Task<bool> Add(CreateUserModel requet)
         {
             try
             {
-                var obj = new User()
+                var obj = new Userr()
                 {
                     Name = requet.Name,
                     Birth = requet.Birth,
