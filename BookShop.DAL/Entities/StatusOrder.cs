@@ -8,19 +8,16 @@ using System.Threading.Tasks;
 
 namespace BookShop.DAL.Entities
 {
-	public class ReturnOrder
+	public class StatusOrder
 	{
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
-		public string Notes { get; set; }
+		[MaxLength(256)]
+		public string StatusName { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public int Status { get; set; }
 
-		//foreign key
-		public int Id_Order { get; set; }
-		public int? Id_OrderDetail { get; set; }
-		public virtual Order Order { get; set; }
-		public virtual OrderDetail? Detail { get; set;}
+		public virtual List<Order> Orders { get; set; }
 	}
 }
