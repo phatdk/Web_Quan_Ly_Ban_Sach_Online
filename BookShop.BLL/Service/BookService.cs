@@ -59,7 +59,6 @@ namespace BookShop.BLL.Service
                     Widght = requet.Widght,
                     CreatedDate = DateTime.Now,
                     Status = requet.Status,
-                    Id_Collection = requet.Id_Collection,
                     Id_Supplier = requet.Id_Supplier,
                 };
                 var book = await _bookRepository.CreateAsync(obj);
@@ -150,7 +149,6 @@ namespace BookShop.BLL.Service
                 obj.Widght = requet.Widght;
                 obj.Length = requet.Length;
                 obj.Status = requet.Status;
-                obj.Id_Collection = requet.Id_Collection;
                 obj.Id_Supplier = requet.Id_Supplier;
 
                 await _bookRepository.UpdateAsync(obj.Id, obj);
@@ -195,8 +193,6 @@ namespace BookShop.BLL.Service
             var collections = await _collectionRepository.GetAllAsync();
             var objlist = (from a in books
                            join b in suppliers on a.Id_Supplier equals b.Id
-                           join c in collections on a.Id_Collection equals c.Id into t
-                           from c in t.DefaultIfEmpty()
                            select new BookViewModel()
                            {
                                Id = a.Id,
@@ -216,8 +212,6 @@ namespace BookShop.BLL.Service
             var collections = await _collectionRepository.GetAllAsync();
             var objlist = (from a in books
                            join b in suppliers on a.Id_Supplier equals b.Id
-                           join c in collections on a.Id_Collection equals c.Id into t
-                           from c in t.DefaultIfEmpty()
                            select new BookViewModel()
                            {
                                Id = a.Id,
@@ -237,9 +231,7 @@ namespace BookShop.BLL.Service
                                Height = a.Height,
                                CreatedDate = a.CreatedDate,
                                Status = a.Status,
-                               Id_Collection = a.Id_Collection,
                                Id_Supplier = a.Id_Supplier,
-                               CollectionName = c.Name != null ? c.Name : "No collection",
                                SupplierName = b.Name,
                            }).FirstOrDefault();
             var listAuthor = (await _bookAuthorRepository.GetAllAsync()).Where(x => x.Id_Book == id);
@@ -281,8 +273,6 @@ namespace BookShop.BLL.Service
             var collections = await _collectionRepository.GetAllAsync();
             var objlist = (from a in books
                            join b in suppliers on a.Id_Supplier equals b.Id
-                           join c in collections on a.Id_Collection equals c.Id into t
-                           from c in t.DefaultIfEmpty()
                            select new BookViewModel()
                            {
                                Id = a.Id,
@@ -309,29 +299,6 @@ namespace BookShop.BLL.Service
             var collections = await _collectionRepository.GetAllAsync();
             var objlist = (from a in books
                            join b in suppliers on a.Id_Supplier equals b.Id
-                           join c in collections on a.Id_Collection equals c.Id into t
-                           from c in t.DefaultIfEmpty()
-                           select new BookViewModel()
-                           {
-                               Id = a.Id,
-                               Title = a.Title,
-                               Price = a.Price,
-                               Quantity = a.Quantity,
-                               Description = a.Description,
-                               Status = a.Status,
-                           }).ToList();
-            return objlist;
-        }
-
-        public async Task<List<BookViewModel>> GetByCollection(int collectrionId)
-        {
-            var books = (await _bookRepository.GetAllAsync()).Where(x => x.Id_Collection == collectrionId);
-            var suppliers = await _supplierRepository.GetAllAsync();
-            var collections = await _collectionRepository.GetAllAsync();
-            var objlist = (from a in books
-                           join b in suppliers on a.Id_Supplier equals b.Id
-                           join c in collections on a.Id_Collection equals c.Id into t
-                           from c in t.DefaultIfEmpty()
                            select new BookViewModel()
                            {
                                Id = a.Id,

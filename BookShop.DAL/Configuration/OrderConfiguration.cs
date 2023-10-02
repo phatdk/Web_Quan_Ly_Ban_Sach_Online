@@ -23,12 +23,18 @@ namespace BookShop.DAL.Configuration
 			builder.Property(x => x.PaymentDate).IsRequired(false);
 			builder.Property(x => x.CompleteDate).IsRequired(false);
 			builder.Property(x => x.ModifiDate).IsRequired(false);
+			builder.Property(x => x.PointUsed).IsRequired(false);
+			builder.Property(x => x.PointAmount).IsRequired(false);
+			builder.Property(x => x.City).IsRequired(false);
+			builder.Property(x => x.District).IsRequired(false);
+			builder.Property(x => x.Commune).IsRequired(false);
 
 			builder.Property(x => x.ModifiNotes).HasColumnType("nvarchar(100)").IsRequired(false);
 			builder.Property(x => x.Description).HasColumnType("nvarchar(255)").IsRequired(false);
 
 			builder.HasOne(x => x.User).WithMany(x => x.Orders).HasForeignKey(x => x.Id_User).OnDelete(DeleteBehavior.NoAction);
 			builder.HasOne(x => x.Promotion).WithMany(x => x.Orders).HasForeignKey(x => x.Id_Promotion).OnDelete(DeleteBehavior.NoAction);
+			builder.HasOne(x => x.StatusOrder).WithMany(x => x.Orders).HasForeignKey(x => x.Id_Promotion).OnDelete(DeleteBehavior.NoAction);
 		}
 	}
 }

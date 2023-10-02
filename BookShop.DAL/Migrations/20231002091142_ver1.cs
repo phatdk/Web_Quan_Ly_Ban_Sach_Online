@@ -5,29 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BookShop.DAL.Migrations
 {
-    public partial class v2 : Migration
+    public partial class ver1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Admins",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    Phone = table.Column<string>(type: "varchar(13)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Role = table.Column<int>(type: "int", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Admins", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Authors",
                 columns: table => new
@@ -108,25 +89,6 @@ namespace BookShop.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(255)", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Products", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PromotionTypes",
                 columns: table => new
                 {
@@ -139,21 +101,6 @@ namespace BookShop.DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PromotionTypes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RoleClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RoleClaims", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -183,6 +130,21 @@ namespace BookShop.DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Shops", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StatusOrders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StatusName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StatusOrders", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -218,27 +180,15 @@ namespace BookShop.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserLogins",
-                columns: table => new
-                {
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserLogins", x => new { x.LoginProvider, x.ProviderKey });
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Img = table.Column<string>(type: "varchar(256)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    Birth = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Birth = table.Column<DateTime>(type: "date", nullable: true),
                     Gender = table.Column<int>(type: "int", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
@@ -263,17 +213,19 @@ namespace BookShop.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserTokens",
+                name: "WorkShifts",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Shift = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    Time = table.Column<string>(type: "nvarchar(256)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserTokens", x => new { x.LoginProvider, x.UserId, x.Name });
+                    table.PrimaryKey("PK_WorkShifts", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -299,26 +251,28 @@ namespace BookShop.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Images",
+                name: "Products",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ImageUrl = table.Column<string>(type: "varchar(50)", nullable: false),
-                    Index = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(255)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    Id_Product = table.Column<int>(type: "int", nullable: false)
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Id_Collection = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Images", x => x.Id);
+                    table.PrimaryKey("PK_Products", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Images_Products_Id_Product",
-                        column: x => x.Id_Product,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Products_CollectionBooks_Id_Collection",
+                        column: x => x.Id_Collection,
+                        principalTable: "CollectionBooks",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -330,6 +284,7 @@ namespace BookShop.DAL.Migrations
                     Name = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(13)", nullable: false),
                     Condition = table.Column<int>(type: "int", nullable: true),
+                    ConversionPoint = table.Column<int>(type: "int", nullable: true),
                     StorageTerm = table.Column<int>(type: "int", nullable: true),
                     AmountReduct = table.Column<int>(type: "int", nullable: true),
                     PercentReduct = table.Column<int>(type: "int", nullable: true),
@@ -350,6 +305,27 @@ namespace BookShop.DAL.Migrations
                         column: x => x.Id_Type,
                         principalTable: "PromotionTypes",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoleClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoleClaims_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -395,18 +371,11 @@ namespace BookShop.DAL.Migrations
                     Height = table.Column<int>(type: "int", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    Id_Collection = table.Column<int>(type: "int", nullable: true),
                     Id_Supplier = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Books", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Books_CollectionBooks_Id_Collection",
-                        column: x => x.Id_Collection,
-                        principalTable: "CollectionBooks",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Books_Suppliers_Id_Supplier",
                         column: x => x.Id_Supplier,
@@ -429,6 +398,26 @@ namespace BookShop.DAL.Migrations
                     table.ForeignKey(
                         name: "FK_Carts_Users_Id_User",
                         column: x => x.Id_User,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserLogins",
+                columns: table => new
+                {
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.ForeignKey(
+                        name: "FK_UserLogins_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -459,6 +448,26 @@ namespace BookShop.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserTokens", x => new { x.LoginProvider, x.UserId, x.Name });
+                    table.ForeignKey(
+                        name: "FK_UserTokens_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "WalletPoints",
                 columns: table => new
                 {
@@ -474,6 +483,109 @@ namespace BookShop.DAL.Migrations
                         name: "FK_WalletPoints_Users_Id_User",
                         column: x => x.Id_User,
                         principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShiftChanges",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "varchar(100)", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IntialAmount = table.Column<int>(type: "int", nullable: true),
+                    TotalMoneyEarn = table.Column<int>(type: "int", nullable: true),
+                    TotalCash = table.Column<int>(type: "int", nullable: true),
+                    TotalCredit = table.Column<int>(type: "int", nullable: true),
+                    CostIncurred = table.Column<int>(type: "int", nullable: true),
+                    IncurredNote = table.Column<string>(type: "nvarchar(256)", nullable: true),
+                    TotalCashPreShift = table.Column<int>(type: "int", nullable: true),
+                    ResetTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    TotalWithDrawn = table.Column<int>(type: "int", nullable: true),
+                    Note = table.Column<string>(type: "nvarchar(256)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Id_UserReset = table.Column<int>(type: "int", nullable: true),
+                    Id_UserInShift = table.Column<int>(type: "int", nullable: true),
+                    Id_UserNxShift = table.Column<int>(type: "int", nullable: true),
+                    Id_Shift = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShiftChanges", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShiftChanges_Users_Id_UserInShift",
+                        column: x => x.Id_UserInShift,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ShiftChanges_Users_Id_UserNxShift",
+                        column: x => x.Id_UserNxShift,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ShiftChanges_Users_Id_UserReset",
+                        column: x => x.Id_UserReset,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ShiftChanges_WorkShifts_Id_Shift",
+                        column: x => x.Id_Shift,
+                        principalTable: "WorkShifts",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserShifts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(256)", nullable: false),
+                    Id_Shift = table.Column<int>(type: "int", nullable: false),
+                    Id_User = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserShifts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserShifts_Users_Id_User",
+                        column: x => x.Id_User,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserShifts_WorkShifts_Id_Shift",
+                        column: x => x.Id_Shift,
+                        principalTable: "WorkShifts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Images",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ImageUrl = table.Column<string>(type: "varchar(50)", nullable: false),
+                    Index = table.Column<int>(type: "int", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Id_Product = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Images", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Images_Products_Id_Product",
+                        column: x => x.Id_Product,
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -523,12 +635,16 @@ namespace BookShop.DAL.Migrations
                     ModifiDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModifiNotes = table.Column<string>(type: "nvarchar(100)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(255)", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    City = table.Column<int>(type: "int", nullable: false),
-                    District = table.Column<int>(type: "int", nullable: false),
-                    Commune = table.Column<int>(type: "int", nullable: false),
+                    City = table.Column<int>(type: "int", nullable: true),
+                    District = table.Column<int>(type: "int", nullable: true),
+                    Commune = table.Column<int>(type: "int", nullable: true),
+                    IsOnlineOrder = table.Column<bool>(type: "bit", nullable: false),
+                    IsUsePoint = table.Column<bool>(type: "bit", nullable: false),
+                    PointUsed = table.Column<int>(type: "int", nullable: true),
+                    PointAmount = table.Column<int>(type: "int", nullable: true),
                     Id_User = table.Column<int>(type: "int", nullable: false),
-                    Id_Promotion = table.Column<int>(type: "int", nullable: false)
+                    Id_Promotion = table.Column<int>(type: "int", nullable: false),
+                    Id_StatusOrder = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -537,6 +653,11 @@ namespace BookShop.DAL.Migrations
                         name: "FK_Orders_Promotions_Id_Promotion",
                         column: x => x.Id_Promotion,
                         principalTable: "Promotions",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Orders_StatusOrders_Id_Promotion",
+                        column: x => x.Id_Promotion,
+                        principalTable: "StatusOrders",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Orders_Users_Id_User",
@@ -610,8 +731,7 @@ namespace BookShop.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Value1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Value2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     Id_Property = table.Column<int>(type: "int", nullable: false)
                 },
@@ -741,6 +861,7 @@ namespace BookShop.DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     Id_Order = table.Column<int>(type: "int", nullable: false),
                     Id_Product = table.Column<int>(type: "int", nullable: false)
                 },
@@ -822,28 +943,6 @@ namespace BookShop.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ReturnOrders",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Notes = table.Column<string>(type: "nvarchar(255)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Id_Order = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ReturnOrders", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ReturnOrders_Orders_Id_Order",
-                        column: x => x.Id_Order,
-                        principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Evaluates",
                 columns: table => new
                 {
@@ -878,6 +977,34 @@ namespace BookShop.DAL.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ReturnOrders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Notes = table.Column<string>(type: "nvarchar(255)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Id_Order = table.Column<int>(type: "int", nullable: false),
+                    Id_OrderDetail = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReturnOrders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReturnOrders_OrderDetails_Id_OrderDetail",
+                        column: x => x.Id_OrderDetail,
+                        principalTable: "OrderDetails",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ReturnOrders_Orders_Id_Order",
+                        column: x => x.Id_Order,
+                        principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_BookAuthors_Id_Author",
                 table: "BookAuthors",
@@ -897,11 +1024,6 @@ namespace BookShop.DAL.Migrations
                 name: "IX_BookGenre_Id_Genre",
                 table: "BookGenre",
                 column: "Id_Genre");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Books_Id_Collection",
-                table: "Books",
-                column: "Id_Collection");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Books_Id_Supplier",
@@ -1009,6 +1131,11 @@ namespace BookShop.DAL.Migrations
                 column: "Id_Promotion");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Products_Id_Collection",
+                table: "Products",
+                column: "Id_Collection");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Promotions_Id_Type",
                 table: "Promotions",
                 column: "Id_Type");
@@ -1022,6 +1149,41 @@ namespace BookShop.DAL.Migrations
                 name: "IX_ReturnOrders_Id_Order",
                 table: "ReturnOrders",
                 column: "Id_Order");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReturnOrders_Id_OrderDetail",
+                table: "ReturnOrders",
+                column: "Id_OrderDetail");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoleClaims_RoleId",
+                table: "RoleClaims",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShiftChanges_Id_Shift",
+                table: "ShiftChanges",
+                column: "Id_Shift");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShiftChanges_Id_UserInShift",
+                table: "ShiftChanges",
+                column: "Id_UserInShift");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShiftChanges_Id_UserNxShift",
+                table: "ShiftChanges",
+                column: "Id_UserNxShift");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShiftChanges_Id_UserReset",
+                table: "ShiftChanges",
+                column: "Id_UserReset");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserLogins_UserId",
+                table: "UserLogins",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserPromotions_Id_Promotion",
@@ -1039,6 +1201,21 @@ namespace BookShop.DAL.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserShifts_Id_Shift",
+                table: "UserShifts",
+                column: "Id_Shift");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserShifts_Id_User",
+                table: "UserShifts",
+                column: "Id_User");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserTokens_UserId",
+                table: "UserTokens",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_WishLists_Id_Product",
                 table: "WishLists",
                 column: "Id_Product");
@@ -1051,9 +1228,6 @@ namespace BookShop.DAL.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Admins");
-
             migrationBuilder.DropTable(
                 name: "BookAuthors");
 
@@ -1094,6 +1268,9 @@ namespace BookShop.DAL.Migrations
                 name: "RoleClaims");
 
             migrationBuilder.DropTable(
+                name: "ShiftChanges");
+
+            migrationBuilder.DropTable(
                 name: "UserClaims");
 
             migrationBuilder.DropTable(
@@ -1104,6 +1281,9 @@ namespace BookShop.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserRoles");
+
+            migrationBuilder.DropTable(
+                name: "UserShifts");
 
             migrationBuilder.DropTable(
                 name: "UserTokens");
@@ -1121,9 +1301,6 @@ namespace BookShop.DAL.Migrations
                 name: "Carts");
 
             migrationBuilder.DropTable(
-                name: "OrderDetails");
-
-            migrationBuilder.DropTable(
                 name: "PaymentForms");
 
             migrationBuilder.DropTable(
@@ -1136,19 +1313,16 @@ namespace BookShop.DAL.Migrations
                 name: "CustomProperties");
 
             migrationBuilder.DropTable(
+                name: "OrderDetails");
+
+            migrationBuilder.DropTable(
                 name: "Roles");
 
             migrationBuilder.DropTable(
+                name: "WorkShifts");
+
+            migrationBuilder.DropTable(
                 name: "Categories");
-
-            migrationBuilder.DropTable(
-                name: "Orders");
-
-            migrationBuilder.DropTable(
-                name: "Products");
-
-            migrationBuilder.DropTable(
-                name: "CollectionBooks");
 
             migrationBuilder.DropTable(
                 name: "Suppliers");
@@ -1157,10 +1331,22 @@ namespace BookShop.DAL.Migrations
                 name: "Shops");
 
             migrationBuilder.DropTable(
+                name: "Orders");
+
+            migrationBuilder.DropTable(
+                name: "Products");
+
+            migrationBuilder.DropTable(
                 name: "Promotions");
 
             migrationBuilder.DropTable(
+                name: "StatusOrders");
+
+            migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "CollectionBooks");
 
             migrationBuilder.DropTable(
                 name: "PromotionTypes");

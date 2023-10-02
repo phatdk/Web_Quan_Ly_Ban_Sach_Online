@@ -15,6 +15,7 @@ namespace BookShop.DAL.Entities
 		public int Id { get; set; }
 		public int Quantity { get; set; }
 		public int Price { get; set; }
+		public int UserId { get; set; }
 
 		//foreign key
 		public int Id_Order { get; set; }
@@ -24,5 +25,6 @@ namespace BookShop.DAL.Entities
 
 		//reference
 		public virtual List<Evaluate> Evaluates { get; set; }
+		public virtual List<ReturnOrder> ReturnOrders { get; set; }
 	}
 }

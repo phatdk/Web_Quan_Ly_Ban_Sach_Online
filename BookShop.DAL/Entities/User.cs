@@ -15,6 +15,8 @@ namespace BookShop.DAL.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        public string Code { get; set; }
+        public string? Img { get; set; }
         public string Name { get; set; }
         public DateTime? Birth { get; set; }
         public int? Gender { get; set; }
@@ -37,5 +39,9 @@ namespace BookShop.DAL.Entities
         public virtual List<Evaluate> Evaluates { get; set; }
         public virtual List<Order> Orders { get; set; }
         public virtual List<UserPromotion> UserPromotions { get; set; }
+        public virtual List<UserShift> UserShifts { get; set; } 
+        public virtual List<ShiftChange> ShiftChangesReset { get; set; }
+        public virtual List<ShiftChange> ShiftChangesIn { get; set; }
+        public virtual List<ShiftChange> ShiftChangesNx { get; set; }
     }
 }
