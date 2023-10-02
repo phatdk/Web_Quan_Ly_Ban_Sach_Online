@@ -51,8 +51,27 @@ namespace BookShop.BLL.Service
 
         public async Task<bool> Add(CreateOrderModel model, List<CartDetail> ListItem)
         {
+
             try
             {
+
+                if (model.IsUsePoint)
+                {
+                    // nếu sử dụng dụng điểm thì sẽ tiến hành đổi điểm VD: 1 điểm = 1.000đ
+                    int pointToAmount = model.PointUsed * 1000;
+
+                    //
+                    model.PointAmount = pointToAmount;
+
+                    //Lưu lại vào Notes
+                    model.ModifiNotes = $"Đã sử dụng {model.PointUsed} điểm để giảm {pointToAmount}đ";
+                }
+                else
+                {
+                    model.PointUsed = 0;
+                    model.ModifiNotes = String.Empty;
+                }
+
                 var code = GenerateCode(13);
                 var obj = new Order()
                 {
@@ -64,7 +83,7 @@ namespace BookShop.BLL.Service
                     ReceiveDate = model.ReceiveDate,
                     PaymentDate = model.PaymentDate,
                     CompleteDate = model.CompleteDate,
-                    ModifiDate = model.ModifiDate,
+                    ModifiDate = model.ModifiDate,                   
                     ModifiNotes = model.ModifiNotes,
                     CreatedDate = DateTime.Now,
                     Description = model.Description,
@@ -74,6 +93,11 @@ namespace BookShop.BLL.Service
                     Commune = model.Commune,
                     Id_User = model.Id_User,
                     Id_Promotion = model.Id_Promotion,
+
+                    //thêm
+                    IsUsePoint = model.IsUsePoint,
+                    PointUsed = model.PointUsed,
+                    PointAmount = model.PointAmount,
                 };
                 var ObjStatus = await _orderRepository.CreateAsync(obj);
                 if (ObjStatus!=null)
@@ -221,6 +245,23 @@ namespace BookShop.BLL.Service
         {
             try
             {
+                if (model.IsUsePoint)
+                {
+                    // nếu sử dụng dụng điểm thì sẽ tiến hành đổi điểm VD: 1 điểm = 1.000đ
+                    int pointToAmount = model.PointUsed * 1000;
+
+                    //
+                    model.PointAmount = pointToAmount;
+
+                    //Lưu lại vào Notes
+                    model.ModifiNotes = $"Đã sử dụng {model.PointUsed} điểm để giảm {pointToAmount}đ";
+                }
+                else
+                {
+                    model.PointUsed = 0;
+                    model.ModifiNotes = String.Empty;
+                }
+
                 var obj = await _orderRepository.GetByIdAsync(id);
                 obj.Receiver = model.Receiver;
                 obj.Phone = model.Phone;
@@ -237,6 +278,10 @@ namespace BookShop.BLL.Service
                 obj.District = model.District;
                 obj.Commune = model.Commune;
                 obj.Id_Promotion = model.Id_Promotion;
+                //thêm
+                obj.IsUsePoint = model.IsUsePoint;
+                obj.PointUsed = model.PointUsed;
+                obj.PointAmount = model.PointAmount;
                 await _orderRepository.UpdateAsync(id, obj);
                 return true;
             }

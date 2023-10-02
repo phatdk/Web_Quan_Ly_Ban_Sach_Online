@@ -31,6 +31,50 @@ namespace BookShop.BLL.Service
             catch (Exception ex) { return false; }
         }
 
+        public async Task<bool> AddProductToPromotions(int productId, List<int> promotionId, ProductPromotion model)
+        {
+            try
+            {
+                foreach (var promotionid in promotionId)
+                {
+                    var promotion = await _promotionRepository.GetByIdAsync(promotionid);
+                    if (promotion != null)
+                    {
+                        model.Id_Product = productId;
+                        model.Id_Promotion = promotionid;
+                        await _productPromotionRepository.CreateAsync(model);
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> AddPromotionToProducts(int promotionId, List<int> productId, ProductPromotion model)
+        {
+            try
+            {
+                foreach (var productid in productId)
+                {
+                    var product = await _productRepository.GetByIdAsync(productid);
+                    if (product != null)
+                    {
+                        model.Id_Product = productid;
+                        model.Id_Promotion = promotionId;
+                        await _productPromotionRepository.CreateAsync(model);
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         public async Task<bool> Delete(int id)
         {
             try
