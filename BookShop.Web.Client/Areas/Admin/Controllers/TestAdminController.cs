@@ -1,10 +1,10 @@
-﻿using BookShop.Web.Client.Areas.Admin.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	public class HomeController : Controller
+	[Route("admin/testadmin")]
+	public class TestAdminController : Controller
 	{
 		
 		public IActionResult Index()
