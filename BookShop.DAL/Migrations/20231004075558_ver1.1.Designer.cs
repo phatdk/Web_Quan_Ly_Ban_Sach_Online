@@ -13,8 +13,13 @@ namespace BookShop.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbcontext))]
 <<<<<<<< HEAD:BookShop.DAL/Migrations/20231004075558_ver1.1.Designer.cs
+<<<<<<<< HEAD:BookShop.DAL/Migrations/20231004075558_ver1.1.Designer.cs
     [Migration("20231004075558_ver1.1")]
     partial class ver11
+========
+    [Migration("20231002091142_ver1")]
+    partial class ver1
+>>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
 ========
     [Migration("20231002091142_ver1")]
     partial class ver1
