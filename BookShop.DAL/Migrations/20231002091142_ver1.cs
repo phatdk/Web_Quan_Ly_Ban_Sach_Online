@@ -5,11 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BookShop.DAL.Migrations
 {
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.cs
-    public partial class Vs0 : Migration
-========
     public partial class ver1 : Migration
->>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.cs
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -169,8 +165,6 @@ namespace BookShop.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.cs
-========
                 name: "UserClaims",
                 columns: table => new
                 {
@@ -186,7 +180,6 @@ namespace BookShop.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
->>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.cs
                 name: "Users",
                 columns: table => new
                 {
@@ -220,8 +213,6 @@ namespace BookShop.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.cs
-========
                 name: "WorkShifts",
                 columns: table => new
                 {
@@ -238,7 +229,6 @@ namespace BookShop.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
->>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.cs
                 name: "Genres",
                 columns: table => new
                 {
@@ -414,39 +404,11 @@ namespace BookShop.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.cs
-                name: "UserClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserrId = table.Column<int>(type: "int", nullable: true),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserClaims_Users_UserrId",
-                        column: x => x.UserrId,
-                        principalTable: "Users",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-========
->>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.cs
                 name: "UserLogins",
                 columns: table => new
                 {
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.cs
-                    UserrId = table.Column<int>(type: "int", nullable: true),
-========
->>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.cs
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -454,18 +416,11 @@ namespace BookShop.DAL.Migrations
                 {
                     table.PrimaryKey("PK_UserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.cs
-                        name: "FK_UserLogins_Users_UserrId",
-                        column: x => x.UserrId,
-                        principalTable: "Users",
-                        principalColumn: "Id");
-========
                         name: "FK_UserLogins_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
->>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.cs
                 });
 
             migrationBuilder.CreateTable(
@@ -473,8 +428,7 @@ namespace BookShop.DAL.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
-                    UserrId = table.Column<int>(type: "int", nullable: true)
+                    RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -486,30 +440,11 @@ namespace BookShop.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserRoles_Users_UserrId",
-                        column: x => x.UserrId,
+                        name: "FK_UserRoles_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserTokens",
-                columns: table => new
-                {
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserrId = table.Column<int>(type: "int", nullable: true),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserTokens", x => new { x.LoginProvider, x.UserId, x.Name });
-                    table.ForeignKey(
-                        name: "FK_UserTokens_Users_UserrId",
-                        column: x => x.UserrId,
-                        principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -700,15 +635,6 @@ namespace BookShop.DAL.Migrations
                     ModifiDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModifiNotes = table.Column<string>(type: "nvarchar(100)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(255)", nullable: true),
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.cs
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    City = table.Column<int>(type: "int", nullable: false),
-                    District = table.Column<int>(type: "int", nullable: false),
-                    Commune = table.Column<int>(type: "int", nullable: false),
-                    IsUsePoint = table.Column<bool>(type: "bit", nullable: false),
-                    PointUsed = table.Column<int>(type: "int", nullable: false),
-                    PointAmount = table.Column<int>(type: "int", nullable: false),
-========
                     City = table.Column<int>(type: "int", nullable: true),
                     District = table.Column<int>(type: "int", nullable: true),
                     Commune = table.Column<int>(type: "int", nullable: true),
@@ -716,7 +642,6 @@ namespace BookShop.DAL.Migrations
                     IsUsePoint = table.Column<bool>(type: "bit", nullable: false),
                     PointUsed = table.Column<int>(type: "int", nullable: true),
                     PointAmount = table.Column<int>(type: "int", nullable: true),
->>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.cs
                     Id_User = table.Column<int>(type: "int", nullable: false),
                     Id_Promotion = table.Column<int>(type: "int", nullable: false),
                     Id_StatusOrder = table.Column<int>(type: "int", nullable: false)
@@ -1226,29 +1151,16 @@ namespace BookShop.DAL.Migrations
                 column: "Id_Order");
 
             migrationBuilder.CreateIndex(
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.cs
-========
                 name: "IX_ReturnOrders_Id_OrderDetail",
                 table: "ReturnOrders",
                 column: "Id_OrderDetail");
 
             migrationBuilder.CreateIndex(
->>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.cs
                 name: "IX_RoleClaims_RoleId",
                 table: "RoleClaims",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.cs
-                name: "IX_UserClaims_UserrId",
-                table: "UserClaims",
-                column: "UserrId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserLogins_UserrId",
-                table: "UserLogins",
-                column: "UserrId");
-========
                 name: "IX_ShiftChanges_Id_Shift",
                 table: "ShiftChanges",
                 column: "Id_Shift");
@@ -1272,7 +1184,6 @@ namespace BookShop.DAL.Migrations
                 name: "IX_UserLogins_UserId",
                 table: "UserLogins",
                 column: "UserId");
->>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.cs
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserPromotions_Id_Promotion",
@@ -1285,14 +1196,9 @@ namespace BookShop.DAL.Migrations
                 column: "Id_User");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserRoles_UserrId",
+                name: "IX_UserRoles_UserId",
                 table: "UserRoles",
-                column: "UserrId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserTokens_UserrId",
-                table: "UserTokens",
-                column: "UserrId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserShifts_Id_Shift",
