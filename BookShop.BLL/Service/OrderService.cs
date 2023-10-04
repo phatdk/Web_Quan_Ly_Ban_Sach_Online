@@ -87,10 +87,10 @@ namespace BookShop.BLL.Service
                     ModifiNotes = model.ModifiNotes,
                     CreatedDate = DateTime.Now,
                     Description = model.Description,
-                    Status = model.Status,
                     City = model.City,
                     District = model.District,
                     Commune = model.Commune,
+                    Id_StatusOrder = model.Id_StatusOrder,
                     Id_User = model.Id_User,
                     Id_Promotion = model.Id_Promotion,
 
@@ -155,7 +155,6 @@ namespace BookShop.BLL.Service
                                ModifiDate = a.ModifiDate,
                                ModifiNotes = a.ModifiNotes,
                                Description = a.Description,
-                               Status = a.Status,
                                City = a.City,
                                District = a.District,
                                Commune = a.Commune,
@@ -167,9 +166,9 @@ namespace BookShop.BLL.Service
             return objlist;
         }
 
-        public async Task<List<OrderViewModel>> GetByStatus(int status)
+        public async Task<List<OrderViewModel>> GetByStatus(int statusId)
         {
-            var orders = (await _orderRepository.GetAllAsync()).Where(c => c.Status == status);
+            var orders = (await _orderRepository.GetAllAsync()).Where(c => c.Id_StatusOrder == statusId);
             var users = await _userRepository.GetAllAsync();
             var promotions = await _promotionRepository.GetAllAsync();
             var objlist = (from a in orders
@@ -192,7 +191,6 @@ namespace BookShop.BLL.Service
                                ModifiDate = a.ModifiDate,
                                ModifiNotes = a.ModifiNotes,
                                Description = a.Description,
-                               Status = a.Status,
                                City = a.City,
                                District = a.District,
                                Commune = a.Commune,
@@ -229,7 +227,6 @@ namespace BookShop.BLL.Service
                                ModifiDate = a.ModifiDate,
                                ModifiNotes = a.ModifiNotes,
                                Description = a.Description,
-                               Status = a.Status,
                                City = a.City,
                                District = a.District,
                                Commune = a.Commune,
@@ -273,7 +270,6 @@ namespace BookShop.BLL.Service
                 obj.ModifiDate = model.ModifiDate;
                 obj.ModifiNotes = model.ModifiNotes;
                 obj.Description = model.Description;
-                obj.Status = model.Status;
                 obj.City = model.City;
                 obj.District = model.District;
                 obj.Commune = model.Commune;
@@ -313,7 +309,6 @@ namespace BookShop.BLL.Service
                                ModifiDate = a.ModifiDate,
                                ModifiNotes = a.ModifiNotes,
                                Description = a.Description,
-                               Status = a.Status,
                                City = a.City,
                                District = a.District,
                                Commune = a.Commune,

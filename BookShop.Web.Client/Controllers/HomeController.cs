@@ -22,7 +22,18 @@ namespace BookShop.Web.Client.Controllers
 		{
 			return View();
 		}
-
+		public IActionResult GioHang()
+		{
+			return View();
+		}
+        public IActionResult ThongTinSanPham()
+        {
+            return View();
+        }
+		public IActionResult MenuaAdmin()
+		{
+			return View();
+		}
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
 		{

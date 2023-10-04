@@ -21,7 +21,6 @@ namespace BookShop.DAL.Configuration
 			builder.Property(x => x.Cover).HasColumnType("nvarchar(50)");
 			builder.Property(x => x.PublicationDate).HasColumnType("varchar(50)");
 
-			builder.HasOne(x=>x.CollectionBook).WithMany(x=>x.Books).HasForeignKey(x=>x.Id_Collection).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
 			builder.HasOne(x => x.Supplier).WithMany(x => x.Books).HasForeignKey(x => x.Id_Supplier).OnDelete(DeleteBehavior.Restrict);
 		}
 	}

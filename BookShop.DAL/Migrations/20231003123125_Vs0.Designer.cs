@@ -12,8 +12,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookShop.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbcontext))]
+<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.Designer.cs
     [Migration("20231003123125_Vs0")]
     partial class Vs0
+========
+    [Migration("20231002091142_ver1")]
+    partial class ver1
+>>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,44 +28,6 @@ namespace BookShop.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("BookShop.DAL.Entities.Admin", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("varchar(13)");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Admins");
-                });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Author", b =>
                 {
@@ -115,9 +82,6 @@ namespace BookShop.DAL.Migrations
                     b.Property<string>("ISBN")
                         .HasColumnType("varchar(20)");
 
-                    b.Property<int?>("Id_Collection")
-                        .HasColumnType("int");
-
                     b.Property<int>("Id_Supplier")
                         .HasColumnType("int");
 
@@ -162,8 +126,6 @@ namespace BookShop.DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Id_Collection");
 
                     b.HasIndex("Id_Supplier");
 
@@ -608,14 +570,14 @@ namespace BookShop.DAL.Migrations
                     b.Property<DateTime?>("AcceptDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("City")
+                    b.Property<int?>("City")
                         .HasColumnType("int");
 
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("varchar(13)");
 
-                    b.Property<int>("Commune")
+                    b.Property<int?>("Commune")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CompleteDate")
@@ -630,15 +592,24 @@ namespace BookShop.DAL.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int>("District")
+                    b.Property<int?>("District")
                         .HasColumnType("int");
 
                     b.Property<int>("Id_Promotion")
                         .HasColumnType("int");
 
+                    b.Property<int>("Id_StatusOrder")
+                        .HasColumnType("int");
+
                     b.Property<int>("Id_User")
                         .HasColumnType("int");
 
+<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.Designer.cs
+========
+                    b.Property<bool>("IsOnlineOrder")
+                        .HasColumnType("bit");
+
+>>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
                     b.Property<bool>("IsUsePoint")
                         .HasColumnType("bit");
 
@@ -655,10 +626,17 @@ namespace BookShop.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(13)");
 
+<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.Designer.cs
                     b.Property<int>("PointAmount")
                         .HasColumnType("int");
 
                     b.Property<int>("PointUsed")
+========
+                    b.Property<int?>("PointAmount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PointUsed")
+>>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("ReceiveDate")
@@ -667,9 +645,6 @@ namespace BookShop.DAL.Migrations
                     b.Property<string>("Receiver")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -698,6 +673,9 @@ namespace BookShop.DAL.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -811,6 +789,9 @@ namespace BookShop.DAL.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<int>("Id_Collection")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
@@ -828,6 +809,8 @@ namespace BookShop.DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Id_Collection");
 
                     b.ToTable("Products");
                 });
@@ -906,6 +889,9 @@ namespace BookShop.DAL.Migrations
                         .HasColumnType("nvarchar(13)");
 
                     b.Property<int?>("Condition")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ConversionPoint")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
@@ -987,11 +973,8 @@ namespace BookShop.DAL.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<string>("Value1")
+                    b.Property<string>("Value")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Value2")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1015,6 +998,9 @@ namespace BookShop.DAL.Migrations
                     b.Property<int>("Id_Order")
                         .HasColumnType("int");
 
+                    b.Property<int?>("Id_OrderDetail")
+                        .HasColumnType("int");
+
                     b.Property<string>("Notes")
                         .IsRequired()
                         .HasColumnType("nvarchar(255)");
@@ -1026,7 +1012,88 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_Order");
 
+                    b.HasIndex("Id_OrderDetail");
+
                     b.ToTable("ReturnOrders");
+                });
+
+            modelBuilder.Entity("BookShop.DAL.Entities.ShiftChange", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int?>("CostIncurred")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Id_Shift")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Id_UserInShift")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Id_UserNxShift")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Id_UserReset")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IncurredNote")
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<int?>("IntialAmount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTime?>("ResetTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TotalCash")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TotalCashPreShift")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TotalCredit")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TotalMoneyEarn")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TotalWithDrawn")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id_Shift");
+
+                    b.HasIndex("Id_UserInShift");
+
+                    b.HasIndex("Id_UserNxShift");
+
+                    b.HasIndex("Id_UserReset");
+
+                    b.ToTable("ShiftChanges");
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Shop", b =>
@@ -1048,6 +1115,30 @@ namespace BookShop.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Shops");
+                });
+
+            modelBuilder.Entity("BookShop.DAL.Entities.StatusOrder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StatusName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StatusOrders");
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Supplier", b =>
@@ -1127,7 +1218,11 @@ namespace BookShop.DAL.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("Birth")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("nvarchar(max)");
@@ -1143,6 +1238,9 @@ namespace BookShop.DAL.Migrations
 
                     b.Property<int?>("Gender")
                         .HasColumnType("int");
+
+                    b.Property<string>("Img")
+                        .HasColumnType("varchar(256)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -1186,6 +1284,77 @@ namespace BookShop.DAL.Migrations
                     b.ToTable("Users");
                 });
 
+<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.Designer.cs
+========
+            modelBuilder.Entity("BookShop.DAL.Entities.UserPromotion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Id_Promotion")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_User")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReduceMax")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id_Promotion");
+
+                    b.HasIndex("Id_User");
+
+                    b.ToTable("UserPromotions");
+                });
+
+            modelBuilder.Entity("BookShop.DAL.Entities.UserShift", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Id_Shift")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_User")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id_Shift");
+
+                    b.HasIndex("Id_User");
+
+                    b.ToTable("UserShifts");
+                });
+
+>>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
             modelBuilder.Entity("BookShop.DAL.Entities.WalletPoint", b =>
                 {
                     b.Property<int>("Id_User")
@@ -1231,20 +1400,40 @@ namespace BookShop.DAL.Migrations
                     b.ToTable("WishLists");
                 });
 
+            modelBuilder.Entity("BookShop.DAL.Entities.WorkShift", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Shift")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Time")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WorkShifts");
+                });
+
             modelBuilder.Entity("BookShop.DAL.Entities.Book", b =>
                 {
-                    b.HasOne("BookShop.DAL.Entities.CollectionBook", "CollectionBook")
-                        .WithMany("Books")
-                        .HasForeignKey("Id_Collection")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("BookShop.DAL.Entities.Supplier", "Supplier")
                         .WithMany("Books")
                         .HasForeignKey("Id_Supplier")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("CollectionBook");
 
                     b.Navigation("Supplier");
                 });
@@ -1427,13 +1616,25 @@ namespace BookShop.DAL.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.Designer.cs
                     b.HasOne("BookShop.DAL.Entities.Userr", "User")
+========
+                    b.HasOne("BookShop.DAL.Entities.StatusOrder", "StatusOrder")
+                        .WithMany("Orders")
+                        .HasForeignKey("Id_Promotion")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BookShop.DAL.Entities.User", "User")
+>>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
                         .WithMany("Orders")
                         .HasForeignKey("Id_User")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Promotion");
+
+                    b.Navigation("StatusOrder");
 
                     b.Navigation("User");
                 });
@@ -1501,6 +1702,16 @@ namespace BookShop.DAL.Migrations
                     b.Navigation("Promotion");
 
                     b.Navigation("WalletPoint");
+                });
+
+            modelBuilder.Entity("BookShop.DAL.Entities.Product", b =>
+                {
+                    b.HasOne("BookShop.DAL.Entities.CollectionBook", "CollectionBook")
+                        .WithMany("Products")
+                        .HasForeignKey("Id_Collection")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("CollectionBook");
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.ProductBook", b =>
@@ -1571,7 +1782,46 @@ namespace BookShop.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BookShop.DAL.Entities.OrderDetail", "Detail")
+                        .WithMany("ReturnOrders")
+                        .HasForeignKey("Id_OrderDetail")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Detail");
+
                     b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("BookShop.DAL.Entities.ShiftChange", b =>
+                {
+                    b.HasOne("BookShop.DAL.Entities.WorkShift", "WorkShift")
+                        .WithMany("ShiftChanges")
+                        .HasForeignKey("Id_Shift")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BookShop.DAL.Entities.User", "UserIn")
+                        .WithMany("ShiftChangesIn")
+                        .HasForeignKey("Id_UserInShift")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("BookShop.DAL.Entities.User", "UserNx")
+                        .WithMany("ShiftChangesNx")
+                        .HasForeignKey("Id_UserNxShift")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("BookShop.DAL.Entities.User", "UserReset")
+                        .WithMany("ShiftChangesReset")
+                        .HasForeignKey("Id_UserReset")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("UserIn");
+
+                    b.Navigation("UserNx");
+
+                    b.Navigation("UserReset");
+
+                    b.Navigation("WorkShift");
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.UserPromotion", b =>
@@ -1591,6 +1841,25 @@ namespace BookShop.DAL.Migrations
                     b.Navigation("Promotion");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BookShop.DAL.Entities.UserShift", b =>
+                {
+                    b.HasOne("BookShop.DAL.Entities.WorkShift", "WorkShift")
+                        .WithMany("UserShifts")
+                        .HasForeignKey("Id_Shift")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookShop.DAL.Entities.User", "User")
+                        .WithMany("UserShifts")
+                        .HasForeignKey("Id_User")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("WorkShift");
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.WalletPoint", b =>
@@ -1649,7 +1918,7 @@ namespace BookShop.DAL.Migrations
 
             modelBuilder.Entity("BookShop.DAL.Entities.CollectionBook", b =>
                 {
-                    b.Navigation("Books");
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.CustomProperties", b =>
@@ -1688,6 +1957,8 @@ namespace BookShop.DAL.Migrations
             modelBuilder.Entity("BookShop.DAL.Entities.OrderDetail", b =>
                 {
                     b.Navigation("Evaluates");
+
+                    b.Navigation("ReturnOrders");
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.PaymentForm", b =>
@@ -1731,6 +2002,11 @@ namespace BookShop.DAL.Migrations
                     b.Navigation("CustomProperties");
                 });
 
+            modelBuilder.Entity("BookShop.DAL.Entities.StatusOrder", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("BookShop.DAL.Entities.Supplier", b =>
                 {
                     b.Navigation("Books");
@@ -1745,13 +2021,23 @@ namespace BookShop.DAL.Migrations
 
                     b.Navigation("Orders");
 
+<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.Designer.cs
                     b.Navigation("UserClaims");
+========
+                    b.Navigation("ShiftChangesIn");
+
+                    b.Navigation("ShiftChangesNx");
+
+                    b.Navigation("ShiftChangesReset");
+>>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
 
                     b.Navigation("UserLogins");
 
                     b.Navigation("UserPromotions");
 
                     b.Navigation("UserRoles");
+
+                    b.Navigation("UserShifts");
 
                     b.Navigation("WalletPoint")
                         .IsRequired();
@@ -1764,6 +2050,13 @@ namespace BookShop.DAL.Migrations
             modelBuilder.Entity("BookShop.DAL.Entities.WalletPoint", b =>
                 {
                     b.Navigation("PointTransactionsHistories");
+                });
+
+            modelBuilder.Entity("BookShop.DAL.Entities.WorkShift", b =>
+                {
+                    b.Navigation("ShiftChanges");
+
+                    b.Navigation("UserShifts");
                 });
 #pragma warning restore 612, 618
         }

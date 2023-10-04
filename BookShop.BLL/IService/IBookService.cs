@@ -10,7 +10,6 @@ namespace BookShop.BLL.IService
 	public interface IBookService
 	{
 		public Task<List<BookViewModel>> GetAll();
-		public Task<List<BookViewModel>> GetByCollection(int collectrionId);
 		public Task<List<BookViewModel>> GetByAuthor(int authorId);
 		public Task<List<BookViewModel>> GetByGenre(int genrerId);
 		public Task<BookViewModel> GetById(int id);

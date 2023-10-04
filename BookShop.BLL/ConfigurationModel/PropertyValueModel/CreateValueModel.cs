@@ -8,8 +8,7 @@ namespace BookShop.BLL.ConfigurationModel.PropertyValueModel
 {
 	public class CreateValueModel
 	{
-		public string Value1 { get; set; }
-		public string? Value2 { get; set; }
+		public string Value { get; set; }
 		public int Status { get; set; }
 		public int Id_Prperty { get; set; }
 	}

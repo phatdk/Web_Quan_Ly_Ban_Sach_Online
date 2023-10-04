@@ -32,10 +32,8 @@ namespace BookShop.DAL.Entities
 		public int Status { get; set; }
 
 		//foreign key
-		public int? Id_Collection { get; set; }
 		public int Id_Supplier { get; set; }
 		public virtual Supplier Supplier { get; set; }
-		public virtual CollectionBook? CollectionBook { get; set; }
 
 		//reference
 		public virtual List<BookAuthor> BookAuthors { get; set; }

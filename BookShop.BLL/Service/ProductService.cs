@@ -53,7 +53,6 @@ namespace BookShop.BLL.Service
                         {
                             Id_Product = product.Id,
                             Id_Book = item.Id,
-                            Status = 1,
                         };
                         await _productBookRepository.CreateAsync(productBook);
                     }
