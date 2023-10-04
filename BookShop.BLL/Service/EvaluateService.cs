@@ -14,12 +14,12 @@ namespace BookShop.BLL.Service
     public class EvaluateService : IEvaluateService
     {
         private readonly IRepository<Evaluate> _evaluateRepository;
-        private readonly IRepository<User> _userRepository;
+        private readonly IRepository<Userr> _userRepository;
 
         public EvaluateService()
         {
             _evaluateRepository = new Repository<Evaluate>();
-            _userRepository = new Repository<User>();
+            _userRepository = new Repository<Userr>();
         }
 
         public async Task<bool> Add(CreateEvaluateModel model)
