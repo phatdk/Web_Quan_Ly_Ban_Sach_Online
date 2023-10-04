@@ -1,2 +1,112 @@
-﻿body {
+﻿/* Reset some default styles */
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+/* Global styles */
+.skin {
+    background-color: #f2f2f2;
+    font-family: 'Times New Roman', sans-serif;
+}
+
+.wrapper {
+    margin: 0 auto;
+}
+.left-side {
+    color: #fff;
+    padding: 20px;
+    height: 100vh;
+    background-color: #3498db; /* Màu nền cho left-side */
+}
+.sidebar-menu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0; /* Loại bỏ margin để các mục không có khoảng cách giữa chúng */
+}
+
+    .sidebar-menu li {
+        margin-bottom: 10px;
+    }
+
+.nav-link {
+    display: flex;
+    align-items: center; /* Canh giữa icon và văn bản */
+    color: #fff;
+    text-decoration: none;
+}
+
+    .nav-link i {
+        margin-right: 10px;
+    }
+
+    /* Thêm một kiểu cho mục được chọn */
+    .nav-link.active {
+        font-weight: bold;
+       
+    }
+.nav-item .nav-link {
+    color: white;
+}
+
+/* Header styles */
+.main-header {
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.content-wrapper {
+    background-color: #fff;
+    padding: 40px;
+}
+
+/* Box styles */
+.box {
+    background-color: #ecf0f1;
+    border: 1px solid #bdc3c7;
+    margin-bottom: 20px;
+}
+
+.box-header {
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+.img{
+    height : 50px;
+    width : 50px;
+
+}
+.menu-right{
+    justify-content:left;
+}
+.box-body {
+    padding: 10px;
+}
+/* Center text in the sidebar */
+.nav-link {
+    display: flex;
+   /*justify-content:center;*/
+}
+
+    .nav-link i {
+        margin-right: 10px; /* Adjust the spacing between icon and text if needed */
+    }
+  
+/* Responsive styles for small screens */
+@media (max-width: 768px) {
+    .left-side, .content-wrapper {
+        width: 100%; /* Make sidebar and content full width on small screens */
+        float: none; /* Reset the float property */
+    }
+}
+.ul  li  a :hover  {
+    color: white;
+}
+.ul  li  a{
+    color : white;
 }
