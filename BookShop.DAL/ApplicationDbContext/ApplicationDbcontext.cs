@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BookShop.DAL.ApplicationDbContext
 {
-    public class ApplicationDbcontext : IdentityDbContext<User, Role, int, UserClaims, UserRoles, UserLogins, RoleClaims, UserTokens>
+    public class ApplicationDbcontext : IdentityDbContext<Userr, Role, int, UserClaims, UserRoles, UserLogins, RoleClaims, UserTokens>
     {
         public ApplicationDbcontext() { }
         public virtual DbSet<Author> Authors { get; set; }
@@ -47,7 +47,7 @@ namespace BookShop.DAL.ApplicationDbContext
         public virtual DbSet<WorkShift> WorkShifts { get; set; }
         public virtual DbSet<UserShift> UserShifts { get; set; }
         public virtual DbSet<ShiftChange> ShiftChanges { get; set; }
-        public override DbSet<User> Users { get; set; }
+        public override DbSet<Userr> Users { get; set; }
         public override DbSet<UserRoles> UserRoles { get; set; }
         public override DbSet<UserLogins> UserLogins { get; set; }
         public override DbSet<UserTokens> UserTokens { get; set; }
@@ -66,10 +66,8 @@ namespace BookShop.DAL.ApplicationDbContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
 
         {
-            modelBuilder.Entity<UserLogins>()
-       .HasKey(x=> new {x.LoginProvider,x.ProviderKey});
-            modelBuilder.Entity<UserTokens>()
-       .HasKey(x=> new {x.LoginProvider,x.UserId,x.Name});
+            modelBuilder.Entity<UserLogins>().HasKey(x=> new {x.LoginProvider,x.ProviderKey});
+            modelBuilder.Entity<UserTokens>().HasKey(x=> new {x.LoginProvider,x.UserId,x.Name});
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BookShop.DAL.Entities
 {
-    public class User : IdentityUser<int>
+    public class Userr : IdentityUser<int>
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

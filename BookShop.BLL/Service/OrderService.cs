@@ -13,13 +13,13 @@ namespace BookShop.BLL.Service
     public class OrderService : IOrderService
     {
         private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<User> _userRepository;
+        private readonly IRepository<Userr> _userRepository;
         private readonly IRepository<Promotion> _promotionRepository;
         private readonly IRepository<OrderDetail> _OrderDetailRepository;
         private readonly IRepository<CartDetail> _CartDetailRepository;
         private readonly IRepository<Product> _productRepository;
 
-        public OrderService(IRepository<Product> productRepository, IRepository<Order> orderRepository, IRepository<User> userRepository, IRepository<Promotion> promotionRepository, IRepository<OrderDetail> orderDetailRepository, IRepository<CartDetail> cartDetailRepository)
+        public OrderService(IRepository<Product> productRepository, IRepository<Order> orderRepository, IRepository<Userr> userRepository, IRepository<Promotion> promotionRepository, IRepository<OrderDetail> orderDetailRepository, IRepository<CartDetail> cartDetailRepository)
         {
             _orderRepository = orderRepository;
             _userRepository = userRepository;

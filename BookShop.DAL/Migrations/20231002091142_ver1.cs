@@ -272,7 +272,8 @@ namespace BookShop.DAL.Migrations
                         name: "FK_Products_CollectionBooks_Id_Collection",
                         column: x => x.Id_Collection,
                         principalTable: "CollectionBooks",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+						onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(

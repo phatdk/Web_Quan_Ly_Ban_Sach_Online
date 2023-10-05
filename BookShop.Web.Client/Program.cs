@@ -1,7 +1,13 @@
+using BookShop.BLL.IService;
+using BookShop.BLL.Service;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<IProductService, ProductService>();
+builder.Services.AddSingleton<IImageService, ImageService>();
+builder.Services.AddSingleton<IBookService, BookService>();
 
 var app = builder.Build();
 

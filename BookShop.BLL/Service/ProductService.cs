@@ -169,20 +169,7 @@ namespace BookShop.BLL.Service
                 new BookViewModel
                 {
                     Id = book.Id,
-                    ISBN = book.ISBN,
                     Title = book.Title,
-                    Description = book.Description,
-                    CreatedDate = book.CreatedDate,
-                    Status = book.Status,
-                    Reader = book.Reader,
-                    Pages = book.Pages,
-                    PageSize = book.PageSize,
-                    Cover = book.Cover,
-                    PublicationDate = book.PublicationDate,
-                    Weight = book.Weight,
-                    Widght = book.Widght,
-                    Length = book.Length,
-                    Height = book.Height,
                 }
             };
             var image = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == id);
@@ -225,20 +212,9 @@ namespace BookShop.BLL.Service
                 var bookv = new BookViewModel()
                 {
                     Id = book.Id,
-                    ISBN = book.ISBN,
                     Title = book.Title,
-                    Description = book.Description,
-                    CreatedDate = book.CreatedDate,
+                    Price= book.Price,
                     Status = book.Status,
-                    Reader = book.Reader,
-                    Pages = book.Pages,
-                    PageSize = book.PageSize,
-                    Cover = book.Cover,
-                    PublicationDate = book.PublicationDate,
-                    Weight = book.Weight,
-                    Widght = book.Widght,
-                    Length = book.Length,
-                    Height = book.Height,
                 };
                 books.Add(bookv);
             }
