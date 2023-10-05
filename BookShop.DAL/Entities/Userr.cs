@@ -12,18 +12,10 @@ namespace BookShop.DAL.Entities
 {
     public class Userr : IdentityUser<int>
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public string Code { get; set; }
-        public string? Img { get; set; }
+
         public string Name { get; set; }
         public DateTime? Birth { get; set; }
         public int? Gender { get; set; }
-        //	public string? Email { get; set; }
-        //public string? Phone { get; set; }
-        //public string UserName { get; set; }
-        //public string Password { get; set; }
         public DateTime CreatedDate { get; set; }
         public int Status { get; set; }
 
@@ -34,14 +26,11 @@ namespace BookShop.DAL.Entities
         //reference
         public virtual ICollection<UserRoles>? _RoleUser { get; set; }
         public virtual ICollection<UserTokens>? UserRoles { get; set; }
+        public virtual ICollection<UserClaims>? UserClaims { get; set; }
         public virtual ICollection<UserLogins>? UserLogins { get; set; }
         public virtual List<WishList> WishLists { get; set; }
         public virtual List<Evaluate> Evaluates { get; set; }
         public virtual List<Order> Orders { get; set; }
         public virtual List<UserPromotion> UserPromotions { get; set; }
-        public virtual List<UserShift> UserShifts { get; set; } 
-        public virtual List<ShiftChange> ShiftChangesReset { get; set; }
-        public virtual List<ShiftChange> ShiftChangesIn { get; set; }
-        public virtual List<ShiftChange> ShiftChangesNx { get; set; }
     }
 }

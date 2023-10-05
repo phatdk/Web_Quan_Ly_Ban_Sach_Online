@@ -17,7 +17,7 @@ namespace BookShop.DAL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.13")
+                .HasAnnotation("ProductVersion", "6.0.16")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -418,7 +418,12 @@ namespace BookShop.DAL.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UserrId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserrId");
 
                     b.ToTable("UserClaims");
                 });
@@ -1265,6 +1270,41 @@ namespace BookShop.DAL.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("BookShop.DAL.Entities.UserPromotion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Id_Promotion")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_User")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReduceMax")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id_Promotion");
+
+                    b.HasIndex("Id_User");
+
+                    b.ToTable("UserPromotions");
+                });
+
             modelBuilder.Entity("BookShop.DAL.Entities.UserShift", b =>
                 {
                     b.Property<int>("Id")
@@ -1504,6 +1544,13 @@ namespace BookShop.DAL.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BookShop.DAL.Entities.Identity.UserClaims", b =>
+                {
+                    b.HasOne("BookShop.DAL.Entities.Userr", null)
+                        .WithMany("UserClaims")
+                        .HasForeignKey("UserrId");
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Identity.UserLogins", b =>

@@ -76,6 +76,7 @@ namespace BookShop.DAL.ApplicationDbContext
                 {
                     entity.SetTableName(tableName.Substring(6));
                 }
+
             }
         }
     }

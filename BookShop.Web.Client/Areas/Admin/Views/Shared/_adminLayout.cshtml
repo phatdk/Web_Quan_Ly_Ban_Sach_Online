@@ -4,142 +4,123 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title>@ViewData["Title"]</title>
-	<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-	<link href="~/css/Admin/admin.css" />
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"/>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<!-- Bootstrap JS and dependencies -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script src="~/js/layout.js"></script>
+	<link rel="stylesheet" href="~/css/Admin/admin.css">
 	<style>
-		/*/* Định dạng menu dọc bên trái */
-		.sidebar {
-			width: 250px;
-			height: 100vh;
-			background-color: #333;
-			color: #fff;
-			font-family: Arial, sans-serif;
-			position: fixed;
-			left: 0;
-			top: 0;
-		}
 
-			.sidebar li a {
-				transition: background-color 0.3s ease;
-			}
 
-			.sidebar i {
-				font-size: 24px;
-				margin-right: 10px;
-			}
-
-			.sidebar li a {
-				padding: 15px 20px;
-				margin-bottom: 10px;
-			}
-
-		.arrow {
-			margin-left: auto;
-			transform: rotate(90deg);
-		}
-		.content {
-			margin-left: 250px;
-			padding: 20px;
-		}
-
-		.navbar {
-			background-color: #f8f9fa;
-		}
-
-		.footer {
-			background-color: #333;
-			color: #fff;
-			text-align: center;
-			padding: 10px 0;
-			position: fixed;
-			bottom: 0;
-			width: 100%;
-		}
 	</style>
 </head>
+
 <body>
-	<div class="wrapper">
-
-		<nav class="sidebar">
-			<div class="logo-details">
-				<i class='bx bx-menu'></i>
-				<span class="logo_name">Dashboard</span>
-			</div>
-			<ul class="list-unstyled">
-				<li>
-					<a href="#">
-						<i class='bx bx-desktop'></i>
-						<span class="link_name">Bàn làm việc</span>
-					</a>
-				</li>
-				<li>
-					<div class="icon_links">
-						<a href="#">
-							<i class='bx bx-grid-alt'></i>
-							<span class="link_name">Sản Phẩm</span>
-						</a>
-						<i class='bx bxs-chevron-down arrow'></i>
+	<div class="skin">
+		<div class="wrapper">
+			<div class="main-header col-12">
+				<div class="row">
+					<div class="logo col-2">
+						<img class="img" src="https://png.pngtree.com/png-vector/20210222/ourlarge/pngtree-cool-gamer-with-hat-mascot-logo-design-png-image_2932196.jpg" alt="Logo">
+						<div class="logo-details">
+							<i class='bx bx-menu'></i>
+							<span class="logo_name">FROM</span>
+						</div>
 					</div>
-					<ul class="sub-menu">
-						<li><a class="link_name" href="#">Quản lý</a></li>
-						<li><a href="#">Danh sách</a></li>
-						<li><a href="#">Thể loại</a></li>
-						<li><a href="#">Tác giả</a></li>
-						<li><a href="#">Đánh giá</a></li>
-					</ul>
-				</li>
-
-			</ul>
-		</nav>
-
-
-		<div class="content">
-			<nav class="navbar navbar-expand-lg bg-body-tertiary">
-				<div class="container-fluid">
-					<a class="navbar-brand" href="#">Navbar</a>
-					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon"></span>
-					</button>
-					<div class="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-							<li class="nav-item">
-								<a class="nav-link active" aria-current="page" href="#">Home</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="#">Link</a>
-							</li>
-							<li class="nav-item dropdown">
-								<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-									Dropdown
-								</a>
-								<ul class="dropdown-menu">
-									<li><a class="dropdown-item" href="#">Action</a></li>
-									<li><a class="dropdown-item" href="#">Another action</a></li>
-									<li><hr class="dropdown-divider"></li>
-									<li><a class="dropdown-item" href="#">Something else here</a></li>
-								</ul>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link disabled" aria-disabled="true">Disabled</a>
-							</li>
-						</ul>
-						<form class="d-flex" role="search">
-							<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-							<button class="btn btn-outline-success" type="submit">Search</button>
-						</form>
+					<div class="menu-right col-6">
 					</div>
 				</div>
-			</nav>
+			</div>
+			<div class="row">
+				<aside class="left-side col-2">
+					<section class="sidebar">
+						<ul class="sidebar-menu">
+							<li class="nav-item active">
+								<span href="#homeSubmenu" class="nav-link dropdown-toggle" data-toggle="collapse" aria-expanded="false" >Home</span>
+								<ul class="collapse " id="homeSubmenu">
+									<li href="#">
+											<i class="fa fa-plus"></i>
+											<a >Home 1</a>
+									</li>
+									<li>
+										<div href="#">
+											<i class="fa fa-plus"></i>
+											<a>Home 1</a>
+										</div>
+									</li>
+									<li>
+										<div href="#">
+											<i class="fa fa-plus"></i>
+											<a>Home 1</a>
+										</div>
+									</li>
+								</ul>
+							</li>
+						
+							<li class="nav-item active">
+								<span href="#homeSubmenu" class="nav-link dropdown-toggle" data-toggle="collapse" aria-expanded="false">Home</span>
+								<ul class="collapse " id="homeSubmenu">
+									<li href="#">
+										<i class="fa fa-plus"></i>
+										<a>Home 1</a>
+									</li>
+									<li>
+										<div href="#">
+											<i class="fa fa-plus"></i>
+											<a>Home 1</a>
+										</div>
+									</li>
+									<li>
+										<div href="#">
+											<i class="fa fa-plus"></i>
+											<a>Home 1</a>
+										</div>
+									</li>
+								</ul>
+							</li>
+							<li class="nav-item active">
+								<span href="#homeSubmenu" class="nav-link dropdown-toggle" data-toggle="collapse" aria-expanded="false">Home</span>
+								<ul class="collapse " id="homeSubmenu">
+									<li href="#">
+										<i class="fa fa-plus"></i>
+										<a>Home 1</a>
+									</li>
+									<li>
+										<div href="#">
+											<i class="fa fa-plus"></i>
+											<a>Home 1</a>
+										</div>
+									</li>
+									<li>
+										<div href="#">
+											<i class="fa fa-plus"></i>
+											<a>Home 1</a>
+										</div>
+									</li>
+								</ul>
+							</li>
 
-			@RenderBody()
+						</ul>
+					</section>
+				</aside>
+
+				<div class="content-wrapper col-10">
+					<div class="box">
+						<div class="box-header">
+							Content Header
+						</div>
+						<div class="box-body">
+							<p>Sample Content Goes Here</p>
+							<p>More Content Goes Here</p>
+							@RenderBody()
+
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
-
-	<footer class="footer">
-		Duy
-	</footer>
-
 </body>
 </html>

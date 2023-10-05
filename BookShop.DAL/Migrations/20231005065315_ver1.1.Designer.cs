@@ -14,6 +14,14 @@ namespace BookShop.DAL.Migrations
     [DbContext(typeof(ApplicationDbcontext))]
     [Migration("20231005065315_ver1.1")]
     partial class ver11
+========
+    [Migration("20231002091142_ver1")]
+    partial class ver1
+>>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
+========
+    [Migration("20231002091142_ver1")]
+    partial class ver1
+>>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
