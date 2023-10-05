@@ -600,12 +600,9 @@ namespace BookShop.DAL.Migrations
                     b.Property<int>("Id_User")
                         .HasColumnType("int");
 
-<<<<<<< HEAD
-=======
                     b.Property<bool>("IsOnlineOrder")
                         .HasColumnType("bit");
 
->>>>>>> master
                     b.Property<bool>("IsUsePoint")
                         .HasColumnType("bit");
 
@@ -622,17 +619,10 @@ namespace BookShop.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(13)");
 
-<<<<<<< HEAD
-                    b.Property<int>("PointAmount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PointUsed")
-=======
                     b.Property<int?>("PointAmount")
                         .HasColumnType("int");
 
                     b.Property<int?>("PointUsed")
->>>>>>> master
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("ReceiveDate")
@@ -785,7 +775,7 @@ namespace BookShop.DAL.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int>("Id_Collection")
+                    b.Property<int?>("Id_Collection")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -1280,43 +1270,6 @@ namespace BookShop.DAL.Migrations
                     b.ToTable("Users");
                 });
 
-<<<<<<< HEAD
-=======
-            modelBuilder.Entity("BookShop.DAL.Entities.UserPromotion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Id_Promotion")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id_User")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReduceMax")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id_Promotion");
-
-                    b.HasIndex("Id_User");
-
-                    b.ToTable("UserPromotions");
-                });
-
             modelBuilder.Entity("BookShop.DAL.Entities.UserShift", b =>
                 {
                     b.Property<int>("Id")
@@ -1350,7 +1303,6 @@ namespace BookShop.DAL.Migrations
                     b.ToTable("UserShifts");
                 });
 
->>>>>>> master
             modelBuilder.Entity("BookShop.DAL.Entities.WalletPoint", b =>
                 {
                     b.Property<int>("Id_User")
@@ -1612,17 +1564,13 @@ namespace BookShop.DAL.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-<<<<<<< HEAD
-                    b.HasOne("BookShop.DAL.Entities.Userr", "User")
-=======
                     b.HasOne("BookShop.DAL.Entities.StatusOrder", "StatusOrder")
                         .WithMany("Orders")
                         .HasForeignKey("Id_Promotion")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("BookShop.DAL.Entities.User", "User")
->>>>>>> master
+                    b.HasOne("BookShop.DAL.Entities.Userr", "User")
                         .WithMany("Orders")
                         .HasForeignKey("Id_User")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -1796,17 +1744,17 @@ namespace BookShop.DAL.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("BookShop.DAL.Entities.User", "UserIn")
+                    b.HasOne("BookShop.DAL.Entities.Userr", "UserIn")
                         .WithMany("ShiftChangesIn")
                         .HasForeignKey("Id_UserInShift")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("BookShop.DAL.Entities.User", "UserNx")
+                    b.HasOne("BookShop.DAL.Entities.Userr", "UserNx")
                         .WithMany("ShiftChangesNx")
                         .HasForeignKey("Id_UserNxShift")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("BookShop.DAL.Entities.User", "UserReset")
+                    b.HasOne("BookShop.DAL.Entities.Userr", "UserReset")
                         .WithMany("ShiftChangesReset")
                         .HasForeignKey("Id_UserReset")
                         .OnDelete(DeleteBehavior.NoAction);
@@ -1847,7 +1795,7 @@ namespace BookShop.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BookShop.DAL.Entities.User", "User")
+                    b.HasOne("BookShop.DAL.Entities.Userr", "User")
                         .WithMany("UserShifts")
                         .HasForeignKey("Id_User")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2017,15 +1965,13 @@ namespace BookShop.DAL.Migrations
 
                     b.Navigation("Orders");
 
-<<<<<<< HEAD
-                    b.Navigation("UserClaims");
-=======
                     b.Navigation("ShiftChangesIn");
 
                     b.Navigation("ShiftChangesNx");
 
                     b.Navigation("ShiftChangesReset");
->>>>>>> master
+
+                    b.Navigation("UserClaims");
 
                     b.Navigation("UserLogins");
 

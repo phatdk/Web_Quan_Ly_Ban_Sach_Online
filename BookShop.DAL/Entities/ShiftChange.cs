@@ -33,9 +33,9 @@ namespace BookShop.DAL.Entities
 		public int? Id_UserInShift { get; set; }
 		public int? Id_UserNxShift { get; set; }
 		public int Id_Shift { get; set; }
-		public virtual User? UserReset { get; set; }
-		public virtual User? UserIn { get; set; }
-		public virtual User? UserNx { get; set; }
+		public virtual Userr? UserReset { get; set; }
+		public virtual Userr? UserIn { get; set; }
+		public virtual Userr? UserNx { get; set; }
 		public virtual WorkShift WorkShift { get; set; }
 	}
 }

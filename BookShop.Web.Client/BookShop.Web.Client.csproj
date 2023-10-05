@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="wwwroot\img\product\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,6 +19,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BookShop.DAL\BookShop.DAL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BookShop.BLL\BookShop.BLL.csproj" />
   </ItemGroup>
 
 </Project>

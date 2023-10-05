@@ -37,7 +37,7 @@ namespace BookShop.DAL.Entities
         public int Id_User { get; set; }
 		public int Id_Promotion { get; set; }
 		public int Id_StatusOrder { get; set; }
-		public virtual User User { get; set; }
+		public virtual Userr User { get; set; }
 		public virtual Promotion Promotion { get; set; }
 		public virtual StatusOrder StatusOrder { get; set; }
 
