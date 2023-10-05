@@ -1270,41 +1270,6 @@ namespace BookShop.DAL.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("BookShop.DAL.Entities.UserPromotion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Id_Promotion")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id_User")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReduceMax")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id_Promotion");
-
-                    b.HasIndex("Id_User");
-
-                    b.ToTable("UserPromotions");
-                });
-
             modelBuilder.Entity("BookShop.DAL.Entities.UserShift", b =>
                 {
                     b.Property<int>("Id")
@@ -2005,6 +1970,8 @@ namespace BookShop.DAL.Migrations
                     b.Navigation("ShiftChangesNx");
 
                     b.Navigation("ShiftChangesReset");
+
+                    b.Navigation("UserClaims");
 
                     b.Navigation("UserLogins");
 

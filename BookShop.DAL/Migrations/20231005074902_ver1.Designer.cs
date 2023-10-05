@@ -12,18 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookShop.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbcontext))]
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.Designer.cs
-    [Migration("20231003123125_Vs0")]
-    partial class Vs0
-========
-    [Migration("20231002091142_ver1")]
+    [Migration("20231005074902_ver1")]
     partial class ver1
->>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
-========
-    [Migration("20231004075558_ver1.1")]
-    partial class ver11
->>>>>>>> master:BookShop.DAL/Migrations/20231004075558_ver1.1.Designer.cs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -459,11 +449,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
                     b.HasIndex("UserrId");
-========
-                    b.HasIndex("UserId");
->>>>>>>> master:BookShop.DAL/Migrations/20231004075558_ver1.1.Designer.cs
 
                     b.ToTable("UserLogins");
                 });
@@ -505,11 +491,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("LoginProvider", "UserId", "Name");
 
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
                     b.HasIndex("UserrId");
-========
-                    b.HasIndex("UserId");
->>>>>>>> master:BookShop.DAL/Migrations/20231004075558_ver1.1.Designer.cs
 
                     b.ToTable("UserTokens");
                 });
@@ -620,18 +602,9 @@ namespace BookShop.DAL.Migrations
                     b.Property<int>("Id_User")
                         .HasColumnType("int");
 
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.Designer.cs
-========
                     b.Property<bool>("IsOnlineOrder")
                         .HasColumnType("bit");
 
->>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
-========
-                    b.Property<bool>("IsOnlineOrder")
-                        .HasColumnType("bit");
-
->>>>>>>> master:BookShop.DAL/Migrations/20231004075558_ver1.1.Designer.cs
                     b.Property<bool>("IsUsePoint")
                         .HasColumnType("bit");
 
@@ -648,23 +621,10 @@ namespace BookShop.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(13)");
 
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.Designer.cs
-                    b.Property<int>("PointAmount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PointUsed")
-========
-========
->>>>>>>> master:BookShop.DAL/Migrations/20231004075558_ver1.1.Designer.cs
                     b.Property<int?>("PointAmount")
                         .HasColumnType("int");
 
                     b.Property<int?>("PointUsed")
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
->>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
-========
->>>>>>>> master:BookShop.DAL/Migrations/20231004075558_ver1.1.Designer.cs
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("ReceiveDate")
@@ -817,7 +777,7 @@ namespace BookShop.DAL.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int>("Id_Collection")
+                    b.Property<int?>("Id_Collection")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -1312,43 +1272,6 @@ namespace BookShop.DAL.Migrations
                     b.ToTable("Users");
                 });
 
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.Designer.cs
-========
-            modelBuilder.Entity("BookShop.DAL.Entities.UserPromotion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Id_Promotion")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id_User")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReduceMax")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id_Promotion");
-
-                    b.HasIndex("Id_User");
-
-                    b.ToTable("UserPromotions");
-                });
-
             modelBuilder.Entity("BookShop.DAL.Entities.UserShift", b =>
                 {
                     b.Property<int>("Id")
@@ -1382,10 +1305,6 @@ namespace BookShop.DAL.Migrations
                     b.ToTable("UserShifts");
                 });
 
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
->>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
-========
->>>>>>>> master:BookShop.DAL/Migrations/20231004075558_ver1.1.Designer.cs
             modelBuilder.Entity("BookShop.DAL.Entities.WalletPoint", b =>
                 {
                     b.Property<int>("Id_User")
@@ -1594,7 +1513,6 @@ namespace BookShop.DAL.Migrations
                         .IsRequired();
                 });
 
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
             modelBuilder.Entity("BookShop.DAL.Entities.Identity.UserClaims", b =>
                 {
                     b.HasOne("BookShop.DAL.Entities.Userr", null)
@@ -1607,15 +1525,6 @@ namespace BookShop.DAL.Migrations
                     b.HasOne("BookShop.DAL.Entities.Userr", null)
                         .WithMany("UserLogins")
                         .HasForeignKey("UserrId");
-========
-            modelBuilder.Entity("BookShop.DAL.Entities.Identity.UserLogins", b =>
-                {
-                    b.HasOne("BookShop.DAL.Entities.User", null)
-                        .WithMany("UserLogins")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
->>>>>>>> master:BookShop.DAL/Migrations/20231004075558_ver1.1.Designer.cs
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Identity.UserRoles", b =>
@@ -1638,15 +1547,6 @@ namespace BookShop.DAL.Migrations
                         .HasForeignKey("UserrId");
                 });
 
-            modelBuilder.Entity("BookShop.DAL.Entities.Identity.UserTokens", b =>
-                {
-                    b.HasOne("BookShop.DAL.Entities.User", null)
-                        .WithMany("UserRoles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("BookShop.DAL.Entities.Image", b =>
                 {
                     b.HasOne("BookShop.DAL.Entities.Product", "Product")
@@ -1666,20 +1566,13 @@ namespace BookShop.DAL.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.Designer.cs
-                    b.HasOne("BookShop.DAL.Entities.Userr", "User")
-========
-========
->>>>>>>> master:BookShop.DAL/Migrations/20231004075558_ver1.1.Designer.cs
                     b.HasOne("BookShop.DAL.Entities.StatusOrder", "StatusOrder")
                         .WithMany("Orders")
                         .HasForeignKey("Id_Promotion")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("BookShop.DAL.Entities.User", "User")
->>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
+                    b.HasOne("BookShop.DAL.Entities.Userr", "User")
                         .WithMany("Orders")
                         .HasForeignKey("Id_User")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -1853,17 +1746,17 @@ namespace BookShop.DAL.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("BookShop.DAL.Entities.User", "UserIn")
+                    b.HasOne("BookShop.DAL.Entities.Userr", "UserIn")
                         .WithMany("ShiftChangesIn")
                         .HasForeignKey("Id_UserInShift")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("BookShop.DAL.Entities.User", "UserNx")
+                    b.HasOne("BookShop.DAL.Entities.Userr", "UserNx")
                         .WithMany("ShiftChangesNx")
                         .HasForeignKey("Id_UserNxShift")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("BookShop.DAL.Entities.User", "UserReset")
+                    b.HasOne("BookShop.DAL.Entities.Userr", "UserReset")
                         .WithMany("ShiftChangesReset")
                         .HasForeignKey("Id_UserReset")
                         .OnDelete(DeleteBehavior.NoAction);
@@ -1904,7 +1797,7 @@ namespace BookShop.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BookShop.DAL.Entities.User", "User")
+                    b.HasOne("BookShop.DAL.Entities.Userr", "User")
                         .WithMany("UserShifts")
                         .HasForeignKey("Id_User")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2074,21 +1967,13 @@ namespace BookShop.DAL.Migrations
 
                     b.Navigation("Orders");
 
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231003123125_Vs0.Designer.cs
-                    b.Navigation("UserClaims");
-========
-========
->>>>>>>> master:BookShop.DAL/Migrations/20231004075558_ver1.1.Designer.cs
                     b.Navigation("ShiftChangesIn");
 
                     b.Navigation("ShiftChangesNx");
 
                     b.Navigation("ShiftChangesReset");
-<<<<<<<< HEAD:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
->>>>>>>> master:BookShop.DAL/Migrations/20231002091142_ver1.Designer.cs
-========
->>>>>>>> master:BookShop.DAL/Migrations/20231004075558_ver1.1.Designer.cs
+
+                    b.Navigation("UserClaims");
 
                     b.Navigation("UserLogins");
 
