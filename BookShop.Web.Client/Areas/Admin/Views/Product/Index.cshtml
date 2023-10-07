@@ -70,13 +70,37 @@
 					@Html.DisplayFor(modelItem => item.Type)
 				</td>
 				<td>
-					@Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-					@Html.ActionLink("Details", "Details", new {type= item.Type, id=item.Id, }) |
-					@Html.ActionLink("Delete", "Delete", new { id=item.Id })
+					@Html.ActionLink("Sửa", "Edit", new { id=item.Id }) |
+					@Html.ActionLink("Chi tiết", "Details", new {type= item.Type, id=item.Id, }) |
+					@Html.ActionLink("Xóa", "Delete", new { id=item.Id })
+					<button onclick="deleteSanPham('@item.Id')" value="Xóa">Xóa</button>
 				</td>
 			</tr>
 		}
 	</tbody>
 </table>
+<script type="text/javascript">
+	function deleteSanPham(id) {
+		console.log(id);
+		$.ajax({
+			url: '/Admin/Product/Delete',
+			type: 'POST',
+			data: { id: id },
+			success: function (result) {
+				if (result.success) {
+					// Xóa thành công, thực hiện các hành động bạn muốn
+					alert('Xóa thành công.');
+					$('#prod-' + id).remove();
+					// Ví dụ: cập nhật giao diện hoặc làm mới danh sách sản phẩm
+				} else {
+					alert('Xóa thất bại: ' + result.errorMessage);
+				}
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	}
+</script>
 
 <script src="~/js/Area/Admin/Product.js" />
