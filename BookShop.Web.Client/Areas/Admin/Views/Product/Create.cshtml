@@ -1,60 +1,69 @@
 ﻿@using BookShop.BLL.ConfigurationModel.BookModel;
+@using BookShop.BLL.ConfigurationModel.CollectionBookModel;
 @model BookShop.BLL.ConfigurationModel.ProductModel.CreateProductModel
 @{
 	ViewData["Title"] = "Create";
 	List<BookViewModel> listBook = ViewBag.listBook;
-	List<BookViewModel> selected = ViewBag.selectedBook;
+	List<CollectionModel> listCollection = ViewBag.listCollection;
 }
 <h4>Create Product</h4>
-<div class="row">
 
-	<div class="col-4">
-		<form asp-action="Create">
-			<div asp-validation-summary="ModelOnly" class="text-danger" />
+@using (Html.BeginForm("Create", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+	@Html.AntiForgeryToken()
 
-			<div class="form-group">
-				<label asp-for="Name" class="control-label"></label>
-				<input id="prod-name" asp-for="Name" class="form-control" />
-				<span asp-validation-for="Name" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="Quantity" class="control-label"></label>
-				<input id="prod-number" asp-for="Quantity" class="form-control" />
-				<span asp-validation-for="Quantity" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="Price" class="control-label"></label>
-				<input id="prod-price" asp-for="Price" class="form-control" />
-				<span asp-validation-for="Price" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="Description" class="control-label"></label>
-				<textarea id="prod-description" asp-for="Description" class="form-control"></textarea>
-				<span asp-validation-for="Description" class="text-danger"></span>
-			</div>
+	<div class="form-group">
+		@Html.Label("Tên sản phẩm")
+		@Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+	</div>
 
-			<div class="form-group">
-				<input id="prod-save" type="button" class="btn btn-primary" value="Save" />
-			</div>
-		</form>
+	<div class="form-group">
+		@Html.Label("Số lượng")
+		@Html.TextBoxFor(m => m.Quantity, new { @class = "form-control" })
 	</div>
-	<div class="col-3">
-		<h4>List sách</h4>
-		<div class="border-1 bg-light">
-			<select id="selectedBook" data-placeholder="Chọn sách cho sản phẩm" class="chosen-select" multiple style="width: 100%;">
-				<option value=""></option>
-				@foreach (var item in listBook)
-				{
-					<option value="'@item.Id'">@item.Title</option>
-				}
-			</select>
-		</div>
-		<button onclick="selectedBookList()">send</button>
+
+	<div class="form-group">
+		@Html.Label("Giá bán")
+		@Html.TextBoxFor(m => m.Price, new { @class = "form-control" })
 	</div>
-	<div class="col-5">
-		<img id="img-selected" src="" alt="product img" style="width: 70%"/>
-		<input id="img-input" type="file" accept=".png,.jpg,.png" />
+
+	<div class="form-group">
+		@Html.Label("Mô tả sản phẩm")
+		@Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
 	</div>
-</div>
+
+
+	<div class="form-group">
+		@Html.Label("Bộ sưu tập")
+		@Html.DropDownListFor(m => m.CollectionId, new SelectList(listCollection, "Id", "Name"),"-- Select Collection --", new { @class = "form-control chosen-select" })
+	</div>
+
+	<div class="form-group">
+		@Html.Label("List Sách")
+		@Html.ListBoxFor(m => m.bookSelected, new MultiSelectList(listBook, "Id", "Title"), new { @class = "form-control chosen-select"})
+	</div>
+
+	<div class="form-group">
+		@Html.Label("Hình ảnh")<br />
+		<img id="img-selected" src="" alt="Hình ảnh sản phẩm" style="max-width: 300px"/>
+		<input type="file" name="image" id="img-input" class="form-control" accept=".jpg, .png"/>
+	</div>
+
+	<button type="submit" class="btn btn-primary">Create</button>
+}
+<script>
+
+	const uploadInput = document.getElementById('img-input');
+	const uploadedImage = document.getElementById('img-selected');
+	uploadInput.addEventListener('change', function (event) {
+
+		const file = event.target.files[0];
+		if (file) {
+			const imageURL = URL.createObjectURL(file);
+			uploadedImage.src = imageURL;
+			// console.log(file)
+		}
+	});
+</script>
 
 <script src="/js/Area/Admin/Product.js"></script>

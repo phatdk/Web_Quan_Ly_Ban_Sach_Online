@@ -9,34 +9,28 @@
 <h1>Index</h1>
 
 <p>
-	<a asp-action="Create">Create New</a>
+	<button class="btn btn-primary" onclick="location.href='@Url.Action("Create")'"><i class="fas fa-plus-circle"></i> Create</button>
 </p>
 <table class="table">
 	<thead>
 		<tr>
 			<th>
-				@Html.DisplayNameFor(model => model.Id)
+				@Html.DisplayName("Tên")
 			</th>
 			<th>
-				@Html.DisplayNameFor(model => model.Name)
+				@Html.DisplayName("Số lượng")
 			</th>
 			<th>
-				@Html.DisplayNameFor(model => model.Quantity)
+				@Html.DisplayName("Giá bán")
 			</th>
 			<th>
-				@Html.DisplayNameFor(model => model.Price)
+				@Html.DisplayName("Ngày tạo")
 			</th>
 			<th>
-				@Html.DisplayNameFor(model => model.Description)
+				@Html.DisplayName("Trạng thái")
 			</th>
 			<th>
-				@Html.DisplayNameFor(model => model.CreatedDate)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Status)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Type)
+				@Html.DisplayName("Loại")
 			</th>
 			<th></th>
 		</tr>
@@ -45,9 +39,6 @@
 		@foreach (var item in Model)
 		{
 			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => item.Id)
-				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.Name)
 				</td>
@@ -58,22 +49,18 @@
 					@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.Description)
+					@Html.DisplayFor(modelTtem => item.CreatedDate)
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.CreatedDate)
+					@(item.Status == 1 ? "Đang bán" : "Chịu")
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.Status)
+					@(item.Type == 1 ? "Lẻ" : "Combo")
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.Type)
-				</td>
-				<td>
-					@Html.ActionLink("Sửa", "Edit", new { id=item.Id }) |
-					@Html.ActionLink("Chi tiết", "Details", new {type= item.Type, id=item.Id, }) |
-					@Html.ActionLink("Xóa", "Delete", new { id=item.Id })
-					<button onclick="deleteSanPham('@item.Id')" value="Xóa">Xóa</button>
+					<button class="btn btn-outline-warning" onclick="location.href='@Url.Action("Edit", new { id = item.Id })' ">Sửa</button>
+					<button class="btn btn-outline-success" onclick="location.href='@Url.Action("Details", new { id = item.Id })'">Chi tiết</button>
+					<button class="btn btn-outline-danger" onclick="deleteSanPham('@item.Id')" value="Xóa">Xóa</button>
 				</td>
 			</tr>
 		}
