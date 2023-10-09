@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using BookShop.DAL.ApplicationDbContext;
 using Microsoft.AspNetCore.Builder;
 using System.Net;
+using BookShop.BLL.IService;
+using BookShop.BLL.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,6 +84,11 @@ op.AddPolicy("ManagerMenu", builder =>
 
 #endregion
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<IProductService, ProductService>();
+builder.Services.AddSingleton<IImageService, ImageService>();
+builder.Services.AddSingleton<IBookService, BookService>();
+builder.Services.AddSingleton<ICollectionService, CollectionService>();
+builder.Services.AddSingleton<IImageService, ImageService>();
 // Configure the HTTP request pipeline.
 var app = builder.Build();
 if (!app.Environment.IsDevelopment())
