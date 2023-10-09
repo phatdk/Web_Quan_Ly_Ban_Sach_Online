@@ -116,7 +116,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					Quantity = request.Quantity,
 					Price = request.Price,
 					Description = request.Description,
-					Status = 1,
+					Status = request.Quantity == 0 ? 0 : 1,
 					Type = request.bookSelected.Count() > 1 ? 2 : 1,
 					CollectionId = request.CollectionId == 0 ? null : request.CollectionId,
 					bookSelected = request.bookSelected,
@@ -181,6 +181,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 				{
 					request.Type = 2;
 				}
+				request.Status = request.Quantity == 0 ? 0: 1;
 				var result = await _productService.Update(request);
 				return RedirectToAction(nameof(Index));
 			}
