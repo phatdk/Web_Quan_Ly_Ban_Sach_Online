@@ -15,136 +15,126 @@
     <script src="~/js/layout.js"></script>
     <link rel="stylesheet" href="~/css/Admin/admin.css">
     <link rel="stylesheet" href="~/lib/chosen_v1.8.7/chosen.min.css" />
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Document</title>
     <style>
-
 
     </style>
 </head>
 <body>
-    <div class="skin">
-        <div class="wrapper">
-            <div class="main-header col-12">
-                <div class="row">
-                    <div class="logo col-2">
-                        <img class="img" src="https://png.pngtree.com/png-vector/20210222/ourlarge/pngtree-cool-gamer-with-hat-mascot-logo-design-png-image_2932196.jpg" alt="Logo">
-                        <div class="logo-details">
-                            <i class='bx bx-menu'></i>
-                            <span class="logo_name">FROM</span>
-                        </div>
-                    </div>
-                    <div class="menu-right col-6">
-                    </div>
+    <div class="sidebar">
+        <div class="logo-details">
+            <i class='bx bxs-balloon'></i>
+            <span class="logo_name">DashBoar</span>
+        </div>
+        <ul class="nav-links">
+            <li>
+                <a href="">
+                    <i class='bx bx-desktop'></i>
+                    <span class="link_name">Bàn làm việc</span>
+                </a>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="">Bàn làm việc</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="icon_links">
+                    <a href="">
+                        <i class='bx bx-grid-alt'></i>
+                        <span class="link_name">Sản Phẩm</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
                 </div>
-            </div>
-            <div class="row">
-                <aside class="left-side col-2">
-                    <div class="sidebar">
-                        <ul class="nav-links">
-                            <li>
-                                <a href="">
-                                    <i class='bx bx-desktop'></i>
-                                    <span class="link_name">Bàn làm việc</span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <li><a class="link_name" href="">Bàn làm việc</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <div class="icon_links">
-                                    <a href="">
-                                        <i class='bx bx-grid-alt'></i>
-                                        <span class="link_name">Sản Phẩm</span>
-                                    </a>
-                                    <i class='bx bxs-chevron-down arrow'></i>
-                                </div>
-                                <ul class="sub-menu">
-                                    <li><a class="link_name" href="">Quản lý</a></li>
-                                    <li><a href="">Danh sách</a></li>
-                                    <li><a href="">Thể loại</a></li>
-                                    <li><a href="">Tác giả</a></li>
-                                    <li><a href="">Đánh giá</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <div class="icon_links">
-                                    <a href="">
-                                        <i class='bx bx-cart'></i>
-                                        <span class="link_name">Đơn hàng</span>
-                                    </a>
-                                    <i class='bx bxs-chevron-down arrow'></i>
-                                </div>
-                                <ul class="sub-menu">
-                                    <li><a class="link_name" href="">Quản lý</a></li>
-                                    <li><a href="">Danh sách</a></li>
-                                    <li><a href="">Thể loại</a></li>
-                                    <li><a href="">Tác giả</a></li>
-                                    <li><a href="">Đánh giá</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <div class="icon_links">
-                                    <a href="">
-                                        <i class='bx bxs-user-detail'></i>
-                                        <span class="link_name">Khách hàng</span>
-                                    </a>
-                                    <i class='bx bxs-chevron-down arrow'></i>
-                                </div>
-                                <ul class="sub-menu">
-                                    <li><a class="link_name" href="">Quản lý</a></li>
-                                    <li><a href="">Danh sách</a></li>
-                                    <li><a href="">Thể loại</a></li>
-                                    <li><a href="">Tác giả</a></li>
-                                    <li><a href="">Đánh giá</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <div class="icon_links">
-                                    <a href="">
-                                        <i class='bx bx-dollar-circle'></i>
-                                        <span class="link_name">Khuyến mãi</span>
-                                    </a>
-                                    <i class='bx bxs-chevron-down arrow'></i>
-                                </div>
-                                <ul class="sub-menu">
-                                    <li><a class="link_name" href="">Quản lý</a></li>
-                                    <li><a href="">Danh sách</a></li>
-                                    <li><a href="">Thể loại</a></li>
-                                    <li><a href="">Tác giả</a></li>
-                                    <li><a href="">Đánh giá</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <div class="icon_links">
-                                    <a href="">
-                                        <i class='bx bx-bookmark-alt-plus'></i>
-                                        <span class="link_name">Bài đăng</span>
-                                    </a>
-                                    <i class='bx bxs-chevron-down arrow'></i>
-                                </div>
-                                <ul class="sub-menu">
-                                    <li><a class="link_name" href="">Quản lý</a></li>
-                                    <li><a href="">Danh sách</a></li>
-                                    <li><a href="">Thể loại</a></li>
-                                    <li><a href="">Tác giả</a></li>
-                                    <li><a href="">Đánh giá</a></li>
-                                </ul>
-                            </li>
-
-                        </ul>
-                    </div>
-                </aside>
-
-                <div class="content-wrapper col-10">
-                    <div class="box">
-                        <div class="box-header">
-                            Content Header
-                        </div>
-                        <div class="box-body">
-
-                            @RenderBody()
-
-                        </div>
-                    </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="">Quản lý</a></li>
+                    <li><a href="">Danh sách</a></li>
+                    <li><a href="">Thể loại</a></li>
+                    <li><a href="">Tác giả</a></li>
+                    <li><a href="">Đánh giá</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="icon_links">
+                    <a href="">
+                        <i class='bx bx-cart'></i>
+                        <span class="link_name">Đơn hàng</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="">Quản lý</a></li>
+                    <li><a href="">Danh sách</a></li>
+                    <li><a href="">Thể loại</a></li>
+                    <li><a href="">Tác giả</a></li>
+                    <li><a href="">Đánh giá</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="icon_links">
+                    <a href="">
+                        <i class='bx bxs-user-detail'></i>
+                        <span class="link_name">Khách hàng</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="">Quản lý</a></li>
+                    <li><a href="">Danh sách</a></li>
+                    <li><a href="">Thể loại</a></li>
+                    <li><a href="">Tác giả</a></li>
+                    <li><a href="">Đánh giá</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="icon_links">
+                    <a href="">
+                        <i class='bx bx-dollar-circle'></i>
+                        <span class="link_name">Khuyến mãi</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="">Quản lý</a></li>
+                    <li><a href="">Danh sách</a></li>
+                    <li><a href="">Thể loại</a></li>
+                    <li><a href="">Tác giả</a></li>
+                    <li><a href="">Đánh giá</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="icon_links">
+                    <a href="">
+                        <i class='bx bx-bookmark-alt-plus'></i>
+                        <span class="link_name">Bài đăng</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="">Quản lý</a></li>
+                    <li><a href="">Danh sách</a></li>
+                    <li><a href="">Thể loại</a></li>
+                    <li><a href="">Tác giả</a></li>
+                    <li><a href="">Đánh giá</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    //<section class="home-section">
+    //    <div class="home-content">
+    //        <i class='bx bx-menu'></i>
+    //        <span class="text">Drop Down Slidebar</span>
+    //    </div>
+    //</section>
+    <div class="row">
+        <div class="content-wrapper col-10">
+            <div class="box">
+                <div class="box-header">
+                    Content Header
+                </div>
+                <div class="box-body">
+                    <p>Sample Content Goes Here</p>
+                    <p>More Content Goes Here</p>
+                    @RenderBody()
                 </div>
             </div>
         </div>
@@ -158,19 +148,20 @@
 	<script>
 		let arrow = document.querySelectorAll(".arrow")
 
-		for (var i = 0; i < arrow.length; i++) {
-			arrow[i].addEventListener("click", (e) => {
-				console.log(e)
-				let arrowParent = e.target.parentElement.parentElement;
-				console.log(arrowParent);
-				arrowParent.classList.toggle("showMenu");
-			});
-		}
-		let sidebar = document.querySelector(".sidebar");
-		let sidebarBtn = document.querySelector(".bx-menu");
-		console.log(sidebarBtn);
-		sidebarBtn.addEventListener("click", () => {
-			sidebar.classList.toggle("close")
-		})
-	</script>
+
+    for (var i = 0; i < arrow.length; i++) {
+        arrow[i].addEventListener("click", (e) => {
+            console.log(e)
+            let arrowParent = e.target.parentElement.parentElement;
+            console.log(arrowParent);
+            arrowParent.classList.toggle("showMenu");
+        });
+    }
+    let sidebar = document.querySelector(".sidebar");
+    let sidebarBtn = document.querySelector(".bx-menu");
+    console.log(sidebarBtn);
+    sidebarBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("close")
+    })
+</script>
 </html>
