@@ -57,6 +57,7 @@
         height: 100%;
         padding-top: 30px;
         overflow: auto;
+        padding-inline-start: 0;
     }
 
     .sidebar.sidebar.close .nav-links {

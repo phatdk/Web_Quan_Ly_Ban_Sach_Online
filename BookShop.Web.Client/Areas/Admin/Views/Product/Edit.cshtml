@@ -39,7 +39,7 @@
 
 	<div class="form-group">
 		@Html.LabelFor(m => m.CollectionId)
-		@Html.DropDownListFor(m => m.CollectionId, new SelectList(listCollection, "Id", "Name"), "-- Select Collection --", new { @class = "form-control", id = "collectionSelect" })
+		@Html.DropDownListFor(m => m.CollectionId, new SelectList(listCollection, "Id", "Name"), "-- Select Collection --", new { @class = "form-control chosen-select", id = "collectionSelect" })
 		<input type="hidden" name="CollectionId" value="@Model.CollectionId" />
 	</div>
 
@@ -47,6 +47,10 @@
 		@Html.Label("List sách")
 		@Html.ListBoxFor(m => m.bookSelected, new MultiSelectList(listBook, "Id", "Title", Model.bookSelected), new { @class = "form-control chosen-select", id = "bookSelect" })
 		<input type="hidden" name="bookSelected" value="@Model.bookSelected" />
+	</div>
+
+	<div class="form-group">
+		<input asp-for="Status" hidden />
 	</div>
 
 	<div class="form-group">

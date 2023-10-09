@@ -36,5 +36,8 @@
 		<PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="1.0.172" />
 		<PackageReference Include="MimeKit" Version="3.4.1" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Migrations\" />
+	</ItemGroup>
 
 </Project>
