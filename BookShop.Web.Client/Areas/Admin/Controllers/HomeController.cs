@@ -1,5 +1,4 @@
-﻿using BookShop.Web.Client.Areas.Admin.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {

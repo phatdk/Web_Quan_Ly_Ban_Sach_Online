@@ -63,6 +63,9 @@ namespace BookShop.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("CoverPrice")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -89,9 +92,6 @@ namespace BookShop.DAL.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<int>("Pages")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Price")
                         .HasColumnType("int");
 
                     b.Property<string>("PublicationDate")
@@ -566,6 +566,9 @@ namespace BookShop.DAL.Migrations
                     b.Property<DateTime?>("AcceptDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Address")
+                        .HasColumnType("varchar(256)");
+
                     b.Property<int?>("City")
                         .HasColumnType("int");
 
@@ -591,7 +594,13 @@ namespace BookShop.DAL.Migrations
                     b.Property<int?>("District")
                         .HasColumnType("int");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("varchar(256)");
+
                     b.Property<int>("Id_Promotion")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Id_Staff")
                         .HasColumnType("int");
 
                     b.Property<int>("Id_StatusOrder")
@@ -616,7 +625,6 @@ namespace BookShop.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("varchar(13)");
 
                     b.Property<int?>("PointAmount")
@@ -629,12 +637,13 @@ namespace BookShop.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Receiver")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Id_Promotion");
+
+                    b.HasIndex("Id_Staff");
 
                     b.HasIndex("Id_User");
 
@@ -1570,6 +1579,11 @@ namespace BookShop.DAL.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("BookShop.DAL.Entities.Userr", "Staff")
+                        .WithMany("StaffOrders")
+                        .HasForeignKey("Id_Staff")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("BookShop.DAL.Entities.Userr", "User")
                         .WithMany("Orders")
                         .HasForeignKey("Id_User")
@@ -1577,6 +1591,8 @@ namespace BookShop.DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("Promotion");
+
+                    b.Navigation("Staff");
 
                     b.Navigation("StatusOrder");
 
@@ -1970,6 +1986,8 @@ namespace BookShop.DAL.Migrations
                     b.Navigation("ShiftChangesNx");
 
                     b.Navigation("ShiftChangesReset");
+
+                    b.Navigation("StaffOrders");
 
                     b.Navigation("UserClaims");
 

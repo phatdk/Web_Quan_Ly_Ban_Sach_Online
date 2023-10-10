@@ -33,6 +33,7 @@ namespace BookShop.DAL.Entities
         public virtual List<WishList> WishLists { get; set; }
         public virtual List<Evaluate> Evaluates { get; set; }
         public virtual List<Order> Orders { get; set; }
+        public virtual List<Order> StaffOrders { get; set; }
         public virtual List<UserPromotion> UserPromotions { get; set; }
         public virtual List<UserShift> UserShifts { get; set; }
         public virtual List<ShiftChange> ShiftChangesReset { get; set; }

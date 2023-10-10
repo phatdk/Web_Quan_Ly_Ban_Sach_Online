@@ -14,8 +14,10 @@ namespace BookShop.DAL.Configuration
 		public void Configure(EntityTypeBuilder<Order> builder)
 		{
 			builder.Property(x => x.Code).HasColumnType("varchar(13)");
-			builder.Property(x => x.Receiver).HasColumnType("nvarchar(50)");
-			builder.Property(x => x.Phone).HasColumnType("varchar(13)");
+			builder.Property(x => x.Receiver).HasColumnType("nvarchar(50)").IsRequired(false);
+			builder.Property(x => x.Phone).HasColumnType("varchar(13)").IsRequired(false);
+			builder.Property(x => x.Email).HasColumnType("varchar(256)").IsRequired(false);
+			builder.Property(x => x.Address).HasColumnType("varchar(256)").IsRequired(false);
 
 			builder.Property(x => x.AcceptDate).IsRequired(false);
 			builder.Property(x => x.DeliveryDate).IsRequired(false);
@@ -33,6 +35,7 @@ namespace BookShop.DAL.Configuration
 			builder.Property(x => x.Description).HasColumnType("nvarchar(255)").IsRequired(false);
 
 			builder.HasOne(x => x.User).WithMany(x => x.Orders).HasForeignKey(x => x.Id_User).OnDelete(DeleteBehavior.NoAction);
+			builder.HasOne(x => x.Staff).WithMany(x => x.StaffOrders).HasForeignKey(x => x.Id_Staff).OnDelete(DeleteBehavior.NoAction);
 			builder.HasOne(x => x.Promotion).WithMany(x => x.Orders).HasForeignKey(x => x.Id_Promotion).OnDelete(DeleteBehavior.NoAction);
 			builder.HasOne(x => x.StatusOrder).WithMany(x => x.Orders).HasForeignKey(x => x.Id_Promotion).OnDelete(DeleteBehavior.NoAction);
 		}

@@ -96,6 +96,11 @@ builder.Services.AddScoped<IGenreService, GenreService>();
 
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddSingleton<IProductService, ProductService>();
+builder.Services.AddSingleton<IImageService, ImageService>();
+builder.Services.AddSingleton<IBookService, BookService>();
+builder.Services.AddSingleton<ICollectionService, CollectionService>();
+builder.Services.AddSingleton<IImageService, ImageService>();
 // Configure the HTTP request pipeline.
 var app = builder.Build();
 if (!app.Environment.IsDevelopment())
