@@ -1,0 +1,89 @@
+﻿@using System.Globalization;
+@model BookShop.BLL.ConfigurationModel.ProductModel.ProductViewModel
+
+@{
+	ViewData["Title"] = "Chi tiết sản phẩm";
+	string imgUrl;
+}
+
+<h1>Details</h1>
+
+<div>
+	<h4>ProductViewModel</h4>
+	<hr />
+	<div class="row">
+		<div class="col-lg-4 col-md-4 col-ms-4">
+			@{
+				imgUrl = Model.imageViewModels.First().ImageUrl;
+			}
+			<img src="@imgUrl" alt="ảnh sản phẩm" style="max-width: 100%" />
+		</div>
+		<div class="col-8 row">
+			<dl class="col-8">
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Id)
+				</dt>
+				<dd class="col-sm-6">
+					@Html.DisplayFor(model => model.Id)
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Name)
+				</dt>
+				<dd class="col-sm-6">
+					@Html.DisplayFor(model => model.Name)
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Quantity)
+				</dt>
+				<dd class="col-sm-6">
+					@Html.DisplayFor(model => model.Quantity)
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Price)
+				</dt>
+				<dd class="col-sm-6">
+					@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Price)
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Description)
+				</dt>
+				<dd class="col-sm-6">
+					@Html.DisplayFor(model => model.Description)
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.CreatedDate)
+				</dt>
+				<dd class="col-sm-6">
+					@Model.CreatedDate.ToString()
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Status)
+				</dt>
+				<dd class="col-sm-6">
+					@Html.DisplayFor(model => model.Status)
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Type)
+				</dt>
+				<dd class="col-sm-6">
+					@Html.DisplayFor(model => model.Type)
+				</dd>
+			</dl>
+			<ul class="col-4">
+				@foreach (var item in Model.bookViewModels)
+				{
+					<li>
+						@item.Title - @string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.ImportPrice)
+					</li>
+				}
+			</ul>
+			<div>
+				<button class="btn btn-outline-danger"><i class="fa-solid fa-face-kiss-wink-heart"></i> Thêm Yêu Thích</button>
+				<button class="btn btn-outline-success"><i class="fa-solid fa-cart-plus"></i> Thêm Vào Giỏ</button>
+				<a href="@Url.Action("Index", "Order")" class="btn btn-outline-warning"><i class="fa-solid fa-money-bill-1-wave"></i> Đặt hàng</a>
+			</div>
+		</div>
+		
+	</div>
+</div>
+
