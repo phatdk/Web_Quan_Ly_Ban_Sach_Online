@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Identity;
 using BookShop.DAL.ApplicationDbContext;
 using Microsoft.AspNetCore.Builder;
 using System.Net;
+using BookShop.BLL.IService;
+using BookShop.BLL.Service;
+using BookShop.BLL.Service.BookGenreCategoryService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,6 +85,17 @@ op.AddPolicy("ManagerMenu", builder =>
 
 #endregion
 builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<IAuthorService, AuthorService>();
+builder.Services.AddScoped<IAuthorService, AuthorService>();
+
+builder.Services.AddTransient<ISupplierService, SupplierService>();
+builder.Services.AddScoped<ISupplierService, SupplierService>();
+
+builder.Services.AddTransient<IGenreService, GenreService>();
+builder.Services.AddScoped<IGenreService, GenreService>();
+
+builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 // Configure the HTTP request pipeline.
 var app = builder.Build();
 if (!app.Environment.IsDevelopment())
