@@ -87,6 +87,7 @@ namespace BookShop.BLL.Service
 			var objlist = new List<ProductViewModel>();
 			foreach (var item in list)
 			{
+				var img = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == item.Id).First();
 				var obj = new ProductViewModel()
 				{
 					Id = item.Id,
@@ -97,6 +98,7 @@ namespace BookShop.BLL.Service
 					CreatedDate = item.CreatedDate,
 					Status = item.Status,
 					Type = item.Type,
+					ImgUrl = img.ImageUrl,
 				};
 				objlist.Add(obj);
 			}
