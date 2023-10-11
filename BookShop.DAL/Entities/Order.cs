@@ -26,10 +26,11 @@ namespace BookShop.DAL.Entities
 		public DateTime? ModifiDate { get; set; }
 		public string? ModifiNotes { get; set; }
 		public string? Description { get; set; }
-		public int? City { get; set; }
-		public int? District { get; set; }
-		public int? Commune { get; set; }
+		public string? City { get; set; }
+		public string? District { get; set; }
+		public string? Commune { get; set; }
 		public string? Address { get; set; }
+		public int? Shipfee { get; set; }
         //Thêm
 		public bool IsOnlineOrder { get; set; }
         public bool IsUsePoint { get; set; }

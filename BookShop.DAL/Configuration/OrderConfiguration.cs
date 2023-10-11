@@ -17,7 +17,7 @@ namespace BookShop.DAL.Configuration
 			builder.Property(x => x.Receiver).HasColumnType("nvarchar(50)").IsRequired(false);
 			builder.Property(x => x.Phone).HasColumnType("varchar(13)").IsRequired(false);
 			builder.Property(x => x.Email).HasColumnType("varchar(256)").IsRequired(false);
-			builder.Property(x => x.Address).HasColumnType("varchar(256)").IsRequired(false);
+			builder.Property(x => x.Address).HasColumnType("nvarchar(256)").IsRequired(false);
 
 			builder.Property(x => x.AcceptDate).IsRequired(false);
 			builder.Property(x => x.DeliveryDate).IsRequired(false);
@@ -27,9 +27,10 @@ namespace BookShop.DAL.Configuration
 			builder.Property(x => x.ModifiDate).IsRequired(false);
 			builder.Property(x => x.PointUsed).IsRequired(false);
 			builder.Property(x => x.PointAmount).IsRequired(false);
-			builder.Property(x => x.City).IsRequired(false);
-			builder.Property(x => x.District).IsRequired(false);
-			builder.Property(x => x.Commune).IsRequired(false);
+
+			builder.Property(x => x.City).HasColumnType("varchar(100)").IsRequired(false);
+			builder.Property(x => x.District).HasColumnType("varchar(100)").IsRequired(false);
+			builder.Property(x => x.Commune).HasColumnType("varchar(100)").IsRequired(false);
 
 			builder.Property(x => x.ModifiNotes).HasColumnType("nvarchar(100)").IsRequired(false);
 			builder.Property(x => x.Description).HasColumnType("nvarchar(255)").IsRequired(false);

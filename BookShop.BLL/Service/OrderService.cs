@@ -15,18 +15,18 @@ namespace BookShop.BLL.Service
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<Userr> _userRepository;
         private readonly IRepository<Promotion> _promotionRepository;
-        private readonly IRepository<OrderDetail> _OrderDetailRepository;
-        private readonly IRepository<CartDetail> _CartDetailRepository;
+        private readonly IRepository<OrderDetail> _orderDetailRepository;
+        private readonly IRepository<CartDetail> _cartDetailRepository;
         private readonly IRepository<Product> _productRepository;
 
-        public OrderService(IRepository<Product> productRepository, IRepository<Order> orderRepository, IRepository<Userr> userRepository, IRepository<Promotion> promotionRepository, IRepository<OrderDetail> orderDetailRepository, IRepository<CartDetail> cartDetailRepository)
+        public OrderService()
         {
-            _orderRepository = orderRepository;
-            _userRepository = userRepository;
-            _promotionRepository = promotionRepository;
-            _OrderDetailRepository = orderDetailRepository;
-            _CartDetailRepository = cartDetailRepository;
-            _productRepository = productRepository;
+            _orderRepository = new Repository<Order>();
+            _userRepository = new Repository<Userr>();
+            _promotionRepository = new Repository<Promotion>();
+            _orderDetailRepository = new Repository<OrderDetail>();
+            _cartDetailRepository = new Repository<CartDetail>();
+            _productRepository = new Repository<Product>();
         }
 
         public async Task<string> GenerateCode(int length)
@@ -105,7 +105,7 @@ namespace BookShop.BLL.Service
 
                     foreach (var item in ListItem)
                     {
-                      await  _OrderDetailRepository.CreateAsync(new OrderDetail()
+                      await  _orderDetailRepository.CreateAsync(new OrderDetail()
                         {
                             Id_Order = ObjStatus.Id,
                             Id_Product = item.Id_Product,

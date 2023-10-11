@@ -22,10 +22,10 @@ namespace BookShop.BLL.ConfigurationModel.BookModel
 		public int? Pages { get; set; }
 		public string? Cover { get; set; }
 		public string? PublicationDate { get; set; }
-		public int? Weight { get; set; }
-		public int? Widght { get; set; }
-		public int? Length { get; set; }
-		public int? Height { get; set; }
+		public int Weight { get; set; }
+		public int Widght { get; set; }
+		public int Length { get; set; }
+		public int Height { get; set; }
 		public DateTime? CreatedDate { get; set; }
 		public int? Status { get; set; }
 

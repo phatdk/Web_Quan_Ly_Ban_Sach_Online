@@ -87,7 +87,7 @@ namespace BookShop.BLL.Service
 			var objlist = new List<ProductViewModel>();
 			foreach (var item in list)
 			{
-				var img = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == item.Id).First();
+				var img = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == item.Id).FirstOrDefault();
 				var obj = new ProductViewModel()
 				{
 					Id = item.Id,
@@ -173,6 +173,10 @@ namespace BookShop.BLL.Service
 					Title = book.Title,
 					ImportPrice = book.ImportPrice,
 					Status = book.Status,
+					Weight = book.Weight,
+					Widght = book.Widght,
+					Length = book.Length,
+					Height = book.Height,
 				};
 				books.Add(bookvm);
 			}
