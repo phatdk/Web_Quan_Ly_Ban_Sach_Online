@@ -131,7 +131,7 @@ namespace App.Areas.Identity.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new Userr { UserName = model.UserName, Email = model.Email,Name=model.Name ,Gender=0,CreatedDate = DateTime.Now};
+                var user = new Userr { Code="xxx",UserName = model.UserName, Email = model.Email,Name=model.Name ,Gender=0,CreatedDate = DateTime.Now};
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
