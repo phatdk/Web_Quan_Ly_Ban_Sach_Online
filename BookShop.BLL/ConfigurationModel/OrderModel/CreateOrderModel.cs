@@ -11,6 +11,7 @@ namespace BookShop.BLL.ConfigurationModel.OrderModel
 {
 	public class CreateOrderModel
 	{
+		public int Id { get; set; }
 		public string? Receiver { get; set; }
 		public string? Phone { get; set; }
 		public string? Email { get; set; }
@@ -27,6 +28,7 @@ namespace BookShop.BLL.ConfigurationModel.OrderModel
 		public string? Commune { get; set; }     
 		public string? Address { get; set; }
 		public int? Shipfee { get; set; }
+		public int Total { get; set; }
 
         //foreign key
 		public string? NameUser { get; set; }
@@ -46,6 +48,7 @@ namespace BookShop.BLL.ConfigurationModel.OrderModel
 		public int Width { get; set; }
 		public int Height { get; set; }
 
+		public List<int> productsId { get; set; }
 		public List<int> paymentsId { get; set; }
 
 		public List<ProductViewModel> productViewModels { get; set; }

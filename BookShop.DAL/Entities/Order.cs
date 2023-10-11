@@ -40,11 +40,11 @@ namespace BookShop.DAL.Entities
         //foreign key
 		public int? Id_Staff { get; set; }
         public int Id_User { get; set; }
-		public int Id_Promotion { get; set; }
+		public int? Id_Promotion { get; set; }
 		public int Id_StatusOrder { get; set; }
 		public virtual Userr? Staff { get; set; }
 		public virtual Userr User { get; set; }
-		public virtual Promotion Promotion { get; set; }
+		public virtual Promotion? Promotion { get; set; }
 		public virtual StatusOrder StatusOrder { get; set; }
 
 		//reference

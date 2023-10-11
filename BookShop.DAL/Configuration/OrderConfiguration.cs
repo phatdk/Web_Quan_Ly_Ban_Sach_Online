@@ -37,7 +37,7 @@ namespace BookShop.DAL.Configuration
 
 			builder.HasOne(x => x.User).WithMany(x => x.Orders).HasForeignKey(x => x.Id_User).OnDelete(DeleteBehavior.NoAction);
 			builder.HasOne(x => x.Staff).WithMany(x => x.StaffOrders).HasForeignKey(x => x.Id_Staff).OnDelete(DeleteBehavior.NoAction);
-			builder.HasOne(x => x.Promotion).WithMany(x => x.Orders).HasForeignKey(x => x.Id_Promotion).OnDelete(DeleteBehavior.NoAction);
+			builder.HasOne(x => x.Promotion).WithMany(x => x.Orders).HasForeignKey(x => x.Id_Promotion).OnDelete(DeleteBehavior.NoAction).IsRequired(false);
 			builder.HasOne(x => x.StatusOrder).WithMany(x => x.Orders).HasForeignKey(x => x.Id_Promotion).OnDelete(DeleteBehavior.NoAction);
 		}
 	}

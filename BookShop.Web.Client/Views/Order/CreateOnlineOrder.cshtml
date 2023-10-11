@@ -18,7 +18,7 @@
 		<div id="account" hidden>
 			<div class="form-group">
 				<label class="control-label">Tên tài khoản</label>
-				<input asp-for="NameUser" id="NameUser" class="form-control" type="text" />
+				<input asp-for="NameUser" id="NameUser" class="form-control" type="text" readonly/>
 			</div>
 		</div>
 
@@ -99,6 +99,7 @@
 		<ul class="ps-0">
 			@foreach (var item in products)
 			{
+				Model.productsId.Add(item.Id);
 				total += item.Price;
 				<li class="row">
 					<img class="col-2" src="@item.ImgUrl" alt="Hình ảnh sản phẩm">
@@ -111,7 +112,7 @@
 		<div class="payment">
 			<div class="form-group">
 				<label for="tongGia">Tạm tính:</label>
-				<input type="number" id="tongGia" min="0" step="1000" value="@total" readonly>@* @total @string.Format(new CultureInfo("vi-VN"), "{0:C0}", total)</input> *@
+				<input asp-for="Total" type="number" id="tongGia" min="0" step="1000" value="@total" readonly>@* @total @string.Format(new CultureInfo("vi-VN"), "{0:C0}", total)</input> *@
 			</div>
 
 			<div class="form-group" hidden>

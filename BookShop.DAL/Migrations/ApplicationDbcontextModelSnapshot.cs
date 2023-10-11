@@ -48,7 +48,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors");
+                    b.ToTable("Authors", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Book", b =>
@@ -122,7 +122,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_Supplier");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.BookAuthor", b =>
@@ -145,7 +145,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_Book");
 
-                    b.ToTable("BookAuthors");
+                    b.ToTable("BookAuthors", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.BookGenre", b =>
@@ -168,7 +168,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_Genre");
 
-                    b.ToTable("BookGenre");
+                    b.ToTable("BookGenre", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Cart", b =>
@@ -184,7 +184,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id_User");
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.CartDetail", b =>
@@ -213,7 +213,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_User");
 
-                    b.ToTable("CartDetails");
+                    b.ToTable("CartDetails", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Category", b =>
@@ -240,7 +240,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.CollectionBook", b =>
@@ -264,7 +264,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CollectionBooks");
+                    b.ToTable("CollectionBooks", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.CustomProperties", b =>
@@ -286,7 +286,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_Shop");
 
-                    b.ToTable("CustomProperties");
+                    b.ToTable("CustomProperties", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Evaluate", b =>
@@ -323,7 +323,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_User");
 
-                    b.ToTable("Evaluates");
+                    b.ToTable("Evaluates", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Genre", b =>
@@ -352,7 +352,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_Category");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Identity.Role", b =>
@@ -374,7 +374,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Identity.RoleClaims", b =>
@@ -398,7 +398,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("RoleClaims");
+                    b.ToTable("RoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Identity.UserClaims", b =>
@@ -425,7 +425,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("UserrId");
 
-                    b.ToTable("UserClaims");
+                    b.ToTable("UserClaims", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Identity.UserLogins", b =>
@@ -449,7 +449,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("UserrId");
 
-                    b.ToTable("UserLogins");
+                    b.ToTable("UserLogins", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Identity.UserRoles", b =>
@@ -467,7 +467,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("UserrId");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("UserRoles", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Identity.UserTokens", b =>
@@ -491,7 +491,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("UserrId");
 
-                    b.ToTable("UserTokens");
+                    b.ToTable("UserTokens", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Image", b =>
@@ -522,7 +522,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_Product");
 
-                    b.ToTable("Images");
+                    b.ToTable("Images", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.News", b =>
@@ -552,7 +552,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("News");
+                    b.ToTable("News", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Order", b =>
@@ -567,17 +567,17 @@ namespace BookShop.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Address")
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
-                    b.Property<string>("City")
-                        .HasColumnType("varchar(100)");
+                    b.Property<int?>("City")
+                        .HasColumnType("int");
 
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("varchar(13)");
 
-                    b.Property<string>("Commune")
-                        .HasColumnType("varchar(100)");
+                    b.Property<int?>("Commune")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("CompleteDate")
                         .HasColumnType("datetime2");
@@ -591,8 +591,8 @@ namespace BookShop.DAL.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("District")
-                        .HasColumnType("varchar(100)");
+                    b.Property<int?>("District")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .HasColumnType("varchar(256)");
@@ -639,9 +639,6 @@ namespace BookShop.DAL.Migrations
                     b.Property<string>("Receiver")
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("Shipfee")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Id_Promotion");
@@ -650,7 +647,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_User");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.OrderDetail", b =>
@@ -682,7 +679,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_Product");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderDetails", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.OrderPayment", b =>
@@ -714,7 +711,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_Payment");
 
-                    b.ToTable("OrderPayments");
+                    b.ToTable("OrderPayments", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.PaymentForm", b =>
@@ -738,7 +735,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentForms");
+                    b.ToTable("PaymentForms", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.PointTransactionsHistory", b =>
@@ -770,7 +767,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_User");
 
-                    b.ToTable("PointTransactionsHistories");
+                    b.ToTable("PointTransactionsHistories", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Product", b =>
@@ -810,7 +807,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_Collection");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.ProductBook", b =>
@@ -836,7 +833,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_Product");
 
-                    b.ToTable("ProductBooks");
+                    b.ToTable("ProductBooks", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.ProductPromotion", b =>
@@ -868,7 +865,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_Promotion");
 
-                    b.ToTable("ProductPromotions");
+                    b.ToTable("ProductPromotions", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Promotion", b =>
@@ -930,7 +927,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_Type");
 
-                    b.ToTable("Promotions");
+                    b.ToTable("Promotions", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.PromotionType", b =>
@@ -954,7 +951,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PromotionTypes");
+                    b.ToTable("PromotionTypes", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.PropertyValue", b =>
@@ -979,7 +976,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_Property");
 
-                    b.ToTable("PropertyValues");
+                    b.ToTable("PropertyValues", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.ReturnOrder", b =>
@@ -1012,7 +1009,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_OrderDetail");
 
-                    b.ToTable("ReturnOrders");
+                    b.ToTable("ReturnOrders", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.ShiftChange", b =>
@@ -1091,7 +1088,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_UserReset");
 
-                    b.ToTable("ShiftChanges");
+                    b.ToTable("ShiftChanges", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Shop", b =>
@@ -1112,7 +1109,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Shops");
+                    b.ToTable("Shops", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.StatusOrder", b =>
@@ -1136,7 +1133,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StatusOrders");
+                    b.ToTable("StatusOrders", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Supplier", b =>
@@ -1166,7 +1163,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suppliers");
+                    b.ToTable("Suppliers", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.UserPromotion", b =>
@@ -1201,7 +1198,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_User");
 
-                    b.ToTable("UserPromotions");
+                    b.ToTable("UserPromotions", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Userr", b =>
@@ -1279,7 +1276,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.UserShift", b =>
@@ -1312,7 +1309,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_User");
 
-                    b.ToTable("UserShifts");
+                    b.ToTable("UserShifts", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.WalletPoint", b =>
@@ -1331,7 +1328,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id_User");
 
-                    b.ToTable("WalletPoints");
+                    b.ToTable("WalletPoints", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.WishList", b =>
@@ -1357,7 +1354,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasIndex("Id_User");
 
-                    b.ToTable("WishLists");
+                    b.ToTable("WishLists", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.WorkShift", b =>
@@ -1384,7 +1381,7 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WorkShifts");
+                    b.ToTable("WorkShifts", (string)null);
                 });
 
             modelBuilder.Entity("BookShop.DAL.Entities.Book", b =>
