@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BookShop.BLL.Service
 {
-	internal class NewsService : INewsService
+	public class NewsService : INewsService
 	{
 		private readonly IRepository<News> _repository;
 		public NewsService()

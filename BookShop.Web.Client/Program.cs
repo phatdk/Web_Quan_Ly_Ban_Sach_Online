@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using System.Net;
 using BookShop.BLL.IService;
 using BookShop.BLL.Service;
+using BookShop.DAL.Repositopy;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,14 +84,34 @@ op.AddPolicy("ManagerMenu", builder =>
 }));
 
 #endregion
+
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<IProductService, ProductService>();
-builder.Services.AddSingleton<IImageService, ImageService>();
-builder.Services.AddSingleton<IBookService, BookService>();
-builder.Services.AddSingleton<ICollectionService, CollectionService>();
-builder.Services.AddSingleton<IImageService, ImageService>();
+builder.Services.AddTransient<IOrderService, OrderService>();
+builder.Services.AddTransient<IOrderDetailService, OrderDetailService>();
+builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<IImageService, ImageService>();
+builder.Services.AddTransient<IBookService, BookService>();
+builder.Services.AddTransient<ICollectionService, CollectionService>();
+builder.Services.AddTransient<ICartService, CartService>();
+builder.Services.AddTransient<ICartDetailService, CartDetailService>();
+builder.Services.AddTransient<IPaymentFormService, PaymentFormService>();
+
 // Configure the HTTP request pipeline.
 var app = builder.Build();
+#region SeedData
+using (var scope = app.Services.CreateScope())
+{
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Userr>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+    SeedDataMD.SeedAsync(userManager, roleManager).Wait();
+}
+using (var scope = app.Services.CreateScope())
+{
+    var serviice1 = scope.ServiceProvider.GetRequiredService<IRepository<StatusOrder>>();
+ 
+    SeedDataMD.SeedDataProduct(serviice1).Wait();
+}
+#endregion
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");

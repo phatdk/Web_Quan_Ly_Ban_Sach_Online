@@ -21,9 +21,9 @@ namespace BookShop.BLL.ConfigurationModel.OrderModel
 		public DateTime? ModifiDate { get; set; }
 		public string? ModifiNotes { get; set; }
 		public string? Description { get; set; }
-		public int? City { get; set; }
-		public int? District { get; set; }
-		public int? Commune { get; set; }
+		public string? City { get; set; }
+		public string? District { get; set; }
+		public string? Commune { get; set; }
 
 		// join properties
 		public string NameUser { get; set; }
@@ -31,6 +31,6 @@ namespace BookShop.BLL.ConfigurationModel.OrderModel
 
 		//foreign key
 		public int Id_User { get; set; }
-		public int Id_Promotion { get; set; }
+		public int? Id_Promotion { get; set; }
 	}
 }
