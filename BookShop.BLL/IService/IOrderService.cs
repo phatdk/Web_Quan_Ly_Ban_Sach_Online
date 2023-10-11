@@ -1,4 +1,5 @@
-﻿using BookShop.BLL.ConfigurationModel.OrderModel;
+﻿using BookShop.BLL.ConfigurationModel.OrderDetailModel;
+using BookShop.BLL.ConfigurationModel.OrderModel;
 using BookShop.DAL.Entities;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace BookShop.BLL.IService
         public Task<List<OrderViewModel>> GetByUser(int userId);
         public Task<List<OrderViewModel>> GetByStatus(int status);
         public Task<OrderViewModel> GetById(int id);
-        public Task<bool> Add(CreateOrderModel model, List<CartDetail> ListItem);
+        public Task<CreateOrderModel> Add(CreateOrderModel model, List<CreateOrderDetailModel> details);
         public Task<bool> Update(int id, UpdateOrderModel model);
         public Task<bool> Delete(int id);
     }

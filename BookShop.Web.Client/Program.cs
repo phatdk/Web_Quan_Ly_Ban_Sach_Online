@@ -84,11 +84,16 @@ op.AddPolicy("ManagerMenu", builder =>
 
 #endregion
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<IProductService, ProductService>();
-builder.Services.AddSingleton<IImageService, ImageService>();
-builder.Services.AddSingleton<IBookService, BookService>();
-builder.Services.AddSingleton<ICollectionService, CollectionService>();
-builder.Services.AddSingleton<IImageService, ImageService>();
+builder.Services.AddTransient<IOrderService, OrderService>();
+builder.Services.AddTransient<IOrderDetailService, OrderDetailService>();
+builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<IImageService, ImageService>();
+builder.Services.AddTransient<IBookService, BookService>();
+builder.Services.AddTransient<ICollectionService, CollectionService>();
+builder.Services.AddTransient<ICartService, CartService>();
+builder.Services.AddTransient<ICartDetailService, CartDetailService>();
+builder.Services.AddTransient<IPaymentFormService, PaymentFormService>();
+
 // Configure the HTTP request pipeline.
 var app = builder.Build();
 if (!app.Environment.IsDevelopment())
