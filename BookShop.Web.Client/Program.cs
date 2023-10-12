@@ -110,7 +110,7 @@ using (var scope = app.Services.CreateScope())
 }
 using (var scope = app.Services.CreateScope())
 {
-    var serviice1 = scope.ServiceProvider.GetRequiredService<IRepository<StatusOrder>>();
+    var serviice1 = scope.ServiceProvider.GetRequiredService<IStatusOrderService>();
  
     SeedDataMD.SeedDataProduct(serviice1).Wait();
 }

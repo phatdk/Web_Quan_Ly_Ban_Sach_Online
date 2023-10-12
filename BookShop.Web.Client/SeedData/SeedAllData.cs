@@ -3,6 +3,7 @@ using BookShop.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Drawing.Drawing2D;
 using BookShop.DAL.Repositopy;
+using BookShop.BLL.IService;
 
 public static class SeedDataMD
 {
@@ -27,6 +28,8 @@ public static class SeedDataMD
                 UserName = "admin",
                 Email = "phuc2003zgt@gmail.com",
                 EmailConfirmed = true,
+                Code = "xxx",
+                Name ="Phuc dep zai"
             };
 
             var result = await userManager.CreateAsync(adminUser, "admin");
@@ -39,7 +42,7 @@ public static class SeedDataMD
 
     }
 
-    public static async Task SeedDataProduct(IRepository<StatusOrder> StatusOrder)
+    public static async Task SeedDataProduct(IStatusOrderService StatusOrder)
     {
 
 
