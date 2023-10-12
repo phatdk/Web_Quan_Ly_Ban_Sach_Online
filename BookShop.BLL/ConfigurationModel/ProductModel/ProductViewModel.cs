@@ -21,7 +21,7 @@ namespace BookShop.BLL.ConfigurationModel.ProductModel
 		public string? CollectionName { get; set; }
 		public int? CollectionId { get; set; }
 		public string ImgUrl { get; set; }
-		
+		public int BuyQuantity { get; set; }
 		public List<BookViewModel> bookViewModels { get; set; }
 		public List<ImageViewModel> imageViewModels { get; set; }
 	}

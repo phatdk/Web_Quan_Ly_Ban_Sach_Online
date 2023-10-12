@@ -194,8 +194,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		// Post: ProductController/Delete/5
 		public async Task<IActionResult> Delete(int id)
 		{
-			var user = (await _productService.GetAll()).FirstOrDefault(u => u.Id == id);
-			if (user != null)
+			var product = (await _productService.GetAll()).FirstOrDefault(u => u.Id == id);
+			if (product != null)
 			{
 				await _productService.Delete(id);
 				return Json(new { success = true });
