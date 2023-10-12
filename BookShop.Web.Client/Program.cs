@@ -84,6 +84,7 @@ op.AddPolicy("ManagerMenu", builder =>
 
 #endregion
 builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IOrderDetailService, OrderDetailService>();
 builder.Services.AddTransient<IProductService, ProductService>();
@@ -93,6 +94,8 @@ builder.Services.AddTransient<ICollectionService, CollectionService>();
 builder.Services.AddTransient<ICartService, CartService>();
 builder.Services.AddTransient<ICartDetailService, CartDetailService>();
 builder.Services.AddTransient<IPaymentFormService, PaymentFormService>();
+builder.Services.AddTransient<IOrderPaymentService, OrderPaymentService>();
+builder.Services.AddTransient<IStatusOrderService, StatusOrderService>();
 
 // Configure the HTTP request pipeline.
 var app = builder.Build();
