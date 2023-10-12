@@ -18,7 +18,7 @@
 		<div id="account" hidden>
 			<div class="form-group">
 				<label class="control-label">Tên tài khoản</label>
-				<input asp-for="NameUser" id="NameUser" class="form-control" type="text" readonly/>
+				<input asp-for="NameUser" id="NameUser" class="form-control" type="text" readonly />
 			</div>
 		</div>
 
@@ -66,32 +66,18 @@
 				</select>
 			</div>
 
-			<div id="sender">
-				<div class="form-group" hidden>
-					<label for="provinceSelectSender">Tỉnh/Thành phố (Gửi hàng):</label>
-					@* <select id="provinceSelectSender" onchange="getDistrict('sender')"></select> *@
-					<input type="text" id="provinceSelectSender" value="201" />
-				</div>
-
-				<div class="form-group" hidden>
-					<label for="districtSelectSender">Quận/Huyện (Gửi hàng):</label>
-					@* <select id="districtSelectSender" onchange="getWard('sender')"></select> *@
-					<input type="text" id="districtSelectSender" value="3440" />
-				</div>
-
-				<div class="form-group" hidden>
-					<label for="wardSelectSender">Phường/Xã (Gửi hàng):</label>
-					@* <select id="wardSelectSender"></select> *@
-					<input type="text" id="wardSelectSender" value="13010" />
-				</div>
+			<div id="sender" hidden>
+				<input type="text" id="provinceSelectSender" value="201" />
+				<input type="text" id="districtSelectSender" value="3440" />
+				<input type="text" id="wardSelectSender" value="13010" />
 			</div>
-
-			<div class="form-group mt-4">
-				<label>Ghi chú giao hàng</label>
-				<textarea asp-for="Description" class="form-control" rows="3"></textarea>
-			</div>
-
 		</div>
+
+		<div class="form-group mt-4">
+			<label>Ghi chú giao hàng</label>
+			<textarea asp-for="Description" class="form-control" rows="3"></textarea>
+		</div>
+
 	</div>
 
 	<div class="col-5">
@@ -99,7 +85,6 @@
 		<ul class="ps-0">
 			@foreach (var item in products)
 			{
-				Model.productsId.Add(item.Id);
 				total += item.Price;
 				<li class="row">
 					<img class="col-2" src="@item.ImgUrl" alt="Hình ảnh sản phẩm">
@@ -112,32 +97,19 @@
 		<div class="payment">
 			<div class="form-group">
 				<label for="tongGia">Tạm tính:</label>
-				<input asp-for="Total" type="number" id="tongGia" min="0" step="1000" value="@total" readonly>@* @total @string.Format(new CultureInfo("vi-VN"), "{0:C0}", total)</input> *@
+				<input asp-for="Total" id="tongGia" value="@total" disabled>
 			</div>
 
 			<div class="form-group" hidden>
-				<label for="weight">Khối lượng (gram):</label>
 				<input type="number" id="weight" value="@Model.Weight" />
-			</div>
-
-			<div class="form-group" hidden>
-				<label for="length">Chiều dài (cm):</label>
 				<input type="number" id="length" value="@Model.Length" />
-			</div>
-
-			<div class="form-group" hidden>
-				<label for="width">Chiều rộng (cm):</label>
 				<input type="number" id="width" value="@Model.Width" />
-			</div>
-
-			<div class="form-group" hidden>
-				<label for="height">Chiều cao (cm):</label>
 				<input type="number" id="height" value="@Model.Height" />
 			</div>
 
 			<div class="form-group">
 				<label for="phiShip">Phí vận chuyển:</label>
-				<input asp-for="Shipfee" id="phiShip" readonly/>
+				<input asp-for="Shipfee" id="phiShip" disabled />
 			</div>
 
 			<div class="form-group">
@@ -157,7 +129,7 @@
 
 		</div>
 
-		<button type="submit">Mua Hàng</button>
+		<input type="submit" value="Đặt hàng" />
 
 	</div>
 </form>
@@ -309,7 +281,7 @@
 
 				.then(function (response) {
 
-					phiShip.innerHTML = response.data.data;
+					phiShip.value = response.data.data.total;
 					var parsedPhiShip = parseFloat(response.data.data.total);
 					var tongGiaInput = document.getElementById("tongGia");
 					var parsedTongGia = parseFloat(tongGiaInput.value);

@@ -14,7 +14,7 @@
 	<div class="row">
 		<div class="col-lg-4 col-md-4 col-ms-4">
 			@{
-				imgUrl = Model.imageViewModels.First().ImageUrl;
+				imgUrl = Model.imageViewModels.FirstOrDefault().ImageUrl;
 			}
 			<img src="@imgUrl" alt="ảnh sản phẩm" style="max-width: 100%" />
 		</div>
