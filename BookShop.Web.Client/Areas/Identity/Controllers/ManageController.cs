@@ -49,6 +49,8 @@ namespace App.Areas.Identity.Controllers
                 : message == ManageMessageId.Error ? "Có lỗi."
                 : message == ManageMessageId.AddPhoneSuccess ? "Đã thêm số điện thoại."
                 : message == ManageMessageId.RemovePhoneSuccess ? "Đã bỏ số điện thoại."
+                : message == ManageMessageId.AddBrithSuccess ? "Đã thêm ngày sinh"
+                : message == ManageMessageId.UpdateBrithSuccess ? "Đã sửa ngày sinh"
                 : "";
 
             var user = await GetCurrentUserAsync();
@@ -66,6 +68,7 @@ namespace App.Areas.Identity.Controllers
                     UserName = user.UserName,
                     UserEmail = user.Email,
                     PhoneNumber = user.PhoneNumber,
+                    Birth = user.Birth
                 }
             };
             return View(model);
@@ -79,7 +82,9 @@ namespace App.Areas.Identity.Controllers
             SetPasswordSuccess,
             RemoveLoginSuccess,
             RemovePhoneSuccess,
-            Error
+            Error,
+            AddBrithSuccess,
+            UpdateBrithSuccess
         }
         private Task<Userr> GetCurrentUserAsync()
         {
@@ -381,6 +386,7 @@ namespace App.Areas.Identity.Controllers
                 UserName = user.UserName,
                 UserEmail = user.Email,
                 PhoneNumber = user.PhoneNumber,
+                Birth = user.Birth,
             };
             return View(model);
         }
@@ -390,6 +396,7 @@ namespace App.Areas.Identity.Controllers
             var user = await GetCurrentUserAsync();
 
             user.PhoneNumber = model.PhoneNumber;
+            user.Birth = model.Birth;
           
             await _userManager.UpdateAsync(user);
 
