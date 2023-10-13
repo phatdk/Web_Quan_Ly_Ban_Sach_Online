@@ -3,10 +3,12 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - BookShop.Web.Client</title>
+    <title>@ViewData["Title"] - SHOPBOOK</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BookShop.Web.Client.styles.css" asp-append-version="true" />
+    <!-- Lọc Thành Phố, Quận Huyện, Xã phường -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
@@ -54,15 +56,39 @@
     .bb {
         background-color: rgb(224, 224, 224);
     }
-    .dndk{
-        text-align:center;
-        font-weight:700;
 
+    .dndk {
+        text-align: center;
+        font-weight: 700;
+        padding-bottom: 5px;
+        color: black;
     }
-    .dndk:hover{
-        border-bottom:2px;
-        border-color:red;
+
+        .dndk:hover {
+            color: orangered;
+            border-bottom: 1px solid orangered;
+            text-decoration: none;
+        }
+
+    .dn1 {
     }
+
+    .form .btn {
+        justify-content: center;
+    }
+
+    .t {
+        cursor: pointer;
+    }
+
+    .cuoitrang {
+        background-color: white;
+        margin-top: 30px;
+        border-radius: 10px
+    }
+    .cuoicc{
+        margin-top:15px;
+        padding-top:15px   }
 </style>
 <body class="bb">
     <header>
@@ -88,13 +114,13 @@
                                             <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
                                         </svg><span class="	glyphicon glyphicon-menu-hamburger"></span>
                                     </div>
-                                    <div class="dropdown-menu">
-                                        <h5 class="dropdown-header">Dropdown header</h5>
-                                        <a class="dropdown-item" href="#">Link 1</a>
-                                        <a class="dropdown-item" href="#">Link 2</a>
-                                        <a class="dropdown-item" href="#">Link 3</a>
-                                        <h5 class="dropdown-header">Dropdown header</h5>
-                                        <a class="dropdown-item" href="#">Another link</a>
+                                    <div class="dropdown-menu row" style="width:780pxđạp ;">
+                                        <div class="col-md-6">
+                                            <h5>Danh Mục Sản Phẩm</h5>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h5>Danh Mục Sản Phẩm</h5>
+                                        </div>
                                     </div>
                                 </div>
                             </li>
@@ -125,7 +151,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#myModal">
+                                <a class="nav-link text-dark t" data-bs-toggle="modal" data-bs-target="#myModal">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
                                         <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
                                         <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
@@ -140,25 +166,53 @@
         <div>
             <!-- The Modal -->
             <div class="modal" id="myModal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
+                <div class="modal-dialog container">
+                    <div class="modal-content group-tabs">
 
                         <!-- Modal Header -->
-                        <div class="modal-header">
-                            <h4 class="modal-title">Khánh</h4>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <div class="modal-header nav nav-tabs" role="tablist">
+                            <div class="nav nav-tabs col-12" role="tablist">
+                                <a role="presentation tab" class="active dndk col-6" style="width:100%" href="#home" aria-controls="home" data-toggle="tab">Đăng Nhập</a>
+                                <a role="presentation tab" class="dndk col-6" href="#profile" aria-controls="profile" data-toggle="tab">Đăng Ký</a>
+                            </div>
                         </div>
 
                         <!-- Modal body -->
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-6"> <h5 class="dndk">Đăng Nhập</h5></div>
-                                <div class="col-md-6 "><h5 class="dndk">Đăng Ký</h5></div>
+                        <div class="modal-body tab-content">
+                            <div class="row container">
+                                <div class="group-tabs container">
+                                    <!-- Tab panes -->
+                                    <div class="tab-content container">
+                                        <div role="tabpanel" class="tab-pane active " id="home">
+                                            <form class="form " style="justify-content:center">
+                                                <p>Tài Khoản</p>
+                                                <input class="text" />
+                                                <p>Mật Khẩu</p>
+                                                <input class="text" type="password" />
+                                                <br />
+                                                <input type="checkbox" /> Ghi Nhớ
+                                                <br />
+                                                <input class="btn btn-success" style="text-align:center" type="button" value="Đăng Nhập" />
+                                            </form>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane " id="profile">
+                                            <form class="form">
+                                                <p>Tài Khoản</p>
+                                                <input class="text" />
+                                                <p>Mật Khẩu</p>
+                                                <input class="text" type="password" />
+                                                <p>Nhập Lại Mật Khẩu</p>
+                                                <input class="text" type="password" /><br />
+                                                <input class="btn btn-warning" type="button" value="Đăng Ký" />
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Modal footer -->
-                        <div class="modal-footer">
+                        <div class="modal-footer group-tabs">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                         </div>
 
@@ -173,11 +227,42 @@
         </main>
     </div>
 
-    <!--<footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - BookShop.Web.Client - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <div class="container cuoitrang">
+        <div class="row cuoicc">
+            <div class="col-4">
+                <img src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/logo.png" />
+                <p>Lầu 5, 387-389 Hai Bà Trưng Quận 3 TP HCMCông Ty Cổ Phần Phát Hành Sách TP HCM - FAHASA60 - 62 Lê Lợi, Quận 1, TP. HCM, Việt Nam</p>
+                <p>Fahasa.com nhận đặt hàng trực tuyến và giao hàng tận nơi. KHÔNG hỗ trợ đặt mua và nhận hàng trực tiếp tại văn phòng cũng như tất cả Hệ Thống Fahasa trên toàn quốc.</p>
+            </div>
+            <div class="col-8">
+                <div class="row">
+                    <div class="col-4">
+                        <h6>Dịch Vụ</h6>
+                        <p>Điều khoản sử dụng</p>
+                        <p>Chính sách bảo mật thông tin cá nhân</p>
+                        <p>Chính sách bảo mật thanh toán</p>
+                        <p>Giới thiệu Fahasa</p>
+                        <p>Hệ thống trung tâm - nhà sách</p>
+                    </div>
+                    <div class="col-4">
+                        <h6>Hỗ Trợ</h6>
+                        <p>Chính sách đổi - trả - hoàn tiền</p>
+                        <p>Chính sách bảo hành - bồi hoàn</p>
+                        <p>Chính sách vận chuyển</p>
+                        <p>Chính sách khách sỉ</p>
+                        <p>Phương thức thanh toán và xuất HĐ</p>
+                    </div>
+                    <div class="col-4">
+                        <h6>Tài Khoản Của Tôi</h6>
+                        <p>Đăng Nhâp/Tạo mới tài khoản</p>
+                        <p>Thay đổi địa chỉ </p>
+                        <p>Chi tiết tài khoản</p>
+                        <p>Lịch sử mua hàng</p>
+                    </div>
+                </div>
+            </div>
         </div>
-    </footer>-->
+    </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

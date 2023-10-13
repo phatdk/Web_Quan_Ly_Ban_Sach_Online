@@ -30,6 +30,14 @@ namespace BookShop.Web.Client.Controllers
         {
             return View();
         }
+		public IActionResult DanhGia()
+		{
+			return View();
+		}
+		public IActionResult ThanhToan()
+		{
+			return View();
+		}
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
 		{
