@@ -7,14 +7,14 @@ using BookShop.BLL.IService;
 
 public static class SeedDataMD
 {
-    public static async Task SeedAsync(UserManager<Userr> userManager, RoleManager<Role> roleManager,IOrderService order)
+    public static async Task SeedAsync(UserManager<Userr> userManager, RoleManager<Role> roleManager)
     {
         // Tạo role "admin" nếu chưa tồn tại
         if (!await roleManager.RoleExistsAsync("Admin"))
         {
             var adminRole = new Role() { Name = "Admin" };
             var adminRole1 = new Role() { Name = "Staff" };
-            var adminRole2 = new Role() { Name = "Khách vãng lai" };
+            var adminRole2 = new Role() { Name = "Customer" };
             await roleManager.CreateAsync(adminRole);
             await roleManager.CreateAsync(adminRole1);
             await roleManager.CreateAsync(adminRole2);
@@ -28,16 +28,16 @@ public static class SeedDataMD
                 UserName = "admin",
                 Email = "phuc2003zgt@gmail.com",
                 EmailConfirmed = true,
-                Code ="AD"+await order.GenerateCode(9),
-                Name ="Ngo Hong Phuc "
+                Code ="AD0000000",
+                Name ="Admin"
             };
             var User = new Userr
             {
-                UserName = "Phatdk",
-                Email = "phuc2003gaming@gmail.com",
+                UserName = "phatdk",
+                Email = "",
                 EmailConfirmed = true,
-                Code = "KH" + await order.GenerateCode(9),
-                Name ="Do Kim Phat"
+                Code = "KH0000000",
+                Name ="Khách vẵng lai"
             };
 
             var result = await userManager.CreateAsync(adminUser, "admin");
@@ -46,7 +46,7 @@ public static class SeedDataMD
             {
                 // Gán role "admin" cho tài khoản "admin"
                 await userManager.AddToRoleAsync(adminUser, "Admin");
-                await userManager.AddToRoleAsync(User, "Khách vãng lai");
+                await userManager.AddToRoleAsync(User, "Customer");
             }
         }
 
@@ -59,47 +59,47 @@ public static class SeedDataMD
         var status = new StatusOrder()
         {
             Status = 1,
-            StatusName = "chờ xác nhận",
+            StatusName = "Chờ xác nhận",
             CreatedDate = DateTime.Now,
         };  var status1 = new StatusOrder()
         {
             Status = 2,
-            StatusName = "đã xác nhận",
+            StatusName = "Đã xác nhận",
             CreatedDate = DateTime.Now,
         }; var status2 = new StatusOrder()
         {
             Status = 3,
-            StatusName = "đang giao",
+            StatusName = "Đang giao",
             CreatedDate = DateTime.Now,
         }; var status3 = new StatusOrder()
         {
             Status = 4,
-            StatusName = "giao thành công",
+            StatusName = "Giao thành công",
             CreatedDate = DateTime.Now,
         }; var status4 = new StatusOrder()
         {
             Status = 5,
-            StatusName = "thanh toán thành công",
+            StatusName = "Thanh toán thành công",
             CreatedDate = DateTime.Now,
         };var status5 = new StatusOrder()
         {
             Status = 6,
-            StatusName = "hoàn thành",
+            StatusName = "Hoàn thành",
             CreatedDate = DateTime.Now,
         };var status6 = new StatusOrder()
         {
             Status = 7,
-            StatusName = "trả hàng",
+            StatusName = "Trả hàng",
             CreatedDate = DateTime.Now,
         };var status7 = new StatusOrder()
         {
             Status = 8,
-            StatusName = "hủy đơn",
+            StatusName = "Hủy đơn",
             CreatedDate = DateTime.Now,
         };var status8 = new StatusOrder()
         {
             Status = 9,
-            StatusName = "đóng đơn",
+            StatusName = "Đóng đơn",
             CreatedDate = DateTime.Now,
         };
 
