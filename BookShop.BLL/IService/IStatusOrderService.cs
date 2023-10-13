@@ -1,4 +1,5 @@
 ﻿using BookShop.BLL.ConfigurationModel.StatusOrderModel;
+using BookShop.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace BookShop.BLL.IService
 {
 	public interface IStatusOrderService
 	{
-		public Task<List<StatusViewModel>> GetAll();
-	}
+		 Task<List<StatusViewModel>> GetAll();
+		Task<StatusOrder> CreateAsync(StatusOrder model);
+
+    }
 }

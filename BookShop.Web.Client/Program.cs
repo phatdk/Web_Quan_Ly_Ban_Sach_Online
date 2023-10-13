@@ -102,18 +102,19 @@ builder.Services.AddTransient<IStatusOrderService, StatusOrderService>();
 // Configure the HTTP request pipeline.
 var app = builder.Build();
 #region SeedData
-using (var scope = app.Services.CreateScope())
-{
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Userr>>();
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
-    SeedDataMD.SeedAsync(userManager, roleManager).Wait();
-}
-using (var scope = app.Services.CreateScope())
-{
-    var serviice1 = scope.ServiceProvider.GetRequiredService<IRepository<StatusOrder>>();
+//using (var scope = app.Services.CreateScope())
+//{
+//    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Userr>>();
+//    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+//    var oderManager = scope.ServiceProvider.GetRequiredService<IOrderService>();
+//    SeedDataMD.SeedAsync(userManager, roleManager, oderManager).Wait();
+//}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var serviice1 = scope.ServiceProvider.GetRequiredService<IStatusOrderService>();
  
-    SeedDataMD.SeedDataProduct(serviice1).Wait();
-}
+//    SeedDataMD.SeedDataProduct(serviice1).Wait();
+//}
 #endregion
 if (!app.Environment.IsDevelopment())
 {
