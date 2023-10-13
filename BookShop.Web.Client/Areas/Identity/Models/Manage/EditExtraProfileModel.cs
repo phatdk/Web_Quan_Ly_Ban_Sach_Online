@@ -11,7 +11,9 @@ namespace App.Areas.Identity.Models.ManageViewModels
       [Display(Name = "Địa chỉ email")]
       public string UserEmail { get; set; }
       [Display(Name = "Số điện thoại")]
-      public string PhoneNumber { get; set; }
+      public string PhoneNumber { get; set; } 
+      [Display(Name = "Ngày sinh")]
+      public DateTime? Birth { get; set; }
 
   }
 }

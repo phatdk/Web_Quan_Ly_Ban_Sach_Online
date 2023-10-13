@@ -104,20 +104,21 @@ builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromSeco
 
 // Configure the HTTP request pipeline.
 var app = builder.Build();
-//#region SeedData
+#region SeedData
 //using (var scope = app.Services.CreateScope())
 //{
 //    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Userr>>();
 //    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
-//    SeedDataMD.SeedAsync(userManager, roleManager).Wait();
+//    var oderManager = scope.ServiceProvider.GetRequiredService<IOrderService>();
+//    SeedDataMD.SeedAsync(userManager, roleManager, oderManager).Wait();
 //}
 //using (var scope = app.Services.CreateScope())
 //{
-//    var serviice1 = scope.ServiceProvider.GetRequiredService<IRepository<StatusOrder>>();
+//    var serviice1 = scope.ServiceProvider.GetRequiredService<IStatusOrderService>();
  
 //    SeedDataMD.SeedDataProduct(serviice1).Wait();
 //}
-//#endregion
+#endregion
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
