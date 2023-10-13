@@ -1,4 +1,5 @@
-﻿using BookShop.BLL.ConfigurationModel.PaymentFormModel;
+﻿using BookShop.BLL.ConfigurationModel.OrderDetailModel;
+using BookShop.BLL.ConfigurationModel.PaymentFormModel;
 using BookShop.BLL.ConfigurationModel.ProductModel;
 using BookShop.DAL.Entities;
 using System;
@@ -48,8 +49,8 @@ namespace BookShop.BLL.ConfigurationModel.OrderModel
 		public int Width { get; set; }
 		public int Height { get; set; }
 
-		public List<int> productsId { get; set; }
 		public List<int> paymentsId { get; set; }
+		public List<CreateOrderDetailModel> orderDetails { get; set; }
 
 		public List<ProductViewModel> productViewModels { get; set; }
 		public List<PaymentFormViewModel> paymentFormViewModels { get; set; }

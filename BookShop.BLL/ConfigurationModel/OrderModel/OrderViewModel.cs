@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookShop.BLL.ConfigurationModel.OrderDetailModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,5 +33,7 @@ namespace BookShop.BLL.ConfigurationModel.OrderModel
 		//foreign key
 		public int Id_User { get; set; }
 		public int? Id_Promotion { get; set; }
+
+		public List<OrderDetailViewModel> Items { get; set; }
 	}
 }

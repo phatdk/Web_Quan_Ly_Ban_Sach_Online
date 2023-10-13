@@ -85,19 +85,30 @@
 		<ul class="ps-0">
 			@foreach (var item in products)
 			{
-				total += item.Price;
+				total += (item.Price * item.BuyQuantity);
 				<li class="row">
 					<img class="col-2" src="@item.ImgUrl" alt="Hình ảnh sản phẩm">
 					<span class="col-5">@item.Name</span>
 					<span class="col-3">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)</span>
-					<span class="col-2">x1</span>
+					<span class="col-2">x @item.BuyQuantity</span>
 				</li>
 			}
 		</ul>
+		<ul style="list-style: none">
+			@for (var i = 0; i < Model.orderDetails.Count; i++)
+			{
+				<li>
+					@Html.HiddenFor(model => model.orderDetails[i].Id_Product) <!-- Add hidden input for ID -->
+					@Html.HiddenFor(model => model.orderDetails[i].Quantity)
+					@Html.HiddenFor(model => model.orderDetails[i].Price)
+				</li>
+			}
+		</ul>
+
 		<div class="payment">
 			<div class="form-group">
 				<label for="tongGia">Tạm tính:</label>
-				<input asp-for="Total" id="tongGia" value="@total" disabled>
+				<input asp-for="Total" id="tongGia" value="@total" readonly>
 			</div>
 
 			<div class="form-group" hidden>
@@ -109,7 +120,7 @@
 
 			<div class="form-group">
 				<label for="phiShip">Phí vận chuyển:</label>
-				<input asp-for="Shipfee" id="phiShip" disabled />
+				<input asp-for="Shipfee" id="phiShip" readonly />
 			</div>
 
 			<div class="form-group">

@@ -70,8 +70,11 @@ namespace BookShop.Web.Client.Controllers
         public async Task<IActionResult> CreateOnlineOrder(int id, int quantity)
         {
             var createModel = new CreateOrderModel();
+            createModel.orderDetails = new List<CreateOrderDetailModel>();
+            var orderdetail = new CreateOrderDetailModel();
             var user = await GetCurrentUserAsync();
-            if(user != null)
+            // kiem tra login
+            if (user != null)
             {
                 createModel.NameUser = user.Name;
                 createModel.Email = user.Email;
@@ -79,10 +82,11 @@ namespace BookShop.Web.Client.Controllers
                 createModel.Id_User = user.Id;
             }
             createModel.paymentsId = new List<int>();
+            // mua trong gio hang
             if (id == 0)
             {
                 List<CartDetailViewModel> cd = new List<CartDetailViewModel>();
-                if (user != null)
+                if (user != null) // non-account
                 {
                     cd = await _cartDetailService.GetByCart(user.Id);
                 }
@@ -94,6 +98,7 @@ namespace BookShop.Web.Client.Controllers
                         cd = JsonConvert.DeserializeObject<List<CartDetailViewModel>>(customCartChar);
                     }
                 }
+                // duyệt sản phẩm
                 foreach (var prod in cd)
                 {
                     var product = await _productService.GetById(prod.Id_Product);
@@ -106,23 +111,37 @@ namespace BookShop.Web.Client.Controllers
                     }
                     product.BuyQuantity = prod.Quantity;
                     product.ImgUrl = product.imageViewModels.FirstOrDefault().ImageUrl;
-                    _products.Add(product);
+                    _products.Add(product); // sp hien thi
+                    orderdetail = new CreateOrderDetailModel()
+                    {
+                        Id_Product = product.Id,
+                        Price = product.Price,
+                        Quantity = prod.Quantity,
+                    };
+                    createModel.orderDetails.Add(orderdetail);
                 }
 
             }
-            else
+            else // mua sản phẩm chi định
             {
                 var product = await _productService.GetById(id);
-                product.BuyQuantity = quantity;
                 foreach (var item in product.bookViewModels)
                 {
-                    createModel.Weight += item.Weight;
-                    createModel.Width += item.Widght;
-                    createModel.Length += item.Length;
-                    createModel.Height += item.Height;
+                    createModel.Weight += item.Weight * quantity;
+                    createModel.Width += item.Widght * quantity;
+                    createModel.Length += item.Length * quantity;
+                    createModel.Height += item.Height * quantity;
                 }
+                product.BuyQuantity = quantity;
                 product.ImgUrl = product.imageViewModels.FirstOrDefault().ImageUrl;
                 _products.Add(product);
+                orderdetail = new CreateOrderDetailModel()
+                {
+                    Id_Product = product.Id,
+                    Price = product.Price,
+                    Quantity = quantity,
+                };
+                createModel.orderDetails.Add(orderdetail);
             }
             createModel.Weight = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Weight / 1000)));
             createModel.Width = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Width / 100)));
@@ -147,9 +166,9 @@ namespace BookShop.Web.Client.Controllers
                     var user = (await _userService.GetAll()).Where(x => x.Email == request.Email);
                     request.Id_StatusOrder = (await _statusService.GetAll()).Where(x => x.Status == 1).FirstOrDefault().Id; // hóa đơn chờ
                     var details = new List<CreateOrderDetailModel>();
-                    foreach (var item in request.productsId)
+                    foreach (var item in request.orderDetails)
                     {
-                        var product = await _productService.GetById(item);
+                        var product = await _productService.GetById(item.Id_Product);
                         var deltail = new CreateOrderDetailModel()
                         {
                             Id_Product = product.Id,
@@ -158,7 +177,8 @@ namespace BookShop.Web.Client.Controllers
                         };
                         details.Add(deltail);
                     }
-                    var result = await _orderService.Add(request, details);
+                    //return Ok(request);
+                    var result = await _orderService.Add(request, request.orderDetails);
                     if (result.Id != 0)
                     {
                         foreach (var item in request.paymentsId)
