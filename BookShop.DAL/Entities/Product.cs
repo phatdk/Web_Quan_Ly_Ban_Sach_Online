@@ -21,8 +21,8 @@ namespace BookShop.DAL.Entities
 		public int Status { get; set; }
 		public int Type { get; set; } // 0 là bán lẻ, 1 là bán combo
 		// foreign key
-		public int Id_Collection { get; set; }
-		public virtual CollectionBook CollectionBook { get; set; }
+		public int? Id_Collection { get; set; }
+		public virtual CollectionBook? CollectionBook { get; set; }
 		//refenrence
 		public virtual List<Image> Images { get; set; }
 		public virtual List<ProductBook> ProductBooks { get; set; }

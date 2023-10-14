@@ -22,7 +22,7 @@ namespace BookShop.DAL.Entities
 		public int Id_User { get; set; }
 		public int Id_Book { get; set; }
 		public virtual Evaluate Parents { get; set; }
-		public virtual User User { get; set; }
+		public virtual Userr User { get; set; }
 		public virtual OrderDetail OrderDetail { get; set; }
 
 		//reference

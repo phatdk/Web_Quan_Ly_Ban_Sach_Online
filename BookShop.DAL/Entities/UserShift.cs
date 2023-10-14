@@ -19,7 +19,7 @@ namespace BookShop.DAL.Entities
 
 		public int Id_Shift { get; set; }
 		public int Id_User { get; set; }
-		public virtual User User { get; set; }
+		public virtual Userr User { get; set; }
 		public virtual WorkShift WorkShift { get; set; }
 	}
 }

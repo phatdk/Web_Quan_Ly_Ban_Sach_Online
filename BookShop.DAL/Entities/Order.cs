@@ -14,8 +14,9 @@ namespace BookShop.DAL.Entities
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 		public string Code { get; set; }
-		public string Receiver { get; set; }
-		public string Phone { get; set; }
+		public string? Receiver { get; set; }
+		public string? Phone { get; set; }
+		public string? Email { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public DateTime? AcceptDate { get; set; }
 		public DateTime? DeliveryDate { get; set; }
@@ -25,20 +26,25 @@ namespace BookShop.DAL.Entities
 		public DateTime? ModifiDate { get; set; }
 		public string? ModifiNotes { get; set; }
 		public string? Description { get; set; }
-		public int? City { get; set; }
-		public int? District { get; set; }
-		public int? Commune { get; set; }
+		public string? City { get; set; }
+		public string? District { get; set; }
+		public string? Commune { get; set; }
+		public string? Address { get; set; }
+		public int? Shipfee { get; set; }
         //Thêm
 		public bool IsOnlineOrder { get; set; }
         public bool IsUsePoint { get; set; }
         public int? PointUsed { get; set; }
         public int? PointAmount { get; set; }
+		
         //foreign key
+		public int? Id_Staff { get; set; }
         public int Id_User { get; set; }
-		public int Id_Promotion { get; set; }
+		public int? Id_Promotion { get; set; }
 		public int Id_StatusOrder { get; set; }
-		public virtual User User { get; set; }
-		public virtual Promotion Promotion { get; set; }
+		public virtual Userr? Staff { get; set; }
+		public virtual Userr User { get; set; }
+		public virtual Promotion? Promotion { get; set; }
 		public virtual StatusOrder StatusOrder { get; set; }
 
 		//reference

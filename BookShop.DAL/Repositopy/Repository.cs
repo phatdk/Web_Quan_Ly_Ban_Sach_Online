@@ -20,9 +20,9 @@ namespace BookShop.DAL.Repositopy
 
 		public async Task<T> CreateAsync(T entity)
         {
-            _context.Set<T>().Add(entity);
+            var obj = await _context.Set<T>().AddAsync(entity);
             await _context.SaveChangesAsync();
-            return entity;
+            return obj.Entity;
         }
 
 

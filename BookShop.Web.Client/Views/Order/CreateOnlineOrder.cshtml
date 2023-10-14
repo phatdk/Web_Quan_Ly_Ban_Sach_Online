@@ -1,0 +1,321 @@
+﻿@using BookShop.BLL.ConfigurationModel.PaymentFormModel;
+@using BookShop.BLL.ConfigurationModel.ProductModel;
+@using System.Globalization;
+@model BookShop.BLL.ConfigurationModel.OrderModel.CreateOrderModel
+@{
+	ViewData["Title"] = "Tạo đơn hàng";
+	List<ProductViewModel> products = ViewBag.Products;
+	List<PaymentFormViewModel> payments = ViewBag.Payments;
+	int total = 0;
+}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<h4>Tạo đơn hàng</h4>
+
+
+<form asp-action="CreateOnlineOrder" class="row pt-5 pb-5 bg-info">
+	<div class="col-7">
+		<div id="account" hidden>
+			<div class="form-group">
+				<label class="control-label">Tên tài khoản</label>
+				<input asp-for="NameUser" id="NameUser" class="form-control" type="text" readonly />
+			</div>
+		</div>
+
+		<div id="non-account">
+			<div class="form-group">
+				<label class="control-label">Email</label>
+				<input asp-for="Email" class="form-control" type="text" id="receiverAddress" />
+			</div>
+		</div>
+		<div class="row">
+
+			<div class="form-group col-7">
+				<label class="control-label">Tên người nhận</label>
+				<input asp-for="Receiver" class="form-control" type="text" id="receiverAddress" />
+			</div>
+
+			<div class="form-group col-5">
+				<label class="control-label">Số điện thoại</label>
+				<input asp-for="Phone" class="form-control" type="text" id="receiverAddress" />
+			</div>
+
+		</div>
+
+		<div class="form-group">
+			<label class="control-label">Địa chỉ nhận hàng</label>
+			<input asp-for="Address" class="form-control" type="text" id="receiverAddress" />
+		</div>
+		<div class="row">
+			<div class="col-4">
+				<label for="provinceSelectReceiver">Tỉnh/Thành phố</label>
+				<select asp-for="City" id="provinceSelectReceiver" onchange="getDistrict('receiver')" style="width: 100%"></select>
+			</div>
+
+			<div class="col-4">
+				<label for="districtSelectReceiver">Quận/Huyện</label>
+				<select asp-for="District" id="districtSelectReceiver" onchange="getWard('receiver')" style="width: 100%">
+					<option value="" selected disabled>--Select District--</option>
+				</select>
+			</div>
+
+			<div class="col-4">
+				<label for="wardSelectReceiver">Phường/Xã</label>
+				<select asp-for="Commune" id="wardSelectReceiver" style="width: 100%">
+					<option value="" selected disabled">--Select Ward--</option>
+				</select>
+			</div>
+
+			<div id="sender" hidden>
+				<input type="text" id="provinceSelectSender" value="201" />
+				<input type="text" id="districtSelectSender" value="3440" />
+				<input type="text" id="wardSelectSender" value="13010" />
+			</div>
+		</div>
+
+		<div class="form-group mt-4">
+			<label>Ghi chú giao hàng</label>
+			<textarea asp-for="Description" class="form-control" rows="3"></textarea>
+		</div>
+
+	</div>
+
+	<div class="col-5">
+
+		<ul class="ps-0">
+			@foreach (var item in products)
+			{
+				total += item.Price;
+				<li class="row">
+					<img class="col-2" src="@item.ImgUrl" alt="Hình ảnh sản phẩm">
+					<span class="col-5">@item.Name</span>
+					<span class="col-3">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)</span>
+					<span class="col-2">x1</span>
+				</li>
+			}
+		</ul>
+		<div class="payment">
+			<div class="form-group">
+				<label for="tongGia">Tạm tính:</label>
+				<input asp-for="Total" id="tongGia" value="@total" disabled>
+			</div>
+
+			<div class="form-group" hidden>
+				<input type="number" id="weight" value="@Model.Weight" />
+				<input type="number" id="length" value="@Model.Length" />
+				<input type="number" id="width" value="@Model.Width" />
+				<input type="number" id="height" value="@Model.Height" />
+			</div>
+
+			<div class="form-group">
+				<label for="phiShip">Phí vận chuyển:</label>
+				<input asp-for="Shipfee" id="phiShip" disabled />
+			</div>
+
+			<div class="form-group">
+				<label for="totalShip">Tổng tiền:</label>
+				<span id="totalShip">0</span>
+			</div>
+
+			<div class="form-group">
+				<label>Hình thức thanh toán</label>
+				<select asp-for="paymentsId" class="form-control" id="paymentMethod">
+					@foreach (var item in payments)
+					{
+						<option value="@item.Id">@item.Name</option>
+					}
+				</select>
+			</div>
+
+		</div>
+
+		<input type="submit" value="Đặt hàng" />
+
+	</div>
+</form>
+
+<script type="text/javascript">
+	function getProvinces() {
+		axios.get("https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province", {
+			headers: {
+				'token': '0df1a22d-1bfe-11ee-8bfa-8a2dda8ec551'
+			}
+		})
+			.then(function (response) {
+				var provinceSelectReceiver = document.getElementById("provinceSelectReceiver");
+				//var provinceSelectSender = document.getElementById("provinceSelectSender");
+				provinceSelectReceiver.innerHTML = "<option value='' selected disabled>--Select City--</option>";
+				//provinceSelectSender.innerHTML = "<option value='' selected disabled>Chọn tỉnh/thành phố</option>";
+
+
+				for (var i = 0; i < response.data.data.length; i++) {
+					var option = document.createElement("option");
+					option.value = response.data.data[i].ProvinceID;
+					option.text = response.data.data[i].ProvinceName;
+					provinceSelectReceiver.appendChild(option);
+					provinceSelectSender.appendChild(option.cloneNode(true));
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+
+	}
+	// Gọi hàm để lấy danh sách tỉnh/thành phố ban đầu
+	getProvinces();
+
+	function getDistrict(type) {
+		var provinceID;
+		var districtSelect;
+		if (type === "receiver") {
+			provinceID = document.getElementById("provinceSelectReceiver").value;
+			districtSelect = document.getElementById("districtSelectReceiver");
+		} else if (type === "sender") {
+			provinceID = document.getElementById("provinceSelectSender").value;
+			districtSelect = document.getElementById("districtSelectSender");
+		}
+
+		axios.get("https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=" + provinceID, {
+			headers: {
+				'token': '0df1a22d-1bfe-11ee-8bfa-8a2dda8ec551'
+			}
+		})
+			.then(function (response) {
+				districtSelect.innerHTML = "<option value='' selected disabled>--Select District--</option>";
+
+
+
+				var wardSelect;
+				if (type === "receiver") {
+					wardSelect = document.getElementById("wardSelectReceiver");
+				} else if (type === "sender") {
+					wardSelect = document.getElementById("wardSelectSender");
+				}
+				wardSelect.innerHTML = "<option value='' selected disabled>--Select Ward--</option>";
+
+				for (var i = 0; i < response.data.data.length; i++) {
+					var option = document.createElement("option");
+					option.value = response.data.data[i].DistrictID;
+					option.text = response.data.data[i].DistrictName;
+					districtSelect.appendChild(option);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+
+	}
+
+	function getWard(type) {
+		var districtID;
+		var wardSelect;
+		if (type === "receiver") {
+			districtID = document.getElementById("districtSelectReceiver").value;
+			wardSelect = document.getElementById("wardSelectReceiver");
+		} else if (type === "sender") {
+			districtID = document.getElementById("districtSelectSender").value;
+			wardSelect = document.getElementById("wardSelectSender");
+		}
+
+		axios.get("https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=" + districtID, {
+			headers: {
+				'token': '0df1a22d-1bfe-11ee-8bfa-8a2dda8ec551'
+			}
+		})
+			.then(function (response) {
+				wardSelect.innerHTML = "<option value='' selected disabled>--Select Ward--</option>";
+				for (var i = 0; i < response.data.data.length; i++) {
+					var option = document.createElement("option");
+					option.value = response.data.data[i].WardCode;
+					option.text = response.data.data[i].WardName;
+					wardSelect.appendChild(option);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+
+	}
+
+	function calculateShipping() {
+
+		var fromDistrictID = document.getElementById("districtSelectSender").value;
+		var fromWardCode = document.getElementById("wardSelectSender").value;
+
+		var toDistrictID = document.getElementById("districtSelectReceiver").value;
+		var toWardCode = document.getElementById("wardSelectReceiver").value;
+
+		var height = document.getElementById("height").value;
+		var length = document.getElementById("length").value;
+		var weight = document.getElementById("weight").value;
+		var width = document.getElementById("width").value;
+
+		// check khi nào nhập đủ dữ liệu dài rộng cao nặng thì hiển thị ra
+
+		if (height !== "" && length !== "" && weight !== "" && width !== "") {
+			var phiShip = document.getElementById("phiShip");
+			var totalShip = document.getElementById("totalShip");
+
+			axios
+				.get("https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee", {
+					params: {
+						from_district_id: fromDistrictID,
+						from_ward_code: fromWardCode,
+						service_id: 53320,
+						service_type_id: null,
+						to_district_id: toDistrictID,
+						to_ward_code: toWardCode,
+						height: height,
+						length: length,
+						weight: weight,
+						width: width,
+						cod_failed_amount: 2000,
+						insurance_value: 10000,
+						coupon: null
+					},
+					headers: {
+						'token': '0df1a22d-1bfe-11ee-8bfa-8a2dda8ec551',
+						'shop_id': '125022'
+					}
+				})
+
+				.then(function (response) {
+
+					phiShip.value = response.data.data.total;
+					var parsedPhiShip = parseFloat(response.data.data.total);
+					var tongGiaInput = document.getElementById("tongGia");
+					var parsedTongGia = parseFloat(tongGiaInput.value);
+
+					if (!isNaN(parsedPhiShip) && !isNaN(parsedTongGia)) {
+						var total = parsedPhiShip + parsedTongGia;
+						totalShip.innerHTML = total.toLocaleString("vi-VN", {
+							style: "currency",
+							currency: "VND"
+						});
+					} else {
+						totalShip.innerHTML = "NaN";
+					}
+
+				});
+		}
+
+	}
+	var inputElements = document.querySelectorAll("input, select");
+	inputElements.forEach(function (element) {
+		element.addEventListener("input", calculateShipping);
+	});
+
+
+	document.getElementById('prod-type').addEventListener('change', function () {
+		var check = this.checked;  // Sử dụng this để truy cập đối tượng hiện tại
+		var booklist = document.getElementById('selectedBook');
+
+		if (check) {
+			booklist.setAttribute('multiple', 'multiple');
+		} else {
+			booklist.removeAttribute('multiple');
+		}
+	});
+
+
+</script>
