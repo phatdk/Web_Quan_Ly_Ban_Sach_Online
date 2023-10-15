@@ -186,31 +186,25 @@ namespace BookShop.BLL.Service
 			var promotions = await _promotionRepository.GetAllAsync();
 			var objlist = (from a in orders
 						   join b in users on a.Id_User equals b.Id into t
-						   from b in t.DefaultIfEmpty()
+						   from b1 in t.DefaultIfEmpty()
 						   join c in promotions on a.Id_Promotion equals c.Id into i
-						   from c in i.DefaultIfEmpty()
+						   from c1 in i.DefaultIfEmpty()
 						   select new OrderViewModel()
 						   {
 							   Id = a.Id,
 							   Code = a.Code,
 							   Phone = a.Phone,
 							   Receiver = a.Receiver,
-							   AcceptDate = a.AcceptDate,
+							   Email = a.Email,
 							   CreatedDate = a.CreatedDate,
-							   DeliveryDate = a.DeliveryDate,
-							   ReceiveDate = a.ReceiveDate,
-							   PaymentDate = a.PaymentDate,
-							   CompleteDate = a.CompleteDate,
-							   ModifiDate = a.ModifiDate,
-							   ModifiNotes = a.ModifiNotes,
 							   Description = a.Description,
 							   City = a.City,
 							   District = a.District,
 							   Commune = a.Commune,
 							   Id_User = a.Id_User,
 							   Id_Promotion = a.Id_Promotion,
-							   NameUser = b.Name,
-							   NamePromotion = c.Name,
+							   NameUser = b1.Name,
+							   NamePromotion = (c1 == null) ? "không sử dụng khuyến mãi" : c1.Name,
 						   }).ToList();
 			return objlist;
 		}
@@ -268,15 +262,16 @@ namespace BookShop.BLL.Service
 			var promotions = await _promotionRepository.GetAllAsync();
 			var objlist = (from a in orders
 						   join b in users on a.Id_User equals b.Id into t
-						   from b in t.DefaultIfEmpty()
+						   from b1 in t.DefaultIfEmpty()
 						   join c in promotions on a.Id_Promotion equals c.Id into i
-						   from c in i.DefaultIfEmpty()
+						   from c1 in i.DefaultIfEmpty()
 						   select new OrderViewModel()
 						   {
 							   Id = a.Id,
 							   Code = a.Code,
 							   Phone = a.Phone,
 							   Receiver = a.Receiver,
+							   Email = a.Email,
 							   AcceptDate = a.AcceptDate,
 							   CreatedDate = a.CreatedDate,
 							   DeliveryDate = a.DeliveryDate,
@@ -286,13 +281,10 @@ namespace BookShop.BLL.Service
 							   ModifiDate = a.ModifiDate,
 							   ModifiNotes = a.ModifiNotes,
 							   Description = a.Description,
-							   City = a.City,
-							   District = a.District,
-							   Commune = a.Commune,
 							   Id_User = a.Id_User,
 							   Id_Promotion = a.Id_Promotion,
-							   NameUser = b.Name,
-							   NamePromotion = c.Name,
+							   NameUser = b1.Name,
+							   NamePromotion = (c1 == null) ? "không sử dụng khuyến mãi" : c1.Name,
 						   }).FirstOrDefault();
 			return objlist;
 		}
