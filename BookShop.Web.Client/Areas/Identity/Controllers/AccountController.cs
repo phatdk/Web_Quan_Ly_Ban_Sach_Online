@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using App.Areas.Identity.Models.AccountViewModels;
+using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using BookShop.Web.Client.ExtendMethods;
 using Microsoft.AspNetCore.Authorization;
