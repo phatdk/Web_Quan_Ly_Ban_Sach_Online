@@ -34,10 +34,5 @@ namespace BookShop.BLL.Service
 			}
 			return listvm;
 		}
-		public async Task<StatusOrder> CreateAsync(StatusOrder model)
-		{
-			return await _statusRepository.CreateAsync(model);
-
-        }
 	}
 }

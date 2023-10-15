@@ -3,7 +3,6 @@ using BookShop.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Drawing.Drawing2D;
 using BookShop.DAL.Repositopy;
-using BookShop.BLL.IService;
 
 public static class SeedDataMD
 {
@@ -41,8 +40,7 @@ public static class SeedDataMD
             };
 
             var result = await userManager.CreateAsync(adminUser, "admin");
-            var result1 = await userManager.CreateAsync(User, "123456");
-            if (result.Succeeded&& result1.Succeeded)
+            if (result.Succeeded)
             {
                 // Gán role "admin" cho tài khoản "admin"
                 await userManager.AddToRoleAsync(adminUser, "Admin");
@@ -52,7 +50,7 @@ public static class SeedDataMD
 
     }
 
-    public static async Task SeedDataProduct(IStatusOrderService StatusOrder)
+    public static async Task SeedDataProduct(IRepository<StatusOrder> StatusOrder)
     {
 
 
