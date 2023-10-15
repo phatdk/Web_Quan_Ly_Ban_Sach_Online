@@ -1,436 +1,172 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>@ViewData["Title"]</title>
-    
-    
-    <link preload href="~/admin/css/style.css" rel="stylesheet">
-    <link preload rel="stylesheet" href="~/admin/vendor/select2/css/select2.min.css">
+    @* <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> *@
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
 
-   
+    @* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> *@
+    <link rel="stylesheet" href="~/lib/fontawesome-6.4.2/css/all.min.css"/>
+
+    <!-- Bootstrap JS and dependencies -->
+	
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    @* <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> *@
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="~/js/layout.js"></script>
+    <link rel="stylesheet" href="~/css/Admin/admin.css">
+    <link rel="stylesheet" href="~/lib/chosen_v1.8.7/chosen.min.css" />
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        
+    <title>Document</title>
+    <style>
+
+    </style>
 </head>
 <body>
-
-    <!--*******************
-        Preloader start
-    ********************-->
-    <div id="preloader">
-        <div class="sk-three-bounce">
-            <div class="sk-child sk-bounce1"></div>
-            <div class="sk-child sk-bounce2"></div>
-            <div class="sk-child sk-bounce3"></div>
+    <div class="sidebar">
+        <div class="logo-details">
+            <i class='bx bxs-balloon'></i>
+            <span class="logo_name">DashBoar</span>
         </div>
+        <ul class="nav-links">
+            <li>
+                <a href="">
+                    <i class='bx bx-desktop'></i>
+                    <span class="link_name">Bàn làm việc</span>
+                </a>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="">Bàn làm việc</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="icon_links">
+                    <a href="">
+                        <i class='bx bx-grid-alt'></i>
+                        <span class="link_name">Sản Phẩm</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="">Quản lý</a></li>
+                    <li><a href="">Danh sách</a></li>
+                    <li><a href="">Thể loại</a></li>
+                    <li><a href="">Tác giả</a></li>
+                    <li><a href="">Đánh giá</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="icon_links">
+                    <a href="">
+                        <i class='bx bx-cart'></i>
+                        <span class="link_name">Đơn hàng</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="">Quản lý</a></li>
+                    <li><a href="">Danh sách</a></li>
+                    <li><a href="">Thể loại</a></li>
+                    <li><a href="">Tác giả</a></li>
+                    <li><a href="">Đánh giá</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="icon_links">
+                    <a href="">
+                        <i class='bx bxs-user-detail'></i>
+                        <span class="link_name">Khách hàng</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="">Quản lý</a></li>
+                    <li><a href="">Danh sách</a></li>
+                    <li><a href="">Thể loại</a></li>
+                    <li><a href="">Tác giả</a></li>
+                    <li><a href="">Đánh giá</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="icon_links">
+                    <a href="">
+                        <i class='bx bx-dollar-circle'></i>
+                        <span class="link_name">Khuyến mãi</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="">Quản lý</a></li>
+                    <li><a href="">Danh sách</a></li>
+                    <li><a href="">Thể loại</a></li>
+                    <li><a href="">Tác giả</a></li>
+                    <li><a href="">Đánh giá</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="icon_links">
+                    <a href="">
+                        <i class='bx bx-bookmark-alt-plus'></i>
+                        <span class="link_name">Bài đăng</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="">Quản lý</a></li>
+                    <li><a href="">Danh sách</a></li>
+                    <li><a href="">Thể loại</a></li>
+                    <li><a href="">Tác giả</a></li>
+                    <li><a href="">Đánh giá</a></li>
+                </ul>
+            </li>
+        </ul>
     </div>
-    <!--*******************
-        Preloader end
-    ********************-->
-    <!--**********************************
-        Main wrapper start
-    ***********************************-->
-    <div id="main-wrapper">
-
-        <!--**********************************
-            Nav header start
-        ***********************************-->
-        <div class="nav-header">
-            <a asp-controller="HomeAdmin" asp-action="Index" class="brand-logo">
-                <img class="img-fluid" src="~/admin/images/tth_admin_logo.png" alt="">
-            </a>
-
-            <div class="nav-control">
-                <div class="hamburger">
-                    <span class="line"></span><span class="line"></span><span class="line"></span>
+    <section class="home-section">
+        <div class="home-content">
+            <i class='bx bx-menu'></i>
+            <span class="text">Drop Down Slidebar</span>
+        </div>
+    </section>
+    <div class="row">
+        <div class="content-wrapper col-12">
+            <div class="box">
+                <div class="box-header">
+                    Content Header
+                </div>
+                <div class="box-body">
+                    @RenderBody()
                 </div>
             </div>
         </div>
-        <!--**********************************
-            Nav header end
-        ***********************************-->
-        <!--**********************************
-            Header start
-        ***********************************-->
-        <div class="header">
-            <div class="header-content">
-                <nav class="navbar navbar-expand">
-                    <div class="collapse navbar-collapse justify-content-between">
-                        <div class="header-left">
-                            <label class="label-header-title-custom">@ViewData["Title"]</label>
-                        </div>
+	</div>
 
-                        <ul class="navbar-nav header-right">
-                            <li class="nav-item dropdown notification_dropdown">
-                                <a class="nav-link" href="#" role="button" data-toggle="dropdown">
-                                    <i class="mdi mdi-bell"></i>
-                                    <div class="pulse-css"></div>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <ul class="list-unstyled">
-                                        <li class="media dropdown-item">
-                                            <span class="success"><i class="ti-user"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p>
-                                                        <strong>Martin</strong> has added a <strong>customer</strong> Successfully
-                                                    </p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="primary"><i class="ti-shopping-cart"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>Jennifer</strong> purchased Light Dashboard 2.0.</p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="danger"><i class="ti-bookmark"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p>
-                                                        <strong>Robin</strong> marked a <strong>ticket</strong> as unsolved.
-                                                    </p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="primary"><i class="ti-heart"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>David</strong> purchased Light Dashboard 1.0.</p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="success"><i class="ti-image"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p>
-                                                        <strong> James.</strong> has added a<strong>customer</strong> Successfully
-                                                    </p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                    </ul>
-                                    <a class="all-notification" href="#">
-                                        See all notifications <i class="ti-arrow-right"></i>
-                                    </a>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown header-profile">
-                                <a class="nav-link" href="#" role="button" data-toggle="dropdown">
-                                    <i class="mdi mdi-account"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="./app-profile.html" class="dropdown-item">
-                                        <i class="icon-user"></i>
-                                        <span class="ml-2">Profile </span>
-                                    </a>
-                                    <a href="./email-inbox.html" class="dropdown-item">
-                                        <i class="icon-envelope-open"></i>
-                                        <span class="ml-2">Inbox </span>
-                                    </a>
-                                    <a href="./page-login.html" class="dropdown-item">
-                                        <i class="icon-key"></i>
-                                        <span class="ml-2">Logout </span>
-                                    </a>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
-            </div>
-        </div>
-        <!--**********************************
-            Header end ti-comment-alt
-        ***********************************-->
-        <!--**********************************
-            Sidebar start
-        ***********************************-->
-        <div class="quixnav">
-            <div class="quixnav-scroll">
-                <ul class="metismenu" id="menu">
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="fa fa-newspaper-o"></i><span class="nav-text">Quản lý tin bài</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="QuanLyTinBai" asp-action="ThemMoiTinBai">Thêm mới tin bài</a></li>
-                            <li><a asp-controller="QuanLyTinBai" asp-action="TinBaiCuaToi">Tin bài của tôi</a></li>
-                            <li><a asp-controller="QuanLyTinBai" asp-action="BienTapVienDuyet">Biên tập viên duyệt</a></li>
-                            <li><a asp-controller="QuanLyTinBai" asp-action="TongTKTSDuyet">Tổng TKTS duyệt</a></li>
-                            <li><a asp-controller="QuanLyTinBai" asp-action="PhongBDTDuyet">Phòng BĐT duyệt</a></li>
-                            <li><a asp-controller="QuanLyTinBai" asp-action="PhoTBTDuyet">Phó TBT duyệt</a></li>
-                            <li><a asp-controller="QuanLyTinBai" asp-action="ChoXuatBan">Chờ xuất bàn</a></li>
-                            <li><a asp-controller="QuanLyTinBai" asp-action="DaXuatBan">Đã xuất bản</a></li>
-                            <li><a asp-controller="QuanLyTinBai" asp-action="NgungXuatBan">Ngừng xuất bản</a></li>
-                            <li><a asp-controller="QuanLyTinBai" asp-action="TinDaThaoTac">Tin đã thao tác</a></li>
-                            <li><a asp-controller="QuanLyTinBai" asp-action="TongHopTinbai">Tổng hợp tin bài</a></li>
-                            <li><a asp-controller="QuanLyTinBai" asp-action="BanDocGuiBai">Bạn đọc gửi bài</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="fa fa-print"></i><span class="nav-text">Quản lý nội dung báo in</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="QuanLyNoiDungBaoIn" asp-action="ThemMoiTinBai">Thêm mới tin bài</a></li>
-                            <li><a asp-controller="QuanLyNoiDungBaoIn" asp-action="TinBaiCuaToi">Tin bài của tôi</a></li>
-                            <li><a asp-controller="QuanLyNoiDungBaoIn" asp-action="BienTapVienDuyet">Biên tập viên duyệt</a></li>
-                            <li><a asp-controller="QuanLyNoiDungBaoIn" asp-action="TongTKTSDuyet">Tổng TKTS duyệt</a></li>
-                            <li><a asp-controller="QuanLyNoiDungBaoIn" asp-action="PhongBDTDuyet">Phòng BĐT duyệt</a></li>
-                            <li><a asp-controller="QuanLyNoiDungBaoIn" asp-action="PhoTBTDuyet">Phó TBT duyệt</a></li>
-                            <li><a asp-controller="QuanLyNoiDungBaoIn" asp-action="ChoXuatBan">Chờ xuất bàn</a></li>
-                            <li><a asp-controller="QuanLyNoiDungBaoIn" asp-action="DaXuatBan">Đã xuất bản</a></li>
-                            <li><a asp-controller="QuanLyNoiDungBaoIn" asp-action="NgungXuatBan">Ngừng xuất bản</a></li>
-                            <li><a asp-controller="QuanLyNoiDungBaoIn" asp-action="TinDaThaoTac">Tin đã thao tác</a></li>
-                            <li><a asp-controller="QuanLyNoiDungBaoIn" asp-action="TongHopTinbai">Tổng hợp tin bài</a></li>
-                            <li><a asp-controller="QuanLyNoiDungBaoIn" asp-action="BanDocGuiBai">Bạn đọc gửi bài</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="fa fa-paint-brush"></i><span class="nav-text">Quản lý dàn trang báo in</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="QuanLyDanTrangBaoIn" asp-action="DanhSachQuangCao">Danh sách quảng cáo</a></li>
-                            <li><a asp-controller="QuanLyDanTrangBaoIn" asp-action="DanhSachTinBai">Danh sách tin bài</a></li>
-                            <li><a asp-controller="QuanLyDanTrangBaoIn" asp-action="ThemMoiDanTrang">Thêm mới dàn trang</a></li>
-                            <li><a asp-controller="QuanLyDanTrangBaoIn" asp-action="DanTrangCuaToi">Dàn trang của tôi</a></li>
-                            <li><a asp-controller="QuanLyDanTrangBaoIn" asp-action="BienTapVienDuyet">Biên tập viên duyệt</a></li>
-                            <li><a asp-controller="QuanLyDanTrangBaoIn" asp-action="TongTKTSDuyet">Tổng TKTS duyệt</a></li>
-                            <li><a asp-controller="QuanLyDanTrangBaoIn" asp-action="PhongBDTDuyet">Phòng BĐT duyệt</a></li>
-                            <li><a asp-controller="QuanLyDanTrangBaoIn" asp-action="PhoTBTDuyet">Phó TBT duyệt</a></li>
-                            <li><a asp-controller="QuanLyDanTrangBaoIn" asp-action="ChoXuatBan">Chờ xuất bàn</a></li>
-                            <li><a asp-controller="QuanLyDanTrangBaoIn" asp-action="DaXuatBan">Đã xuất bản</a></li>
-                            <li><a asp-controller="QuanLyDanTrangBaoIn" asp-action="NgungXuatBan">Ngừng xuất bản</a></li>
-                            <li><a asp-controller="QuanLyDanTrangBaoIn" asp-action="TongHopTinbai">Tổng hợp tin bài</a></li>
-                            <li><a asp-controller="QuanLyDanTrangBaoIn" asp-action="BanDocGuiBai">Bạn đọc gửi bài</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="fa fa-video-camera"></i><span class="nav-text">Quản lý video</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="QuanLyVideo" asp-action="ThemMoiVideo">Thêm mới video</a></li>
-                            <li><a asp-controller="QuanLyVideo" asp-action="VideoCuatoi">Video của tôi</a></li>
-                            <li><a asp-controller="QuanLyVideo" asp-action="BienTapVienDuyet">Biên tập viên duyệt</a></li>
-                            <li><a asp-controller="QuanLyVideo" asp-action="TongTKTSDuyet">Tổng TKTS duyệt</a></li>
-                            <li><a asp-controller="QuanLyVideo" asp-action="PhongBDTDuyet">Phòng BĐT duyệt</a></li>
-                            <li><a asp-controller="QuanLyVideo" asp-action="PhoTBTDuyet">Phó TBT duyệt</a></li>
-                            <li><a asp-controller="QuanLyVideo" asp-action="ChoXuatBan">Chờ xuất bàn</a></li>
-                            <li><a asp-controller="QuanLyVideo" asp-action="DaXuatBan">Đã xuất bản</a></li>
-                            <li><a asp-controller="QuanLyVideo" asp-action="NgungXuatBan">Ngừng xuất bản</a></li>
-                            <li><a asp-controller="QuanLyVideo" asp-action="DaThaoTac">Đã thao tác</a></li>
-                            <li><a asp-controller="QuanLyVideo" asp-action="TongHopVideo">Tổng hợp video</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="fa fa-telegram"></i><span class="nav-text">Quản lý tường luật</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="QuanLyTinTuongThuat" asp-action="ThemNoiDung">Thêm mới nội dung</a></li>
-                            <li><a asp-controller="QuanLyTinTuongThuat" asp-action="NoiDungCuatoi">Nội dung của tôi</a></li>
-                            <li><a asp-controller="QuanLyTinTuongThuat" asp-action="BienTapVienDuyet">Biên tập viên duyệt</a></li>
-                            <li><a asp-controller="QuanLyTinTuongThuat" asp-action="TongTKTSDuyet">Tổng TKTS duyệt</a></li>
-                            <li><a asp-controller="QuanLyTinTuongThuat" asp-action="PhongBDTDuyet">Phòng BĐT duyệt</a></li>
-                            <li><a asp-controller="QuanLyTinTuongThuat" asp-action="PhoTBTDuyet">Phó TBT duyệt</a></li>
-                            <li><a asp-controller="QuanLyTinTuongThuat" asp-action="ChoXuatBan">Chờ xuất bàn</a></li>
-                            <li><a asp-controller="QuanLyTinTuongThuat" asp-action="DaXuatBan">Đã xuất bản</a></li>
-                            <li><a asp-controller="QuanLyTinTuongThuat" asp-action="NgungXuatBan">Ngừng xuất bản</a></li>
-                            <li><a asp-controller="QuanLyTinTuongThuat" asp-action="TongHopNoiDung">Tổng hợp nội dung tường thuật</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="fa fa-headphones"></i><span class="nav-text">Quản lý báo nói</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="QuanLyBaoNoi" asp-action="ChoBienTap">Chờ biên tập</a></li>
-                            <li><a asp-controller="QuanLyBaoNoi" asp-action="DangBienTap">Đang biên tập</a></li>
-                            <li><a asp-controller="QuanLyBaoNoi" asp-action="DaXuatBan">Đã xuất bản</a></li>
-                            <li><a asp-controller="QuanLyBaoNoi" asp-action="NgungXuatBan">Ngừng xuất bản</a></li>
-                            <li><a asp-controller="QuanLyBaoNoi" asp-action="TongHopBaoNoi">Tổng hợp báo nói</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="fa fa-volume-up"></i><span class="nav-text">Quản lý audio</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="QuanLyAudio" asp-action="ThemMoiAudio">Thêm mới Audio</a></li>
-                            <li><a asp-controller="QuanLyAudio" asp-action="AudioCuaToi">Audio của tôi</a></li>
-                            <li><a asp-controller="QuanLyAudio" asp-action="ChoXuatBan">Chờ xuất bản</a></li>
-                            <li><a asp-controller="QuanLyAudio" asp-action="DaXuatBan">Đã xuất bản</a></li>
-                            <li><a asp-controller="QuanLyAudio" asp-action="NgungXuatBan">Ngừng xuất bản</a></li>
-                            <li><a asp-controller="QuanLyAudio" asp-action="TongHopAudio">Tổng hợp Audio</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="fa fa-group"></i><span class="nav-text">Giao lưu trực tuyến </span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="QuanLyGiaoLuuTrucTuyen" asp-action="ChuongTrinhGiaoLuu">Chương trình giao lưu</a></li>
-                            <li><a asp-controller="QuanLyGiaoLuuTrucTuyen" asp-action="QuanLyCauHoi">Quản lý câu hỏi</a></li>
-                            <li><a asp-controller="QuanLyGiaoLuuTrucTuyen" asp-action="PhongBDTDuyet">Phòng BĐT duyệt</a></li>
-                            <li><a asp-controller="QuanLyGiaoLuuTrucTuyen" asp-action="ChoXuatBan">Chờ xuất bản</a></li>
-                            <li><a asp-controller="QuanLyGiaoLuuTrucTuyen" asp-action="DaXuatBan">Đã xuất bản</a></li>
-                            <li><a asp-controller="QuanLyGiaoLuuTrucTuyen" asp-action="NgungXuatBan">Ngừng xuất bản</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="fa fa-comments-o"></i><span class="nav-text">Quản lý phản hồi </span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="QuanLyPhanHoi" asp-action="DanhSachPhanHoi">Danh sách phản hồi</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="fa fa-bar-chart"></i><span class="nav-text">Báo cáo thống kê</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="BaoCaoThongKe" asp-action="TinDocNhieuNhat">Tin đọc nhiều nhất</a></li>
-                            <li><a asp-controller="BaoCaoThongKe" asp-action="ThongKeNguoiDang">Thống kê người đăng</a></li>
-                            <li><a asp-controller="BaoCaoThongKe" asp-action="ThongKeChuyenMuc">Thống kê chuyên mục</a></li>
-                            <li><a asp-controller="BaoCaoThongKe" asp-action="ChiTietNhuanBut">Chi tiết nhuận bút</a></li>
-                            <li><a asp-controller="BaoCaoThongKe" asp-action="TongHopNhuanBut">Tổng hợp nhuận bút</a></li>
-                            <li><a asp-controller="BaoCaoThongKe" asp-action="ChiTraNhuanBut">Chi tri trả nhuận bút</a></li>
-                            <li><a asp-controller="BaoCaoThongKe" asp-action="NhuanButCaNhan">Nhuận bút cá nhân</a></li>
-                            <li><a asp-controller="BaoCaoThongKe" asp-action="TongHopGiongNoi">Tổng hợp giọng nói</a></li>
-                            <li><a asp-controller="BaoCaoThongKe" asp-action="BaoCaoTinBaiTheoSoBaoCao">Báo cáo tin bài theo số báo cáo</a></li>
-                            <li><a asp-controller="BaoCaoThongKe" asp-action="BaoCaoVideo">Báo cáo video</a></li>
-                            <li><a asp-controller="BaoCaoThongKe" asp-action="BaoCaoQuangCao">Báo cáo quảng cáo</a></li>
-                        </ul>
-                    </li>
- 
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="fa fa-question-circle"></i><span class="nav-text">Quản lý hỏi đáp trực tuyến</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="QuanLyHoiDapTrucTuyen" asp-action="DanhSachHoiDapTrucTuyen">Danh sách hỏi đáp trực tuyến</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="fa fa-pencil-square"></i><span class="nav-text">Quản lý đề tài</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="QuanLyDeTai" asp-action="ThemMoiDeTai">Thêm mới đề tài</a></li>
-                            <li><a asp-controller="QuanLyDeTai" asp-action="DeTaiCuaToi">Đề tài của tôi</a></li>
-                            <li><a asp-controller="QuanLyDeTai" asp-action="BienTapVienDuyet">Biên tập viên duyệt</a></li>
-                            <li><a asp-controller="QuanLyDeTai" asp-action="ChoXuatBan">Chờ xuất bàn</a></li>
-                            <li><a asp-controller="QuanLyDeTai" asp-action="DaXuatBan">Đã xuất bản</a></li>
-                            <li><a asp-controller="QuanLyDeTai" asp-action="NgungXuatBan">Ngừng xuất bản</a></li>
-                            <li><a asp-controller="QuanLyDeTai" asp-action="TongHopDeTai">Tổng hợp đề tài</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="fa fa-map"></i><span class="nav-text">Quản lý kịch bản</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="QuanLyKichBan" asp-action="ThemKichBan">Thêm mới kịch bản</a></li>
-                            <li><a asp-controller="QuanLyKichBan" asp-action="KichBanCuaToi">Kịch bản của tôi</a></li>
-                            <li><a asp-controller="QuanLyKichBan" asp-action="BienTapVienDuyet">Biên tập viên duyệt</a></li>
-                            <li><a asp-controller="QuanLyKichBan" asp-action="ChoXuatBan">Chờ xuất bàn</a></li>
-                            <li><a asp-controller="QuanLyKichBan" asp-action="DaXuatBan">Đã xuất bản</a></li>
-                            <li><a asp-controller="QuanLyKichBan" asp-action="NgungXuatBan">Ngừng xuất bản</a></li>
-                            <li><a asp-controller="QuanLyKichBan" asp-action="TongHopKichBan">Tổng hợp kịch bản</a></li>
-                            <li><a asp-controller="QuanLyKichBan" asp-action="DaThaoTac">Đã thao tác</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="fa fa-diamond"></i><span class="nav-text">Quản lý quản lý tài chính</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="QuanLyTaiChinh" asp-action="QuanLyKhachHang">Thêm mới kịch bản</a></li>
-                            <li><a asp-controller="QuanLyTaiChinh" asp-action="QuanLyDotThu">Kịch bản của tôi</a></li>
-                            <li><a asp-controller="QuanLyTaiChinh" asp-action="QuanLyDotChi">Biên tập viên duyệt</a></li>
-                            <li><a asp-controller="QuanLyTaiChinh" asp-action="BaoCaoChiTietDonViDangQuangCao">Chờ xuất bàn</a></li>
-                            <li><a asp-controller="QuanLyTaiChinh" asp-action="BaoCaoHopDongDangThucHien">Đã xuất bản</a></li>
-                            <li><a asp-controller="QuanLyTaiChinh" asp-action="BaoCaoHopDongDaHoanThanh">Ngừng xuất bản</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="fa fa-newspaper-o"></i><span class="nav-text">Quản lý QC báo giấy</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="QuanLyQCBaoGiay" asp-action="ThemMoiQuangCao">Thêm mới quảng cáo</a></li>
-                            <li><a asp-controller="QuanLyQCBaoGiay" asp-action="QuangCaoCuaToi">Quảng cáo của tôi</a></li>
-                            <li><a asp-controller="QuanLyQCBaoGiay" asp-action="BienTapVienDuyet">Biên tập viên duyệt</a></li>
-                            <li><a asp-controller="QuanLyQCBaoGiay" asp-action="TongHopQuangCao">Tổng hợp quảng cáo</a></li>
-                        </ul>
-                    </li>
- 
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="fa fa-chain-broken"></i><span class="nav-text">Quản lý QC báo điện tử</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="QuanLyQCBaoDienTu" asp-action="QuanLyVung">Quản lý vùng</a></li>
-                            <li><a asp-controller="QuanLyQCBaoDienTu" asp-action="QuanLyChienDich">Quản lý chiến dịch</a></li>
-                            <li><a asp-controller="QuanLyQCBaoDienTu" asp-action="QuanLyBanner">Quản lý banner</a></li>
-                            <li><a asp-controller="QuanLyQCBaoDienTu" asp-action="QuanLyCodeBenThu3">Quản lý code bên thứ 3</a></li>
-                        </ul>
-                    </li>
- 
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="fa fa-external-link"></i><span class="nav-text">Quản lý rao vặt</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="QuanLyRaoVat" asp-action="ThemMoiTin">Thêm mới tin</a></li>
-                            <li><a asp-controller="QuanLyRaoVat" asp-action="DanhSachIn">Danh sách tin</a></li>
-                            <li><a asp-controller="QuanLyRaoVat" asp-action="BinhLuanPhanHoi">Bình luận/Phản hồi</a></li>
-                            <li><a asp-controller="QuanLyRaoVat" asp-action="DanhMucGiaoVat">Danh mục rao vặt</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+    <script src="/lib/chosen_v1.8.7/docsupport/jquery-3.2.1.min.js" type="text/javascript"></script>
+    <script src="/lib/chosen_v1.8.7/chosen.jquery.js"></script>
+    <script src="/lib/chosen_v1.8.7/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/lib/chosen_v1.8.7/docsupport/init.js" type="text/javascript" charset="utf-8"></script>
+
+	<script>
+		let arrow = document.querySelectorAll(".arrow")
 
 
-        </div>
-        <!--**********************************
-            Sidebar end
-        ***********************************-->
-
-        <div class="content-body">
-            @RenderBody()
-        </div>
-
-    </div>
-    <!--**********************************
-        Main wrapper end
-    ***********************************-->
-    <!--**********************************
-        Scripts
-    ***********************************-->
-    <!-- Required vendors -->
-    <script src="~/admin/vendor/global/global.min.js"></script>
-    <script src="~/admin/js/quixnav-init.js"></script>
-    <script src="~/admin/js/custom.min.js"></script>
-
-
-  
-
-   
-
+    for (var i = 0; i < arrow.length; i++) {
+        arrow[i].addEventListener("click", (e) => {
+            console.log(e)
+            let arrowParent = e.target.parentElement.parentElement;
+            console.log(arrowParent);
+            arrowParent.classList.toggle("showMenu");
+        });
+    }
+    let sidebar = document.querySelector(".sidebar");
+    let sidebarBtn = document.querySelector(".bx-menu");
+    console.log(sidebarBtn);
+    sidebarBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("close")
+    })
+	</script>
 </body>
 </html>
