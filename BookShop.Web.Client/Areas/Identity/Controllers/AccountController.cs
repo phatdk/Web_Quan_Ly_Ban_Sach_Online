@@ -143,7 +143,7 @@ namespace App.Areas.Identity.Controllers
 			{
 				return code;
 			}
-			return GenerateCode(length).ToString();
+			return (await GenerateCode(length)).ToString();
 		}
 
 		// POST: /Account/Register

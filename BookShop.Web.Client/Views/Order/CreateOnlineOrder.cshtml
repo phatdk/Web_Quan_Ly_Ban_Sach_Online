@@ -4,7 +4,6 @@
 @model BookShop.BLL.ConfigurationModel.OrderModel.CreateOrderModel
 @{
 	ViewData["Title"] = "Tạo đơn hàng";
-	List<ProductViewModel> products = ViewBag.Products;
 	List<PaymentFormViewModel> payments = ViewBag.Payments;
 	int total = 0;
 }
@@ -15,7 +14,8 @@
 
 <form asp-action="CreateOnlineOrder" class="row pt-5 pb-5 bg-info">
 	<div class="col-7">
-		<div id="account" hidden>
+		<input asp-for="Id_User" id="UserId" value="@Model.Id_User" hidden />
+		<div id="account">
 			<div class="form-group">
 				<label class="control-label">Tên tài khoản</label>
 				<input asp-for="NameUser" id="NameUser" class="form-control" type="text" readonly />
@@ -23,6 +23,7 @@
 		</div>
 
 		<div id="non-account">
+			<span>Bạn chưa đăng nhập?</span>
 			<div class="form-group">
 				<label class="control-label">Email</label>
 				<input asp-for="Email" class="form-control" type="text" id="receiverAddress" />
@@ -82,22 +83,18 @@
 
 	<div class="col-5">
 
-		<ul class="ps-0">
-			@foreach (var item in products)
-			{
-				total += (item.Price * item.BuyQuantity);
-				<li class="row">
-					<img class="col-2" src="@item.ImgUrl" alt="Hình ảnh sản phẩm">
-					<span class="col-5">@item.Name</span>
-					<span class="col-3">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)</span>
-					<span class="col-2">x @item.BuyQuantity</span>
-				</li>
-			}
-		</ul>
-		<ul style="list-style: none">
+		<ul class="ps-0" style="list-style: none">
 			@for (var i = 0; i < Model.orderDetails.Count; i++)
 			{
-				<li>
+				total += (Model.orderDetails[i].Price * Model.orderDetails[i].Quantity);
+				<li class="row">
+					<div class="col-3 position-relativelative">
+						<img class="" src="@Model.orderDetails[i].Img" style="width: 100%; z-index: 0" />
+						<span class="badge"
+							  style="color: orange; position: absolute; top: 0; right: 15px; background-color: gray">@Model.orderDetails[i].Quantity</span>
+					</div>
+					<span class="col-6">@Model.orderDetails[i].NameProduct</span>
+					<span class="col-3">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.orderDetails[i].Price)</span>
 					@Html.HiddenFor(model => model.orderDetails[i].Id_Product) <!-- Add hidden input for ID -->
 					@Html.HiddenFor(model => model.orderDetails[i].Quantity)
 					@Html.HiddenFor(model => model.orderDetails[i].Price)
@@ -146,6 +143,21 @@
 </form>
 
 <script type="text/javascript">
+	function getAcount() {
+		var account = document.getElementById("UserId").value
+		var accountForm = document.getElementById("account");
+		var nonAccountForm = document.getElementById("non-account");
+		if (account != 0) {
+			nonAccountForm.setAttribute('hidden', 'hidden');
+			accountForm.removeAttribute('hidden')
+		}
+		else {
+			accountForm.setAttribute('hidden', 'hidden');
+			nonAccountForm.removeAttribute('hidden')
+		}
+	}
+	getAcount();
+
 	function getProvinces() {
 		axios.get("https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province", {
 			headers: {
@@ -315,18 +327,5 @@
 	inputElements.forEach(function (element) {
 		element.addEventListener("input", calculateShipping);
 	});
-
-
-	document.getElementById('prod-type').addEventListener('change', function () {
-		var check = this.checked;  // Sử dụng this để truy cập đối tượng hiện tại
-		var booklist = document.getElementById('selectedBook');
-
-		if (check) {
-			booklist.setAttribute('multiple', 'multiple');
-		} else {
-			booklist.removeAttribute('multiple');
-		}
-	});
-
 
 </script>

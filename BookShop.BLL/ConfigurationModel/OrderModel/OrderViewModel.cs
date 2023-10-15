@@ -13,6 +13,7 @@ namespace BookShop.BLL.ConfigurationModel.OrderModel
 		public string Code { get; set; }
 		public string Receiver { get; set; }
 		public string Phone { get; set; }
+		public string Email { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public DateTime? AcceptDate { get; set; }
 		public DateTime? DeliveryDate { get; set; }
@@ -25,14 +26,19 @@ namespace BookShop.BLL.ConfigurationModel.OrderModel
 		public string? City { get; set; }
 		public string? District { get; set; }
 		public string? Commune { get; set; }
+		public string? Address { get; set; }
+		public int? Shipfee { get; set; }
 
 		// join properties
+		public int Total { get; set; }
 		public string NameUser { get; set; }
 		public string NamePromotion { get; set; }
+		public int Status { get; set; }
 
 		//foreign key
 		public int Id_User { get; set; }
 		public int? Id_Promotion { get; set; }
+		public int Id_Status { get; set; }
 
 		public List<OrderDetailViewModel> Items { get; set; }
 	}

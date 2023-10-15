@@ -19,6 +19,7 @@ namespace BookShop.BLL.Service
 		private readonly IRepository<OrderDetail> _orderDetailRepository;
 		private readonly IRepository<CartDetail> _cartDetailRepository;
 		private readonly IRepository<Product> _productRepository;
+		private readonly IRepository<StatusOrder> _statusRepository;
 
 		public OrderService()
 		{
@@ -28,6 +29,7 @@ namespace BookShop.BLL.Service
 			_orderDetailRepository = new Repository<OrderDetail>();
 			_cartDetailRepository = new Repository<CartDetail>();
 			_productRepository = new Repository<Product>();
+			_statusRepository = new Repository<StatusOrder>();
 		}
 
 		public async Task<string> GenerateCode(int length)
@@ -47,10 +49,10 @@ namespace BookShop.BLL.Service
 			{
 				return code;
 			}
-			return GenerateCode(length).ToString();
+			return (await GenerateCode(length)).ToString();
 		}
 
-		public async Task<CreateOrderModel> Add(CreateOrderModel model, List<CreateOrderDetailModel> detail)
+		public async Task<CreateOrderModel> Add(CreateOrderModel model)
 		{
 			try
 			{
@@ -72,12 +74,13 @@ namespace BookShop.BLL.Service
 					model.ModifiNotes = String.Empty;
 				}
 
-				var code = GenerateCode(13);
+				var code = await GenerateCode(10);
 				var obj = new Order()
 				{
 					Code = code.ToString(),
 					Receiver = model.Receiver,
 					Phone = model.Phone,
+					Email = model.Email,
 					AcceptDate = model.AcceptDate,
 					DeliveryDate = model.DeliveryDate,
 					ReceiveDate = model.ReceiveDate,
@@ -97,6 +100,7 @@ namespace BookShop.BLL.Service
 					Id_Promotion = model.Id_Promotion,
 
 					//thêm
+					IsOnlineOrder = model.IsOnlineOrder,
 					IsUsePoint = model.IsUsePoint,
 					PointUsed = model.PointUsed,
 					PointAmount = model.PointAmount,
@@ -105,7 +109,7 @@ namespace BookShop.BLL.Service
 				if (ObjStatus != null)
 				{
 
-					foreach (var item in detail)
+					foreach (var item in model.orderDetails)
 					{
 						await _orderDetailRepository.CreateAsync(new OrderDetail()
 						{
@@ -140,34 +144,37 @@ namespace BookShop.BLL.Service
 			var orders = await _orderRepository.GetAllAsync();
 			var users = await _userRepository.GetAllAsync();
 			var promotions = await _promotionRepository.GetAllAsync();
+			var status = await _statusRepository.GetAllAsync();
 			var objlist = (from a in orders
 						   join b in users on a.Id_User equals b.Id into t
-						   from b in t.DefaultIfEmpty()
+						   from b1 in t.DefaultIfEmpty()
 						   join c in promotions on a.Id_Promotion equals c.Id into i
-						   from c in i.DefaultIfEmpty()
+						   from c1 in i.DefaultIfEmpty()
+						   join d in status on a.Id_StatusOrder equals d.Id
 						   select new OrderViewModel()
 						   {
 							   Id = a.Id,
 							   Code = a.Code,
 							   Phone = a.Phone,
+							   Email = a.Email,
 							   Receiver = a.Receiver,
-							   AcceptDate = a.AcceptDate,
-							   CreatedDate = a.CreatedDate,
-							   DeliveryDate = a.DeliveryDate,
-							   ReceiveDate = a.ReceiveDate,
-							   PaymentDate = a.PaymentDate,
-							   CompleteDate = a.CompleteDate,
-							   ModifiDate = a.ModifiDate,
-							   ModifiNotes = a.ModifiNotes,
 							   Description = a.Description,
-							   City = a.City,
-							   District = a.District,
-							   Commune = a.Commune,
+							   Shipfee = a.Shipfee,
 							   Id_User = a.Id_User,
 							   Id_Promotion = a.Id_Promotion,
-							   NameUser = b.Name,
-							   NamePromotion = c.Name,
+							   Id_Status = a.Id_StatusOrder,
+							   NameUser = b1.Name,
+							   NamePromotion = (c1 == null)? "không sử dụng khuyến mãi": c1.Name,
+							   Status = d.Status,
 						   }).ToList();
+			foreach (var item in objlist)
+			{
+				var details = (await _orderDetailRepository.GetAllAsync()).Where(x=>x.Id_Order == item.Id).ToList();
+				foreach(var prod in details)
+				{
+					item.Total += (prod.Quantity * prod.Price);
+				}
+			}
 			return objlist;
 		}
 

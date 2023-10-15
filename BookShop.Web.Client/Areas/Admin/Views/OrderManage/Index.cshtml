@@ -1,0 +1,475 @@
+﻿@using BookShop.BLL.ConfigurationModel.OrderModel;
+@model IEnumerable<BookShop.BLL.ConfigurationModel.OrderModel.OrderViewModel>
+
+@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
+	List<OrderViewModel> orders = ViewBag.Orders;
+	var statusOrder1 = orders.Where(x => x.Status == 1);
+	var statusOrder2 = orders.Where(x => x.Status == 2);
+	var statusOrder3 = orders.Where(x => x.Status == 3);
+	var statusOrder4 = orders.Where(x => x.Status == 4);
+	var statusOrder5 = orders.Where(x => x.Status == 5);
+	var statusOrder6 = orders.Where(x => x.Status == 6);
+	var statusOrder7 = orders.Where(x => x.Status == 7);
+	var statusOrder8 = orders.Where(x => x.Status == 8);
+	var statusOrder9 = orders.Where(x => x.Status == 9);
+	int index = 0;
+}
+<script>
+
+	document.addEventListener('DOMContentLoaded', function () {
+		var tabs = document.querySelectorAll('.nav-link');
+		tabs.forEach(function (tab) {
+			tab.addEventListener('click', function (event) {
+				event.preventDefault();
+				// xóa hết các active ở các class
+				tabs.forEach(function (tab) {
+					tab.classList.remove('active');
+				});
+
+				// chèn acctive vào class
+				tab.classList.add('active');
+
+				// các thanh tab có đường dẫn ví dụ : #
+				var targetId = tab.getAttribute('href').substring(1);
+
+				// ẩn các nội dung
+				var tabContents = document.querySelectorAll('.tab-pane');
+				tabContents.forEach(function (content) {
+					content.classList.remove('show', 'active');
+				});
+
+				//  - > hiển thị ra table
+				var targetContent = document.getElementById(targetId);
+				targetContent.classList.add('show', 'active');
+			});
+		});
+	});
+
+</script>
+<h1>Quản lý hóa đơn</h1>
+@{
+	if (orders != null)
+	{
+		<div class="row">
+			<div class="col-xl-12 col-xxl-12">
+				<div class="card">
+					<div class="card-body">
+						<div class="default-tab">
+							<ul class="nav nav-tabs" role="tablist">
+								<li class="nav-item">
+									<a class="nav-link active" data-toggle="tab" href="#1">Đơn hàng chờ</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" data-toggle="tab" href="#2">Đã xác nhận</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" data-toggle="tab" href="#3">Đang giao</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" data-toggle="tab" href="#4">Giao thành công</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" data-toggle="tab" href="#5">Đã Thanh toán</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" data-toggle="tab" href="#6">Hoành thành</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" data-toggle="tab" href="#7">Trả hàng</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" data-toggle="tab" href="#8">Hủy đơn</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" data-toggle="tab" href="#9">Đã đóng</a>
+								</li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane fade show active" id="1" role="tabpanel">
+									<div class="pt-4">
+										<div class="table-responsive">
+											<table class="table table-bordered table-responsive-sm">
+												<thead class="thead-light">
+													<tr>
+														<th class="text-center">STT</th>
+														<th class="text-center">Mã đơn hàng</th>
+														<th class="text-center">Tên khách hàng</th>
+														<th class="text-center">Giá trị đơn hàng</th>
+														<th class="text-center">Ngày tạo</th>
+														<th class="text-center"></th>
+													</tr>
+												</thead>
+												<tbody style="max-height: 100px; overflow: auto">
+													@foreach (var item in statusOrder1)
+													{
+														index += 1;
+														<tr>
+															<td class="text-center">@index</td>
+															<td class="text-center">
+																<label>@item.Code</label>
+															</td>
+															<td class="text-center">
+																<label>@item.NameUser</label>
+															</td>
+															<td class="text-center">
+																<label>@item.Total</label>
+															</td>
+															<td class="text-center">
+																<label>@item.CreatedDate</label>
+															</td>
+															<td class="text-center">
+																<button class="btn btn-danger">Xóa</button>
+															</td>
+														</tr>
+													}
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane fade show" id="2" role="tabpanel">
+									<div class="pt-4">
+										<div class="table-responsive">
+											<table class="table table-bordered table-responsive-sm">
+												<thead class="thead-light">
+													<tr>
+														<th class="text-center">STT</th>
+														<th class="text-center">Mã đơn hàng</th>
+														<th class="text-center">Tên khách hàng</th>
+														<th class="text-center">Giá trị đơn hàng</th>
+														<th class="text-center">Ngày tạo</th>
+														<th class="text-center"></th>
+													</tr>
+												</thead>
+												<tbody style="max-height: 100px; overflow: auto">
+													@foreach (var item in statusOrder2)
+													{
+														index += 1;
+														<tr>
+															<td class="text-center">@index</td>
+															<td class="text-center">
+																<label>@item.Code</label>
+															</td>
+															<td class="text-center">
+																<label>@item.NameUser</label>
+															</td>
+															<td class="text-center">
+																<label>@item.Total</label>
+															</td>
+															<td class="text-center">
+																<label>@item.CreatedDate</label>
+															</td>
+															<td class="text-center">
+																<button class="btn btn-danger">Xóa</button>
+															</td>
+														</tr>
+													}
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane fade show" id="3" role="tabpanel">
+									<div class="pt-4">
+										<div class="table-responsive">
+											<table class="table table-bordered table-responsive-sm">
+												<thead class="thead-light">
+													<tr>
+														<th class="text-center">STT</th>
+														<th class="text-center">Mã đơn hàng</th>
+														<th class="text-center">Tên khách hàng</th>
+														<th class="text-center">Giá trị đơn hàng</th>
+														<th class="text-center">Ngày tạo</th>
+														<th class="text-center"></th>
+													</tr>
+												</thead>
+												<tbody style="max-height: 100px; overflow: auto">
+													@foreach (var item in statusOrder3)
+													{
+														index += 1;
+														<tr>
+															<td class="text-center">@index</td>
+															<td class="text-center">
+																<label>@item.Code</label>
+															</td>
+															<td class="text-center">
+																<label>@item.NameUser</label>
+															</td>
+															<td class="text-center">
+																<label>@item.Total</label>
+															</td>
+															<td class="text-center">
+																<label>@item.CreatedDate</label>
+															</td>
+															<td class="text-center">
+																<button class="btn btn-danger">Xóa</button>
+															</td>
+														</tr>
+													}
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane fade show" id="4" role="tabpanel">
+									<div class="pt-4">
+										<div class="table-responsive">
+											<table class="table table-bordered table-responsive-sm">
+												<thead class="thead-light">
+													<tr>
+														<th class="text-center">STT</th>
+														<th class="text-center">Mã đơn hàng</th>
+														<th class="text-center">Tên khách hàng</th>
+														<th class="text-center">Giá trị đơn hàng</th>
+														<th class="text-center">Ngày tạo</th>
+														<th class="text-center"></th>
+													</tr>
+												</thead>
+												<tbody style="max-height: 100px; overflow: auto">
+													@foreach (var item in statusOrder4)
+													{
+														index += 1;
+														<tr>
+															<td class="text-center">@index</td>
+															<td class="text-center">
+																<label>@item.Code</label>
+															</td>
+															<td class="text-center">
+																<label>@item.NameUser</label>
+															</td>
+															<td class="text-center">
+																<label>@item.Total</label>
+															</td>
+															<td class="text-center">
+																<label>@item.CreatedDate</label>
+															</td>
+															<td class="text-center">
+																<button class="btn btn-danger">Xóa</button>
+															</td>
+														</tr>
+													}
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane fade show" id="5" role="tabpanel">
+									<div class="pt-4">
+										<div class="table-responsive">
+											<table class="table table-bordered table-responsive-sm">
+												<thead class="thead-light">
+													<tr>
+														<th class="text-center">STT</th>
+														<th class="text-center">Mã đơn hàng</th>
+														<th class="text-center">Tên khách hàng</th>
+														<th class="text-center">Giá trị đơn hàng</th>
+														<th class="text-center">Ngày tạo</th>
+														<th class="text-center"></th>
+													</tr>
+												</thead>
+												<tbody style="max-height: 100px; overflow: auto">
+													@foreach (var item in statusOrder5)
+													{
+														index += 1;
+														<tr>
+															<td class="text-center">@index</td>
+															<td class="text-center">
+																<label>@item.Code</label>
+															</td>
+															<td class="text-center">
+																<label>@item.NameUser</label>
+															</td>
+															<td class="text-center">
+																<label>@item.Total</label>
+															</td>
+															<td class="text-center">
+																<label>@item.CreatedDate</label>
+															</td>
+															<td class="text-center">
+																<button class="btn btn-danger">Xóa</button>
+															</td>
+														</tr>
+													}
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane fade show" id="6" role="tabpanel">
+									<div class="pt-4">
+										<div class="table-responsive">
+											<table class="table table-bordered table-responsive-sm">
+												<thead class="thead-light">
+													<tr>
+														<th class="text-center">STT</th>
+														<th class="text-center">Mã đơn hàng</th>
+														<th class="text-center">Tên khách hàng</th>
+														<th class="text-center">Giá trị đơn hàng</th>
+														<th class="text-center">Ngày tạo</th>
+														<th class="text-center"></th>
+													</tr>
+												</thead>
+												<tbody style="max-height: 100px; overflow: auto">
+													@foreach (var item in statusOrder6)
+													{
+														index += 1;
+														<tr>
+															<td class="text-center">@index</td>
+															<td class="text-center">
+																<label>@item.Code</label>
+															</td>
+															<td class="text-center">
+																<label>@item.NameUser</label>
+															</td>
+															<td class="text-center">
+																<label>@item.Total</label>
+															</td>
+															<td class="text-center">
+																<label>@item.CreatedDate</label>
+															</td>
+															<td class="text-center">
+																<button class="btn btn-danger">Xóa</button>
+															</td>
+														</tr>
+													}
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane fade show" id="7" role="tabpanel">
+									<div class="pt-4">
+										<div class="table-responsive">
+											<table class="table table-bordered table-responsive-sm">
+												<thead class="thead-light">
+													<tr>
+														<th class="text-center">STT</th>
+														<th class="text-center">Mã đơn hàng</th>
+														<th class="text-center">Tên khách hàng</th>
+														<th class="text-center">Giá trị đơn hàng</th>
+														<th class="text-center">Ngày tạo</th>
+														<th class="text-center"></th>
+													</tr>
+												</thead>
+												<tbody style="max-height: 100px; overflow: auto">
+													@foreach (var item in statusOrder7)
+													{
+														index += 1;
+														<tr>
+															<td class="text-center">@index</td>
+															<td class="text-center">
+																<label>@item.Code</label>
+															</td>
+															<td class="text-center">
+																<label>@item.NameUser</label>
+															</td>
+															<td class="text-center">
+																<label>@item.Total</label>
+															</td>
+															<td class="text-center">
+																<label>@item.CreatedDate</label>
+															</td>
+															<td class="text-center">
+																<button class="btn btn-danger">Xóa</button>
+															</td>
+														</tr>
+													}
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane fade show" id="8" role="tabpanel">
+									<div class="pt-4">
+										<div class="table-responsive">
+											<table class="table table-bordered table-responsive-sm">
+												<thead class="thead-light">
+													<tr>
+														<th class="text-center">STT</th>
+														<th class="text-center">Mã đơn hàng</th>
+														<th class="text-center">Tên khách hàng</th>
+														<th class="text-center">Giá trị đơn hàng</th>
+														<th class="text-center">Ngày tạo</th>
+														<th class="text-center"></th>
+													</tr>
+												</thead>
+												<tbody style="max-height: 100px; overflow: auto">
+													@foreach (var item in statusOrder8)
+													{
+														index += 1;
+														<tr>
+															<td class="text-center">@index</td>
+															<td class="text-center">
+																<label>@item.Code</label>
+															</td>
+															<td class="text-center">
+																<label>@item.NameUser</label>
+															</td>
+															<td class="text-center">
+																<label>@item.Total</label>
+															</td>
+															<td class="text-center">
+																<label>@item.CreatedDate</label>
+															</td>
+															<td class="text-center">
+																<button class="btn btn-danger">Xóa</button>
+															</td>
+														</tr>
+													}
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane fade show" id="9" role="tabpanel">
+									<div class="pt-4">
+										<div class="table-responsive">
+											<table class="table table-bordered table-responsive-sm">
+												<thead class="thead-light">
+													<tr>
+														<th class="text-center">STT</th>
+														<th class="text-center">Mã đơn hàng</th>
+														<th class="text-center">Tên khách hàng</th>
+														<th class="text-center">Giá trị đơn hàng</th>
+														<th class="text-center">Ngày tạo</th>
+														<th class="text-center"></th>
+													</tr>
+												</thead>
+												<tbody style="max-height: 100px; overflow: auto">
+													@foreach (var item in statusOrder9)
+													{
+														index += 1;
+														<tr>
+															<td class="text-center">@index</td>
+															<td class="text-center">
+																<label>@item.Code</label>
+															</td>
+															<td class="text-center">
+																<label>@item.NameUser</label>
+															</td>
+															<td class="text-center">
+																<label>@item.Total</label>
+															</td>
+															<td class="text-center">
+																<label>@item.CreatedDate</label>
+															</td>
+															<td class="text-center">
+																<button class="btn btn-danger">Xóa</button>
+															</td>
+														</tr>
+													}
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}

@@ -34,11 +34,12 @@ namespace BookShop.BLL.ConfigurationModel.OrderModel
         //foreign key
 		public string? NameUser { get; set; }
         public int Id_User { get; set; }
-        public int Id_Staff { get; set; }
-		public int Id_Promotion { get; set; }
+        public int? Id_Staff { get; set; }
+		public int? Id_Promotion { get; set; }
 		public int Id_StatusOrder { get; set; }
 
         //Order
+		public bool IsOnlineOrder { get; set; }
         public bool IsUsePoint { get; set; }
         public int PointUsed { get; set; }
         public int PointAmount { get; set; }
@@ -50,7 +51,7 @@ namespace BookShop.BLL.ConfigurationModel.OrderModel
 		public int Height { get; set; }
 
 		public List<int> paymentsId { get; set; }
-		public List<CreateOrderDetailModel> orderDetails { get; set; }
+		public List<OrderDetailViewModel> orderDetails { get; set; }
 
 		public List<ProductViewModel> productViewModels { get; set; }
 		public List<PaymentFormViewModel> paymentFormViewModels { get; set; }
