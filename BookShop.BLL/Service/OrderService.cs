@@ -159,6 +159,7 @@ namespace BookShop.BLL.Service
 							   Email = a.Email,
 							   Receiver = a.Receiver,
 							   Description = a.Description,
+							   CreatedDate = a.CreatedDate,
 							   Shipfee = a.Shipfee,
 							   Id_User = a.Id_User,
 							   Id_Promotion = a.Id_Promotion,
@@ -175,42 +176,6 @@ namespace BookShop.BLL.Service
 					item.Total += (prod.Quantity * prod.Price);
 				}
 			}
-			return objlist;
-		}
-
-		public async Task<List<OrderViewModel>> GetByStatus(int statusId)
-		{
-			var orders = (await _orderRepository.GetAllAsync()).Where(c => c.Id_StatusOrder == statusId);
-			var users = await _userRepository.GetAllAsync();
-			var promotions = await _promotionRepository.GetAllAsync();
-			var objlist = (from a in orders
-						   join b in users on a.Id_User equals b.Id into t
-						   from b in t.DefaultIfEmpty()
-						   join c in promotions on a.Id_Promotion equals c.Id into i
-						   from c in i.DefaultIfEmpty()
-						   select new OrderViewModel()
-						   {
-							   Id = a.Id,
-							   Code = a.Code,
-							   Phone = a.Phone,
-							   Receiver = a.Receiver,
-							   AcceptDate = a.AcceptDate,
-							   CreatedDate = a.CreatedDate,
-							   DeliveryDate = a.DeliveryDate,
-							   ReceiveDate = a.ReceiveDate,
-							   PaymentDate = a.PaymentDate,
-							   CompleteDate = a.CompleteDate,
-							   ModifiDate = a.ModifiDate,
-							   ModifiNotes = a.ModifiNotes,
-							   Description = a.Description,
-							   City = a.City,
-							   District = a.District,
-							   Commune = a.Commune,
-							   Id_User = a.Id_User,
-							   Id_Promotion = a.Id_Promotion,
-							   NameUser = b.Name,
-							   NamePromotion = c.Name,
-						   }).ToList();
 			return objlist;
 		}
 
