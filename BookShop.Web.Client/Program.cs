@@ -98,22 +98,26 @@ builder.Services.AddTransient<ICartDetailService, CartDetailService>();
 builder.Services.AddTransient<IPaymentFormService, PaymentFormService>();
 builder.Services.AddTransient<IOrderPaymentService, OrderPaymentService>();
 builder.Services.AddTransient<IStatusOrderService, StatusOrderService>();
+builder.Services.AddTransient<IPromotionService, PromotionService>();
+
+
+builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromSeconds(1800); });
 
 // Configure the HTTP request pipeline.
 var app = builder.Build();
 #region SeedData
-using (var scope = app.Services.CreateScope())
-{
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Userr>>();
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
-    SeedDataMD.SeedAsync(userManager, roleManager).Wait();
-}
-using (var scope = app.Services.CreateScope())
-{
-    var serviice1 = scope.ServiceProvider.GetRequiredService<IRepository<StatusOrder>>();
- 
-    SeedDataMD.SeedDataProduct(serviice1).Wait();
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Userr>>();
+//    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+//    SeedDataMD.SeedAsync(userManager, roleManager).Wait();
+//}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var serviice1 = scope.ServiceProvider.GetRequiredService<IStatusOrderService>();
+
+//    SeedDataMD.SeedDataProduct(serviice1).Wait();
+//}
 #endregion
 if (!app.Environment.IsDevelopment())
 {

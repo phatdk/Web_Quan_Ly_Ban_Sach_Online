@@ -75,6 +75,7 @@ namespace BookShop.BLL.Service
 
                         select new UserModel()
                         {
+                            Code = c.Code,
                             Gender = c.Gender,
                             Id = c.Id,
                             Name = c.Name,
