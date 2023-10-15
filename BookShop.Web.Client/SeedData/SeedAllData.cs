@@ -3,11 +3,10 @@ using BookShop.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Drawing.Drawing2D;
 using BookShop.DAL.Repositopy;
-using BookShop.BLL.IService;
 
 public static class SeedDataMD
 {
-    public static async Task SeedAsync(UserManager<Userr> userManager, RoleManager<Role> roleManager,IOrderService order)
+    public static async Task SeedAsync(UserManager<Userr> userManager, RoleManager<Role> roleManager)
     {
         // Tạo role "admin" nếu chưa tồn tại
         if (!await roleManager.RoleExistsAsync("Admin"))
@@ -28,31 +27,19 @@ public static class SeedDataMD
                 UserName = "admin",
                 Email = "phuc2003zgt@gmail.com",
                 EmailConfirmed = true,
-                Code ="AD"+await order.GenerateCode(9),
-                Name ="Ngo Hong Phuc "
-            };
-            var User = new Userr
-            {
-                UserName = "Phatdk",
-                Email = "phuc2003gaming@gmail.com",
-                EmailConfirmed = true,
-                Code = "KH" + await order.GenerateCode(9),
-                Name ="Do Kim Phat"
             };
 
             var result = await userManager.CreateAsync(adminUser, "admin");
-            var result1 = await userManager.CreateAsync(User, "123456");
-            if (result.Succeeded&& result1.Succeeded)
+            if (result.Succeeded)
             {
                 // Gán role "admin" cho tài khoản "admin"
                 await userManager.AddToRoleAsync(adminUser, "Admin");
-                await userManager.AddToRoleAsync(User, "Khách vãng lai");
             }
         }
 
     }
 
-    public static async Task SeedDataProduct(IStatusOrderService StatusOrder)
+    public static async Task SeedDataProduct(IRepository<StatusOrder> StatusOrder)
     {
 
 
@@ -64,12 +51,12 @@ public static class SeedDataMD
         };  var status1 = new StatusOrder()
         {
             Status = 2,
-            StatusName = "đã xác nhận",
+            StatusName = " đã xác nhận",
             CreatedDate = DateTime.Now,
         }; var status2 = new StatusOrder()
         {
             Status = 3,
-            StatusName = "đang giao",
+            StatusName = " đang giao",
             CreatedDate = DateTime.Now,
         }; var status3 = new StatusOrder()
         {
@@ -94,7 +81,7 @@ public static class SeedDataMD
         };var status7 = new StatusOrder()
         {
             Status = 8,
-            StatusName = "hủy đơn",
+            StatusName = "  hủy đơn",
             CreatedDate = DateTime.Now,
         };var status8 = new StatusOrder()
         {

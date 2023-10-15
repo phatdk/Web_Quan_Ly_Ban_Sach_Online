@@ -18,6 +18,5 @@ namespace BookShop.BLL.IService
         public Task<CreateOrderModel> Add(CreateOrderModel model, List<CreateOrderDetailModel> details);
         public Task<bool> Update(int id, UpdateOrderModel model);
         public Task<bool> Delete(int id);
-        Task<string> GenerateCode(int length);
     }
 }
