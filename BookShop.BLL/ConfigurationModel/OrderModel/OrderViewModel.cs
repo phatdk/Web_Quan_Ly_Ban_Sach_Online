@@ -28,6 +28,15 @@ namespace BookShop.BLL.ConfigurationModel.OrderModel
 		public string? Commune { get; set; }
 		public string? Address { get; set; }
 		public int? Shipfee { get; set; }
+		// them
+		public bool IsOnlineOrder { get; set; }
+		public bool IsUsePoint { get; set; }
+		public int? PointUsed { get; set; }
+		public int? PointAmount { get; set; }
+		public int Weight { get; set; }
+		public int Length { get; set; }
+		public int Width { get; set; }
+		public int Height { get; set; }
 
 		// join properties
 		public int Total { get; set; }
@@ -37,9 +46,11 @@ namespace BookShop.BLL.ConfigurationModel.OrderModel
 
 		//foreign key
 		public int Id_User { get; set; }
+		public string? PromotionCode { get; set; }
 		public int? Id_Promotion { get; set; }
 		public int Id_Status { get; set; }
-
-		public List<OrderDetailViewModel> Items { get; set; }
+		
+		public List<int> paymentsId { get; set; }
+		public List<OrderDetailViewModel> orderDetails { get; set; }
 	}
 }
