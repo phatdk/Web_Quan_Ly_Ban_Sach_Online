@@ -8,6 +8,7 @@ namespace BookShop.BLL.ConfigurationModel.GenreModel
 {
 	public class updateGenreModel
 	{
+		public int Id { get; set; }
 		public string Name { get; set; }
 		public int Index { get; set; }
 
@@ -15,3 +16,4 @@ namespace BookShop.BLL.ConfigurationModel.GenreModel
 		public int Id_Category { get; set; }
 	}
 }
+// Thêm id
