@@ -14,7 +14,6 @@ namespace BookShop.BLL.Service
     {
         private readonly IRepository<OrderDetail> _orderDetailRepository;
         private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<CartDetail> _CartDetailRepository;
 
         public OrderDetailService()
         {
@@ -84,6 +83,7 @@ namespace BookShop.BLL.Service
                                NameProduct = b.Name,
                                Quantity = a.Quantity,
                                Price = a.Price,
+                               Img = b.Images.FirstOrDefault().ImageUrl,
                            }).ToList();
             return objlist;
         }

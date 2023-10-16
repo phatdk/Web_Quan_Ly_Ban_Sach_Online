@@ -1,10 +1,16 @@
 ﻿@using BookShop.BLL.ConfigurationModel.PaymentFormModel;
 @using BookShop.BLL.ConfigurationModel.ProductModel;
 @using System.Globalization;
-@model BookShop.BLL.ConfigurationModel.OrderModel.CreateOrderModel
+@using BookShop.BLL.ConfigurationModel.PromotionModel;
+@using BookShop.BLL.ConfigurationModel.UerPromotionModel;
+@using BookShop.BLL.ConfigurationModel.UserModel;
+@model BookShop.BLL.ConfigurationModel.OrderModel.OrderViewModel;
 @{
 	ViewData["Title"] = "Tạo đơn hàng";
 	List<PaymentFormViewModel> payments = ViewBag.Payments;
+	List<UserPromotionViewModel> userPromotions = ViewBag.UserPromotions;
+	List<PromotionViewModel> promotions = ViewBag.Promotions;
+	UserModel user = ViewBag.User;
 	int total = 0;
 }
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -15,55 +21,56 @@
 <form asp-action="CreateOnlineOrder" class="row pt-5 pb-5 bg-info">
 	<div class="col-7">
 		<input asp-for="Id_User" id="UserId" value="@Model.Id_User" hidden />
-		<div id="account">
+		@if (Model.Id_User != 0)
+		{
 			<div class="form-group">
 				<label class="control-label">Tên tài khoản</label>
 				<input asp-for="NameUser" id="NameUser" class="form-control" type="text" readonly />
+				<input asp-for="Email" class="form-control" type="text" hidden id="Email" />
 			</div>
-		</div>
-
-		<div id="non-account">
+		}
+		else
+		{
 			<span>Bạn chưa đăng nhập?</span>
 			<div class="form-group">
 				<label class="control-label">Email</label>
-				<input asp-for="Email" class="form-control" type="text" id="receiverAddress" />
+				<input asp-for="Email" class="form-control" type="text" id="Email" />
 			</div>
-		</div>
+		}
+
 		<div class="row">
 
 			<div class="form-group col-7">
 				<label class="control-label">Tên người nhận</label>
-				<input asp-for="Receiver" class="form-control" type="text" id="receiverAddress" />
+				<input asp-for="Receiver" class="form-control" required type="text" id="receiverAddress" />
 			</div>
 
 			<div class="form-group col-5">
 				<label class="control-label">Số điện thoại</label>
-				<input asp-for="Phone" class="form-control" type="text" id="receiverAddress" />
+				<input asp-for="Phone" class="form-control" required type="text" id="receiverAddress" />
 			</div>
 
 		</div>
 
 		<div class="form-group">
 			<label class="control-label">Địa chỉ nhận hàng</label>
-			<input asp-for="Address" class="form-control" type="text" id="receiverAddress" />
+			<input asp-for="Address" class="form-control" required type="text" id="receiverAddress" />
 		</div>
 		<div class="row">
 			<div class="col-4">
 				<label for="provinceSelectReceiver">Tỉnh/Thành phố</label>
-				<select asp-for="City" id="provinceSelectReceiver" onchange="getDistrict('receiver')" style="width: 100%"></select>
+				<select asp-for="City" id="provinceSelectReceiver" required onchange="getDistrict('receiver')" style="width: 100%"></select>
 			</div>
 
 			<div class="col-4">
 				<label for="districtSelectReceiver">Quận/Huyện</label>
-				<select asp-for="District" id="districtSelectReceiver" onchange="getWard('receiver')" style="width: 100%">
-					<option value="" selected disabled>--Select District--</option>
+				<select asp-for="District" id="districtSelectReceiver" required onchange="getWard('receiver')" style="width: 100%">
 				</select>
 			</div>
 
 			<div class="col-4">
 				<label for="wardSelectReceiver">Phường/Xã</label>
-				<select asp-for="Commune" id="wardSelectReceiver" style="width: 100%">
-					<option value="" selected disabled">--Select Ward--</option>
+				<select asp-for="Commune" id="wardSelectReceiver" required style="width: 100%">
 				</select>
 			</div>
 
@@ -89,7 +96,7 @@
 				total += (Model.orderDetails[i].Price * Model.orderDetails[i].Quantity);
 				<li class="row">
 					<div class="col-3 position-relativelative">
-						<img class="" src="@Model.orderDetails[i].Img" style="width: 100%; z-index: 0" />
+						<img class="bg-light" src="@Model.orderDetails[i].Img" style="width: 100%; z-index: 0" />
 						<span class="badge"
 							  style="color: orange; position: absolute; top: 0; right: 15px; background-color: gray">@Model.orderDetails[i].Quantity</span>
 					</div>
@@ -119,7 +126,35 @@
 				<label for="phiShip">Phí vận chuyển:</label>
 				<input asp-for="Shipfee" id="phiShip" readonly />
 			</div>
+			@if (Model.Id_User != 0)
+			{
+				<div class="form-group">
+					<label>Sử dụng diểm</label>
+					<input asp-for="PointUsed" type="number" min="0" max="@user.Point" value="0" style="width: 70px"/>
+					<span>Số điểm hiện có @user.Point</span>
+				</div>
+				<div>
+					<input name="promotion" id="selectPromotion" type="radio" value="1" checked /><span> Nhập mã </span> |
+					<input name="promotion" id="useCodePromotion" type="radio" value="2" /><span> Chọn mã</span>
+				</div>
+				<div class="form-group" id="chonma" hidden>
+					<label>Chọn khuyến mãi</label>
+					<select asp-for="paymentsId" class="form-control" id="selectPromotion">
+						@if (userPromotions != null)
+						{
+							foreach (var item in userPromotions)
+							{
+								<option value="@item.Id">@item.Name</option>
+							}
 
+						}
+					</select>
+				</div>
+			}
+			<div class="form-group" id="nhapma">
+				<label>Nhập mã khuyến mãi</label>
+				<input asp-for="PromotionCode" id="userPromotionCode" class="form-control" />
+			</div>
 			<div class="form-group">
 				<label for="totalShip">Tổng tiền:</label>
 				<span id="totalShip">0</span>
@@ -127,7 +162,7 @@
 
 			<div class="form-group">
 				<label>Hình thức thanh toán</label>
-				<select asp-for="paymentsId" class="form-control" id="paymentMethod">
+				<select asp-for="paymentsId" required class="form-control" id="paymentMethod">
 					@foreach (var item in payments)
 					{
 						<option value="@item.Id">@item.Name</option>
@@ -141,22 +176,29 @@
 
 	</div>
 </form>
-
 <script type="text/javascript">
-	function getAcount() {
-		var account = document.getElementById("UserId").value
-		var accountForm = document.getElementById("account");
-		var nonAccountForm = document.getElementById("non-account");
-		if (account != 0) {
-			nonAccountForm.setAttribute('hidden', 'hidden');
-			accountForm.removeAttribute('hidden')
-		}
+
+	// Thêm sự kiện "change" cho các input radio
+	document.getElementById('selectPromotion').addEventListener('change', handleRadioChange);
+	document.getElementById('useCodePromotion').addEventListener('change', handleRadioChange);
+
+	// Hàm xử lý khi input radio thay đổi
+	function handleRadioChange(event) {
+		const chonma = document.getElementById('chonma');
+		const nhapma = document.getElementById('nhapma');
+		const selectedValue = event.target.value;
+		if (selectedValue == 1) {
+			chonma.setAttribute('hidden', 'hidden');
+			nhapma.removeAttribute('hidden');
+		} 
 		else {
-			accountForm.setAttribute('hidden', 'hidden');
-			nonAccountForm.removeAttribute('hidden')
+			nhapma.setAttribute('hidden', 'hidden');
+			chonma.removeAttribute('hidden');
 		}
 	}
-	getAcount();
+</script>
+
+<script type="text/javascript">
 
 	function getProvinces() {
 		axios.get("https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province", {
@@ -214,7 +256,6 @@
 				} else if (type === "sender") {
 					wardSelect = document.getElementById("wardSelectSender");
 				}
-				wardSelect.innerHTML = "<option value='' selected disabled>--Select Ward--</option>";
 
 				for (var i = 0; i < response.data.data.length; i++) {
 					var option = document.createElement("option");

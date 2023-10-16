@@ -12,7 +12,7 @@ namespace BookShop.BLL.IService
 	{
 		public Task<List<Image>> GetByProduct(int productId);
 		public Task<bool> Add(CreateImageModel model);
-		public Task<bool> Update(int id, UpdateImageModel model);
+		public Task<bool> Update(UpdateImageModel model);
 		public Task<bool> Delete(int id);
 	}
 }

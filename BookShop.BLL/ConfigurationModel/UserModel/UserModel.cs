@@ -20,5 +20,6 @@ namespace BookShop.BLL.ConfigurationModel.UserModel
 		public string Password { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public int Status { get; set; }
+		public int Point {  get; set; }
 	}
 }

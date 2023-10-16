@@ -1,0 +1,137 @@
+﻿@using BookShop.BLL.ConfigurationModel.OrderDetailModel;
+@using System.Globalization;
+@model BookShop.BLL.ConfigurationModel.OrderModel.OrderViewModel
+
+@{
+	ViewData["Title"] = "OrderDetails";
+	List<OrderDetailViewModel> details = ViewBag.Details;
+	int total = 0;
+}
+
+<h1>OrderDetails</h1>
+
+<div>
+	<h4>OrderViewModel</h4>
+	<hr />
+	<div class="row">
+		<dl class="col-8">
+			<dd class="col-sm-10" hidden>
+				@Html.DisplayFor(model => model.Id)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Code)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Code)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Receiver)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Receiver)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Phone)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Phone)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Email)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Email)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.CreatedDate)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.CreatedDate)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Description)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Description)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Address)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Address)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Shipfee)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Shipfee)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Total)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Total)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.NamePromotion)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.NamePromotion)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Status)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Status)
+			</dd>
+		</dl>
+		<div class="col-4">
+			<ul class="ps-0" style="list-style: none">
+				@foreach (var item in details)
+				{
+					total += (item.Price * item.Quantity);
+					<li class="row">
+						<div class="col-3 position-relativelative">
+							<img class="bg-light" src="@item.Img" style="width: 100%; z-index: 0" />
+							<span class="badge" style="color: orange; position: absolute; top: 0; right: 15px; background-color: gray">@item.Quantity</span>
+						</div>
+						<span class="col-6">@item.NameProduct</span>
+						<span class="col-3">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)</span>
+					</li>
+				}
+			</ul>
+		</div>
+	</div>
+</div>
+<div>
+	<button class="btn btn-outline-danger" id="deleteOrder" onclick="deleteOrder()" value="Xóa">Hủy đơn</button>
+	<a asp-action="Index" asp-controller="Home">Trở lại trang chủ</a>
+</div>
+<script type="text/javascript">
+	function checkStatus() {
+		if (@Model.Status >= 3) {
+			document.getElementById('deleteOrder').setAttribute('disabled', 'disabled');
+		}
+	}
+	checkStatus();
+
+	function deleteOrder() {
+		var url = "@Url.Action("Index", "Home")";
+		$.ajax({
+			url: '/Order/DeleteOrder',
+			type: 'POST',
+			data: { id: @Model.Id },
+			success: function (result) {
+				if (result.success) {
+					alert('Hủy đơn thành công.');
+					window.location.href = url;
+				} else {
+					alert('Hủy đơn thất bại: ' + result.errorMessage);
+				}
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	}
+</script>
