@@ -14,7 +14,7 @@
 	<div class="row">
 		<div class="col-lg-4 col-md-4 col-ms-4">
 			@{
-				imgUrl = Model.imageViewModels.First().ImageUrl;
+				imgUrl = Model.imageViewModels.FirstOrDefault().ImageUrl;
 			}
 			<img src="@imgUrl" alt="ảnh sản phẩm" style="max-width: 100%" />
 		</div>
@@ -69,7 +69,9 @@
 					@Html.DisplayFor(model => model.Type)
 				</dd>
 			</dl>
+
 			<ul class="col-4">
+				<h6>Sản phẩm bao gồm</h6>
 				@foreach (var item in Model.bookViewModels)
 				{
 					<li>
@@ -77,13 +79,51 @@
 					</li>
 				}
 			</ul>
+			<div id="quantity" class="form-group">
+				<div style="display: flex">
+					<input id="quantityInput" class="form-control" min="1" max="@Model.Quantity" value="1" type="number"
+						   style="width: 100px; height: 25px; border-bottom: 1px solid black;
+border-left: none; border-right: none;border-top:none; border-radius: 0px; text-align: center" />
+					@Html.DisplayFor(model => model.Quantity) sản phẩm còn lại
+				</div>
+			</div>
 			<div>
 				<button class="btn btn-outline-danger"><i class="fa-solid fa-face-kiss-wink-heart"></i> Thêm Yêu Thích</button>
-				<button class="btn btn-outline-success"><i class="fa-solid fa-cart-plus"></i> Thêm Vào Giỏ</button>
-				<a href="@Url.Action("Index", "Order")" class="btn btn-outline-warning"><i class="fa-solid fa-money-bill-1-wave"></i> Đặt hàng</a>
+
+				<a href="#" id="addToCart" class="btn btn-outline-success"><i class="fa-solid fa-cart-plus"></i> Thêm Vào Giỏ</a>
+				@* <a href="@Url.Action("CreateOnlineOrder", "Order", new{ id=Model.Id })" class="btn btn-outline-warning"><i class="fa-solid fa-money-bill-1-wave"></i> Đặt hàng</a> *@
+				<a href="#" id="buyNow" class="btn btn-outline-warning"><i class="fa-solid fa-money-bill-1-wave"></i> Đặt hàng</a>
 			</div>
 		</div>
-		
+
 	</div>
 </div>
+<script type="text/javascript">
+	document.getElementById('addToCart').addEventListener('click', function () {
+		var quantity = document.getElementById('quantityInput').value;
+		$.ajax({
+			url: '/Cart/AddToCart?id=@Model.Id',
+			type: 'POST',
+			data: { quantity: quantity },
+			success: function (result) {
+				if (result.success) {
+					// Xóa thành công, thực hiện các hành động bạn muốn
+					alert('Đã thêm vào giỏ hàng.');
+					// Ví dụ: cập nhật giao diện hoặc làm mới danh sách sản phẩm
+				} else {
+					alert('Xóa thất bại: ' + result.errorMessage);
+				}
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	});
+	document.getElementById('buyNow').addEventListener('click', function () {
+		var quantity = document.getElementById('quantityInput').value;
+		// var result = "@Url.Action("AddToCart", "Cart")?id=@Model.Id&quantity=" + quantity;
+		var url = "@Url.Action("CreateOnlineOrder", "Order")?id=@Model.Id&quantity=" + quantity 
+		window.location.href = url;
+	});
+</script>
 

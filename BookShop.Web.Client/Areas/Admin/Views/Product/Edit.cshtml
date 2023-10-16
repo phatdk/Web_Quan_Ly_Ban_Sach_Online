@@ -3,7 +3,7 @@
 @model BookShop.BLL.ConfigurationModel.ProductModel.UpdateProductModel
 
 @{
-	string imgUrl = Model.imageViewModels.First().ImageUrl;
+	string imgUrl = Model.imageViewModels.FirstOrDefault().ImageUrl;
 	List<BookViewModel> listBook = ViewBag.listBook;
 	List<CollectionModel> listCollection = ViewBag.listCollection;
 }

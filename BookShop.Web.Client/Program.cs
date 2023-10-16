@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using System.Net;
 using BookShop.BLL.IService;
 using BookShop.BLL.Service;
-using BookShop.BLL.Service.BookGenreCategoryService;
+using BookShop.DAL.Repositopy;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -84,26 +84,45 @@ op.AddPolicy("ManagerMenu", builder =>
 }));
 
 #endregion
+
 builder.Services.AddControllersWithViews();
+
 builder.Services.AddTransient<IAuthorService, AuthorService>();
-builder.Services.AddScoped<IAuthorService, AuthorService>();
-
 builder.Services.AddTransient<ISupplierService, SupplierService>();
-builder.Services.AddScoped<ISupplierService, SupplierService>();
-
 builder.Services.AddTransient<IGenreService, GenreService>();
-builder.Services.AddScoped<IGenreService, GenreService>();
-
 builder.Services.AddTransient<ICategoryService, CategoryService>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IOrderService, OrderService>();
+builder.Services.AddTransient<IOrderDetailService, OrderDetailService>();
+builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<IImageService, ImageService>();
+builder.Services.AddTransient<IBookService, BookService>();
+builder.Services.AddTransient<ICollectionService, CollectionService>();
+builder.Services.AddTransient<ICartService, CartService>();
+builder.Services.AddTransient<ICartDetailService, CartDetailService>();
+builder.Services.AddTransient<IPaymentFormService, PaymentFormService>();
+builder.Services.AddTransient<IOrderPaymentService, OrderPaymentService>();
+builder.Services.AddTransient<IStatusOrderService, StatusOrderService>();
+builder.Services.AddTransient<IPromotionService, PromotionService>();
 
-builder.Services.AddSingleton<IProductService, ProductService>();
-builder.Services.AddSingleton<IImageService, ImageService>();
-builder.Services.AddSingleton<IBookService, BookService>();
-builder.Services.AddSingleton<ICollectionService, CollectionService>();
-builder.Services.AddSingleton<IImageService, ImageService>();
+builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromSeconds(1800); });
+
 // Configure the HTTP request pipeline.
 var app = builder.Build();
+#region SeedData
+//using (var scope = app.Services.CreateScope())
+//{
+//    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Userr>>();
+//    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+//    SeedDataMD.SeedAsync(userManager, roleManager).Wait();
+//}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var serviice1 = scope.ServiceProvider.GetRequiredService<IStatusOrderService>();
+
+//    SeedDataMD.SeedDataProduct(serviice1).Wait();
+//}
+#endregion
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");

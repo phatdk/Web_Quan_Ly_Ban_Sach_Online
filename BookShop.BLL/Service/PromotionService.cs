@@ -37,7 +37,7 @@ namespace BookShop.BLL.Service
             {
                 return code;
             }
-            return GenerateCode(length).ToString();
+            return (await GenerateCode(length)).ToString();
         }
 
         public async Task<bool> Add(CreatePromotionModel model)

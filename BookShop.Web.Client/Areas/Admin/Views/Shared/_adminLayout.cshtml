@@ -5,23 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>@ViewData["Title"]</title>
     @* <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> *@
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
     @* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> *@
-    <link rel="stylesheet" href="~/lib/fontawesome-6.4.2/css/all.min.css"/>
+    <link rel="stylesheet" href="~/lib/fontawesome-6.4.2/css/all.min.css" />
 
     <!-- Bootstrap JS and dependencies -->
-	
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     @* <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> *@
-    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"/>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" />
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="~/js/layout.js"></script>
     <link rel="stylesheet" href="~/css/Admin/admin.css">
     <link rel="stylesheet" href="~/lib/chosen_v1.8.7/chosen.min.css" />
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-        
+
     <title>Document</title>
     <style>
 
@@ -142,31 +142,31 @@
                 </div>
             </div>
         </div>
-	</div>
+    </div>
 
     <script src="/lib/chosen_v1.8.7/docsupport/jquery-3.2.1.min.js" type="text/javascript"></script>
     <script src="/lib/chosen_v1.8.7/chosen.jquery.js"></script>
     <script src="/lib/chosen_v1.8.7/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
     <script src="/lib/chosen_v1.8.7/docsupport/init.js" type="text/javascript" charset="utf-8"></script>
 
-	<script>
-		let arrow = document.querySelectorAll(".arrow")
+    <script>
+            let arrow = document.querySelectorAll(".arrow")
 
 
-    for (var i = 0; i < arrow.length; i++) {
-        arrow[i].addEventListener("click", (e) => {
-            console.log(e)
-            let arrowParent = e.target.parentElement.parentElement;
-            console.log(arrowParent);
-            arrowParent.classList.toggle("showMenu");
-        });
-    }
-    let sidebar = document.querySelector(".sidebar");
-    let sidebarBtn = document.querySelector(".bx-menu");
-    console.log(sidebarBtn);
-    sidebarBtn.addEventListener("click", () => {
-        sidebar.classList.toggle("close")
-    })
-	</script>
+        for (var i = 0; i < arrow.length; i++) {
+            arrow[i].addEventListener("click", (e) => {
+                console.log(e)
+                let arrowParent = e.target.parentElement.parentElement;
+                console.log(arrowParent);
+                arrowParent.classList.toggle("showMenu");
+            });
+        }
+        let sidebar = document.querySelector(".sidebar");
+        let sidebarBtn = document.querySelector(".bx-menu");
+        console.log(sidebarBtn);
+        sidebarBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("close")
+        })
+    </script>
 </body>
 </html>
