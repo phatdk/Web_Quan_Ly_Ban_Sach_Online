@@ -10,7 +10,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookShop.BLL.Service.BookGenreCategoryService
+namespace BookShop.BLL.Service.CategoryService
 {
 	public class CategoryService : ICategoryService
 	{
