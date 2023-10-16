@@ -1,50 +1,36 @@
-﻿@model BookShop.BLL.ConfigurationModel.GenreModel.GenreModel
+﻿@using BookShop.BLL.ConfigurationModel.CategoryModel
+@model BookShop.BLL.ConfigurationModel.GenreModel.CreateGenreModel
 
 @{
     ViewData["Title"] = "Create";
+    List<CategoryModel> categorys = ViewBag.Categorys;
 }
 
 <h1>Create</h1>
 
-<h4>GenreModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Index" class="control-label"></label>
-                <input asp-for="Index" class="form-control" />
-                <span asp-validation-for="Index" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Id_Category" class="control-label"></label>
-                <input asp-for="Id_Category" class="form-control" />
-                <span asp-validation-for="Id_Category" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+@using (Html.BeginForm(FormMethod.Post))
+{
+	<div style="width: 500px">
+        <div class="form-group">
+		@Html.Label("Tên thể loại")
+		@Html.TextBoxFor(m => m.Name, new { @class = "form-control short" })
+		</div>
 
+		<div class="form-group">
+			@Html.Label("Index")
+			@Html.TextBoxFor(m => m.Index, new { @class = "form-control short" })
+		</div>
+
+		<div class="form-group">
+			@Html.Label("Danh mục")
+			@Html.DropDownListFor(m => m.Id_Category, new SelectList(categorys, "Id","Name"), "-- Select Collection --", new { @class = "form-control chosen-				select" })
+
+		</div>
+    </div>
+<br />
+	<button type="submit" class="btn btn-primary">Create</button>
+}
+<br />
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-

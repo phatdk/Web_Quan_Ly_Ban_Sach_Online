@@ -6,18 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 {
-    [Area("Admin")] 
-    [Route("admin/Gener")] 
+    [Area("Admin")]
+    [Route("admin/Gener")]
     public class GenerController : Controller
     {
         private readonly IGenreService _genreService;
         List<CategoryModel> _listCategory;
+        GenreModel _genre;
         ICategoryService _categoryService;
 
 
-        public GenerController(IGenreService genreService, List<CategoryModel> listCategory, ICategoryService categoryService)
+        public GenerController(IGenreService genreService, ICategoryService categoryService)
         {
             _genreService = genreService;
+            _genre = new GenreModel();
             _listCategory = new List<CategoryModel>();
             _categoryService = categoryService;
         }
@@ -43,52 +45,70 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             }
         }
 
-        [HttpGet("Create/gener")]
+        [HttpGet("Create")]
         public async Task<IActionResult> Create()
         {
-            var listcategory = await LoadCategory(1);
+            var categorys = await LoadCategory(1);
+            ViewBag.Categorys = categorys;
             return View();
         }
-        [HttpPost("Create/gener")]
-        public async Task<IActionResult> Create(Genre genre)
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create(CreateGenreModel genre)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                var createGenerModel = new CreateGenreModel
+                var createGenerModel = new CreateGenreModel()
                 {
                     Name = genre.Name,
                     Index = genre.Index,
                     CreatedDate = genre.CreatedDate,
-                    Id_Category = genre.Id_Category == 0 ? 0 : genre.Id_Category
+                    Id_Category = genre.Id_Category == 0 ? 1 : genre.Id_Category
                 };
-
-                await _genreService.Add(createGenerModel);
-                return RedirectToAction("Index");
+                var result = await _genreService.Add(createGenerModel);
+                return RedirectToAction(nameof(Index));
             }
-            return View(genre);
+            catch (Exception)
+            {
+                return View();
+            }
         }
-        [HttpGet("Edit/gener/{id}")]
+
+        [HttpGet("Edit/genre/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
-            var gener = await _genreService.GetById(id);
-            return View(gener);
-        }
-        [HttpPost("Edit/gener/{id}")]
-        public async Task<IActionResult> Edit(int id, Genre gener)
-        {
-            if (!ModelState.IsValid)
+            _genre = await _genreService.GetById(id);
+            var _updateGenreModel = new updateGenreModel
             {
-                var updatGenerModel = new updateGenreModel
+                Name = _genre.Name,
+                Index = _genre.Index ?? 0,
+                Id_Category = _genre.Id_Category ?? 0
+            };
+
+            var categorys = await LoadCategory(1);
+            ViewBag.Categorys = categorys;
+            return View(_updateGenreModel); // Truyền ViewModel chứa cả danh sách danh mục và thông tin thể loại
+        }
+
+
+        [HttpPost("Edit/genre/{id}")]
+        public async Task<IActionResult> Edit(int id, updateGenreModel gener)
+        {
+            try
+            {
+                var updatGenerModel = new updateGenreModel()
                 {
                     Name = gener.Name,
                     Index = gener.Index,
-
+                    Id_Category = gener.Id_Category
                 };
-
-                await _genreService.Update(id, updatGenerModel);
+                await _genreService.Update(id, gener);
                 return RedirectToAction("Index");
+
             }
-            return View(gener);
+            catch (Exception)
+            {
+                return View();
+            }
         }
 
         [HttpGet("Detail/gener/{id}")]
@@ -98,14 +118,27 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             return View(gener);
         }
 
-        //[HttpDelete("Delete/author/{id}")]
+
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            if (await _genreService.Delete(id))
+            var genre = await _genreService.GetById(id);
+            if (genre == null)
             {
-                return RedirectToAction("Index");
+                return NotFound();
             }
-            else return BadRequest();
+
+            try
+            {
+                // Xóa thể loại theo id
+                await _genreService.Delete(id);
+                return RedirectToAction("Index"); // Chuyển hướng sau khi xóa thành công
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index"); // Xử lý lỗi xóa
+            }
         }
     }
+
 }

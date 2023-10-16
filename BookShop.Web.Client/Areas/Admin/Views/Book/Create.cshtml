@@ -1,0 +1,137 @@
+﻿@using BookShop.BLL.ConfigurationModel.AuthorModel
+@using BookShop.BLL.ConfigurationModel.SupplierModel
+@using BookShop.BLL.ConfigurationModel.GenreModel
+@model BookShop.BLL.ConfigurationModel.BookModel.CreateBookModel
+@{
+	ViewData["Title"] = "Create";
+	List<AuthorModel> authors = ViewBag.Authors;
+	List<GenreModel> genres = ViewBag.Genres;
+	List<SupplierViewModel> suppliers = ViewBag.Supplier;
+}
+<style>
+	.form-column {
+		float: left;
+		width: 30%; /* Điều chỉnh chiều rộng của cột tại đây */
+		margin-right: 5%; /* Khoảng cách giữa hai cột */
+	}
+
+	.clear {
+		clear: both;
+	}
+
+	.btn btn-primary {
+		width: 50px;
+	}
+
+	.form-control {
+		height: 30px;
+	}
+
+	button {
+		float: left;
+		width: 30%; /* Điều chỉnh chiều rộng của cột tại đây */
+		margin-right: 5%; /* Khoảng cách giữa hai cột */
+	}
+</style>
+
+@using (Html.BeginForm("Create", "Book", FormMethod.Post))
+{
+	@Html.AntiForgeryToken()
+	<div class="form-column">
+		<div class="form-group">
+			@Html.Label("Mã định danh")
+			@Html.TextBoxFor(m => m.ISBN, new { @class = "form-control" })
+		</div>
+
+		<div class="form-group">
+			@Html.Label("Tiêu đề sách")
+			@Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+		</div>
+
+		<div class="form-group">
+			@Html.Label("Số lượng")
+			@Html.TextBoxFor(m => m.Quantity, new { @class = "form-control" })
+		</div>
+
+		<div class="form-group">
+			@Html.Label("Giá bìa")
+			@Html.TextBoxFor(m => m.CoverPrice, new { @class = "form-control" })
+		</div>
+
+		<div class="form-group">
+			@Html.Label("Giá nhập")
+			@Html.TextBoxFor(m => m.ImportPrice, new { @class = "form-control" })
+		</div>
+
+		<div class="form-group">
+			@Html.Label("Số trang")
+			@Html.TextBoxFor(m => m.Pages, new { @class = "form-control" })
+		</div>
+		<div class="form-group">
+			@Html.Label("Kích thước trang(mm)")
+			@Html.TextBoxFor(m => m.PageSize, new { @class = "form-control" })
+		</div>
+		<div class="form-group">
+			@Html.Label("Cover")
+			@Html.TextBoxFor(m => m.Cover, new { @class = "form-control" })
+		</div>
+		<div class="form-group">
+			@Html.Label("Ngày xuất bản")
+			@Html.EditorFor(m => m.PublicationDate, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+		</div>
+		<div class="form-group">
+				@Html.Label("Trọng lượng(g)")
+				@Html.TextBoxFor(m => m.Weight, new { @class = "form-control" })
+			</div>
+		<div class="clear"></div>
+	</div>
+	<div class="form-column">
+		<div class="form-group">
+			<div class="form-group">
+				@Html.Label("Chiều dài sách(mm)")
+				@Html.TextBoxFor(m => m.Length, new { @class = "form-control" })
+			</div>
+			<div class="form-group">
+				@Html.Label("Chiều cao(mm)")
+				@Html.TextBoxFor(m => m.Height, new { @class = "form-control" })
+			</div>
+			<div class="form-group">
+				@Html.Label("Ngày tạo")
+				@Html.EditorFor(m => m.CreatedDate, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+			</div>
+
+			<div class="form-group">
+				@Html.Label("Độc giả")
+				@Html.TextBoxFor(m => m.Reader, new { @class = "form-control" })
+			</div>
+
+			<div class="form-group">
+				@Html.Label("Mô tả sản phẩm")
+				@Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+			</div>
+			<div class="form-group">
+				@Html.Label("Status")
+				@Html.TextBoxFor(m => m.Status, new { @class = "form-control" })
+			</div>
+
+			<div class="form-group">
+				@Html.Label("Tác giả")
+				@Html.ListBoxFor(m => m.authorSelected, new MultiSelectList(authors, "Id", "Name"), new { @class = "form-control chosen-select" })
+			</div>
+
+			<div class="form-group">
+				@Html.Label("Thể loại")
+				@Html.ListBoxFor(m => m.genreSelected, new MultiSelectList(genres, "Id", "Name"), new { @class = "form-control chosen-select"})
+			</div>
+
+			<div class="form-group">
+				@Html.Label("Nhà sản xuất")
+				@Html.DropDownListFor(m => m.Id_Supplier, new SelectList(suppliers, "Id", "Name"), new { @class = "form-control chosen-select"})
+			</div>
+			<div class="clear"></div>
+		</div>
+		<br/>
+		<button type="submit" class="btn btn-primary">Create</button>
+	</div>
+	<br />
+}

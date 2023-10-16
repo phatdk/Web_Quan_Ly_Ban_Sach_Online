@@ -96,6 +96,7 @@ builder.Services.AddScoped<IGenreService, GenreService>();
 
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+
 builder.Services.AddSingleton<IProductService, ProductService>();
 builder.Services.AddSingleton<IImageService, ImageService>();
 builder.Services.AddSingleton<IBookService, BookService>();
