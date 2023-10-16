@@ -38,7 +38,7 @@ namespace BookShop.BLL.Service
 			Random random = new Random();
 
 			// Tạo một chuỗi các ký tự ngẫu nhiên
-			string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 			string code = "";
 			for (int i = 0; i < length; i++)
 			{
@@ -52,7 +52,7 @@ namespace BookShop.BLL.Service
 			return (await GenerateCode(length)).ToString();
 		}
 
-		public async Task<CreateOrderModel> Add(CreateOrderModel model)
+		public async Task<OrderViewModel> Add(OrderViewModel model)
 		{
 			try
 			{
@@ -60,7 +60,7 @@ namespace BookShop.BLL.Service
 				if (model.IsUsePoint)
 				{
 					// nếu sử dụng dụng điểm thì sẽ tiến hành đổi điểm VD: 1 điểm = 1.000đ
-					int pointToAmount = model.PointUsed * 1000;
+					int pointToAmount = Convert.ToInt32(model.PointUsed * 1000);
 
 					//
 					model.PointAmount = pointToAmount;
@@ -95,7 +95,7 @@ namespace BookShop.BLL.Service
 					Commune = model.Commune,
 					Address = model.Address,
 					Shipfee = model.Shipfee,
-					Id_StatusOrder = model.Id_StatusOrder,
+					Id_StatusOrder = model.Id_Status,
 					Id_User = model.Id_User,
 					Id_Promotion = model.Id_Promotion,
 
@@ -119,12 +119,9 @@ namespace BookShop.BLL.Service
 							Quantity = item.Quantity,
 						});
 					}
-
+					model.Id = ObjStatus.Id;
 				}
-				return new CreateOrderModel()
-				{
-					Id = ObjStatus.Id
-				};
+				return model;
 			}
 			catch (Exception ex) { return model; }
 		}
@@ -158,6 +155,7 @@ namespace BookShop.BLL.Service
 							   Phone = a.Phone,
 							   Email = a.Email,
 							   Receiver = a.Receiver,
+							   Address = a.Address,
 							   Description = a.Description,
 							   CreatedDate = a.CreatedDate,
 							   Shipfee = a.Shipfee,
@@ -165,13 +163,13 @@ namespace BookShop.BLL.Service
 							   Id_Promotion = a.Id_Promotion,
 							   Id_Status = a.Id_StatusOrder,
 							   NameUser = b1.Name,
-							   NamePromotion = (c1 == null)? "không sử dụng khuyến mãi": c1.Name,
+							   NamePromotion = (c1 == null) ? "không sử dụng khuyến mãi" : c1.Name,
 							   Status = d.Status,
 						   }).ToList();
 			foreach (var item in objlist)
 			{
-				var details = (await _orderDetailRepository.GetAllAsync()).Where(x=>x.Id_Order == item.Id).ToList();
-				foreach(var prod in details)
+				var details = (await _orderDetailRepository.GetAllAsync()).Where(x => x.Id_Order == item.Id).ToList();
+				foreach (var prod in details)
 				{
 					item.Total += (prod.Quantity * prod.Price);
 				}
@@ -184,11 +182,13 @@ namespace BookShop.BLL.Service
 			var orders = (await _orderRepository.GetAllAsync()).Where(c => c.Id_User == userId);
 			var users = await _userRepository.GetAllAsync();
 			var promotions = await _promotionRepository.GetAllAsync();
+			var status = await _statusRepository.GetAllAsync();
 			var objlist = (from a in orders
 						   join b in users on a.Id_User equals b.Id into t
 						   from b1 in t.DefaultIfEmpty()
 						   join c in promotions on a.Id_Promotion equals c.Id into i
 						   from c1 in i.DefaultIfEmpty()
+						   join d in status on a.Id_StatusOrder equals d.Id
 						   select new OrderViewModel()
 						   {
 							   Id = a.Id,
@@ -203,20 +203,22 @@ namespace BookShop.BLL.Service
 							   Commune = a.Commune,
 							   Id_User = a.Id_User,
 							   Id_Promotion = a.Id_Promotion,
+							   Id_Status = d.Id,
+							   Status = d.Status,
 							   NameUser = b1.Name,
 							   NamePromotion = (c1 == null) ? "không sử dụng khuyến mãi" : c1.Name,
 						   }).ToList();
 			return objlist;
 		}
 
-		public async Task<bool> Update(int id, UpdateOrderModel model)
+		public async Task<bool> Update(OrderViewModel model)
 		{
 			try
 			{
 				if (model.IsUsePoint)
 				{
 					// nếu sử dụng dụng điểm thì sẽ tiến hành đổi điểm VD: 1 điểm = 1.000đ
-					int pointToAmount = model.PointUsed * 1000;
+					int pointToAmount = Convert.ToInt32(model.PointUsed * 1000);
 
 					//
 					model.PointAmount = pointToAmount;
@@ -230,9 +232,11 @@ namespace BookShop.BLL.Service
 					model.ModifiNotes = String.Empty;
 				}
 
-				var obj = await _orderRepository.GetByIdAsync(id);
+				var obj = await _orderRepository.GetByIdAsync(model.Id);
 				obj.Receiver = model.Receiver;
 				obj.Phone = model.Phone;
+				obj.Email = model.Email;
+				obj.Address = model.Address;
 				obj.AcceptDate = model.AcceptDate;
 				obj.DeliveryDate = model.DeliveryDate;
 				obj.ReceiveDate = model.ReceiveDate;
@@ -249,7 +253,7 @@ namespace BookShop.BLL.Service
 				obj.IsUsePoint = model.IsUsePoint;
 				obj.PointUsed = model.PointUsed;
 				obj.PointAmount = model.PointAmount;
-				await _orderRepository.UpdateAsync(id, obj);
+				await _orderRepository.UpdateAsync(model.Id, obj);
 				return true;
 			}
 			catch (Exception ex) { return false; }
@@ -260,11 +264,13 @@ namespace BookShop.BLL.Service
 			var orders = (await _orderRepository.GetAllAsync()).Where(c => c.Id == id);
 			var users = await _userRepository.GetAllAsync();
 			var promotions = await _promotionRepository.GetAllAsync();
+			var status = await _statusRepository.GetAllAsync();
 			var objlist = (from a in orders
 						   join b in users on a.Id_User equals b.Id into t
 						   from b1 in t.DefaultIfEmpty()
 						   join c in promotions on a.Id_Promotion equals c.Id into i
 						   from c1 in i.DefaultIfEmpty()
+						   join d in status on a.Id_StatusOrder equals d.Id
 						   select new OrderViewModel()
 						   {
 							   Id = a.Id,
@@ -272,6 +278,8 @@ namespace BookShop.BLL.Service
 							   Phone = a.Phone,
 							   Receiver = a.Receiver,
 							   Email = a.Email,
+							   Address = a.Address,
+							   Shipfee = a.Shipfee,
 							   AcceptDate = a.AcceptDate,
 							   CreatedDate = a.CreatedDate,
 							   DeliveryDate = a.DeliveryDate,
@@ -283,10 +291,31 @@ namespace BookShop.BLL.Service
 							   Description = a.Description,
 							   Id_User = a.Id_User,
 							   Id_Promotion = a.Id_Promotion,
+							   Id_Status = d.Id,
+							   Status =  d.Status,
 							   NameUser = b1.Name,
+							   IsOnlineOrder = a.IsOnlineOrder,
+							   IsUsePoint = a.IsUsePoint,
+							   PointUsed = a.PointUsed,
+							   PointAmount = a.PointAmount,
 							   NamePromotion = (c1 == null) ? "không sử dụng khuyến mãi" : c1.Name,
 						   }).FirstOrDefault();
 			return objlist;
+		}
+
+		public async Task<bool> ChangeStatus(int id, int statusId)
+		{
+			try
+			{
+				var order = await _orderRepository.GetByIdAsync(id);
+				if(order != null)
+				{
+					order.Id_StatusOrder = statusId;
+					await _orderRepository.UpdateAsync(id, order);
+					return true;
+				}
+				return false;
+			}catch { return false; }
 		}
 	}
 }
