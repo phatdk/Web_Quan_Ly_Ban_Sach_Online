@@ -173,15 +173,26 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		{
 			try
 			{
-				if(image!=null)
+				if (image != null)
 				{
-					await UpLoadImage(image, request.Id);
+					var imgvm = (await _imageService.GetByProduct(request.Id)).FirstOrDefault();
+					var imgUrl = "/img/product/" + await UpLoadImage(image, request.Id);
+					if (imgvm.ImageUrl != imgUrl)
+					{
+						var img = new UpdateImageModel()
+						{
+							Id = imgvm.Id,
+							ImageUrl = imgUrl,
+						};
+						await _imageService.Update(img);
+					}
 				}
 				if (request.bookSelected.Count() > 1)
 				{
 					request.Type = 2;
 				}
-				request.Status = request.Quantity == 0 ? 0: 1;
+				else request.Type = 1;
+				request.Status = request.Quantity == 0 ? 0 : 1;
 				var result = await _productService.Update(request);
 				return RedirectToAction(nameof(Index));
 			}

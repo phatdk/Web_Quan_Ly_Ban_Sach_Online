@@ -32,7 +32,7 @@ public static class SeedDataMD
             };
             var User = new Userr
             {
-                UserName = "phatdk",
+                UserName = "customer",
                 Email = "",
                 EmailConfirmed = true,
                 Code = "KH0000000",
@@ -72,32 +72,32 @@ public static class SeedDataMD
         }; var status3 = new StatusOrder()
         {
             Status = 4,
-            StatusName = "Giao thành công",
+            StatusName = "Thanh toán thành công",
             CreatedDate = DateTime.Now,
         }; var status4 = new StatusOrder()
         {
             Status = 5,
-            StatusName = "Thanh toán thành công",
+            StatusName = "Hoàn thành",
             CreatedDate = DateTime.Now,
         };var status5 = new StatusOrder()
         {
             Status = 6,
-            StatusName = "Hoàn thành",
+            StatusName = "Trả hàng",
             CreatedDate = DateTime.Now,
         };var status6 = new StatusOrder()
         {
             Status = 7,
-            StatusName = "Trả hàng",
+            StatusName = "Hủy đơn",
             CreatedDate = DateTime.Now,
         };var status7 = new StatusOrder()
         {
             Status = 8,
-            StatusName = "Hủy đơn",
+            StatusName = "Đóng đơn",
             CreatedDate = DateTime.Now,
         };var status8 = new StatusOrder()
         {
             Status = 9,
-            StatusName = "Đóng đơn",
+            StatusName = "Đơn chờ",
             CreatedDate = DateTime.Now,
         };
 

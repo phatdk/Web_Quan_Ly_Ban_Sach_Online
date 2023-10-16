@@ -8,6 +8,7 @@ namespace BookShop.BLL.ConfigurationModel.ImageModel
 {
 	public class UpdateImageModel
 	{
+		public int Id { get; set; }
 		public string ImageUrl { get; set; }
 	}
 }
