@@ -1,4 +1,6 @@
-﻿using BookShop.Web.Client.Models;
+﻿using BookShop.BLL.ConfigurationModel.ProductModel;
+using BookShop.BLL.IService;
+using BookShop.Web.Client.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -8,27 +10,33 @@ namespace BookShop.Web.Client.Controllers
 	{
 		private readonly ILogger<HomeController> _logger;
 
-		public HomeController(ILogger<HomeController> logger)
+		private List<ProductViewModel> _products;
+		private ProductViewModel _product;
+		private readonly IProductService _productService;
+		public HomeController(ILogger<HomeController> logger, IProductService productService)
 		{
 			_logger = logger;
+			_products = new List<ProductViewModel>();
+			_product = new ProductViewModel();
+			_productService = productService;
 		}
 
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
+			ViewBag.Products = await _productService.GetAll();
 			return View();
 		}
 
-		public IActionResult Privacy()
-		{
-			return View();
-		}
 		public IActionResult GioHang()
 		{
 			return View();
 		}
-        public IActionResult ThongTinSanPham()
+
+        public async Task<IActionResult> ChiTietSanPham(int id)
         {
-            return View();
+			_product = await _productService.GetById(id);
+			ViewBag.Product = _product;
+            return View(_product);
         }
 		public IActionResult DanhGia()
 		{

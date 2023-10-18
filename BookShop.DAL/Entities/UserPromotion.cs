@@ -21,7 +21,7 @@ namespace BookShop.DAL.Entities
 		//foreign key
 		public int Id_User { get; set; }
 		public int Id_Promotion { get; set; }
-		public virtual User User { get; set; }
+		public virtual Userr User { get; set; }
 		public virtual Promotion Promotion { get; set; } 
 	}
 }

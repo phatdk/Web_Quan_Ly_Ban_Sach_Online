@@ -1,0 +1,69 @@
+﻿@using BookShop.BLL.ConfigurationModel.BookModel;
+@using BookShop.BLL.ConfigurationModel.CollectionBookModel;
+@model BookShop.BLL.ConfigurationModel.ProductModel.CreateProductModel
+@{
+	ViewData["Title"] = "Create";
+	List<BookViewModel> listBook = ViewBag.listBook;
+	List<CollectionModel> listCollection = ViewBag.listCollection;
+}
+<h4>Create Product</h4>
+
+@using (Html.BeginForm("Create", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+	@Html.AntiForgeryToken()
+
+	<div class="form-group">
+		@Html.Label("Tên sản phẩm")
+		@Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+	</div>
+
+	<div class="form-group">
+		@Html.Label("Số lượng")
+		@Html.TextBoxFor(m => m.Quantity, new { @class = "form-control" })
+	</div>
+
+	<div class="form-group">
+		@Html.Label("Giá bán")
+		@Html.TextBoxFor(m => m.Price, new { @class = "form-control" })
+	</div>
+
+	<div class="form-group">
+		@Html.Label("Mô tả sản phẩm")
+		@Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+	</div>
+
+
+	<div class="form-group">
+		@Html.Label("Bộ sưu tập")
+		@Html.DropDownListFor(m => m.CollectionId, new SelectList(listCollection, "Id", "Name"),"-- Select Collection --", new { @class = "form-control chosen-select" })
+	</div>
+
+	<div class="form-group">
+		@Html.Label("List Sách")
+		@Html.ListBoxFor(m => m.bookSelected, new MultiSelectList(listBook, "Id", "Title"), new { @class = "form-control chosen-select"})
+	</div>
+
+	<div class="form-group">
+		@Html.Label("Hình ảnh")<br />
+		<img id="img-selected" src="" alt="Hình ảnh sản phẩm" style="max-width: 300px"/>
+		<input type="file" name="image" id="img-input" class="form-control" accept=".png"/>
+	</div>
+
+	<button type="submit" class="btn btn-primary">Create</button>
+}
+<script>
+
+	const uploadInput = document.getElementById('img-input');
+	const uploadedImage = document.getElementById('img-selected');
+	uploadInput.addEventListener('change', function (event) {
+
+		const file = event.target.files[0];
+		if (file) {
+			const imageURL = URL.createObjectURL(file);
+			uploadedImage.src = imageURL;
+			// console.log(file)
+		}
+	});
+</script>
+
+<script src="/js/Area/Admin/Product.js"></script>

@@ -17,7 +17,7 @@ namespace BookShop.DAL.Entities
 		public string Title { get; set; }
 		public string? Description { get; set; }
 		public string Reader { get; set; }
-		public int Price { get; set; }
+		public int CoverPrice { get; set; }
 		public int ImportPrice { get; set; }
 		public int Quantity { get; set; }
 		public string PageSize { get; set; }

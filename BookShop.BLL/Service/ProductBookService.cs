@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BookShop.BLL.Service
 {
-	internal class ProductBookService : IProductBookService
+	public class ProductBookService : IProductBookService
 	{
 		private readonly IRepository<ProductBook> _productDetailRepository;
 		private readonly IRepository<Product> _productRepository;

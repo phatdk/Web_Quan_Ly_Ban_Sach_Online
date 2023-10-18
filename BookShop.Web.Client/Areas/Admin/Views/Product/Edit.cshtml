@@ -1,0 +1,87 @@
+﻿@using BookShop.BLL.ConfigurationModel.BookModel;
+@using BookShop.BLL.ConfigurationModel.CollectionBookModel;
+@model BookShop.BLL.ConfigurationModel.ProductModel.UpdateProductModel
+
+@{
+	string imgUrl = Model.imageViewModels.FirstOrDefault().ImageUrl;
+	List<BookViewModel> listBook = ViewBag.listBook;
+	List<CollectionModel> listCollection = ViewBag.listCollection;
+}
+<h4>Update Product</h4>
+
+@using (Html.BeginForm("Edit", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+	@Html.AntiForgeryToken()
+
+	<div class="form-group">
+		<input asp-for="Id" hidden />
+	</div>
+
+	<div class="form-group">
+		@Html.Label("Tên sản phẩm")
+		@Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+	</div>
+
+	<div class="form-group">
+		@Html.Label("Số lượng")
+		@Html.TextBoxFor(m => m.Quantity, new { @class = "form-control" })
+	</div>
+
+	<div class="form-group">
+		@Html.Label("Giá bán")
+		@Html.TextBoxFor(m => m.Price, new { @class = "form-control" })
+	</div>
+
+	<div class="form-group">
+		@Html.Label("Mô tả sản phẩm")
+		@Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+	</div>
+
+	<div class="form-group">
+		@Html.LabelFor(m => m.CollectionId)
+		@Html.DropDownListFor(m => m.CollectionId, new SelectList(listCollection, "Id", "Name"), "-- Select Collection --", new { @class = "form-control chosen-select", id = "collectionSelect" })
+		<input type="hidden" name="CollectionId" value="@Model.CollectionId" />
+	</div>
+
+	<div class="form-group">
+		@Html.Label("List sách")
+		@Html.ListBoxFor(m => m.bookSelected, new MultiSelectList(listBook, "Id", "Title", Model.bookSelected), new { @class = "form-control chosen-select", id = "bookSelect" })
+		<input type="hidden" name="bookSelected" value="@Model.bookSelected" />
+	</div>
+
+	<div class="form-group">
+		<input asp-for="Status" hidden />
+	</div>
+
+	<div class="form-group">
+		@Html.Label("Hình ảnh")<br />
+		<img id="img-selected" src="@imgUrl" alt="Hình ảnh sản phẩm" style="max-width: 300px" />
+		<input type="file" name="image" id="img-input" class="form-control" accept=".png" />
+	</div>
+
+	<button type="submit" class="btn btn-primary">Save</button>
+}
+
+<script>
+	const uploadInput = document.getElementById('img-input');
+	const uploadedImage = document.getElementById('img-selected');
+	uploadInput.addEventListener('change', function (event) {
+
+		const file = event.target.files[0];
+		if (file) {
+			const imageURL = URL.createObjectURL(file);
+			uploadedImage.src = imageURL;
+		}
+	});
+	$(document).ready(function () {
+		$('#bookSelect').change(function () {
+			var selectedValues = $('#bookSelect').val();
+			// Cập nhật bookSelected khi người dùng thay đổi lựa chọn
+			$('input[name="bookSelected"]').val(selectedValues);
+		});
+		$('#collectionSelect').change(function () {
+			var selectedValue = $('#collectionSelect').val();
+			$('input[name="CollectionId"]').val(selectedValue);
+		});
+	});
+</script>

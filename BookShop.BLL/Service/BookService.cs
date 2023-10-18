@@ -46,7 +46,7 @@ namespace BookShop.BLL.Service
                     Title = requet.Title,
                     Description = requet.Description,
                     Reader = requet.Reader,
-                    Price = requet.Price,
+                    CoverPrice = requet.CoverPrice,
                     ImportPrice = requet.ImportPrice,
                     Quantity = requet.Quantity,
                     PageSize = requet.PageSize,
@@ -87,7 +87,7 @@ namespace BookShop.BLL.Service
                     {
                         Name = book.Title,
                         Quantity = book.Quantity,
-                        Price = book.Price,
+                        Price = book.CoverPrice,
                         Description = book.Description,
                         CreatedDate = DateTime.Now,
                         Status = book.Status,
@@ -137,7 +137,7 @@ namespace BookShop.BLL.Service
                 obj.Title = requet.Title;
                 obj.Description = requet.Description;
                 obj.Reader = requet.Reader;
-                obj.Price = requet.Price;
+                obj.CoverPrice = requet.Price;
                 obj.ImportPrice = requet.ImportPrice;
                 obj.Quantity = requet.Quantity;
                 obj.PageSize = requet.PageSize;
@@ -196,11 +196,25 @@ namespace BookShop.BLL.Service
                            select new BookViewModel()
                            {
                                Id = a.Id,
+                               ISBN =a.ISBN,
                                Title = a.Title,
-                               Price = a.Price,
+                               Price = a.CoverPrice,
                                Quantity = a.Quantity,
                                Description = a.Description,
                                Status = a.Status,
+                               ImportPrice= a.ImportPrice,
+                               PageSize = a.PageSize,
+                               Pages = a.Pages,
+                               Reader = a.Reader,
+                               Cover = a.Cover,
+                               PublicationDate = a.PublicationDate,
+                               Weight = a.Weight,
+                               Widght = a.Widght,
+                               Length = a.Length,
+                               Height = a.Height,
+                               CreatedDate = a.CreatedDate,
+                               Id_Supplier = a.Id_Supplier,
+                               SupplierName = b.Name
                            }).ToList();
             return objlist;
         }
@@ -217,7 +231,7 @@ namespace BookShop.BLL.Service
                                Id = a.Id,
                                Title = a.Title,
                                Reader = a.Reader,
-                               Price = a.Price,
+                               Price = a.CoverPrice,
                                ImportPrice = a.ImportPrice,
                                Quantity = a.Quantity,
                                PageSize = a.PageSize,
@@ -277,7 +291,7 @@ namespace BookShop.BLL.Service
                            {
                                Id = a.Id,
                                Title = a.Title,
-                               Price = a.Price,
+                               Price = a.CoverPrice,
                                Quantity = a.Quantity,
                                Description = a.Description,
                                Status = a.Status,
@@ -303,7 +317,7 @@ namespace BookShop.BLL.Service
                            {
                                Id = a.Id,
                                Title = a.Title,
-                               Price = a.Price,
+                               Price = a.CoverPrice,
                                Quantity = a.Quantity,
                                Description = a.Description,
                                Status = a.Status,

@@ -1,0 +1,141 @@
+﻿@using System.Collections.Generic
+@using BookShop.DAL.Entities;
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Authentication;
+@using Microsoft.AspNetCore.Authentication;
+@model LoginViewModel
+@inject SignInManager<Userr> SignInManager
+
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+<section class="login_box_area section_gap">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="login_box_img">
+                    <img class="img-fluid" src="/img/login.jpg" alt="">
+                    <div class="hover">
+                        <h4>Bạn mới lần đầu vào website của chúng tôi</h4>
+                        <p>There are advances being made in science and technology everyday, and a good example of this is the</p>
+
+						<a class="primary-btn"  asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" >Tạo tài khoản mới</a>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="login_form_inner">
+                    <h3>Log in to enter</h3>
+                    <form class="row login_form" asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                        <div class="col-md-12 form-group">
+                            <input asp-for="UserNameOrEmail" type="text" class="form-control">
+                                 <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input asp-for="Password" type="password" class="form-control" id="name">
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <div class="creat_account">
+                                <label asp-for="RememberMe">
+                                    <input asp-for="RememberMe" />
+                                    @Html.DisplayNameFor(m => m.RememberMe)
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <button type="submit" value="submit" class="primary-btn">Log In</button>
+                            <a <a asp-action="ForgotPassword">Forgot Password?</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@*<h1>@ViewData["Title"].</h1>
+<div class="row">
+    <div class="col-md-8">
+        <section>
+            <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
+                <h4>Sử dụng tài khoản đã đăng ký để đăng nhập</h4>
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="UserNameOrEmail" class="control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="UserNameOrEmail" class="form-control" />
+                        <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <div class="checkbox">
+                            <label asp-for="RememberMe">
+                                <input asp-for="RememberMe" />
+                                @Html.DisplayNameFor(m => m.RememberMe)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="submit" class="btn btn-primary">Đăng nhập</button>
+                    </div>
+                </div>
+                <p>
+                    <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Chưa có tài khoản? Đăng ký</a>
+                </p>
+                <p>
+                    <a asp-action="ForgotPassword">Quyên mật khẩu?</a>
+                </p>
+            </form>
+        </section>
+    </div>
+    <div class="col-md-4">
+        <section>
+            <h4>Đăng nhập bằng tài khoản.</h4>
+            <hr />
+            @{
+                var schemes = await SignInManager.GetExternalAuthenticationSchemesAsync();
+                var loginProviders = schemes.ToList();
+                if (loginProviders.Count == 0)
+                {
+                    <div>
+                        <p>
+                            Ứng dụng chưa hỗ trợ đăng nhập từ tài khoản ngoài
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
+                        <div>
+                            <p>
+                                @foreach (var provider in loginProviders)
+                                {
+                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.Name account">@provider.Name</button>
+                                }
+                            </p>
+                        </div>
+                    </form>
+                }
+            }
+        </section>
+    </div>
+</div>
+*@
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
