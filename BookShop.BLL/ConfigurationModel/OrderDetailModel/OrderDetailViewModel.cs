@@ -19,5 +19,6 @@ namespace BookShop.BLL.ConfigurationModel.OrderDetailModel
 		//foreign key
 		public int Id_Order { get; set; }
 		public int Id_Product { get; set; }
+		public int Id_User { get; set; }
 	}
 }

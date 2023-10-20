@@ -132,7 +132,7 @@ namespace App.Areas.Identity.Controllers
 			Random random = new Random();
 
 			// Tạo một chuỗi các ký tự ngẫu nhiên
-			string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			string characters = "0123456789";
 			string code = "";
 			for (int i = 0; i < length; i++)
 			{

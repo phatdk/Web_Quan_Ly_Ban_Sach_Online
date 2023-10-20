@@ -17,7 +17,7 @@ namespace BookShop.BLL.Service
 		private readonly IRepository<Userr> _userRepository;
 		private readonly IRepository<Promotion> _promotionRepository;
 		private readonly IRepository<OrderDetail> _orderDetailRepository;
-		private readonly IRepository<CartDetail> _cartDetailRepository;
+		private readonly IRepository<ReturnOrder> _returnOrderRepository;
 		private readonly IRepository<Product> _productRepository;
 		private readonly IRepository<StatusOrder> _statusRepository;
 
@@ -27,7 +27,7 @@ namespace BookShop.BLL.Service
 			_userRepository = new Repository<Userr>();
 			_promotionRepository = new Repository<Promotion>();
 			_orderDetailRepository = new Repository<OrderDetail>();
-			_cartDetailRepository = new Repository<CartDetail>();
+			_returnOrderRepository = new Repository<ReturnOrder>();
 			_productRepository = new Repository<Product>();
 			_statusRepository = new Repository<StatusOrder>();
 		}
@@ -61,19 +61,14 @@ namespace BookShop.BLL.Service
 				{
 					// nếu sử dụng dụng điểm thì sẽ tiến hành đổi điểm VD: 1 điểm = 1.000đ
 					int pointToAmount = Convert.ToInt32(model.PointUsed * 1000);
-
 					//
 					model.PointAmount = pointToAmount;
-
-					//Lưu lại vào Notes
-					model.ModifiNotes = $"Đã sử dụng {model.PointUsed} điểm để giảm {pointToAmount}đ";
 				}
 				else
 				{
 					model.PointUsed = 0;
 					model.ModifiNotes = String.Empty;
 				}
-
 				var code = await GenerateCode(10);
 				var obj = new Order()
 				{
@@ -114,6 +109,7 @@ namespace BookShop.BLL.Service
 						await _orderDetailRepository.CreateAsync(new OrderDetail()
 						{
 							Id_Order = ObjStatus.Id,
+							UserId = ObjStatus.Id_User,
 							Id_Product = item.Id_Product,
 							Price = item.Price,
 							Quantity = item.Quantity,
@@ -148,6 +144,8 @@ namespace BookShop.BLL.Service
 						   join c in promotions on a.Id_Promotion equals c.Id into i
 						   from c1 in i.DefaultIfEmpty()
 						   join d in status on a.Id_StatusOrder equals d.Id
+						   join e in users on a.Id_Staff equals e.Id into j
+						   from e1 in j.DefaultIfEmpty()
 						   select new OrderViewModel()
 						   {
 							   Id = a.Id,
@@ -158,13 +156,25 @@ namespace BookShop.BLL.Service
 							   Address = a.Address,
 							   Description = a.Description,
 							   CreatedDate = a.CreatedDate,
+							   AcceptDate = a.AcceptDate,
+							   DeliveryDate = a.DeliveryDate,
+							   PaymentDate = a.PaymentDate,
+							   ModifiDate = a.ModifiDate,
+							   ReceiveDate = a.ReceiveDate,
+							   CompleteDate = a.CompleteDate,
 							   Shipfee = a.Shipfee,
-							   Id_User = a.Id_User,
-							   Id_Promotion = a.Id_Promotion,
 							   Id_Status = a.Id_StatusOrder,
-							   NameUser = b1.Name,
-							   NamePromotion = (c1 == null) ? "không sử dụng khuyến mãi" : c1.Name,
 							   Status = d.Status,
+							   StatusName = d.StatusName,
+							   Id_User = a.Id_User,
+							   UserCode = b1.Code,
+							   NameUser = b1.Name,
+							   Id_Staff = a.Id_Staff,
+							   StaffCode = e1 == null ? "Chưa có nhân viên tiếp nhận" : e1.Code,
+							   NameStaff = e1 == null ? "Chưa có nhân viên tiếp nhận" : e1.Name,
+							   Id_Promotion = a.Id_Promotion,
+							   PromotionCode = c1 == null ? "Không sử dụng khuyến mãi" : c1.Code,
+							   NamePromotion = c1 == null ? "không sử dụng khuyến mãi" : c1.Name,
 						   }).ToList();
 			foreach (var item in objlist)
 			{
@@ -189,25 +199,85 @@ namespace BookShop.BLL.Service
 						   join c in promotions on a.Id_Promotion equals c.Id into i
 						   from c1 in i.DefaultIfEmpty()
 						   join d in status on a.Id_StatusOrder equals d.Id
+						   join e in users on a.Id_Staff equals e.Id into j
+						   from e1 in j.DefaultIfEmpty()
 						   select new OrderViewModel()
 						   {
 							   Id = a.Id,
 							   Code = a.Code,
 							   Phone = a.Phone,
-							   Receiver = a.Receiver,
 							   Email = a.Email,
-							   CreatedDate = a.CreatedDate,
+							   Receiver = a.Receiver,
+							   Address = a.Address,
 							   Description = a.Description,
-							   City = a.City,
-							   District = a.District,
-							   Commune = a.Commune,
-							   Id_User = a.Id_User,
-							   Id_Promotion = a.Id_Promotion,
-							   Id_Status = d.Id,
+							   CreatedDate = a.CreatedDate,
+							   AcceptDate = a.AcceptDate,
+							   DeliveryDate = a.DeliveryDate,
+							   PaymentDate = a.PaymentDate,
+							   ModifiDate = a.ModifiDate,
+							   ReceiveDate = a.ReceiveDate,
+							   CompleteDate = a.CompleteDate,
+							   Shipfee = a.Shipfee,
+							   Id_Status = a.Id_StatusOrder,
 							   Status = d.Status,
+							   StatusName = d.StatusName,
+							   Id_User = a.Id_User,
+							   UserCode = b1.Code,
 							   NameUser = b1.Name,
-							   NamePromotion = (c1 == null) ? "không sử dụng khuyến mãi" : c1.Name,
+							   Id_Staff = a.Id_Staff,
+							   StaffCode = e1 == null ? "Chưa có nhân viên tiếp nhận" : e1.Code,
+							   NameStaff = e1 == null ? "Chưa có nhân viên tiếp nhận" : e1.Name,
+							   Id_Promotion = a.Id_Promotion,
+							   PromotionCode = c1 == null ? "Không sử dụng khuyến mãi" : c1.Code,
+							   NamePromotion = c1 == null ? "không sử dụng khuyến mãi" : c1.Name,
 						   }).ToList();
+			return objlist;
+		}
+
+		public async Task<OrderViewModel> GetById(int id)
+		{
+			var orders = (await _orderRepository.GetAllAsync()).Where(c => c.Id == id);
+			var users = await _userRepository.GetAllAsync();
+			var promotions = await _promotionRepository.GetAllAsync();
+			var status = await _statusRepository.GetAllAsync();
+			var objlist = (from a in orders
+						   join b in users on a.Id_User equals b.Id into t
+						   from b1 in t.DefaultIfEmpty()
+						   join c in promotions on a.Id_Promotion equals c.Id into i
+						   from c1 in i.DefaultIfEmpty()
+						   join d in status on a.Id_StatusOrder equals d.Id
+						   join e in users on a.Id_Staff equals e.Id into j
+						   from e1 in j.DefaultIfEmpty()
+						   select new OrderViewModel()
+						   {
+							   Id = a.Id,
+							   Code = a.Code,
+							   Phone = a.Phone,
+							   Email = a.Email,
+							   Receiver = a.Receiver,
+							   Address = a.Address,
+							   Description = a.Description,
+							   CreatedDate = a.CreatedDate,
+							   AcceptDate = a.AcceptDate,
+							   DeliveryDate = a.DeliveryDate,
+							   PaymentDate = a.PaymentDate,
+							   ModifiDate = a.ModifiDate,
+							   ReceiveDate = a.ReceiveDate,
+							   CompleteDate = a.CompleteDate,
+							   Shipfee = a.Shipfee,
+							   Id_Status = a.Id_StatusOrder,
+							   Status = d.Status,
+							   StatusName = d.StatusName,
+							   Id_User = a.Id_User,
+							   UserCode = b1.Code,
+							   NameUser = b1.Name,
+							   Id_Staff = a.Id_Staff,
+							   StaffCode = e1 == null ? "Chưa có nhân viên tiếp nhận" : e1.Code,
+							   NameStaff = e1 == null ? "Chưa có nhân viên tiếp nhận" : e1.Name,
+							   Id_Promotion = a.Id_Promotion,
+							   PromotionCode = c1 == null ? "Không sử dụng khuyến mãi" : c1.Code,
+							   NamePromotion = c1 == null ? "không sử dụng khuyến mãi" : c1.Name,
+						   }).FirstOrDefault();
 			return objlist;
 		}
 
@@ -219,19 +289,14 @@ namespace BookShop.BLL.Service
 				{
 					// nếu sử dụng dụng điểm thì sẽ tiến hành đổi điểm VD: 1 điểm = 1.000đ
 					int pointToAmount = Convert.ToInt32(model.PointUsed * 1000);
-
 					//
 					model.PointAmount = pointToAmount;
-
-					//Lưu lại vào Notes
-					model.ModifiNotes = $"Đã sử dụng {model.PointUsed} điểm để giảm {pointToAmount}đ";
 				}
 				else
 				{
 					model.PointUsed = 0;
 					model.ModifiNotes = String.Empty;
 				}
-
 				var obj = await _orderRepository.GetByIdAsync(model.Id);
 				obj.Receiver = model.Receiver;
 				obj.Phone = model.Phone;
@@ -248,74 +313,19 @@ namespace BookShop.BLL.Service
 				obj.City = model.City;
 				obj.District = model.District;
 				obj.Commune = model.Commune;
+				obj.Shipfee = model.Shipfee;
+				obj.Id_Staff = model.Id_Staff;
 				obj.Id_Promotion = model.Id_Promotion;
+				obj.Id_StatusOrder = model.Id_Status;
+				obj.Id_User = model.Id_User;
 				//thêm
 				obj.IsUsePoint = model.IsUsePoint;
 				obj.PointUsed = model.PointUsed;
 				obj.PointAmount = model.PointAmount;
-				await _orderRepository.UpdateAsync(model.Id, obj);
+				await _orderRepository.UpdateAsync(obj.Id, obj);
 				return true;
 			}
 			catch (Exception ex) { return false; }
-		}
-
-		public async Task<OrderViewModel> GetById(int id)
-		{
-			var orders = (await _orderRepository.GetAllAsync()).Where(c => c.Id == id);
-			var users = await _userRepository.GetAllAsync();
-			var promotions = await _promotionRepository.GetAllAsync();
-			var status = await _statusRepository.GetAllAsync();
-			var objlist = (from a in orders
-						   join b in users on a.Id_User equals b.Id into t
-						   from b1 in t.DefaultIfEmpty()
-						   join c in promotions on a.Id_Promotion equals c.Id into i
-						   from c1 in i.DefaultIfEmpty()
-						   join d in status on a.Id_StatusOrder equals d.Id
-						   select new OrderViewModel()
-						   {
-							   Id = a.Id,
-							   Code = a.Code,
-							   Phone = a.Phone,
-							   Receiver = a.Receiver,
-							   Email = a.Email,
-							   Address = a.Address,
-							   Shipfee = a.Shipfee,
-							   AcceptDate = a.AcceptDate,
-							   CreatedDate = a.CreatedDate,
-							   DeliveryDate = a.DeliveryDate,
-							   ReceiveDate = a.ReceiveDate,
-							   PaymentDate = a.PaymentDate,
-							   CompleteDate = a.CompleteDate,
-							   ModifiDate = a.ModifiDate,
-							   ModifiNotes = a.ModifiNotes,
-							   Description = a.Description,
-							   Id_User = a.Id_User,
-							   Id_Promotion = a.Id_Promotion,
-							   Id_Status = d.Id,
-							   Status =  d.Status,
-							   NameUser = b1.Name,
-							   IsOnlineOrder = a.IsOnlineOrder,
-							   IsUsePoint = a.IsUsePoint,
-							   PointUsed = a.PointUsed,
-							   PointAmount = a.PointAmount,
-							   NamePromotion = (c1 == null) ? "không sử dụng khuyến mãi" : c1.Name,
-						   }).FirstOrDefault();
-			return objlist;
-		}
-
-		public async Task<bool> ChangeStatus(int id, int statusId)
-		{
-			try
-			{
-				var order = await _orderRepository.GetByIdAsync(id);
-				if(order != null)
-				{
-					order.Id_StatusOrder = statusId;
-					await _orderRepository.UpdateAsync(id, order);
-					return true;
-				}
-				return false;
-			}catch { return false; }
 		}
 	}
 }

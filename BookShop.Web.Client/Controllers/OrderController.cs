@@ -67,6 +67,7 @@ namespace BookShop.Web.Client.Controllers
 		}
 
 		// GET: OrderController/Details/5
+
 		public async Task<IActionResult> OrderDetails(int id)
 		{
 			_order = await _orderService.GetById(id);
@@ -179,6 +180,21 @@ namespace BookShop.Web.Client.Controllers
 			return View(createModel);
 		}
 
+		// tru san pham khi tao don thanh cong
+		public async Task<IActionResult> SubtractProduct(int id)
+		{
+			var order = await _orderService.GetById(id);
+			if (order != null)
+			{
+				var details = await _orderDetailService.GetByOrder(id);
+				foreach (var item in details)
+				{
+					await _productService.ChangeQuantity(item.Id_Product, -item.Quantity);
+				}
+			}
+			return Json(new { success = true });
+		}
+
 		// POST: OrderController/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
@@ -200,7 +216,7 @@ namespace BookShop.Web.Client.Controllers
 
 				request.Id_Status = (await _statusService.GetAll()).Where(x => x.Status == 1).FirstOrDefault().Id; // hóa đơn chờ
 				request.IsOnlineOrder = true;
-				request.IsUsePoint = request.PointUsed == 0 ? false : true;
+				request.IsUsePoint = request.PointUsed > 0 ? false : true;
 				// return Ok(request);
 				var result = await _orderService.Add(request);
 				if (result.Id != 0)
@@ -216,6 +232,7 @@ namespace BookShop.Web.Client.Controllers
 						};
 						await _orderPaymentService.Add(op);
 					}
+					await SubtractProduct(result.Id);
 				}
 
 				return RedirectToAction("OrderDetails", new { id = result.Id });
@@ -247,21 +264,42 @@ namespace BookShop.Web.Client.Controllers
 			}
 		}
 
+		// Cộng lại sản phẩm nếu đơn bị hủy kể cả đã xác nhận
+		// (chỉ không tự động công khi đơn đã được giao 'điều này để shop xác nhận rẳng sản phẩm vẫn còn được đảm bảo có thể bày bán trở lại')
+		public async Task<IActionResult> ReturnProduct(int id)
+		{
+			var order = await _orderService.GetById(id);
+			if (order != null)
+			{
+				var details = await _orderDetailService.GetByOrder(id);
+				foreach (var item in details)
+				{
+					await _productService.ChangeQuantity(item.Id_Product, item.Quantity);
+				}
+			}
+			return Json(new { success = true });
+		}
 		// GET: OrderController/Delete/5
 		public async Task<IActionResult> DeleteOrder(int id)
 		{
 			var order = await _orderService.GetById(id);
 			bool result = false;
-			if (order.Status > 1)
+			//if (order.Status == 2)
+			//{
+			var statusId = (await _statusService.GetAll()).Where(x => x.Status == 8).FirstOrDefault().Id;
+			order.Id_Status = statusId;
+			result = await _orderService.Update(order);
+			//}
+			//else if(order.Status == 1)
+			//{
+			//	await ReturnProduct(id);
+			//	result = await _orderService.Delete(id);
+			//}
+			if (result)
 			{
-				var statusId = (await _statusService.GetAll()).Where(x => x.Status == 7).FirstOrDefault().Id;
-				result = await _orderService.ChangeStatus(id, statusId);
+				await ReturnProduct(id);
+				return Json(new { success = true });
 			}
-			else
-			{
-				result = await _orderService.Delete(id);
-			}
-			if (result) return Json(new { success = true });
 			else return Json(new { success = false });
 		}
 
