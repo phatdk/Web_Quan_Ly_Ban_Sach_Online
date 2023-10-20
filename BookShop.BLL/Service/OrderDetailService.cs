@@ -14,11 +14,13 @@ namespace BookShop.BLL.Service
     {
         private readonly IRepository<OrderDetail> _orderDetailRepository;
         private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<Image> _imageRepository;
 
         public OrderDetailService()
         {
             _orderDetailRepository = new Repository<OrderDetail>();
             _productRepository = new Repository<Product>();
+            _imageRepository = new Repository<Image>();
         }
 
         public async Task<bool> Add(CreateOrderDetailModel model)
@@ -70,21 +72,24 @@ namespace BookShop.BLL.Service
 
         public async Task<List<OrderDetailViewModel>> GetByOrder(int orderId)
         {
+            List<OrderDetail> details = (await _orderDetailRepository.GetAllAsync()).Where(x => x.Id_Order == orderId).ToList();
             var products = await _productRepository.GetAllAsync();
-            var orderdetails = (await _orderDetailRepository.GetAllAsync()).Where(c => c.Id_Order == orderId);
-            var objlist = (from a in orderdetails
-                           join b in products on a.Id_Product equals b.Id into t
-                           from b in t.DefaultIfEmpty()
+            var objlist = (from a in details
+                           join b in products on a.Id_Product equals b.Id
                            select new OrderDetailViewModel()
                            {
                                Id = a.Id,
-                               Id_Product = a.Id_Product,
-                               Id_Order = a.Id_Order,
-                               NameProduct = b.Name,
                                Quantity = a.Quantity,
                                Price = a.Price,
-                               Img = b.Images.FirstOrDefault().ImageUrl,
+                               Id_Product = a.Id_Product,
+                               Id_Order = a.Id_Order,
+							   Id_User = a.UserId,
+                               NameProduct = b.Name,
                            }).ToList();
+            foreach (var item in objlist)
+            {
+                item.Img = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == item.Id_Product).FirstOrDefault()?.ImageUrl;
+            }
             return objlist;
         }
 
