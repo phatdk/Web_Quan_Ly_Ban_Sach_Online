@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using App.Areas.Identity.Models.AccountViewModels;
+using BookShop.BLL.ConfigurationModel.CartDetailModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;
@@ -32,16 +33,10 @@ namespace App.Areas.Identity.Controllers
 		private readonly IEmailSender _emailSender;
 		private readonly ILogger<AccountController> _logger;
 		private readonly IUserService _userService;
-        private readonly IRepository<Cart> _CartRepository;
-        private readonly IRepository<WalletPoint> _WalletPointRepository;
-        public AccountController(
-            UserManager<Userr> userManager,
-            SignInManager<Userr> signInManager,
-            IEmailSender emailSender,
-            ILogger<AccountController> logger,
-            IUserService userService,
-            IRepository<Cart> cartRepository,
-            IRepository<WalletPoint> walletPointRepository)
+        private readonly ICartService _CartRepository;
+        private readonly IWalletpointService _WalletPointRepository;
+
+        public AccountController(UserManager<Userr> userManager, SignInManager<Userr> signInManager, IEmailSender emailSender, ILogger<AccountController> logger, IUserService userService, ICartService cartRepository, IWalletpointService walletPointRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -51,6 +46,7 @@ namespace App.Areas.Identity.Controllers
             _CartRepository = cartRepository;
             _WalletPointRepository = walletPointRepository;
         }
+
 
         // GET: /Account/Login
         [HttpGet("/login/")]
@@ -174,13 +170,12 @@ namespace App.Areas.Identity.Controllers
 
 				if (result.Succeeded)
 				{
-                    var cart = new Cart()
+                    var cart = new CartViewModel()
                     {
                         Id_User = user.Id,
-                        CreatedDate = DateTime.Now,
-                        Status = 1,
+                      
                     };
-                    await _CartRepository.CreateAsync(cart);
+                    await _CartRepository.Add(cart);
                     var walletPoint = new WalletPoint()
                     {
                         Id_User = user.Id,
@@ -188,7 +183,7 @@ namespace App.Areas.Identity.Controllers
                         Status = 1,
                         Point = 0,
                     };
-                    await _WalletPointRepository.CreateAsync(walletPoint);
+                    await _WalletPointRepository.Add(walletPoint);
                     _logger.LogInformation("Đã tạo user mới.");
 					var users = await _userManager.FindByNameAsync(user.UserName);
 					if (users != null)
