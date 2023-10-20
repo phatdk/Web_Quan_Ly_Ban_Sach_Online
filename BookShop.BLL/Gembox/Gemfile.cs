@@ -9,6 +9,7 @@ using BookShop.BLL.Service;
 using BookShop.DAL.Entities;
 
 
+
 using Microsoft.Data.SqlClient;
 using GemBox.Spreadsheet;
 using MailKit.Search;
@@ -64,6 +65,72 @@ namespace BookShop.BLL.Gembox
 
             workbook.Save("DataExport.xlsx");
             Console.WriteLine("Dữ liệu đã được xuất thành công thành tệp Excel.");
+            //// Tính tổng doanh số theo tuần.
+            //var weeklyRevenue = transactions
+            //    .GroupBy(t => GetWeekOfYearISO8601(t.AcceptDate))
+            //    .Select(group => new
+            //    {
+            //        Week = group.Key,
+            //        TotalRevenue = group.Sum(t => t.Amount)
+            //    })
+            //    .OrderBy(r => r.Week)
+            //    .ToList();
+
+            //// Tính tổng doanh số theo tháng.
+            //var monthlyRevenue = transactions
+            //    .GroupBy(t => new { Year = t.AcceptDate.Year, Month = t.AcceptDate.Month })
+            //    .Select(group => new
+            //    {
+            //        Year = group.Key.Year,
+            //        Month = group.Key.Month,
+            //        TotalRevenue = group.Sum(t => t.Amount)
+            //    })
+            //    .OrderBy(r => r.Year)
+            //    .ThenBy(r => r.Month)
+            //    .ToList();
+
+            //// Tính tổng doanh số theo năm.
+            //var yearlyRevenue = transactions
+            //    .GroupBy(t => t.AcceptDate.Year)
+            //    .Select(group => new
+            //    {
+            //        Year = group.Key,
+            //        TotalRevenue = group.Sum(t => t.Amount)
+            //    })
+            //    .OrderBy(r => r.Year)
+            //    .ToList();
+
+            //// Tạo một tệp Excel và một bảng tính Excel.
+            //var workbook = new ExcelFile();
+            //var worksheet = workbook.Worksheets.Add("RevenueData");
+
+            //// Ghi dữ liệu tổng doanh số theo tuần vào bảng tính Excel.
+            //for (int row = 0; row < weeklyRevenue.Count; row++)
+            //{
+            //    worksheet.Cells[row, 0].Value = weeklyRevenue[row].Week;
+            //    worksheet.Cells[row, 1].Value = weeklyRevenue[row].TotalRevenue;
+            //}
+
+            //// Ghi dữ liệu tổng doanh số theo tháng vào bảng tính Excel.
+            //for (int row = 0; row < monthlyRevenue.Count; row++)
+            //{
+            //    worksheet.Cells[row, 3].Value = $"{monthlyRevenue[row].Month}/{monthlyRevenue[row].Year}";
+            //    worksheet.Cells[row, 4].Value = monthlyRevenue[row].TotalRevenue;
+            //}
+
+            //// Ghi dữ liệu tổng doanh số theo năm vào bảng tính Excel.
+            //for (int row = 0; row < yearlyRevenue.Count; row++)
+            //{
+            //    worksheet.Cells[row, 6].Value = yearlyRevenue[row].Year;
+            //    worksheet.Cells[row, 7].Value = yearlyRevenue[row].TotalRevenue;
+            //}
+
+            // Lưu tệp Excel.
+            workbook.Save("RevenueReport.xlsx");
+
+            Console.WriteLine("Kết quả đã được xuất thành công vào tệp Excel.");
+
         }
+
     }
 }
