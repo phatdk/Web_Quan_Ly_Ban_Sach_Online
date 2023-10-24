@@ -9,6 +9,7 @@ namespace App.Areas.Identity.Models.ManageViewModels
     public class IndexViewModel
     {
         public EditExtraProfileModel profile { get; set; }
+        public ChangePasswordViewModel reSetPass { get; set; }
         public bool HasPassword { get; set; }
 
         public IList<UserLoginInfo> Logins { get; set; }

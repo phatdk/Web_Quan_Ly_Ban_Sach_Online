@@ -66,6 +66,11 @@ namespace App.Areas.Identity.Controllers
                     UserName = user.UserName,
                     UserEmail = user.Email,
                     PhoneNumber = user.PhoneNumber,
+                    Birth = user.Birth,
+                    Code = user.Code,
+                    Gender = user.Gender,
+                    Img = user.Img,
+                    Name = user.Name,
                 }
             };
             return View(model);
@@ -374,13 +379,18 @@ namespace App.Areas.Identity.Controllers
         public async Task<IActionResult> EditProfile()
         {
             var user = await GetCurrentUserAsync();
-            
+
             var model = new EditExtraProfileModel()
             {
-           
+
                 UserName = user.UserName,
                 UserEmail = user.Email,
                 PhoneNumber = user.PhoneNumber,
+                Birth = user.Birth,
+                Code = user.Code,
+                Gender = user.Gender,
+                Img = user.Img,
+                Name = user.Name,
             };
             return View(model);
         }
