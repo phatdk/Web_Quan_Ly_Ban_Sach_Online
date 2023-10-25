@@ -2,11 +2,10 @@
 using BookShop.BLL.ConfigurationModel.OrderDetailModel;
 using BookShop.BLL.ConfigurationModel.OrderModel;
 using BookShop.BLL.ConfigurationModel.OrderPaymentModel;
-using BookShop.BLL.ConfigurationModel.ProductModel;
-using BookShop.BLL.ConfigurationModel.StatusOrderModel;
 using BookShop.BLL.ConfigurationModel.UserModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
+using BookShop.Web.Client.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +28,7 @@ namespace BookShop.Web.Client.Controllers
 		private readonly IStatusOrderService _statusService;
 		private readonly ICartDetailService _cartDetailService;
 		private readonly IPromotionService _promotionService;
+		private readonly ProductPreviewService _productPreviewService;
 
 		public OrderController(UserManager<Userr> userManager, IOrderService orderService, IProductService productService, IOrderDetailService orderDetailService, IPaymentFormService paymentFormService, IOrderPaymentService orderPaymentService, IUserService userService, IStatusOrderService statusOrderService, ICartDetailService cartDetailService, IPromotionService promotionService, IUserPromotionService userPromotionService)
 		{
@@ -45,6 +45,8 @@ namespace BookShop.Web.Client.Controllers
 			_cartDetailService = cartDetailService;
 			_promotionService = promotionService;
 			_userPromotionService = userPromotionService;
+
+			_productPreviewService = new ProductPreviewService(_productService, _orderDetailService, _orderService);
 		}
 
 		private Task<Userr> GetCurrentUserAsync()
@@ -181,19 +183,6 @@ namespace BookShop.Web.Client.Controllers
 		}
 
 		// tru san pham khi tao don thanh cong
-		public async Task<IActionResult> SubtractProduct(int id)
-		{
-			var order = await _orderService.GetById(id);
-			if (order != null)
-			{
-				var details = await _orderDetailService.GetByOrder(id);
-				foreach (var item in details)
-				{
-					await _productService.ChangeQuantity(item.Id_Product, -item.Quantity);
-				}
-			}
-			return Json(new { success = true });
-		}
 
 		// POST: OrderController/Create
 		[HttpPost]
@@ -232,7 +221,7 @@ namespace BookShop.Web.Client.Controllers
 						};
 						await _orderPaymentService.Add(op);
 					}
-					await SubtractProduct(result.Id);
+					await _productPreviewService.ChangeQuantity(result.Id, -1);
 				}
 
 				return RedirectToAction("OrderDetails", new { id = result.Id });
@@ -264,40 +253,18 @@ namespace BookShop.Web.Client.Controllers
 			}
 		}
 
-		// Cộng lại sản phẩm nếu đơn bị hủy kể cả đã xác nhận
-		// (chỉ không tự động công khi đơn đã được giao 'điều này để shop xác nhận rẳng sản phẩm vẫn còn được đảm bảo có thể bày bán trở lại')
-		public async Task<IActionResult> ReturnProduct(int id)
-		{
-			var order = await _orderService.GetById(id);
-			if (order != null)
-			{
-				var details = await _orderDetailService.GetByOrder(id);
-				foreach (var item in details)
-				{
-					await _productService.ChangeQuantity(item.Id_Product, item.Quantity);
-				}
-			}
-			return Json(new { success = true });
-		}
 		// GET: OrderController/Delete/5
 		public async Task<IActionResult> DeleteOrder(int id)
 		{
 			var order = await _orderService.GetById(id);
 			bool result = false;
-			//if (order.Status == 2)
-			//{
 			var statusId = (await _statusService.GetAll()).Where(x => x.Status == 8).FirstOrDefault().Id;
 			order.Id_Status = statusId;
 			result = await _orderService.Update(order);
-			//}
-			//else if(order.Status == 1)
-			//{
-			//	await ReturnProduct(id);
-			//	result = await _orderService.Delete(id);
-			//}
 			if (result)
 			{
-				await ReturnProduct(id);
+				// tang lại so luong sp
+				await _productPreviewService.ChangeQuantity(id, 1);
 				return Json(new { success = true });
 			}
 			else return Json(new { success = false });

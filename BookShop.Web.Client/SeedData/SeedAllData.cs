@@ -3,6 +3,7 @@ using BookShop.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Drawing.Drawing2D;
 using BookShop.DAL.Repositopy;
+using BookShop.BLL.IService;
 
 public static class SeedDataMD
 {
@@ -51,7 +52,7 @@ public static class SeedDataMD
 
     }
 
-    public static async Task SeedDataProduct(IRepository<StatusOrder> StatusOrder)
+    public static async Task SeedDataProduct(IStatusOrderService service)
     {
 
 
@@ -108,16 +109,16 @@ public static class SeedDataMD
         };
 
 
-       await StatusOrder.CreateAsync(status);
-       await StatusOrder.CreateAsync(status1);
-       await StatusOrder.CreateAsync(status2);
-       await StatusOrder.CreateAsync(status3);
-       await StatusOrder.CreateAsync(status4);
-       await StatusOrder.CreateAsync(status5);
-       await StatusOrder.CreateAsync(status6);
-       await StatusOrder.CreateAsync(status7);
-       await StatusOrder.CreateAsync(status8);
-       await StatusOrder.CreateAsync(status9);
+       await service.Add(status);
+       await service.Add(status1);
+       await service.Add(status2);
+       await service.Add(status3);
+       await service.Add(status4);
+       await service.Add(status5);
+       await service.Add(status6);
+       await service.Add(status7);
+       await service.Add(status8);
+       await service.Add(status9);
 
     } 
 }

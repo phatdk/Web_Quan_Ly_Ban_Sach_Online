@@ -1,6 +1,8 @@
 ﻿using BookShop.BLL.ConfigurationModel.OrderModel;
+using BookShop.BLL.ConfigurationModel.OrderPaymentModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
+using BookShop.Web.Client.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,20 +17,29 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		private readonly UserManager<Userr> _userManager;
 		private readonly IOrderService _orderService;
 		private readonly IOrderDetailService _orderDetailService;
+		private readonly IOrderPaymentService _orderPaymentService;
 		private readonly IStatusOrderService _statusOrderService;
 		private readonly IPromotionService _promotionService;
 		private readonly IProductService _productService;
+		private readonly IBookService _bookService;
+		private readonly ProductPreviewService _productPreviewService;
+		private readonly AccumulatePointService _accumulatePointService;
 
-		public OrderManageController(UserManager<Userr> userManager, IOrderService orderService, IOrderDetailService orderDetailService, IStatusOrderService statusOrderService, IPromotionService promotionService, IProductService productService)
+		public OrderManageController(UserManager<Userr> userManager, IOrderService orderService, IOrderDetailService orderDetailService, IOrderPaymentService orderPaymentService, IStatusOrderService statusOrderService, IPromotionService promotionService, IProductService productService, IBookService bookService)
 		{
 			_orders = new List<OrderViewModel>();
 			_order = new OrderViewModel();
 			_userManager = userManager;
 			_orderService = orderService;
 			_orderDetailService = orderDetailService;
+			_orderPaymentService = orderPaymentService;
 			_statusOrderService = statusOrderService;
 			_promotionService = promotionService;
 			_productService = productService;
+			_bookService = bookService;
+
+			_productPreviewService = new ProductPreviewService(_productService, _orderDetailService, _orderService);
+			_accumulatePointService = new AccumulatePointService();
 		}
 
 		private Task<Userr> GetCurrentUserAsync()
@@ -70,27 +81,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			return View(_order);
 		}
 
-		// GET: OrderManageController/Create
-		public ActionResult Create()
-		{
-			return View();
-		}
-
-		// POST: OrderManageController/Create
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Create(IFormCollection collection)
-		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
-		}
-
 		// GET: OrderManageController/Edit/5
 		public async Task<IActionResult> Edit(int id)
 		{
@@ -118,8 +108,15 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		{
 			var order = await _orderService.GetById(id);
 			var staff = await GetCurrentUserAsync();
-			if (staff != null)
+			if (staff != null && order != null)
 			{
+				// tru so luong sach
+				var details = await _orderDetailService.GetByOrder(order.Id);
+				foreach (var item in details)
+				{
+					var book = await _bookService.GetById(item.Id_Product);
+					await _bookService.ChangeQuantity(book.Id, -item.Quantity);
+				}
 				if (order.Status == 1)
 				{
 					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 2).First().Id;
@@ -127,7 +124,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					order.AcceptDate = DateTime.Now;
 					order.Id_Staff = staff.Id;
 					var result = await _orderService.Update(order);
-					// trừ sách trong kho
 					return Json(new { success = result });
 				}
 				return Json(new { success = false });
@@ -171,7 +167,28 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					if (order.PaymentDate == null)
 					{
 						order.PaymentDate = DateTime.Now;
-						// đổi trạng thái payment order
+						var paymentMethods = await _orderPaymentService.GetByOrder(id);
+						foreach (var item in paymentMethods)
+						{
+							var obj = new UpdateOrderPaymentModel()
+							{
+								Id_Payment = item.Id_Payment,
+								Status = 1,
+								PaymentAmount = item.paymentAmount,
+							};
+							await _orderPaymentService.Update(item.Id, obj);
+						}
+					}
+					// cộng điểm vào ví điểm
+					var details = await _orderDetailService.GetByOrder(order.Id);
+					foreach (var item in details)
+					{
+						order.Total += item.Price * item.Quantity;
+					}
+					int point = Convert.ToInt32(Math.Floor(Convert.ToDouble(order.Total / 20000))); // 20k = 1 điểm
+					if (point > 0)
+					{
+						await _accumulatePointService.Accumulate(order.Id_User, point);
 					}
 					var result = await _orderService.Update(order);
 					return Json(new { success = result });
@@ -248,7 +265,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		{
 			var order = await _orderService.GetById(id);
 			var staff = await GetCurrentUserAsync();
-			if (staff != null)
+			if (staff != null && order.Status <= 2)
 			{
 				var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 6).First().Id;
 				order.Id_Status = statusId;
@@ -256,6 +273,11 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 				order.ModifiNotes = order.ModifiNotes == null ? "" : order.ModifiNotes;
 				order.ModifiNotes = order.ModifiNotes + "\n" + DateTime.Now + " : " + modifyChange;
 				var result = await _orderService.Update(order);
+				if (result)
+				{
+					// tang lai sp
+					await _productPreviewService.ChangeQuantity(id, 1);
+				}
 				return Json(new { success = result });
 			}
 			else return RedirectToAction("Login", "Account", new { ares = "Identity" });

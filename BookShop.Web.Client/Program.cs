@@ -119,9 +119,9 @@ var app = builder.Build();
 //}
 //using (var scope = app.Services.CreateScope())
 //{
-//    var serviice1 = scope.ServiceProvider.GetRequiredService<IStatusOrderService>();
+//    var service1 = scope.ServiceProvider.GetRequiredService<IStatusOrderService>();
 
-//    SeedDataMD.SeedDataProduct(serviice1).Wait();
+//    SeedDataMD.SeedDataProduct(service1).Wait();
 //}
 #endregion
 if (!app.Environment.IsDevelopment())
