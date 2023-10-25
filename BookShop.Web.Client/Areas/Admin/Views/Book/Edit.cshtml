@@ -99,6 +99,10 @@
 			@Html.EditorFor(m => m.CreatedDate, new { htmlAttributes = new { @class = "form-control", type = "date" } })
 		</div>
 		<div class="form-group">
+				@Html.Label("Độc giả")
+				@Html.TextBoxFor(m => m.Reader, new { @class = "form-control" })
+		</div>
+		<div class="form-group">
 			@Html.Label("Mô tả sản phẩm")
 			@Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
 		</div>

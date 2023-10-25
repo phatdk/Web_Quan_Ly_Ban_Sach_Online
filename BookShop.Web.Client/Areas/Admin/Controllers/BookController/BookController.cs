@@ -188,8 +188,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
                 CreatedDate = _book.CreatedDate.HasValue ? _book.CreatedDate.Value : default(DateTime),
                 Status = _book.Status ?? 0,
                 Id_Supplier = _book.Id_Supplier ?? 0
-                //authorModels = _book.authorModels ?? new List<AuthorModel>(),
-                //genreModels = _book.genreModels ?? new List<GenreModel>()
             };
             updateBookModel.authorModels = new List<AuthorModel> { };
             foreach (var item in updateBookModel.authorModels)
@@ -208,7 +206,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
         public async Task<IActionResult> Edit(UpdateBookModel book)
         {
             try
-            
             {
                 book.Status = book.Quantity == 0 ? 0 : 1;
                 var result = await _bookService.Update(book);
