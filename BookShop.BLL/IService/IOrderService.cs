@@ -14,8 +14,8 @@ namespace BookShop.BLL.IService
         public Task<List<OrderViewModel>> GetAll();
         public Task<List<OrderViewModel>> GetByUser(int userId);
         public Task<OrderViewModel> GetById(int id);
-        public Task<CreateOrderModel> Add(CreateOrderModel model);
-        public Task<bool> Update(int id, UpdateOrderModel model);
+        public Task<OrderViewModel> Add(OrderViewModel model);
+        public Task<bool> Update(OrderViewModel model);
         public Task<bool> Delete(int id);
     }
 }

@@ -23,9 +23,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		IBookService _bookService;
 		ICollectionService _collectionService;
 		IImageService _imageService;
-		IWebHostEnvironment _webHostEnvironment;
 
-		public ProductController(IProductService productService, IBookService bookService, ICollectionService collectionService, IImageService imageService, IWebHostEnvironment webHostEnvironment)
+		public ProductController(IProductService productService, IBookService bookService, ICollectionService collectionService, IImageService imageService)
 		{
 			_listProduct = new List<ProductViewModel>();
 			_product = new ProductViewModel();
@@ -36,7 +35,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			_bookService = bookService;
 			_collectionService = collectionService;
 			_imageService = imageService;
-			_webHostEnvironment = webHostEnvironment;
 		}
 		public async Task<List<BookViewModel>> LoadBook(int status)
 		{
@@ -69,7 +67,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			{
 				var extension = Path.GetExtension(file.FileName);
 				var filename = "Product_" + productId + "_0_" + extension;
-				var filePath = Path.Combine(_webHostEnvironment.ContentRootPath, "wwwroot\\img\\product", filename);
+				var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\product", filename);
 				using (var stream = new FileStream(filePath, FileMode.Create))
 				{
 					await file.CopyToAsync(stream);
@@ -173,15 +171,26 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		{
 			try
 			{
-				if(image!=null)
+				if (image != null)
 				{
-					await UpLoadImage(image, request.Id);
+					var imgvm = (await _imageService.GetByProduct(request.Id)).FirstOrDefault();
+					var imgUrl = "/img/product/" + await UpLoadImage(image, request.Id);
+					if (imgvm.ImageUrl != imgUrl)
+					{
+						var img = new UpdateImageModel()
+						{
+							Id = imgvm.Id,
+							ImageUrl = imgUrl,
+						};
+						await _imageService.Update(img);
+					}
 				}
 				if (request.bookSelected.Count() > 1)
 				{
 					request.Type = 2;
 				}
-				request.Status = request.Quantity == 0 ? 0: 1;
+				else request.Type = 1;
+				request.Status = request.Quantity == 0 ? 0 : 1;
 				var result = await _productService.Update(request);
 				return RedirectToAction(nameof(Index));
 			}

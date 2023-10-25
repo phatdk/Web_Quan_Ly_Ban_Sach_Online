@@ -281,5 +281,17 @@ namespace BookShop.BLL.Service
 			}
 			catch (Exception ex) { return false; }
 		}
+
+		public async Task<bool> ChangeQuantity(int id, int changeAmount)
+		{
+			try
+			{
+				var product = await _productRepository.GetByIdAsync(id);
+				product.Quantity += changeAmount;
+				await _productRepository.UpdateAsync(id, product);
+				return true;
+			}
+			catch { return false; }
+		}
 	}
 }

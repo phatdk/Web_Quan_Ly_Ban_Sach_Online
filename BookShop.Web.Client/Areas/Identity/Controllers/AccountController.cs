@@ -8,8 +8,10 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using App.Areas.Identity.Models.AccountViewModels;
+using BookShop.BLL.ConfigurationModel.CartDetailModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
+using BookShop.DAL.Repositopy;
 using BookShop.Web.Client.ExtendMethods;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -31,23 +33,23 @@ namespace App.Areas.Identity.Controllers
 		private readonly IEmailSender _emailSender;
 		private readonly ILogger<AccountController> _logger;
 		private readonly IUserService _userService;
+        private readonly ICartService _CartRepository;
+        private readonly IWalletpointService _WalletPointRepository;
 
-		public AccountController(
-			UserManager<Userr> userManager,
-			SignInManager<Userr> signInManager,
-			IEmailSender emailSender,
-			ILogger<AccountController> logger,
-			IUserService userService)
-		{
-			_userManager = userManager;
-			_signInManager = signInManager;
-			_emailSender = emailSender;
-			_logger = logger;
-			_userService = userService;
-		}
+        public AccountController(UserManager<Userr> userManager, SignInManager<Userr> signInManager, IEmailSender emailSender, ILogger<AccountController> logger, IUserService userService, ICartService cartRepository, IWalletpointService walletPointRepository)
+        {
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _emailSender = emailSender;
+            _logger = logger;
+            _userService = userService;
+            _CartRepository = cartRepository;
+            _WalletPointRepository = walletPointRepository;
+        }
 
-		// GET: /Account/Login
-		[HttpGet("/login/")]
+
+        // GET: /Account/Login
+        [HttpGet("/login/")]
 		[AllowAnonymous]
 		public IActionResult Login(string returnUrl = null)
 		{
@@ -132,7 +134,7 @@ namespace App.Areas.Identity.Controllers
 			Random random = new Random();
 
 			// Tạo một chuỗi các ký tự ngẫu nhiên
-			string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			string characters = "0123456789";
 			string code = "";
 			for (int i = 0; i < length; i++)
 			{
@@ -168,7 +170,21 @@ namespace App.Areas.Identity.Controllers
 
 				if (result.Succeeded)
 				{
-					_logger.LogInformation("Đã tạo user mới.");
+                    var cart = new CartViewModel()
+                    {
+                        Id_User = user.Id,
+                      
+                    };
+                    await _CartRepository.Add(cart);
+                    var walletPoint = new WalletPoint()
+                    {
+                        Id_User = user.Id,
+                        CreatedDate = DateTime.Now,
+                        Status = 1,
+                        Point = 0,
+                    };
+                    await _WalletPointRepository.Add(walletPoint);
+                    _logger.LogInformation("Đã tạo user mới.");
 					var users = await _userManager.FindByNameAsync(user.UserName);
 					if (users != null)
 					{

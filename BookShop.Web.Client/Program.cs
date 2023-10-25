@@ -94,6 +94,7 @@ builder.Services.AddTransient<ISupplierService, SupplierService>();
 builder.Services.AddTransient<IGenreService, GenreService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IUserPromotionService, UserPromotionService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IOrderDetailService, OrderDetailService>();
 builder.Services.AddTransient<IProductService, ProductService>();
@@ -106,6 +107,7 @@ builder.Services.AddTransient<IPaymentFormService, PaymentFormService>();
 builder.Services.AddTransient<IOrderPaymentService, OrderPaymentService>();
 builder.Services.AddTransient<IStatusOrderService, StatusOrderService>();
 builder.Services.AddTransient<IPromotionService, PromotionService>();
+builder.Services.AddTransient<IWalletpointService, WalletPointService>();
 
 builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromSeconds(1800); });
 

@@ -16,6 +16,7 @@ namespace BookShop.BLL.IService
 		public Task<List<ProductViewModel>> GetByCollection(int collectionId);
 		public Task<CreateProductModel> Add(CreateProductModel model);
 		public Task<bool> Update(UpdateProductModel model);
+		public Task<bool> ChangeQuantity(int id, int changeAmount);
 		public Task<bool> Delete(int id);
 	}
 }

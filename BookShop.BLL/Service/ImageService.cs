@@ -49,13 +49,13 @@ namespace BookShop.BLL.Service
 			return (await _imageRepository.GetAllAsync()).Where(c=>c.Id_Product ==productId).ToList();
 		}
 
-		public async Task<bool> Update(int id, UpdateImageModel model)
+		public async Task<bool> Update(UpdateImageModel model)
 		{
 			try
 			{
-				var obj = await _imageRepository.GetByIdAsync(id);
+				var obj = await _imageRepository.GetByIdAsync(model.Id);
 				obj.ImageUrl = model.ImageUrl;
-				await _imageRepository.UpdateAsync(id, obj);
+				await _imageRepository.UpdateAsync(model.Id, obj);
 				return true;
 			}catch (Exception ex) { return false; }
 		}

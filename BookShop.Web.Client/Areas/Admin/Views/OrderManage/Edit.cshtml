@@ -1,0 +1,296 @@
+﻿@model BookShop.BLL.ConfigurationModel.OrderModel.OrderViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>OrderViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <input asp-for="Id" hidden class="form-control" />
+
+            <div class="form-group">
+                <label class="control-label">Mã đơn</label>
+                <input asp-for="Code" class="form-control" readonly/>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Người nhận</label>
+                <input asp-for="Receiver" class="form-control" />
+                <span asp-validation-for="Receiver" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Số điện thoại</label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" readonly/>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group" hidden>
+                <input asp-for="ModifiDate" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Thêm ghi chú</label>
+                <textarea asp-for="ModifyChange" class="form-control" rows="3"/>
+                <span asp-validation-for="ModifyChange" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Ghi chú của khách hàng</label>
+                <input asp-for="Description" class="form-control" readonly/>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="City" class="control-label"></label>
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="District" class="control-label"></label>
+                <input asp-for="District" class="form-control" />
+                <span asp-validation-for="District" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Commune" class="control-label"></label>
+                <input asp-for="Commune" class="form-control" />
+                <span asp-validation-for="Commune" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserCode" class="control-label"></label>
+                <input asp-for="UserCode" class="form-control" readonly/>
+                <span asp-validation-for="UserCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NameUser" class="control-label"></label>
+                <input asp-for="NameUser" class="form-control" readonly/>
+                <span asp-validation-for="NameUser" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StaffCode" class="control-label"></label>
+                <input asp-for="StaffCode" class="form-control" readonly/>
+                <span asp-validation-for="StaffCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NameStaff" class="control-label"></label>
+                <input asp-for="NameStaff" class="form-control" readonly/>
+                <span asp-validation-for="NameStaff" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PromotionCode" class="control-label"></label>
+                <input asp-for="PromotionCode" class="form-control" readonly/>
+                <span asp-validation-for="PromotionCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NamePromotion" class="control-label"></label>
+                <input asp-for="NamePromotion" class="form-control" readonly/>
+                <span asp-validation-for="NamePromotion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Trạng thái đơn hàng</label>
+                <input asp-for="StatusName" class="form-control" readonly/>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Id_User" class="control-label"></label>
+                <input asp-for="Id_User" class="form-control" />
+                <span asp-validation-for="Id_User" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<script type="text/javascript">
+
+	function getProvinces() {
+		axios.get("https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province", {
+			headers: {
+				'token': '0df1a22d-1bfe-11ee-8bfa-8a2dda8ec551'
+			}
+		})
+			.then(function (response) {
+				var provinceSelectReceiver = document.getElementById("provinceSelectReceiver");
+				//var provinceSelectSender = document.getElementById("provinceSelectSender");
+				provinceSelectReceiver.innerHTML = "<option value='' selected disabled>--Select City--</option>";
+				//provinceSelectSender.innerHTML = "<option value='' selected disabled>Chọn tỉnh/thành phố</option>";
+
+
+				for (var i = 0; i < response.data.data.length; i++) {
+					var option = document.createElement("option");
+					option.value = response.data.data[i].ProvinceID;
+					option.text = response.data.data[i].ProvinceName;
+					provinceSelectReceiver.appendChild(option);
+					provinceSelectSender.appendChild(option.cloneNode(true));
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+
+	}
+	// Gọi hàm để lấy danh sách tỉnh/thành phố ban đầu
+	getProvinces();
+
+	function getDistrict(type) {
+		var provinceID;
+		var districtSelect;
+		if (type === "receiver") {
+			provinceID = document.getElementById("provinceSelectReceiver").value;
+			districtSelect = document.getElementById("districtSelectReceiver");
+		} else if (type === "sender") {
+			provinceID = document.getElementById("provinceSelectSender").value;
+			districtSelect = document.getElementById("districtSelectSender");
+		}
+
+		axios.get("https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=" + provinceID, {
+			headers: {
+				'token': '0df1a22d-1bfe-11ee-8bfa-8a2dda8ec551'
+			}
+		})
+			.then(function (response) {
+				districtSelect.innerHTML = "<option value='' selected disabled>--Select District--</option>";
+
+
+
+				var wardSelect;
+				if (type === "receiver") {
+					wardSelect = document.getElementById("wardSelectReceiver");
+				} else if (type === "sender") {
+					wardSelect = document.getElementById("wardSelectSender");
+				}
+
+				for (var i = 0; i < response.data.data.length; i++) {
+					var option = document.createElement("option");
+					option.value = response.data.data[i].DistrictID;
+					option.text = response.data.data[i].DistrictName;
+					districtSelect.appendChild(option);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+
+	}
+
+	function getWard(type) {
+		var districtID;
+		var wardSelect;
+		if (type === "receiver") {
+			districtID = document.getElementById("districtSelectReceiver").value;
+			wardSelect = document.getElementById("wardSelectReceiver");
+		} else if (type === "sender") {
+			districtID = document.getElementById("districtSelectSender").value;
+			wardSelect = document.getElementById("wardSelectSender");
+		}
+
+		axios.get("https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=" + districtID, {
+			headers: {
+				'token': '0df1a22d-1bfe-11ee-8bfa-8a2dda8ec551'
+			}
+		})
+			.then(function (response) {
+				wardSelect.innerHTML = "<option value='' selected disabled>--Select Ward--</option>";
+				for (var i = 0; i < response.data.data.length; i++) {
+					var option = document.createElement("option");
+					option.value = response.data.data[i].WardCode;
+					option.text = response.data.data[i].WardName;
+					wardSelect.appendChild(option);
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+
+	}
+
+	function calculateShipping() {
+
+		var fromDistrictID = document.getElementById("districtSelectSender").value;
+		var fromWardCode = document.getElementById("wardSelectSender").value;
+
+		var toDistrictID = document.getElementById("districtSelectReceiver").value;
+		var toWardCode = document.getElementById("wardSelectReceiver").value;
+
+		var height = document.getElementById("height").value;
+		var length = document.getElementById("length").value;
+		var weight = document.getElementById("weight").value;
+		var width = document.getElementById("width").value;
+
+		// check khi nào nhập đủ dữ liệu dài rộng cao nặng thì hiển thị ra
+
+		if (height !== "" && length !== "" && weight !== "" && width !== "") {
+			var phiShip = document.getElementById("phiShip");
+			var totalShip = document.getElementById("totalShip");
+
+			axios
+				.get("https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee", {
+					params: {
+						from_district_id: fromDistrictID,
+						from_ward_code: fromWardCode,
+						service_id: 53320,
+						service_type_id: null,
+						to_district_id: toDistrictID,
+						to_ward_code: toWardCode,
+						height: height,
+						length: length,
+						weight: weight,
+						width: width,
+						cod_failed_amount: 2000,
+						insurance_value: 10000,
+						coupon: null
+					},
+					headers: {
+						'token': '0df1a22d-1bfe-11ee-8bfa-8a2dda8ec551',
+						'shop_id': '125022'
+					}
+				})
+
+				.then(function (response) {
+
+					phiShip.value = response.data.data.total;
+					var parsedPhiShip = parseFloat(response.data.data.total);
+					var tongGiaInput = document.getElementById("tongGia");
+					var parsedTongGia = parseFloat(tongGiaInput.value);
+
+					if (!isNaN(parsedPhiShip) && !isNaN(parsedTongGia)) {
+						var total = parsedPhiShip + parsedTongGia;
+						totalShip.innerHTML = total.toLocaleString("vi-VN", {
+							style: "currency",
+							currency: "VND"
+						});
+					} else {
+						totalShip.innerHTML = "NaN";
+					}
+
+				});
+		}
+
+	}
+	var inputElements = document.querySelectorAll("input, select");
+	inputElements.forEach(function (element) {
+		element.addEventListener("input", calculateShipping);
+	});
+
+</script>

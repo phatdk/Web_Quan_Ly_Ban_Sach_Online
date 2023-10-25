@@ -17,6 +17,7 @@ namespace BookShop.Web.Client.Controllers
 	public class OrderController : Controller
 	{
 		private List<OrderViewModel> _orders;
+		private OrderViewModel _order;
 		private readonly UserManager<Userr> _userManager;
 		private readonly IOrderService _orderService;
 		private readonly IProductService _productService;
@@ -24,12 +25,15 @@ namespace BookShop.Web.Client.Controllers
 		private readonly IPaymentFormService _paymentFormService;
 		private readonly IOrderPaymentService _orderPaymentService;
 		private readonly IUserService _userService;
+		private readonly IUserPromotionService _userPromotionService;
 		private readonly IStatusOrderService _statusService;
 		private readonly ICartDetailService _cartDetailService;
+		private readonly IPromotionService _promotionService;
 
-		public OrderController(UserManager<Userr> userManager, IOrderService orderService, IProductService productService, IOrderDetailService orderDetailService, IPaymentFormService paymentFormService, IOrderPaymentService orderPaymentService, IUserService userService, IStatusOrderService statusOrderService, ICartDetailService cartDetailService)
+		public OrderController(UserManager<Userr> userManager, IOrderService orderService, IProductService productService, IOrderDetailService orderDetailService, IPaymentFormService paymentFormService, IOrderPaymentService orderPaymentService, IUserService userService, IStatusOrderService statusOrderService, ICartDetailService cartDetailService, IPromotionService promotionService, IUserPromotionService userPromotionService)
 		{
 			_orders = new List<OrderViewModel>();
+			_order = new OrderViewModel();
 			_userManager = userManager;
 			_orderService = orderService;
 			_productService = productService;
@@ -39,7 +43,8 @@ namespace BookShop.Web.Client.Controllers
 			_userService = userService;
 			_statusService = statusOrderService;
 			_cartDetailService = cartDetailService;
-
+			_promotionService = promotionService;
+			_userPromotionService = userPromotionService;
 		}
 
 		private Task<Userr> GetCurrentUserAsync()
@@ -49,20 +54,49 @@ namespace BookShop.Web.Client.Controllers
 		// GET: OrderController
 		public async Task<IActionResult> Index()
 		{
-			_orders = await _orderService.GetAll();
-			return View(_orders);
+			var user = await GetCurrentUserAsync();
+			if (user != null)
+			{
+				_orders = (await _orderService.GetAll()).Where(x => x.Id_User == user.Id).ToList();
+				return View(_orders);
+			}
+			else
+			{
+				return RedirectToAction("Login", "Account", new { area = "Identity" });
+			}
 		}
 
 		// GET: OrderController/Details/5
+
 		public async Task<IActionResult> OrderDetails(int id)
 		{
-			return View();
+			_order = await _orderService.GetById(id);
+			var details = await _orderDetailService.GetByOrder(id);
+			ViewBag.Details = details;
+			foreach (var item in details)
+			{
+				_order.Total += item.Quantity * item.Price;
+			}
+			if (_order.Id_Promotion != null)
+			{
+				var promotion = await _promotionService.GetById(Convert.ToInt32(_order.Id_Promotion));
+				if (promotion.PercentReduct != null)
+				{
+					_order.Total -= Convert.ToInt32(Math.Floor(Convert.ToDouble((_order.Total / 100) * promotion.PercentReduct)));
+				}
+				else _order.Total -= Convert.ToInt32(promotion.AmountReduct);
+			}
+			if (_order.IsUsePoint)
+			{
+				_order.Total -= Convert.ToInt32(_order.PointAmount);
+			}
+			return View(_order);
 		}
 
 		// GET: OrderController/Create
 		public async Task<IActionResult> CreateOnlineOrder(int id, int quantity)
 		{
-			var createModel = new CreateOrderModel();
+			var createModel = new OrderViewModel();
 			createModel.orderDetails = new List<OrderDetailViewModel>();
 			var orderdetail = new OrderDetailViewModel();
 			var user = await GetCurrentUserAsync();
@@ -73,6 +107,8 @@ namespace BookShop.Web.Client.Controllers
 				createModel.Email = user.Email;
 				createModel.Phone = user.PhoneNumber;
 				createModel.Id_User = user.Id;
+				ViewBag.UserPromotions = await _userPromotionService.GetByUser(user.Id);
+				ViewBag.User = await _userService.GetById(user.Id);
 			}
 			createModel.paymentsId = new List<int>();
 			// mua trong gio hang
@@ -139,16 +175,30 @@ namespace BookShop.Web.Client.Controllers
 			createModel.Length = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Length / 100)));
 			createModel.Height = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Height / 100)));
 
-			var payments = (await _paymentFormService.GetAll()).Where(x => x.Status == 1).ToList();
-			//ViewBag.Products = _products;
-			ViewBag.Payments = payments;
+			ViewBag.Payments = (await _paymentFormService.GetAll()).Where(x => x.Status == 1).ToList();
+			ViewBag.Promotions = (await _promotionService.GetAll()).Where(x => x.Status == 1).ToList();
 			return View(createModel);
+		}
+
+		// tru san pham khi tao don thanh cong
+		public async Task<IActionResult> SubtractProduct(int id)
+		{
+			var order = await _orderService.GetById(id);
+			if (order != null)
+			{
+				var details = await _orderDetailService.GetByOrder(id);
+				foreach (var item in details)
+				{
+					await _productService.ChangeQuantity(item.Id_Product, -item.Quantity);
+				}
+			}
+			return Json(new { success = true });
 		}
 
 		// POST: OrderController/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> CreateOnlineOrder(CreateOrderModel request)
+		public async Task<IActionResult> CreateOnlineOrder(OrderViewModel request)
 		{
 			try
 			{
@@ -164,9 +214,9 @@ namespace BookShop.Web.Client.Controllers
 					request.Id_User = user.Id;
 				}
 
-				request.Id_StatusOrder = (await _statusService.GetAll()).Where(x => x.Status == 1).FirstOrDefault().Id; // hóa đơn chờ
+				request.Id_Status = (await _statusService.GetAll()).Where(x => x.Status == 1).FirstOrDefault().Id; // hóa đơn chờ
 				request.IsOnlineOrder = true;
-				request.IsUsePoint = false;
+				request.IsUsePoint = request.PointUsed > 0 ? false : true;
 				// return Ok(request);
 				var result = await _orderService.Add(request);
 				if (result.Id != 0)
@@ -182,9 +232,10 @@ namespace BookShop.Web.Client.Controllers
 						};
 						await _orderPaymentService.Add(op);
 					}
+					await SubtractProduct(result.Id);
 				}
 
-				return RedirectToAction(nameof(Index));
+				return RedirectToAction("OrderDetails", new { id = result.Id });
 			}
 			catch
 			{
@@ -213,10 +264,43 @@ namespace BookShop.Web.Client.Controllers
 			}
 		}
 
-		// GET: OrderController/Delete/5
-		public async Task<IActionResult> Delete(int id)
+		// Cộng lại sản phẩm nếu đơn bị hủy kể cả đã xác nhận
+		// (chỉ không tự động công khi đơn đã được giao 'điều này để shop xác nhận rẳng sản phẩm vẫn còn được đảm bảo có thể bày bán trở lại')
+		public async Task<IActionResult> ReturnProduct(int id)
 		{
-			return View();
+			var order = await _orderService.GetById(id);
+			if (order != null)
+			{
+				var details = await _orderDetailService.GetByOrder(id);
+				foreach (var item in details)
+				{
+					await _productService.ChangeQuantity(item.Id_Product, item.Quantity);
+				}
+			}
+			return Json(new { success = true });
+		}
+		// GET: OrderController/Delete/5
+		public async Task<IActionResult> DeleteOrder(int id)
+		{
+			var order = await _orderService.GetById(id);
+			bool result = false;
+			//if (order.Status == 2)
+			//{
+			var statusId = (await _statusService.GetAll()).Where(x => x.Status == 8).FirstOrDefault().Id;
+			order.Id_Status = statusId;
+			result = await _orderService.Update(order);
+			//}
+			//else if(order.Status == 1)
+			//{
+			//	await ReturnProduct(id);
+			//	result = await _orderService.Delete(id);
+			//}
+			if (result)
+			{
+				await ReturnProduct(id);
+				return Json(new { success = true });
+			}
+			else return Json(new { success = false });
 		}
 
 	}

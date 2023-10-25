@@ -32,7 +32,7 @@ public static class SeedDataMD
             };
             var User = new Userr
             {
-                UserName = "phatdk",
+                UserName = "customer",
                 Email = "",
                 EmailConfirmed = true,
                 Code = "KH0000000",
@@ -40,7 +40,8 @@ public static class SeedDataMD
             };
 
             var result = await userManager.CreateAsync(adminUser, "admin");
-            if (result.Succeeded)
+            var result1 = await userManager.CreateAsync(User, "123");
+            if (result.Succeeded && result1.Succeeded)
             {
                 // Gán role "admin" cho tài khoản "admin"
                 await userManager.AddToRoleAsync(adminUser, "Admin");
@@ -57,7 +58,7 @@ public static class SeedDataMD
         var status = new StatusOrder()
         {
             Status = 1,
-            StatusName = "Chờ xác nhận",
+            StatusName = "Chờ xử lý",
             CreatedDate = DateTime.Now,
         };  var status1 = new StatusOrder()
         {
@@ -72,22 +73,22 @@ public static class SeedDataMD
         }; var status3 = new StatusOrder()
         {
             Status = 4,
-            StatusName = "Giao thành công",
+            StatusName = "Hoàn thành",
             CreatedDate = DateTime.Now,
         }; var status4 = new StatusOrder()
         {
             Status = 5,
-            StatusName = "Thanh toán thành công",
+            StatusName = "Trả hàng",
             CreatedDate = DateTime.Now,
         };var status5 = new StatusOrder()
         {
             Status = 6,
-            StatusName = "Hoàn thành",
+            StatusName = "Xử lý hàng trả",
             CreatedDate = DateTime.Now,
         };var status6 = new StatusOrder()
         {
             Status = 7,
-            StatusName = "Trả hàng",
+            StatusName = "Trả hàng thành công",
             CreatedDate = DateTime.Now,
         };var status7 = new StatusOrder()
         {
@@ -98,6 +99,11 @@ public static class SeedDataMD
         {
             Status = 9,
             StatusName = "Đóng đơn",
+            CreatedDate = DateTime.Now,
+        };var status9 = new StatusOrder()
+        {
+            Status = 0,
+            StatusName = "Đơn chờ",
             CreatedDate = DateTime.Now,
         };
 
@@ -111,6 +117,7 @@ public static class SeedDataMD
        await StatusOrder.CreateAsync(status6);
        await StatusOrder.CreateAsync(status7);
        await StatusOrder.CreateAsync(status8);
+       await StatusOrder.CreateAsync(status9);
 
     } 
 }

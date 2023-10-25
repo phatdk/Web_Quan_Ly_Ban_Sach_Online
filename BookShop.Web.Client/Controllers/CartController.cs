@@ -77,6 +77,7 @@ namespace BookShop.Web.Client.Controllers
                     {
                         Id_User = userId,
                         Id_Product = product.Id,
+                        
                         Quantity = quantity,
                     };
                     await _cartDetailService.Add(cpc);
@@ -127,6 +128,7 @@ namespace BookShop.Web.Client.Controllers
                     {
                         Id_Product = product.Id,
                         CreatedDate = DateTime.Now,
+                        ProductPrice = product.Price,
                         Quantity = quantity,
                     };
                     customCart.Add(pc);

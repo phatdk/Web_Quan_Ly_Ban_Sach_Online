@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookShop.BLL.Service.GenreService
+namespace BookShop.BLL.Service
 {
 	public class GenreService : IGenreService
 	{
