@@ -96,6 +96,7 @@ builder.Services.AddTransient<IUserPromotionService, UserPromotionService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IOrderDetailService, OrderDetailService>();
 builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<IProductBookService, ProductBookService>();
 builder.Services.AddTransient<IImageService, ImageService>();
 builder.Services.AddTransient<IBookService, BookService>();
 builder.Services.AddTransient<ICollectionService, CollectionService>();
@@ -107,7 +108,7 @@ builder.Services.AddTransient<IStatusOrderService, StatusOrderService>();
 builder.Services.AddTransient<IPromotionService, PromotionService>();
 builder.Services.AddTransient<IWalletpointService, WalletPointService>();
 
-builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromSeconds(1800); });
+builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromMinutes(30); });
 
 // Configure the HTTP request pipeline.
 var app = builder.Build();

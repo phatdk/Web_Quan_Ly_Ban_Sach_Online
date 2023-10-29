@@ -1,8 +1,6 @@
 ﻿using BookShop.BLL.ConfigurationModel.CartDetailModel;
-using BookShop.BLL.ConfigurationModel.ProductModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -42,7 +40,7 @@ namespace BookShop.Web.Client.Controllers
             List<CartDetailViewModel> detail = new List<CartDetailViewModel>();
             if (user == null)
             {
-                var customCartChar = HttpContext.Session.GetString("customCart");
+                var customCartChar = HttpContext.Session.GetString("sessionCart");
                 if (!string.IsNullOrEmpty(customCartChar))
                 {
                     detail = JsonConvert.DeserializeObject<List<CartDetailViewModel>>(customCartChar);
@@ -58,7 +56,7 @@ namespace BookShop.Web.Client.Controllers
             var user = await GetCurrentUserAsync();
             var product = await _productService.GetById(id);
             if (product == null) return Json(new { success = false, errorMessage = "Không tìm thấy sản phẩm" });
-            if (user != null)
+            if (user != null) // có đăng nhập
             {
                 var userId = user.Id;
                 var cart = await _cartService.GetByUser(userId);
@@ -77,10 +75,11 @@ namespace BookShop.Web.Client.Controllers
                     {
                         Id_User = userId,
                         Id_Product = product.Id,
-                        
+
                         Quantity = quantity,
                     };
                     await _cartDetailService.Add(cpc);
+                    return Json(new { success = true });
                 }
                 else
                 {
@@ -93,50 +92,40 @@ namespace BookShop.Web.Client.Controllers
                         return Json(new { success = false, errorMessage = "Số lượng vượt quá số lượng tồn kho" });
                     }
                     await _cartDetailService.Update(pc.Id, upc);
+                    return Json(new { success = true });
                 }
             }
-            else
+            else // không đăng nhập
             {
-                var customCartChar = HttpContext.Session.GetString("customCart");
+                var customCartChar = HttpContext.Session.GetString("sessionCart");
                 var customCart = new List<CartDetailViewModel>();
+                var pc = new CartDetailViewModel();
                 if (!string.IsNullOrEmpty(customCartChar))
                 {
                     customCart = JsonConvert.DeserializeObject<List<CartDetailViewModel>>(customCartChar);
-                    var pc = customCart.FirstOrDefault(x => x.Id_Product == product.Id);
+                    pc = customCart.FirstOrDefault(x => x.Id_Product == product.Id);
                     if (pc != null)
                     {
                         pc.Quantity += quantity;
+                        pc.TotalPrice = product.Price * pc.Quantity;
+                        HttpContext.Session.SetString("sessionCart", JsonConvert.SerializeObject(customCart));
+                        return Json(new { success = true });
                     }
-                    else
-                    {
-                        pc = new CartDetailViewModel()
-                        {
-                            Id_Product = product.Id,
-                            Quantity = quantity,
-                            ProductName = product.Name,
-                            ProductPrice = product.Price,
-                            Status = product.Status,
-                            CreatedDate = DateTime.Now,
-                        };
-                        customCart.Add(pc);
-                    }
-                    HttpContext.Session.SetString("customCart", JsonConvert.SerializeObject(customCart));
                 }
-                else
+                pc = new CartDetailViewModel()
                 {
-                    var pc = new CartDetailViewModel()
-                    {
-                        Id_Product = product.Id,
-                        CreatedDate = DateTime.Now,
-                        ProductPrice = product.Price,
-                        Quantity = quantity,
-                    };
-                    customCart.Add(pc);
-                    HttpContext.Session.SetString("customCart", JsonConvert.SerializeObject(customCart));
-                }
+                    Id_Product = product.Id,
+                    Quantity = quantity,
+                    ProductName = product.Name,
+                    ProductPrice = product.Price,
+                    Status = product.Status,
+                    CreatedDate = DateTime.Now,
+                    TotalPrice = product.Price * quantity,
+                };
+                customCart.Add(pc);
+                HttpContext.Session.SetString("sessionCart", JsonConvert.SerializeObject(customCart));
                 return Json(new { success = true });
             }
-            return Json(new { success = true });
         }
 
         // GET: CartController/Edit/5
@@ -166,10 +155,10 @@ namespace BookShop.Web.Client.Controllers
             var user = await GetCurrentUserAsync();
             if (user != null)
             {
-                var detail = (await _cartDetailService.GetByCart(user.Id)).FirstOrDefault(u => u.Id == id);
-                if (detail != null)
+                var cd = (await _cartDetailService.GetByCart(user.Id)).FirstOrDefault(u => u.Id == id);
+                if (cd != null)
                 {
-                    await _cartDetailService.Delete(detail.Id);
+                    await _cartDetailService.Delete(cd.Id);
                     return RedirectToAction(nameof(CartDetails));
                 }
                 return Json(new { success = "error" });
@@ -177,7 +166,7 @@ namespace BookShop.Web.Client.Controllers
             }
             else
             {
-                var customCartChar = HttpContext.Session.GetString("customCart");
+                var customCartChar = HttpContext.Session.GetString("sessionCart");
                 var customCart = new List<CartDetailViewModel>();
                 if (!string.IsNullOrEmpty(customCartChar))
                 {
@@ -186,13 +175,27 @@ namespace BookShop.Web.Client.Controllers
                     if (pc != null)
                     {
                         customCart.Remove(pc);
-                        HttpContext.Session.SetString("customCart", JsonConvert.SerializeObject(customCart));
+                        HttpContext.Session.SetString("sessionCart", JsonConvert.SerializeObject(customCart));
                         return RedirectToAction(nameof(CartDetails));
                     }
                 }
                 return RedirectToAction(nameof(CartDetails));
             }
 
+        }
+
+        // clear cart
+        public async Task<IActionResult> ClearCart(int userId)
+        {
+            if (userId != 0) // đang đăng nhập
+            {
+                await _cartDetailService.DeleteByCart(userId);
+            }
+            else
+            {
+                HttpContext.Session.Remove("sessionCart");
+            }
+            return Json(new {success = true});
         }
     }
 }

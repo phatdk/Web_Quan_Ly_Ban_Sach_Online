@@ -170,11 +170,11 @@ namespace BookShop.BLL.Service
 							   UserCode = b1.Code,
 							   NameUser = b1.Name,
 							   Id_Staff = a.Id_Staff,
-							   StaffCode = e1 == null ? "Chưa có nhân viên tiếp nhận" : e1.Code,
-							   NameStaff = e1 == null ? "Chưa có nhân viên tiếp nhận" : e1.Name,
+							   StaffCode = e1 == null ? "Trống" : e1.Code,
+							   NameStaff = e1 == null ? "Trống" : e1.Name,
 							   Id_Promotion = a.Id_Promotion,
-							   PromotionCode = c1 == null ? "Không sử dụng khuyến mãi" : c1.Code,
-							   NamePromotion = c1 == null ? "không sử dụng khuyến mãi" : c1.Name,
+							   PromotionCode = c1 == null ? "Trống" : c1.Code,
+							   NamePromotion = c1 == null ? "Trống" : c1.Name,
 						   }).ToList();
 			foreach (var item in objlist)
 			{
@@ -225,11 +225,11 @@ namespace BookShop.BLL.Service
 							   UserCode = b1.Code,
 							   NameUser = b1.Name,
 							   Id_Staff = a.Id_Staff,
-							   StaffCode = e1 == null ? "Chưa có nhân viên tiếp nhận" : e1.Code,
-							   NameStaff = e1 == null ? "Chưa có nhân viên tiếp nhận" : e1.Name,
+							   StaffCode = e1 == null ? "Trống" : e1.Code,
+							   NameStaff = e1 == null ? "Trống" : e1.Name,
 							   Id_Promotion = a.Id_Promotion,
-							   PromotionCode = c1 == null ? "Không sử dụng khuyến mãi" : c1.Code,
-							   NamePromotion = c1 == null ? "không sử dụng khuyến mãi" : c1.Name,
+							   PromotionCode = c1 == null ? "Trống" : c1.Code,
+							   NamePromotion = c1 == null ? "Trống" : c1.Name,
 						   }).ToList();
 			return objlist;
 		}
@@ -264,7 +264,11 @@ namespace BookShop.BLL.Service
 							   ModifiDate = a.ModifiDate,
 							   ReceiveDate = a.ReceiveDate,
 							   CompleteDate = a.CompleteDate,
+							   ModifiNotes = a.ModifiNotes,
 							   Shipfee = a.Shipfee,
+							   City = a.City,
+							   District = a.District,
+							   Commune = a.Commune,
 							   Id_Status = a.Id_StatusOrder,
 							   Status = d.Status,
 							   StatusName = d.StatusName,
@@ -272,11 +276,15 @@ namespace BookShop.BLL.Service
 							   UserCode = b1.Code,
 							   NameUser = b1.Name,
 							   Id_Staff = a.Id_Staff,
-							   StaffCode = e1 == null ? "Chưa có nhân viên tiếp nhận" : e1.Code,
-							   NameStaff = e1 == null ? "Chưa có nhân viên tiếp nhận" : e1.Name,
+							   StaffCode = e1 == null ? "Trống" : e1.Code,
+							   NameStaff = e1 == null ? "Trống" : e1.Name,
 							   Id_Promotion = a.Id_Promotion,
-							   PromotionCode = c1 == null ? "Không sử dụng khuyến mãi" : c1.Code,
-							   NamePromotion = c1 == null ? "không sử dụng khuyến mãi" : c1.Name,
+							   PromotionCode = c1 == null ? "Trống" : c1.Code,
+							   NamePromotion = c1 == null ? "Trống" : c1.Name,
+							   IsOnlineOrder = a.IsOnlineOrder,
+							   IsUsePoint = a.IsUsePoint,
+							   PointUsed = a.PointUsed,
+							   PointAmount = a.PointAmount,
 						   }).FirstOrDefault();
 			return objlist;
 		}

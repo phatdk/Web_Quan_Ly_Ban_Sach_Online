@@ -5,641 +5,128 @@
 @{
 	ViewData["Title"] = "Index";
 	Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
-	List<OrderViewModel> orders = ViewBag.Orders;
-	var statusOrder1 = orders.Where(x => x.Status == 1); // đơn chờ
-	var statusOrder2 = orders.Where(x => x.Status == 2); // đã xác nhận
-	var statusOrder3 = orders.Where(x => x.Status == 3); // Đang giao
-	var statusOrder4 = orders.Where(x => x.Status == 4).OrderByDescending(x => x.CompleteDate); // Hoàn thành
-	var statusOrder5 = orders.Where(x => x.Status == 5); // Trả hàng
-	var statusOrder6 = orders.Where(x => x.Status == 6); // Xử lý hàng trả
-	var statusOrder7 = orders.Where(x => x.Status == 7).OrderByDescending(x => x.CreatedDate); // Trả hàng thành công
-	var statusOrder8 = orders.Where(x => x.Status == 8).OrderByDescending(x => x.CreatedDate); // Hủy đơn
-	var statusOrder9 = orders.Where(x => x.Status == 9).OrderByDescending(x => x.CreatedDate); // Đóng đơn
-	var statusOrder0 = orders.Where(x => x.Status == 0); // đơn chờ (bán offline)
-	int index = 0;
+	string selectFilter = ViewBag.Filter;
 }
-<script>
 
-	document.addEventListener('DOMContentLoaded', function () {
-		var tabs = document.querySelectorAll('.nav-link');
-		tabs.forEach(function (tab) {
-			tab.addEventListener('click', function (event) {
-				event.preventDefault();
-				// xóa hết các active ở các class
-				tabs.forEach(function (tab) {
-					tab.classList.remove('active');
-				});
-
-				// chèn acctive vào class
-				tab.classList.add('active');
-
-				// các thanh tab có đường dẫn ví dụ : #
-				var targetId = tab.getAttribute('href').substring(1);
-
-				// ẩn các nội dung
-				var tabContents = document.querySelectorAll('.tab-pane');
-				tabContents.forEach(function (content) {
-					content.classList.remove('show', 'active');
-				});
-
-				//  - > hiển thị ra table
-				var targetContent = document.getElementById(targetId);
-				targetContent.classList.add('show', 'active');
-			});
-		});
-	});
-
-</script>
-
-@{
-	if (orders != null)
-	{
-		<div class="row">
-			<div class="col-xl-12 col-xxl-12">
-				<div class="card">
-					<div class="card-body">
-						<div class="default-tab">
-							<ul class="nav nav-tabs" role="tablist">
-								<li class="nav-item">
-									<a class="nav-link" data-toggle="tab" href="#1">Tất cả</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link active" data-toggle="tab" href="#2">Chờ xử lý</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" data-toggle="tab" href="#3">Đã xác nhận</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" data-toggle="tab" href="#4">Đang giao</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" data-toggle="tab" href="#5">Hoàn thành</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" data-toggle="tab" href="#6">Hoàn trả</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" data-toggle="tab" href="#7">Xử lý hoàn trả</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" data-toggle="tab" href="#8">Hoàn trả thành công</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" data-toggle="tab" href="#9">Đơn bị hủy</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" data-toggle="tab" href="#10">Đơn đã đóng</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" data-toggle="tab" href="#11">Đơn chờ (offline)</a>
-								</li>
-							</ul>
-							<div class="tab-content">
-								<div class="tab-pane fade show" id="1" role="tabpanel">
-									<div class="pt-4">
-										<div class="table-responsive">
-											<table class="table table-bordered table-responsive-sm">
-												<thead class="thead-light">
-													<tr>
-														<th class="text-center">STT</th>
-														<th class="text-center">Mã đơn</th>
-														<th class="text-center">Mã khách hàng</th>
-														<th class="text-center">Tên khách hàng</th>
-														<th class="text-center">Giá trị đơn hàng</th>
-														<th class="text-center">Ngày tạo</th>
-														<th class="text-center"></th>
-													</tr>
-												</thead>
-												<tbody>
-													@{
-														index = 0;
-													}
-													@foreach (var item in orders)
-													{
-													index += 1;
-													<tr>
-														<td class="text-center">@index</td>
-														<td class="text-center">
-															<label>@item.Code</label>
-														</td>
-														<td class="text-center">
-															<label>@item.UserCode</label>
-														</td>
-														<td class="text-center">
-															<label>@item.NameUser</label>
-														</td>
-														<td class="text-center">
-															<label>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Total)</label>
-														</td>
-														<td class="text-center">
-															<label>@item.CreatedDate</label>
-														</td>
-														<td class="text-center">
-															<a href="@Url.Action("Details", "OrderManage", new { id = item.Id })" class="btn btn-outline-warning"> Chi tiết</a>
-														</td>
-													</tr>
-													}
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane fade show active" id="2" role="tabpanel">
-									<div class="pt-4">
-										<div class="table-responsive">
-											<table class="table table-bordered table-responsive-sm">
-												<thead class="thead-light">
-													<tr>
-														<th class="text-center">STT</th>
-														<th class="text-center">Mã đơn</th>
-														<th class="text-center">Mã khách hàng</th>
-														<th class="text-center">Tên khách hàng</th>
-														<th class="text-center">Giá trị đơn hàng</th>
-														<th class="text-center">Ngày tạo</th>
-														<th class="text-center"></th>
-													</tr>
-												</thead>
-												<tbody>
-													@{
-														index = 0;
-													}
-													@foreach (var item in statusOrder1)
-													{
-														index += 1;
-														<tr>
-															<td class="text-center">@index</td>
-															<td class="text-center">
-																<label>@item.Code</label>
-															</td>
-															<td class="text-center">
-																<label>@item.UserCode</label>
-															</td>
-															<td class="text-center">
-																<label>@item.NameUser</label>
-															</td>
-															<td class="text-center">
-																<label>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Total)</label>
-															</td>
-															<td class="text-center">
-																<label>@item.CreatedDate</label>
-															</td>
-															<td class="text-center">
-																<a href="@Url.Action("Details", "OrderManage", new{ id=item.Id })" class="btn btn-outline-warning"> Chi tiết</a>
-															</td>
-														</tr>
-													}
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane fade show" id="3" role="tabpanel">
-									<div class="pt-4">
-										<div class="table-responsive">
-											<table class="table table-bordered table-responsive-sm">
-												<thead class="thead-light">
-													<tr>
-														<th class="text-center">STT</th>
-														<th class="text-center">Mã đơn</th>
-														<th class="text-center">Mã khách hàng</th>
-														<th class="text-center">Giá trị đơn hàng</th>
-														<th class="text-center">Ngày xác nhận</th>
-														<th class="text-center">Mã nhân viên tiếp nhận</th>
-														<th class="text-center"></th>
-													</tr>
-												</thead>
-												<tbody>
-													@{
-														index = 0;
-													}
-													@foreach (var item in statusOrder2)
-													{
-														index += 1;
-														<tr>
-															<td class="text-center">@index</td>
-															<td class="text-center">
-																<label>@item.Code</label>
-															</td>
-															<td class="text-center">
-																<label>@item.UserCode</label>
-															</td>
-															<td class="text-center">
-																<label>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Total)</label>
-															</td>
-															<td class="text-center">
-																<label>@item.AcceptDate</label>
-															</td>
-															<td class="text-center">
-																<label>@item.StaffCode</label>
-															</td>
-															<td class="text-center">
-																<a href="@Url.Action("Details", "OrderManage", new{ id=item.Id })" class="btn btn-outline-warning"> Chi tiết</a>
-															</td>
-														</tr>
-													}
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane fade show" id="4" role="tabpanel">
-									<div class="pt-4">
-										<div class="table-responsive">
-											<table class="table table-bordered table-responsive-sm">
-												<thead class="thead-light">
-													<tr>
-														<th class="text-center">STT</th>
-														<th class="text-center">Mã đơn</th>
-														<th class="text-center">Mã khách hàng</th>
-														<th class="text-center">Giá trị đơn hàng</th>
-														<th class="text-center">Ngày giao hàng</th>
-														<th class="text-center">Mã nhân viên tiếp nhận</th>
-														<th class="text-center"></th>
-													</tr>
-												</thead>
-												<tbody>
-													@{
-														index = 0;
-													}
-													@foreach (var item in statusOrder3)
-													{
-														index += 1;
-														<tr>
-															<td class="text-center">@index</td>
-															<td class="text-center">
-																<label>@item.Code</label>
-															</td>
-															<td class="text-center">
-																<label>@item.UserCode</label>
-															</td>
-															<td class="text-center">
-																<label>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Total)</label>
-															</td>
-															<td class="text-center">
-																<label>@item.DeliveryDate</label>
-															</td>
-															<td class="text-center">
-																<label>@item.StaffCode</label>
-															</td>
-															<td class="text-center">
-																<a href="@Url.Action("Details", "OrderManage", new{ id=item.Id })" class="btn btn-outline-warning"> Chi tiết</a>
-															</td>
-														</tr>
-													}
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane fade show" id="5" role="tabpanel">
-									<div class="pt-4">
-										<div class="table-responsive">
-											<table class="table table-bordered table-responsive-sm">
-												<thead class="thead-light">
-													<tr>
-														<th class="text-center">STT</th>
-														<th class="text-center">Mã đơn</th>
-														<th class="text-center">Mã khách hàng</th>
-														<th class="text-center">Giá trị đơn hàng</th>
-														<th class="text-center">Ngày hoàn thành</th>
-														<th class="text-center">Mã nhân viên tiếp nhận</th>
-														<th class="text-center"></th>
-													</tr>
-												</thead>
-												<tbody>
-													@{
-														index = 0;
-													}
-													@foreach (var item in statusOrder4)
-													{
-														index += 1;
-														<tr>
-															<td class="text-center">@index</td>
-															<td class="text-center">
-																<label>@item.Code</label>
-															</td>
-															<td class="text-center">
-																<label>@item.UserCode</label>
-															</td>
-															<td class="text-center">
-																<label>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Total)</label>
-															</td>
-															<td class="text-center">
-																<label>@item.CompleteDate</label>
-															</td>
-															<td class="text-center">
-																<label>@item.StaffCode</label>
-															</td>
-															<td class="text-center">
-																<a href="@Url.Action("Details", "OrderManage", new{ id=item.Id })" class="btn btn-outline-warning"> Chi tiết</a>
-															</td>
-														</tr>
-													}
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane fade show" id="6" role="tabpanel">
-									<div class="pt-4">
-										<div class="table-responsive">
-											<table class="table table-bordered table-responsive-sm">
-												<thead class="thead-light">
-													<tr>
-														<th class="text-center">STT</th>
-														<th class="text-center">Mã đơn</th>
-														<th class="text-center">Mã khách hàng</th>
-														<th class="text-center">Giá trị đơn hàng</th>
-														<th class="text-center">Ngày gửi trả</th>
-														<th class="text-center">Mã nhân viên tiếp nhận</th>
-														<th class="text-center"></th>
-													</tr>
-												</thead>
-												<tbody>
-													@{
-														index = 0;
-													}
-													@foreach (var item in statusOrder5)
-													{
-														index += 1;
-														<tr>
-															<td class="text-center">@index</td>
-															<td class="text-center">
-																<label>@item.Code</label>
-															</td>
-															<td class="text-center">
-																<label>@item.UserCode</label>
-															</td>
-															<td class="text-center">
-																<label>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Total)</label>
-															</td>
-															<td class="text-center">
-																<label>@item.ModifiDate</label>
-															</td>
-															<td class="text-center">
-																<label>@item.StaffCode</label>
-															</td>
-															<td class="text-center">
-																<a href="@Url.Action("Details", "OrderManage", new{ id=item.Id })" class="btn btn-outline-warning"> Chi tiết</a>
-															</td>
-														</tr>
-													}
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane fade show" id="7" role="tabpanel">
-									<div class="pt-4">
-										<div class="table-responsive">
-											<table class="table table-bordered table-responsive-sm">
-												<thead class="thead-light">
-													<tr>
-														<th class="text-center">STT</th>
-														<th class="text-center">Mã đơn</th>
-														<th class="text-center">Mã khách hàng</th>
-														<th class="text-center">Giá trị đơn hàng</th>
-														<th class="text-center">Ngày gửi trả</th>
-														<th class="text-center">Mã nhân viên tiếp nhận</th>
-														<th class="text-center"></th>
-													</tr>
-												</thead>
-												<tbody>
-													@{
-														index = 0;
-													}
-													@foreach (var item in statusOrder6)
-													{
-														index += 1;
-														<tr>
-															<td class="text-center">@index</td>
-															<td class="text-center">
-																<label>@item.Code</label>
-															</td>
-															<td class="text-center">
-																<label>@item.UserCode</label>
-															</td>
-															<td class="text-center">
-																<label>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Total)</label>
-															</td>
-															<td class="text-center">
-																<label>@item.ModifiDate</label>
-															</td>
-															<td class="text-center">
-																<label>@item.StaffCode</label>
-															</td>
-															<td class="text-center">
-																<a href="@Url.Action("Details", "OrderManage", new{ id=item.Id })" class="btn btn-outline-warning"> Chi tiết</a>
-															</td>
-														</tr>
-													}
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane fade show" id="8" role="tabpanel">
-									<div class="pt-4">
-										<div class="table-responsive">
-											<table class="table table-bordered table-responsive-sm">
-												<thead class="thead-light">
-													<tr>
-														<th class="text-center">STT</th>
-														<th class="text-center">Mã đơn</th>
-														<th class="text-center">Mã khách hàng</th>
-														<th class="text-center">Giá trị đơn hàng</th>
-														<th class="text-center">Ngày gửi trả</th>
-														<th class="text-center">Mã nhân viên tiếp nhận</th>
-														<th class="text-center"></th>
-													</tr>
-												</thead>
-												<tbody>
-													@{
-														index = 0;
-													}
-													@foreach (var item in statusOrder7)
-													{
-														index += 1;
-														<tr>
-															<td class="text-center">@index</td>
-															<td class="text-center">
-																<label>@item.Code</label>
-															</td>
-															<td class="text-center">
-																<label>@item.UserCode</label>
-															</td>
-															<td class="text-center">
-																<label>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Total)</label>
-															</td>
-															<td class="text-center">
-																<label>@item.ModifiDate</label>
-															</td>
-															<td class="text-center">
-																<label>@item.StaffCode</label>
-															</td>
-															<td class="text-center">
-																<a href="@Url.Action("Details", "OrderManage", new{ id=item.Id })" class="btn btn-outline-warning"> Chi tiết</a>
-															</td>
-														</tr>
-													}
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane fade show" id="9" role="tabpanel">
-									<div class="pt-4">
-										<div class="table-responsive">
-											<table class="table table-bordered table-responsive-sm">
-												<thead class="thead-light">
-													<tr>
-														<th class="text-center">STT</th>
-														<th class="text-center">Mã đơn</th>
-														<th class="text-center">Mã khách hàng</th>
-														<th class="text-center">Giá trị đơn hàng</th>
-														<th class="text-center">Ngày hủy</th>
-														<th class="text-center">Mã nhân viên tiếp nhận</th>
-														<th class="text-center"></th>
-													</tr>
-												</thead>
-												<tbody>
-													@{
-														index = 0;
-													}
-													@foreach (var item in statusOrder8)
-													{
-														index += 1;
-														<tr>
-															<td class="text-center">@index</td>
-															<td class="text-center">
-																<label>@item.Code</label>
-															</td>
-															<td class="text-center">
-																<label>@item.UserCode</label>
-															</td>
-															<td class="text-center">
-																<label>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Total)</label>
-															</td>
-															<td class="text-center">
-																<label>@item.ModifiDate</label>
-															</td>
-															<td class="text-center">
-																<label>@item.StaffCode</label>
-															</td>
-															<td class="text-center">
-																<a href="@Url.Action("Details", "OrderManage", new{ id=item.Id })" class="btn btn-outline-warning"> Chi tiết</a>
-															</td>
-														</tr>
-													}
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane fade show" id="10" role="tabpanel">
-									<div class="pt-4">
-										<div class="table-responsive">
-											<table class="table table-bordered table-responsive-sm">
-												<thead class="thead-light">
-													<tr>
-														<th class="text-center">STT</th>
-														<th class="text-center">Mã đơn</th>
-														<th class="text-center">Mã khách hàng</th>
-														<th class="text-center">Giá trị đơn hàng</th>
-														<th class="text-center">Ngày đóng</th>
-														<th class="text-center">Mã nhân viên tiếp nhận</th>
-														<th class="text-center"></th>
-													</tr>
-												</thead>
-												<tbody>
-													@{
-														index = 0;
-													}
-													@foreach (var item in statusOrder3)
-													{
-														DateTime newDate = Convert.ToDateTime(item.CompleteDate).AddDays(7);
-														index += 1;
-														<tr>
-															<td class="text-center">@index</td>
-															<td class="text-center">
-																<label>@item.Code</label>
-															</td>
-															<td class="text-center">
-																<label>@item.UserCode</label>
-															</td>
-															<td class="text-center">
-																<label>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Total)</label>
-															</td>
-															<td class="text-center">
-																<label>@newDate</label>
-															</td>
-															<td class="text-center">
-																<label>@item.StaffCode</label>
-															</td>
-															<td class="text-center">
-																<a href="@Url.Action("Details", "OrderManage", new{ id=item.Id })" class="btn btn-outline-warning"> Chi tiết</a>
-															</td>
-														</tr>
-													}
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane fade show" id="11" role="tabpanel">
-									<div class="pt-4">
-										<div class="table-responsive">
-											<table class="table table-bordered table-responsive-sm">
-												<thead class="thead-light">
-													<tr>
-														<th class="text-center">STT</th>
-														<th class="text-center">Mã đơn</th>
-														<th class="text-center">Mã khách hàng</th>
-														<th class="text-center">Giá trị đơn hàng</th>
-														<th class="text-center">Ngày tạo</th>
-														<th class="text-center">Mã nhân viên tiếp nhận</th>
-														<th class="text-center"></th>
-													</tr>
-												</thead>
-												<tbody>
-													@{
-														index = 0;
-													}
-													@foreach (var item in statusOrder0)
-													{
-														index += 1;
-														<tr>
-															<td class="text-center">@index</td>
-															<td class="text-center">
-																<label>@item.Code</label>
-															</td>
-															<td class="text-center">
-																<label>@item.UserCode</label>
-															</td>
-															<td class="text-center">
-																<label>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Total)</label>
-															</td>
-															<td class="text-center">
-																<label>@item.CreatedDate</label>
-															</td>
-															<td class="text-center">
-																<label>@item.StaffCode</label>
-															</td>
-															<td class="text-center">
-																<a href="@Url.Action("Details", "OrderManage", new{ id=item.Id })" class="btn btn-outline-warning"> Chi tiết</a>
-															</td>
-														</tr>
-													}
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+<div class="row bg-light">
+	<div class="m-1 row">
+		<select class="col-3 border-info text-danger" id="filterSelect" onchange="filterChange()" aria-label="Default select example">
+			<option value="">Tất cả</option>
+			<option value="1">Chờ xử lý</option>
+			<option value="2">Đã xác nhận</option>
+			<option value="3">Đang giao</option>
+			<option value="5">Đơn hàng bị trả về</option>
+			<option value="6">Hàng trả chờ xử lý</option>
+			<option value="8">Đơn bị hủy</option>
+			<option value="7">Đơn hàng trả lại đã xử lý</option>
+			<option value="4">Đơn đã hoành thành</option>
+			<option value="9">Đơn đã đóng</option>
+			<option value="0">Đơn lưu tạm</option>
+		</select>
+		<div class="btn-group col-4">
+			<input id="keyWordFind" class="btn btn-outline-info" placeholder="nhập mã hoặc tên" onkeypress="searchOnEnter(event)">
+			<button onclick="findOrder()" class="btn btn-info"><i class="fa-solid fa-magnifying-glass"></i></button>
 		</div>
+	</div>
+	<div>
+		<table class="table table-bordered border-dark table-hover">
+			<thead class="thead-light">
+				<tr>
+					<th class="text-center">STT</th>
+					<th class="text-center">Mã đơn</th>
+					<th class="text-center">Mã KH</th>
+					<th class="text-center">Giá trị đơn</th>
+					<th class="text-center">Ngày tạo</th>
+					<th class="text-center">Nv tiếp nhận</th>
+					<th class="text-center">Trạng thái</th>
+					<th class="text-center"></th>
+				</tr>
+			</thead>
+			<tbody id="ordersList">
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<script>
+	function formatCurrency(amount) {
+		return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 	}
-}
+	function getDetail(id) {
+		var url = "@Url.Action("Details", "OrderManage")?id=" + id
+		window.location.href = url;
+	}
+	function getOrder() {
+		// Gửi yêu cầu Ajax đến máy chủ
+		var status = document.getElementById("filterSelect").value;
+		var keyWord = document.getElementById("keyWordFind").value;
+		var sortDate = 
+		$.ajax({
+			url: '@Url.Action("GetOrder", "OrderManage")',
+			type: 'GET',
+			data: { status: status, keyWord: keyWord },
+			success: function (data) {
+				// Xóa danh sách cũ trước khi thêm danh sách mới
+				var ordersList = $("#ordersList");
+				ordersList.empty();
+				let statusColor = "";
+				// Thêm danh sách đơn hàng vào HTML
+				data.forEach(function (item, index) {
+					index += 1;
+					const datetime = item.createdDate;
+					const formattedDateTime = moment(datetime).format("YYYY-MM-DD HH:mm:ss");
+					if (item.status === 0 || item.status === 5 || item.status === 8) {
+						statusColor = "table-danger";
+					} 
+					else if(item.status === 6 || item.status === 1){
+						statusColor = "table-warning";
+					}
+					else if (item.status === 7) {
+						statusColor = "table-info"
+					}
+					else if (item.status === 2 || item.status === 3) {
+						statusColor = "table-primary"
+					}
+					else if(item.status === 4 || item.status === 9){
+						statusColor = "table-success"
+					}
+					var orderRow =
+						'<tr class="table table-bordered border-dark ' + statusColor + '">' +
+						'<td class="text-center">' + index + '</td>' +
+						'<td class="text-center"><label>' + item.code + '</label></td>' +
+						'<td class="text-center"><label>' + item.userCode + '</label></td>' +
+						'<td class="text-center"><label>' + formatCurrency(item.total) + '</label></td>' +
+						'<td class="text-center"><label>' + formattedDateTime + '</label></td>' +
+						'<td class="text-center"><label>' + item.nameStaff + '</label></td>' +
+						'<td class="text-center"><label>' + item.statusName + '</label></td>' +
+						'<td class="text-center"><button class="btn btn-warning" onclick="getDetail('+ item.id +')">Xem</button></td>' +
+						'</tr>';
+
+					ordersList.append(orderRow);
+				});
+			},
+			error: function (error) {
+				console.log('Lỗi: ' + error.responseText);
+			}
+		});
+	}
+
+	function filterChange() {
+		getOrder()
+	}
+	function findOrder() {
+		getOrder()
+	}
+	function searchOnEnter(event) {
+		if (event.key === 'Enter') {
+			event.preventDefault(); // Ngăn chặn hành vi mặc định của Enter (chẳng hạn là submit biểu mẫu)
+			getOrder();
+		}
+	}
+
+	// Gọi hàm getProducts() khi trang được tải
+	$(document).ready(function () {
+		document.getElementById("filterSelect").value = @selectFilter;
+		getOrder();
+	});
+</script>

@@ -11,6 +11,7 @@ namespace BookShop.BLL.IService
     public interface IOrderDetailService
     {
         public Task<List<OrderDetailViewModel>> GetByOrder(int orderId);
+        public Task<OrderDetailViewModel> GetById(int id);
         public Task<bool> Add(CreateOrderDetailModel model);
         public Task<bool> AddRange(CreateOrderDetailModel model, List<CartDetail> ListItem);
         public Task<bool> Update(int id, UpdateOrderDetailModel model);
