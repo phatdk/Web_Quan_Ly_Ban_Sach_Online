@@ -1,0 +1,42 @@
+﻿@model BookShop.BLL.ConfigurationModel.PromotionTypeModel.PromotionTypeViewModel
+
+@{
+    ViewData["Title"] = "Thông tin loại khuyến mãi";
+    Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
+}
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Trang chủ</a>
+            <a asp-area="Admin" asp-controller="AdminRoles" asp-action="Index" class="breadcrumb-item">Danh sách loại khuyến mãi</a>
+            <span class="breadcrumb-item active">Thông tin loại khuyến mãi</span>
+        </nav>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Thông tin loại khuyến mãi</h4>
+        <div class="table-responsive">
+            <table class="product-info-table m-t-20">
+                <tbody>
+                    <tr>
+                        <td>ID:</td>
+                        <td class="text-dark font-weight-semibold">@Model.Id</td>
+                    </tr>
+                    <tr>
+                        <td>Tên loại khuyến mãi:</td>
+                        <td>@Model.Name</td>
+                    </tr>
+                    <tr>
+                        <td>Ngày tạo:</td>
+                        <td>@Model.CreatedDate</td>
+                    </tr>
+                    <tr>
+                        <td>Trạng thái:</td>
+                        <td>@Model.Status</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
