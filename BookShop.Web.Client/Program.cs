@@ -106,18 +106,19 @@ builder.Services.AddTransient<IOrderPaymentService, OrderPaymentService>();
 builder.Services.AddTransient<IStatusOrderService, StatusOrderService>();
 builder.Services.AddTransient<IPromotionService, PromotionService>();
 builder.Services.AddTransient<IWalletpointService, WalletPointService>();
+builder.Services.AddTransient<IUserRoleService, UserRoleService>();
 
 builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromSeconds(1800); });
 
 // Configure the HTTP request pipeline.
 var app = builder.Build();
 #region SeedData
-//using (var scope = app.Services.CreateScope())
-//{
-//    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Userr>>();
-//    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
-//    SeedDataMD.SeedAsync(userManager, roleManager).Wait();
-//}
+using (var scope = app.Services.CreateScope())
+{
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Userr>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+    SeedDataMD.SeedAsync(userManager, roleManager).Wait();
+}
 //using (var scope = app.Services.CreateScope())
 //{
 //    var serviice1 = scope.ServiceProvider.GetRequiredService<IStatusOrderService>();
