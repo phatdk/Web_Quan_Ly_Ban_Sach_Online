@@ -44,7 +44,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 		{
 			var user = await _userManager.GetUserAsync(HttpContext.User);
 			if (user != null) return View();
-			return RedirectToAction("Login", "Account", new {Areas = "Identity"});
+			return Redirect("/login");
 		}
 
 		// POST: OfflineSaleController/Create
