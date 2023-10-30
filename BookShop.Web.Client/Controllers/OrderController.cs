@@ -4,6 +4,7 @@ using BookShop.BLL.ConfigurationModel.OrderModel;
 using BookShop.BLL.ConfigurationModel.OrderPaymentModel;
 using BookShop.BLL.ConfigurationModel.UserModel;
 using BookShop.BLL.IService;
+using BookShop.BLL.Service;
 using BookShop.DAL.Entities;
 using BookShop.Web.Client.Services;
 using Microsoft.AspNetCore.Http;
@@ -102,6 +103,7 @@ namespace BookShop.Web.Client.Controllers
             createModel.orderDetails = new List<OrderDetailViewModel>();
             var orderdetail = new OrderDetailViewModel();
             var user = await GetCurrentUserAsync();
+            var cartUse = 0;
             // kiem tra login
             if (user != null)
             {
@@ -150,7 +152,7 @@ namespace BookShop.Web.Client.Controllers
                     };
                     createModel.orderDetails.Add(orderdetail);
                 }
-
+                cartUse = 1;
             }
             else // mua sản phẩm chi định
             {
@@ -179,13 +181,14 @@ namespace BookShop.Web.Client.Controllers
 
             ViewBag.Payments = (await _paymentFormService.GetAll()).Where(x => x.Status == 1).ToList();
             ViewBag.Promotions = (await _promotionService.GetAll()).Where(x => x.Status == 1).ToList();
+            ViewBag.Cart = cartUse;
             return View(createModel);
         }
 
         // POST: OrderController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateOnlineOrder(OrderViewModel request)
+        public async Task<IActionResult> CreateOnlineOrder(OrderViewModel request, int cartUse)
         {
             try
             {
@@ -221,6 +224,18 @@ namespace BookShop.Web.Client.Controllers
                         await _orderPaymentService.Add(op);
                     }
                     await _productPreviewService.ChangeQuantity(result.Id, -1);
+                    if (cartUse == 1)
+                    {
+                        var cartUser = await GetCurrentUserAsync();
+                        if (cartUser != null)
+                        {
+							await _cartDetailService.DeleteByCart(user.Id);
+						}
+                        else
+                        {
+							HttpContext.Session.Remove("sessionCart");
+						}
+                    }
                     return RedirectToAction("OrderDetails", new { id = result.Id });
                 }
                 return BadRequest();

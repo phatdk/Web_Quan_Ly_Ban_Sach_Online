@@ -24,7 +24,7 @@ namespace BookShop.BLL.Service
 			_imageRepository = new Repository<Image>();
 		}
 
-		public async Task<bool> Add(CreateOrderDetailModel model)
+		public async Task<bool> Add(OrderDetailViewModel model)
 		{
 			try
 			{
@@ -40,7 +40,7 @@ namespace BookShop.BLL.Service
 			}
 			catch (Exception ex) { return true; }
 		}
-		public async Task<bool> AddRange(CreateOrderDetailModel model, List<CartDetail> ListItem)
+		public async Task<bool> AddRange(OrderDetailViewModel model, List<CartDetail> ListItem)
 		{
 			try
 			{
@@ -108,7 +108,7 @@ namespace BookShop.BLL.Service
 			return objlist;
 		}
 
-		public async Task<bool> Update(int id, UpdateOrderDetailModel model)
+		public async Task<bool> Update(int id, OrderDetailViewModel model)
 		{
 			try
 			{

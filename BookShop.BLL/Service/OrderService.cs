@@ -38,7 +38,7 @@ namespace BookShop.BLL.Service
 			Random random = new Random();
 
 			// Tạo một chuỗi các ký tự ngẫu nhiên
-			string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+			string characters = "0123456789";
 			string code = "";
 			for (int i = 0; i < length; i++)
 			{
@@ -69,10 +69,13 @@ namespace BookShop.BLL.Service
 					model.PointUsed = 0;
 					model.ModifiNotes = String.Empty;
 				}
-				var code = await GenerateCode(10);
+				if (string.IsNullOrEmpty(model.Code))
+				{
+					model.Code = "OL" + await GenerateCode(8);
+				}
 				var obj = new Order()
 				{
-					Code = code.ToString(),
+					Code = model.Code,
 					Receiver = model.Receiver,
 					Phone = model.Phone,
 					Email = model.Email,

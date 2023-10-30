@@ -25,7 +25,7 @@ namespace BookShop.Web.Client.Services
 				{
 					Point = pointAmount,
 				};
-				var result = await _walletpointService.Update(userId, obj);
+				var result = await _walletpointService.Update(userId, obj); // tao lich su tich diêm
 				return result;
 			}
 			return false;
