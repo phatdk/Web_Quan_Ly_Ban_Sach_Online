@@ -1,136 +1,110 @@
-﻿using System;
+﻿using BookShop.BLL.IService;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BookShop.BLL.IService;
-using BookShop.BLL.Service;
-using BookShop.DAL.Entities;
-
-
-
-using Microsoft.Data.SqlClient;
 using GemBox.Spreadsheet;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using BookShop.BLL.Service;
+using BookShop.BLL.ConfigurationModel.ProductBooklModel;
+using BookShop.DAL.Entities;
 using MailKit.Search;
 
 namespace BookShop.BLL.Gembox
 {
-    public class Gemfile
-    {
-        public IOrderService _IorderService;
-        public IOrderDetailService _Iorderdetailservice;
-        public Order _order;
-        public OrderDetail _orderdetail;
+	public class Gen
+	{
+		public IOrderDetailService _OrderDetailService;
+		public IOrderService _OrderService;
 
-        
-        public Gemfile()
-        {
-            _IorderService = new OrderService();
-            _Iorderdetailservice = new OrderDetailService();
-            
-        }
-        public async void GetExel()
-        {
-            SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
-            var workbook = new ExcelFile();
-            var worksheet = workbook.Worksheets.Add("DataSheet");
-            var orders = await _IorderService.GetAll();
-           
-          
-            // Ghi dữ liệu từ danh sách vào bảng tính Excel.
-            for (int row = 0; row < orders.Count; row++)
-            {
-                worksheet.Cells[row + 1, 0].Value = orders[row].Id;
-                worksheet.Cells[row + 1, 1].Value = orders[row].Code;
-                worksheet.Cells[row + 1, 2].Value = orders[row].Phone;
-                worksheet.Cells[row + 1, 3].Value = orders[row].Receiver;
-                worksheet.Cells[row + 1, 4].Value = orders[row].AcceptDate;
-                worksheet.Cells[row + 1, 5].Value = orders[row].CreatedDate;
-                worksheet.Cells[row + 1, 6].Value = orders[row].DeliveryDate;
-                worksheet.Cells[row + 1, 7].Value = orders[row].ReceiveDate;
-                worksheet.Cells[row + 1, 8].Value = orders[row].PaymentDate;
-                worksheet.Cells[row + 1, 9].Value = orders[row].CompleteDate;
-                worksheet.Cells[row + 1, 10].Value = orders[row].ModifiDate;
-                worksheet.Cells[row + 1, 11].Value = orders[row].ModifiNotes;
-                worksheet.Cells[row + 1, 12].Value = orders[row].Description;
-                worksheet.Cells[row + 1, 13].Value = orders[row].City;
-                worksheet.Cells[row + 1, 14].Value = orders[row].District;
-                worksheet.Cells[row + 1, 15].Value = orders[row].Commune;
-                worksheet.Cells[row + 1, 16].Value = orders[row].Id_User;
-                worksheet.Cells[row + 1, 17].Value = orders[row].Id_Promotion;
-                worksheet.Cells[row + 1, 18].Value = orders[row].NameUser;
-                worksheet.Cells[row + 1, 19].Value = orders[row].NamePromotion;
-            }
+		public Gen()
+		{
+			_OrderService = new OrderService();
+			_OrderDetailService = new OrderDetailService();
+		}
+		public async void xuatExel()
+		{
 
-            workbook.Save("DataExport.xlsx");
-            Console.WriteLine("Dữ liệu đã được xuất thành công thành tệp Excel.");
-            //// Tính tổng doanh số theo tuần.
-            //var weeklyRevenue = transactions
-            //    .GroupBy(t => GetWeekOfYearISO8601(t.AcceptDate))
-            //    .Select(group => new
-            //    {
-            //        Week = group.Key,
-            //        TotalRevenue = group.Sum(t => t.Amount)
-            //    })
-            //    .OrderBy(r => r.Week)
-            //    .ToList();
+			SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
 
-            //// Tính tổng doanh số theo tháng.
-            //var monthlyRevenue = transactions
-            //    .GroupBy(t => new { Year = t.AcceptDate.Year, Month = t.AcceptDate.Month })
-            //    .Select(group => new
-            //    {
-            //        Year = group.Key.Year,
-            //        Month = group.Key.Month,
-            //        TotalRevenue = group.Sum(t => t.Amount)
-            //    })
-            //    .OrderBy(r => r.Year)
-            //    .ThenBy(r => r.Month)
-            //    .ToList();
 
-            //// Tính tổng doanh số theo năm.
-            //var yearlyRevenue = transactions
-            //    .GroupBy(t => t.AcceptDate.Year)
-            //    .Select(group => new
-            //    {
-            //        Year = group.Key,
-            //        TotalRevenue = group.Sum(t => t.Amount)
-            //    })
-            //    .OrderBy(r => r.Year)
-            //    .ToList();
+			var workbook = new ExcelFile();
+			var worksheet = workbook.Worksheets.Add("OrderDetails");
 
-            //// Tạo một tệp Excel và một bảng tính Excel.
-            //var workbook = new ExcelFile();
-            //var worksheet = workbook.Worksheets.Add("RevenueData");
 
-            //// Ghi dữ liệu tổng doanh số theo tuần vào bảng tính Excel.
-            //for (int row = 0; row < weeklyRevenue.Count; row++)
-            //{
-            //    worksheet.Cells[row, 0].Value = weeklyRevenue[row].Week;
-            //    worksheet.Cells[row, 1].Value = weeklyRevenue[row].TotalRevenue;
-            //}
+			// Đặt tiêu đề cho các cột
+			worksheet.Cells["A1"].Value = "Code";
+			worksheet.Cells["B1"].Value = "Receiver";
+			worksheet.Cells["C1"].Value = "PhoneNumt_erQ";
+			worksheet.Cells["D1"].Value = "Email";
+			worksheet.Cells["E1"].Value = "Shipping_Fee";
+			worksheet.Cells["F1"].Value = "CreateDate";
+			worksheet.Cells["G1"].Value = "AcceptDate";
+			worksheet.Cells["H1"].Value = "DeliveryDate";
+			worksheet.Cells["I1"].Value = "ReceiveDate";
+			worksheet.Cells["J1"].Value = "PaymentDate";
+			worksheet.Cells["K1"].Value = "CompleteDate";
+			worksheet.Cells["L1"].Value = "Modify Date";
+			worksheet.Cells["M1"].Value = "Modify Notes";
+			worksheet.Cells["N1"].Value = "Description";
+			worksheet.Cells["O1"].Value = "Isonlineorder";
+			worksheet.Cells["P1"].Value = "lsLJsePoint";
+			worksheet.Cells["Q1"].Value = "PointUsed";
+			worksheet.Cells["R1"].Value = "PointAmount";
+			worksheet.Cells["S1"].Value = "City";
+			worksheet.Cells["T1"].Value = "District";
+			worksheet.Cells["U1"].Value = "Commune";
+			worksheet.Cells["V1"].Value = "Address";
+			worksheet.Cells["W1"].Value = "ld User";
+			worksheet.Cells["X1"].Value = "ld_Staff";
+			worksheet.Cells["Y1"].Value = "ld Promotion";
+			worksheet.Cells["Z1"].Value = "ld_Status";
 
-            //// Ghi dữ liệu tổng doanh số theo tháng vào bảng tính Excel.
-            //for (int row = 0; row < monthlyRevenue.Count; row++)
-            //{
-            //    worksheet.Cells[row, 3].Value = $"{monthlyRevenue[row].Month}/{monthlyRevenue[row].Year}";
-            //    worksheet.Cells[row, 4].Value = monthlyRevenue[row].TotalRevenue;
-            //}
+			int rowIndex = 2; // Bắt đầu từ dòng thứ hai sau tiêu đề
 
-            //// Ghi dữ liệu tổng doanh số theo năm vào bảng tính Excel.
-            //for (int row = 0; row < yearlyRevenue.Count; row++)
-            //{
-            //    worksheet.Cells[row, 6].Value = yearlyRevenue[row].Year;
-            //    worksheet.Cells[row, 7].Value = yearlyRevenue[row].TotalRevenue;
-            //}
+			foreach (var order in await _OrderService.GetAll())
+			{
+				worksheet.Cells[$"A{rowIndex}"].Value = order.Code;
+				worksheet.Cells[$"B{rowIndex}"].Value = order.Receiver;
+				worksheet.Cells[$"C{rowIndex}"].Value = order.Phone;
+				//worksheet.Cells[$"D{rowIndex}"].Value = order.E;
+				//worksheet.Cells[$"E{rowIndex}"].Value = order.Shipfee;
+				worksheet.Cells[$"F{rowIndex}"].Value = order.CreatedDate;
+				worksheet.Cells[$"G{rowIndex}"].Value = order.AcceptDate;
+				worksheet.Cells[$"H{rowIndex}"].Value = order.DeliveryDate;
+				worksheet.Cells[$"I{rowIndex}"].Value = order.ReceiveDate;
+				worksheet.Cells[$"J{rowIndex}"].Value = order.PaymentDate;
+				worksheet.Cells[$"K{rowIndex}"].Value = order.CompleteDate;
+				worksheet.Cells[$"L{rowIndex}"].Value = order.ModifiDate;
+				worksheet.Cells[$"M{rowIndex}"].Value = order.ModifiNotes;
+				worksheet.Cells[$"N{rowIndex}"].Value = order.Description;
+				//worksheet.Cells[$"O{rowIndex}"].Value = order.IsOnlineOrder;
+				//worksheet.Cells[$"P{rowIndex}"].Value = order.IsUsePoint;
+				//worksheet.Cells[$"Q{rowIndex}"].Value = order.PointUsed;
+				//worksheet.Cells[$"R{rowIndex}"].Value = order.PointAmount;
+				worksheet.Cells[$"S{rowIndex}"].Value = order.City;
+				worksheet.Cells[$"T{rowIndex}"].Value = order.District;
+				worksheet.Cells[$"U{rowIndex}"].Value = order.Commune;
+				//worksheet.Cells[$"V{rowIndex}"].Value = order.;
+				worksheet.Cells[$"W{rowIndex}"].Value = order.Id_User;
+				//worksheet.Cells[$"X{rowIndex}"].Value = order.Id_Staff;
+				worksheet.Cells[$"Y{rowIndex}"].Value = order.Id_Promotion;
+				//worksheet.Cells[$"Z{rowIndex}"].Value = order.Id_Status;
 
-            // Lưu tệp Excel.
-            workbook.Save("RevenueReport.xlsx");
+				rowIndex++;
 
-            Console.WriteLine("Kết quả đã được xuất thành công vào tệp Excel.");
 
-        }
+			};
 
-    }
+			// Save the document as a PDF
+			var pdfFilePath = @"wwwroot\PDF\XinheMau.pdf";
+			workbook.Save(pdfFilePath);
+
+			// Return the PDF file as a response
+			workbook.Save("Spreadsheet.xlsx");
+
+		}
+	}
 }
