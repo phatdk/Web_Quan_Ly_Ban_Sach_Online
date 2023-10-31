@@ -1,3 +1,4 @@
+@using BookShop.Web.Client.Models;
 @model UserListModel
 @{
     ViewData["Title"] = "Danh sách các thành viên";
@@ -32,7 +33,8 @@
         </tr>
     }
 </table>
-@* @{
+
+@{
     var pagingmodel = new PagingModel()
     {
         currentpage = Model.currentPage,
@@ -41,4 +43,4 @@
     };
 }
 
-<partial name="_PagingXTL" model="@pagingmodel" /> *@
+<partial name="_Paging" model="@pagingmodel" />
