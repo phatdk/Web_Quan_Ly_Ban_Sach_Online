@@ -11,11 +11,11 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-4">Thông tin cơ bản:</dt>
-        <dd class="col-sm-6"> 
+        <dd class="col-sm-6">
             <dl class="row">
                  <dt class = "col-sm-6">
                     @Html.DisplayNameFor(m => Model.profile.UserName)
-                 </dt>   
+                 </dt>
                  <dd class = "col-sm-6">
                     @Html.DisplayFor(m => Model.profile.UserName)
                  </dd>
@@ -23,7 +23,7 @@
              <dl class="row">
                  <dt class = "col-sm-6">
                     @Html.DisplayNameFor(m => Model.profile.UserEmail)
-                 </dt>   
+                 </dt>
                  <dd class = "col-sm-6">
                     @Html.DisplayFor(m => Model.profile.UserEmail)
                  </dd>
@@ -31,13 +31,13 @@
               <dl class="row">
                  <dt class = "col-sm-6">
                     @Html.DisplayNameFor(m => Model.profile.PhoneNumber)
-                 </dt>   
+                 </dt>
                  <dd class = "col-sm-6">
                     @Html.DisplayFor(m => Model.profile.PhoneNumber)
                  </dd>
             </dl>
             <a asp-action="EditProfile" class="btn btn-primary btn-sm">Sửa</a>
- 
+
         </dd>
 
         <dt class="col-sm-4">Mật khẩu:</dt>
@@ -138,10 +138,10 @@
             <div class="col-4 mt-3">@Html.DisplayNameFor(m => Model.profile.UserName):</div>
             <div class="col-8 mt-3"><input class="form-control" value="@Model.profile.UserName" disabled /></div>
             <div class="col-4 mt-3">@Html.DisplayNameFor(m => Model.profile.Gender):</div>
-            <div class="col-8 mt-3"><input class="form-control" value="@Model.profile.Gender" disabled /></div>
+            <div class="col-8 mt-3"><input class="form-control" value="@(Model.profile.Gender==0?"Nam":"Nữ")" disabled /></div>
             <div class="col-4 mt-3">@Html.DisplayNameFor(m => Model.profile.UserEmail):</div>
             <div class="col-8 mt-3"><input class="form-control" value="@Model.profile.UserEmail" disabled /></div>
-           
+
 
             @*  <a class=" text-center col-3 mt-3 btn btn-primary btn-sm" asp-action="EditProfile">Sửa</a> *@
             <button type="button" class="mt-3  text-center col-3 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@Model.PhoneNumber">Sửa thông tin</button>
@@ -152,16 +152,25 @@
 
     <div class="col-4">
         <h3>Ảnh đại diện</h3>
-        <div class="row"> 
-            @if (Model.profile.Img==null)
+        <div class="row">
+            <form asp-action="UpLoadAvata" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input type="file" name="_file" />
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="UpLoad" class="btn btn-primary" />
+                </div>
+            </form>
+            @if (Model.profile.Img == null)
             {
-                <div class="col-12 mt-3"><img src="https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg" class="img-fluid"/></div>
+                <div class="col-12 mt-3"><img src="https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg" class="img-fluid" /></div>
             }
             else
             {
-                <div class="col-12 mt-3"><img src="~/img/@Model.profile.Img" class="img-fluid"/></div>
+                <div class="col-12 mt-3"><img src="~/img/@Model.profile.Img" class="img-fluid" /></div>
             }
-            
+
         </div>
     </div>
 </div>
@@ -177,7 +186,21 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="message-text" class="col-form-label">@Html.DisplayNameFor(m => Model.profile.PhoneNumber):</label>
-                        <input type="text" class="form-control" asp-for="@Model.PhoneNumber">
+                        <input type="text" class="form-control" asp-for="@Model.profile.PhoneNumber">
+                    </div>
+                    <div class="mb-3">
+                        <label for="message-text" class="col-form-label">@Html.DisplayNameFor(m => Model.profile.Birth):</label>
+                        <input type="date" class="form-control" asp-for="@Model.profile.Birth">
+                    </div>
+                    <div class="mb-3">
+                        <label for="message-text" class="col-form-label">@Html.DisplayNameFor(m => Model.profile.Gender):</label>
+                        <select asp-for="@Model.profile.Gender">
+                            @foreach (var item in Model.Gender)
+                            {
+                                <option value="@item">@(item == 0 ? "Nam" : "Nữ")</option>
+                            }
+                        </select>
+
                     </div>
 
                 </div>
@@ -205,13 +228,13 @@
             var recipient = button.getAttribute('data-bs-whatever')
             // If necessary, you could initiate an AJAX request here
             // and then do the updating in a callback.
-            
+
             // Update the modal's content.
             var modalTitle = exampleModal.querySelector('.modal-title')
             var modalBodyInput = exampleModal.querySelector('.modal-body input')
             modalBodyInput.value = recipient
         });
 
-        
+
     </script>
 }

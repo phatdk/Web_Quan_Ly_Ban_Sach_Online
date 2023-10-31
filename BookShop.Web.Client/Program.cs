@@ -113,12 +113,12 @@ builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromSeco
 // Configure the HTTP request pipeline.
 var app = builder.Build();
 #region SeedData
-using (var scope = app.Services.CreateScope())
-{
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Userr>>();
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
-    SeedDataMD.SeedAsync(userManager, roleManager).Wait();
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Userr>>();
+//    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+//    SeedDataMD.SeedAsync(userManager, roleManager).Wait();
+//}
 //using (var scope = app.Services.CreateScope())
 //{
 //    var serviice1 = scope.ServiceProvider.GetRequiredService<IStatusOrderService>();

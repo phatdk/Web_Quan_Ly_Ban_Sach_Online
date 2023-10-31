@@ -37,7 +37,16 @@ namespace App.Areas.Identity.Controllers
         }
         [TempData]
         public string StatusMessage { get; set; }
-        //
+
+        [HttpPost]
+        public async Task<IActionResult> UpLoadAvata(IndexViewModel indexViewModel)
+        {
+            StatusMessage = "Tải lên ảnh đại điện thành công";
+            return RedirectToAction(nameof(Index));
+        }
+
+
+
         // GET: /Manage/Index
         [HttpGet]
         public async Task<IActionResult> Index(ManageMessageId? message = null)
@@ -395,14 +404,16 @@ namespace App.Areas.Identity.Controllers
             return View(model);
         }
         [HttpPost,ActionName("EditProfile"),ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditProfileConfirm(EditExtraProfileModel model)
+        public async Task<IActionResult> EditProfileConfirm(IndexViewModel model)
         {
             var user = await GetCurrentUserAsync();
 
-            user.PhoneNumber = model.PhoneNumber;
+            user.PhoneNumber = model.profile.PhoneNumber;
+            user.Gender = model.profile.Gender;
+            user.Birth = model.profile.Birth;
           
             await _userManager.UpdateAsync(user);
-
+            StatusMessage = "Cập nhập thông tin thành công";
             await _signInManager.RefreshSignInAsync(user);
             return RedirectToAction(nameof(Index), "Manage");
 
