@@ -180,7 +180,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
                 PageSize = _book.PageSize ?? string.Empty,
                 Pages = _book.Pages ?? 0,
                 Cover = _book.Cover ?? string.Empty,
-                PublicationDate = _book.PublicationDate ?? string.Empty,\
+                PublicationDate = _book.PublicationDate ?? string.Empty,
                 Weight = _book.Weight,
                 Widght = _book.Widght,
                 Length = _book.Length,
