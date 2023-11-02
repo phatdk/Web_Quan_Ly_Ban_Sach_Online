@@ -99,70 +99,70 @@
     <div class="row">
         <div class="col-lg-4 col-md-4 col-ms-4">
 @{
-    imgUrl = Model.imageViewModels.FirstOrDefault().ImageUrl;
+   imgUrl = Model.imageViewModels.FirstOrDefault().ImageUrl;
 }
             <img src="@imgUrl" alt="ảnh sản phẩm" style="max-width: 100%" />
         </div>
         <div class="col-8 row">
             <dl class="col-8">
                 <dt class="col-sm-2">
-@Html.DisplayNameFor(model => model.Id)
+                    @Html.DisplayNameFor(model => model.Id)
                 </dt>
                 <dd class="col-sm-6">
-@Html.DisplayFor(model => model.Id)
+                    @Html.DisplayFor(model => model.Id)
                 </dd>
                 <dt class="col-sm-2">
-@Html.DisplayNameFor(model => model.Name)
+                    @Html.DisplayNameFor(model => model.Name)
                 </dt>
                 <dd class="col-sm-6">
-@Html.DisplayFor(model => model.Name)
+                    @Html.DisplayFor(model => model.Name)
                 </dd>
                 <dt class="col-sm-2">
-@Html.DisplayNameFor(model => model.Quantity)
+                    @Html.DisplayNameFor(model => model.Quantity)
                 </dt>
                 <dd class="col-sm-6">
-@Html.DisplayFor(model => model.Quantity)
+                    @Html.DisplayFor(model => model.Quantity)
                 </dd>
                 <dt class="col-sm-2">
-@Html.DisplayNameFor(model => model.Price)
+                    @Html.DisplayNameFor(model => model.Price)
                 </dt>
                 <dd class="col-sm-6">
-@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Price)
+                    @string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Price)
                 </dd>
                 <dt class="col-sm-2">
-@Html.DisplayNameFor(model => model.Description)
+                    @Html.DisplayNameFor(model => model.Description)
                 </dt>
                 <dd class="col-sm-6">
-@Html.DisplayFor(model => model.Description)
+                    @Html.DisplayFor(model => model.Description)
                 </dd>
                 <dt class="col-sm-2">
-@Html.DisplayNameFor(model => model.CreatedDate)
+                    @Html.DisplayNameFor(model => model.CreatedDate)
                 </dt>
                 <dd class="col-sm-6">
-@Model.CreatedDate.ToString()
+                    @Model.CreatedDate.ToString()
                 </dd>
                 <dt class="col-sm-2">
-@Html.DisplayNameFor(model => model.Status)
+                    @Html.DisplayNameFor(model => model.Status)
                 </dt>
                 <dd class="col-sm-6">
-@Html.DisplayFor(model => model.Status)
+                    @Html.DisplayFor(model => model.Status)
                 </dd>
                 <dt class="col-sm-2">
-@Html.DisplayNameFor(model => model.Type)
+                    @Html.DisplayNameFor(model => model.Type)
                 </dt>
                 <dd class="col-sm-6">
-@Html.DisplayFor(model => model.Type)
+                    @Html.DisplayFor(model => model.Type)
                 </dd>
             </dl>
 
             <ul class="col-4">
                 <h6>Sản phẩm bao gồm</h6>
-@foreach (var item in Model.bookViewModels)
-{
-                                <li>
-        @item.Title - @string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.ImportPrice)
-                                </li>
-}
+                @foreach (var item in Model.bookViewModels)
+                {
+                    <li>
+                        @item.Title - @string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.ImportPrice)
+                    </li>
+                }
             </ul>
             <div id="quantity" class="form-group">
                 <div style="display: flex">
@@ -384,3 +384,31 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
     });
 </script>
 
+<script type="text/javascript">
+    document.getElementById('addToCart').addEventListener('click', function () {
+        var quantity = document.getElementById('quantityInput').value;
+        $.ajax({
+            url: '/Cart/AddToCart?id=@Model.Id',
+            type: 'POST',
+            data: { quantity: quantity },
+            success: function (result) {
+                if (result.success) {
+                    // Xóa thành công, thực hiện các hành động bạn muốn
+                    alert('Đã thêm vào giỏ hàng.');
+                    // Ví dụ: cập nhật giao diện hoặc làm mới danh sách sản phẩm
+                } else {
+                    alert('Xóa thất bại: ' + result.errorMessage);
+                }
+            },
+            error: function (error) {
+                alert('Có lỗi xảy ra: ' + error.responseText);
+            }
+        });
+    });
+    document.getElementById('buyNow').addEventListener('click', function () {
+        var quantity = document.getElementById('quantityInput').value;
+        // var result = "@Url.Action("AddToCart", "Cart")?id=@Model.Id&quantity=" + quantity;
+        var url = "@Url.Action("CreateOnlineOrder", "Order")?id=@Model.Id&quantity=" + quantity
+        window.location.href = url;
+    });
+</script>

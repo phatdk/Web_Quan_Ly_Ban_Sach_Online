@@ -8,44 +8,58 @@ public static class SeedDataMD
 {
     public static async Task SeedAsync(UserManager<Userr> userManager, RoleManager<Role> roleManager)
     {
-        // Tạo role "admin" nếu chưa tồn tại
-        if (!await roleManager.RoleExistsAsync("Admin"))
-        {
-            var adminRole = new Role() { Name = "Admin" };
-            var adminRole1 = new Role() { Name = "Staff" };
-            var adminRole2 = new Role() { Name = "Customer" };
-            await roleManager.CreateAsync(adminRole);
-            await roleManager.CreateAsync(adminRole1);
-            await roleManager.CreateAsync(adminRole2);
-        }
+        //// Tạo role "admin" nếu chưa tồn tại
+        //if (!await roleManager.RoleExistsAsync("Admin"))
+        //{
+        //    var adminRole = new Role() { Name = "Admin" };
+        //    var adminRole1 = new Role() { Name = "Staff" };
+        //    var adminRole2 = new Role() { Name = "Customer" };
+        //    await roleManager.CreateAsync(adminRole);
+        //    await roleManager.CreateAsync(adminRole1);
+        //    await roleManager.CreateAsync(adminRole2);
+        //}
 
-        // Tạo tài khoản "admin" nếu chưa tồn tại
-        if (await userManager.FindByNameAsync("admin") == null)
+        //// Tạo tài khoản "admin" nếu chưa tồn tại
+        //if (await userManager.FindByNameAsync("admin") == null)
+        //{
+        //    var adminUser = new Userr
+        //    {
+        //        UserName = "admin",
+        //        Email = "phuc2003zgt@gmail.com",
+        //        EmailConfirmed = true,
+        //        Code ="AD0000000",
+        //        Name ="Admin"
+        //    };
+        //    var User = new Userr
+        //    {
+        //        UserName = "customer",
+        //        Email = "",
+        //        EmailConfirmed = true,
+        //        Code = "KH0000000",
+        //        Name ="Khách vẵng lai"
+        //    };
+
+        //    var result = await userManager.CreateAsync(adminUser, "admin");
+        //    var result1 = await userManager.CreateAsync(User, "123");
+        //    if (result.Succeeded && result1.Succeeded)
+        //    {
+        //        // Gán role "admin" cho tài khoản "admin"
+        //        await userManager.AddToRoleAsync(adminUser, "Admin");
+        //        await userManager.AddToRoleAsync(User, "Customer");
+        //    }
+        //}
+
+        for (int i = 0; i < 30; i++)
         {
-            var adminUser = new Userr
-            {
-                UserName = "admin",
-                Email = "phuc2003zgt@gmail.com",
-                EmailConfirmed = true,
-                Code ="AD0000000",
-                Name ="Admin"
-            };
             var User = new Userr
             {
-                UserName = "customer",
+                UserName = $"customer{i}",
                 Email = "",
                 EmailConfirmed = true,
                 Code = "KH0000000",
-                Name ="Khách vẵng lai"
+                Name = $"Khách vẵng lai{i}"
             };
-
-            var result = await userManager.CreateAsync(adminUser, "admin");
-            if (result.Succeeded)
-            {
-                // Gán role "admin" cho tài khoản "admin"
-                await userManager.AddToRoleAsync(adminUser, "Admin");
-                await userManager.AddToRoleAsync(User, "Customer");
-            }
+            var result1 = await userManager.CreateAsync(User, "123");
         }
 
     }
@@ -57,7 +71,7 @@ public static class SeedDataMD
         var status = new StatusOrder()
         {
             Status = 1,
-            StatusName = "Chờ xác nhận",
+            StatusName = "Chờ xử lý",
             CreatedDate = DateTime.Now,
         };  var status1 = new StatusOrder()
         {
@@ -72,31 +86,36 @@ public static class SeedDataMD
         }; var status3 = new StatusOrder()
         {
             Status = 4,
-            StatusName = "Thanh toán thành công",
+            StatusName = "Hoàn thành",
             CreatedDate = DateTime.Now,
         }; var status4 = new StatusOrder()
         {
             Status = 5,
-            StatusName = "Hoàn thành",
+            StatusName = "Trả hàng",
             CreatedDate = DateTime.Now,
         };var status5 = new StatusOrder()
         {
             Status = 6,
-            StatusName = "Trả hàng",
+            StatusName = "Xử lý hàng trả",
             CreatedDate = DateTime.Now,
         };var status6 = new StatusOrder()
         {
             Status = 7,
-            StatusName = "Hủy đơn",
+            StatusName = "Trả hàng thành công",
             CreatedDate = DateTime.Now,
         };var status7 = new StatusOrder()
         {
             Status = 8,
-            StatusName = "Đóng đơn",
+            StatusName = "Hủy đơn",
             CreatedDate = DateTime.Now,
         };var status8 = new StatusOrder()
         {
             Status = 9,
+            StatusName = "Đóng đơn",
+            CreatedDate = DateTime.Now,
+        };var status9 = new StatusOrder()
+        {
+            Status = 0,
             StatusName = "Đơn chờ",
             CreatedDate = DateTime.Now,
         };
@@ -111,6 +130,7 @@ public static class SeedDataMD
        await StatusOrder.CreateAsync(status6);
        await StatusOrder.CreateAsync(status7);
        await StatusOrder.CreateAsync(status8);
+       await StatusOrder.CreateAsync(status9);
 
     } 
 }

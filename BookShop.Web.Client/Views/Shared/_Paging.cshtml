@@ -1,0 +1,118 @@
+﻿@model PagingModel
+@{
+    int currentPage = Model.currentpage;
+    int countPages = Model.countpages;
+    var generateUrl = Model.generateUrl;
+
+
+
+    if (currentPage > countPages)
+        currentPage = countPages;
+
+    if (countPages <= 1) return;
+
+
+    int? preview = null;
+    int? next = null;
+
+    if (currentPage > 1)
+        preview = currentPage - 1;
+
+    if (currentPage < countPages)
+        next = currentPage + 1;
+
+    // Các trang hiện thị trong điều hướng
+    List<int> pagesRanges = new List<int>();
+
+
+    int delta = 5;             // Số trang mở rộng về mỗi bên trang hiện tại
+    int remain = delta * 2;     // Số trang hai bên trang hiện tại
+
+    pagesRanges.Add(currentPage);
+    // Các trang phát triển về hai bên trang hiện tại
+    for (int i = 1; i <= delta; i++)
+    {
+        if (currentPage + i <= countPages)
+        {
+            pagesRanges.Add(currentPage + i);
+            remain--;
+        }
+
+        if (currentPage - i >= 1)
+        {
+            pagesRanges.Insert(0, currentPage - i);
+            remain--;
+        }
+
+    }
+    // Xử lý thêm vào các trang cho đủ remain
+    //(xảy ra ở đầu mút của khoảng trang không đủ trang chèn  vào)
+    if (remain > 0)
+    {
+        if (pagesRanges[0] == 1)
+        {
+            for (int i = 1; i <= remain; i++)
+            {
+                if (pagesRanges.Last() + 1 <= countPages)
+                {
+                    pagesRanges.Add(pagesRanges.Last() + 1);
+                }
+            }
+        }
+        else
+        {
+            for (int i = 1; i <= remain; i++)
+            {
+                if (pagesRanges.First() - 1 > 1)
+                {
+                    pagesRanges.Insert(0, pagesRanges.First() - 1);
+                }
+            }
+        }
+    }
+
+}
+
+@* PHÁT SINH HTML*@
+
+
+
+<!-- Previous page link -->
+<div class="pagination">
+    @if (preview != null)
+    {
+        <a class="prev-arrow" href="@generateUrl(preview)"> <i class="fa fa-long-arrow-left" aria-hidden="true"></i></a>
+    }
+    else
+    {
+        <a class="prev-arrow" tabindex="-1" aria-disabled="true" href="#"> <i class="fa fa-long-arrow-left" aria-hidden="true"></i></a>
+    }
+
+    <!-- Numbered page links -->
+    @foreach (var pageitem in pagesRanges)
+    {
+        if (pageitem != currentPage)
+        {
+
+            <a href="@generateUrl(pageitem)" class="">@pageitem</a>
+        }
+        else
+        {
+
+            <a href="#">@pageitem <span class="sr-only">(current)</span></a>
+
+        }
+    }
+
+
+    <!-- Next page link -->
+    @if (next != null)
+    {
+        <a href="@generateUrl(next)" class="next-arrow"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+
+    }
+    else
+    {
+        <a class="next-arrow" href="#" tabindex="-1" aria-disabled="true"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+    }
+</div>

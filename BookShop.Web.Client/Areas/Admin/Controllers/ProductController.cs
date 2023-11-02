@@ -23,9 +23,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		IBookService _bookService;
 		ICollectionService _collectionService;
 		IImageService _imageService;
-		IWebHostEnvironment _webHostEnvironment;
 
-		public ProductController(IProductService productService, IBookService bookService, ICollectionService collectionService, IImageService imageService, IWebHostEnvironment webHostEnvironment)
+		public ProductController(IProductService productService, IBookService bookService, ICollectionService collectionService, IImageService imageService)
 		{
 			_listProduct = new List<ProductViewModel>();
 			_product = new ProductViewModel();
@@ -36,7 +35,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			_bookService = bookService;
 			_collectionService = collectionService;
 			_imageService = imageService;
-			_webHostEnvironment = webHostEnvironment;
 		}
 		public async Task<List<BookViewModel>> LoadBook(int status)
 		{
@@ -69,7 +67,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			{
 				var extension = Path.GetExtension(file.FileName);
 				var filename = "Product_" + productId + "_0_" + extension;
-				var filePath = Path.Combine(_webHostEnvironment.ContentRootPath, "wwwroot\\img\\product", filename);
+				var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\product", filename);
 				using (var stream = new FileStream(filePath, FileMode.Create))
 				{
 					await file.CopyToAsync(stream);
