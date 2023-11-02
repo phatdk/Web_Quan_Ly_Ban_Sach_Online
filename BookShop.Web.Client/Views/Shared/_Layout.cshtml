@@ -1,4 +1,15 @@
-﻿<!DOCTYPE html>
+﻿@using App.Areas.Identity.Models.AccountViewModels;
+@using BookShop.DAL.Entities;
+@using Microsoft.AspNetCore.Identity
+@using System.Collections.Generic
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Authentication;
+
+@model LoginViewModel
+@inject SignInManager<Userr> SignInManager
+@inject UserManager<Userr> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -57,16 +68,17 @@
         background-color: rgb(224, 224, 224);
     }
 
-    .dndk {
+    .dndk a{
         text-align: center;
         font-weight: 700;
         padding-bottom: 5px;
         color: black;
+        cursor:pointer;
     }
 
-        .dndk:hover {
+        .dndk a:hover {
             color: orangered;
-            border-bottom: 1px solid orangered;
+            border: 1px solid orangered;
             text-decoration: none;
         }
 
@@ -84,12 +96,16 @@
     .cuoitrang {
         background-color: white;
         margin-top: 30px;
-        border-radius: 10px
+        border-radius: 10px;
     }
     .cuoicc{
         margin-top:15px;
-        padding-top:15px   }
+        padding-top:30px;   }
+        .cuoicc .col-4{
+            border-left-color:black;
+        }
 </style>
+<</head>
 <body class="bb">
     <header>
 
@@ -115,7 +131,7 @@
                                             <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
                                         </svg><span class="	glyphicon glyphicon-menu-hamburger"></span>
                                     </div>
-                                    <div class="dropdown-menu row" style="width:780pxđạp ;">
+                                    <div class="dropdown-menu row" style="width:760px;">
                                         <div class="col-md-6">
                                             <h5>Danh Mục Sản Phẩm</h5>
                                         </div>
@@ -168,57 +184,81 @@
             <!-- The Modal -->
             <div class="modal" id="myModal">
                 <div class="modal-dialog container">
-                    <div class="modal-content group-tabs">
+                    <div class="modal-content" role="tablist">
 
                         <!-- Modal Header -->
-                        <div class="modal-header nav nav-tabs" role="tablist">
-                            <div class="nav nav-tabs col-12" role="tablist">
-                                <a role="presentation tab" class="active dndk col-6" style="width:100%" href="#home" aria-controls="home" data-toggle="tab">Đăng Nhập</a>
-                                <a role="presentation tab" class="dndk col-6" href="#profile" aria-controls="profile" data-toggle="tab">Đăng Ký</a>
-                            </div>
-                        </div>
+                        <div class="modal-body nav nav-tabs" role="tablist">
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                <partial name="_ManagerMenu"></partial>
+                                <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
+                                    <ul class="">
+                                        <li class="nav-item dropdown">
+                                            <span class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                                Xin chào @((await UserManager.GetUserAsync(User)).UserName)!
+                                            </span>
+                                            <div class="dropdown-menu">
 
-                        <!-- Modal body -->
-                        <div class="modal-body tab-content">
-                            <div class="row container">
-                                <div class="group-tabs container">
-                                    <!-- Tab panes -->
-                                    <div class="tab-content container">
-                                        <div role="tabpanel" class="tab-pane active " id="home">
-                                            <form class="form " style="justify-content:center">
-                                                <p>Tài Khoản</p>
-                                                <input class="text" />
-                                                <p>Mật Khẩu</p>
-                                                <input class="text" type="password" />
-                                                <br />
-                                                <input type="checkbox" /> Ghi Nhớ
-                                                <br />
-                                                <input class="btn btn-success" style="text-align:center" type="button" value="Đăng Nhập" />
-                                            </form>
-                                        </div>
-                                        <div role="tabpanel" class="tab-pane " id="profile">
-                                            <form class="form">
-                                                <p>Tài Khoản</p>
-                                                <input class="text" />
-                                                <p>Mật Khẩu</p>
-                                                <input class="text" type="password" />
-                                                <p>Nhập Lại Mật Khẩu</p>
-                                                <input class="text" type="password" /><br />
-                                                <input class="btn btn-warning" type="button" value="Đăng Ký" />
-                                            </form>
-                                        </div>
+                                                <a class="dropdown-item" asp-area="Identity" asp-controller="Manage" asp-action="Index" title="Manage">
+                                                    Thông tin tài khoản
+                                                </a>
+                                                <div role="separator" class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="#">
+                                                    Trạng thái đơn hàng
+                                                </a>
+                                                <div role="separator" class="dropdown-divider"></div>
+                                                <button type="submit" class="dropdown-item">
+                                                    Đăng xuất
+                                                </button>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </form>
+                            }
+                            else
+                            {
+                                <div class="modal-body">
+                                    <ul class="nav" role="tablist">
+                                        <li class="col-6 nav-item dndk">
+                                            <a class="nav-link active" data-bs-toggle="pill" href="#home">Đăng Nhập</a>
+                                        </li>
+                                        <li class="col-6 nav-item dndk">
+                                            <a class="nav-link" data-bs-toggle="pill" href="#menu1">Đăng Ký</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                @*  <ul class="nav navbar-nav navbar-right">
+                            <li class="nav-item">
+                            <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Register">Đăng ký</a>
+                            </li>
+                            <li class="nav-item">
+                            <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Login">Đăng nhập</a>
+                            </li>
+                            </ul> *@
+                            }
+                            <div class="modal-body">
+                                <div class="row container tab-content">
+                                    <div class="container tab-pane active col-12" id="home" style="left:15px">
+                                        <!-- Tab panes -->
+                                        <!-- Nhúng View -->
+                                        @await Html.PartialAsync("~/Areas/Identity/Views/Account/Login.cshtml")
+
+                                    </div>
+                                    <div class="container tab-pane fade col-12" id="menu1" style="left:15px">
+                                        <!-- Tab panes -->
+                                        <!-- Nhúng View -->
+                                        @await Html.PartialAsync("~/Areas/Identity/Views/Account/Register.cshtml")
+
                                     </div>
                                 </div>
                             </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                            </div>
                         </div>
-
-                        <!-- Modal footer -->
-                        <div class="modal-footer group-tabs">
-                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                        </div>
-
+                        
                     </div>
-
+                   
                 </div>
             </div>
         </div>

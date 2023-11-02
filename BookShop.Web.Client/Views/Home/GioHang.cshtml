@@ -12,7 +12,6 @@
         background-color: white;
         border-radius: 10px
     }
-
     .t1, .col-2 p {
         margin-top: 10px;
     }
@@ -62,7 +61,6 @@
             text-align: center;
             font-weight: 600;
         }
-
             .wrapper span.num {
                 font-size: 20px;
                 border-left: 2px solid rgba(0,0,0,0.2);
@@ -98,7 +96,7 @@
                     </td>
                     <td>$80</td>
                     <td>
-                        <input type="number" id="" disabled onchange="countCost()">
+                        <input type="number" id="khanh" disabled onchange="countCost()">
                         <div class="wrapper">
                             <span class="minus">-</span>
                             <span class="num" type="number" name="qty" id="khanh" onchange="countCost()">01</span>
@@ -126,13 +124,13 @@
                 <p><span id="totalcost"></span></p>
             </div>
             <div>
-                <a type="button" disabled class="btn btn-warning" asp-area="" asp-controller="Home" asp-action="ThanhToan">Thanh Toán</a>
+                <input type="button" disabled class="btn btn-warning" id="buyNow" value="Thanh Toán"/>
             </div>
         </div>
     </div>
 </div>
 
-<script>
+<script type="text/javascript">
     var priceRange = document.getElementById("price-range")
     var mylist = document.getElementById("mylist")
     var rows = mylist.getElementsByTagName("tr")
@@ -196,5 +194,11 @@
             a = (a < 10) ? "0" + a : a;
             num.innerText = a;
         }
+    });
+    document.getElementById('buyNow').addEventListener('click', function () {
+        var quantity = document.getElementById('quantityInput').value;
+        // var result = "@Url.Action("AddToCart", "Cart")?id=@Model.Id&quantity=" + quantity;
+        var url = "@Url.Action("CreateOnlineOrder", "Order")?id=@Model.Id&quantity=" + quantity
+        window.location.href = url;
     });
 </script>

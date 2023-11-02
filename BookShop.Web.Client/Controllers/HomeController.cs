@@ -42,6 +42,10 @@ namespace BookShop.Web.Client.Controllers
 		{
 			return View();
 		}
+		public IActionResult ThongTinSanPham()
+		{
+			return View();
+		}
 		public IActionResult ThanhToan()
 		{
 			return View();

@@ -9,31 +9,28 @@
 @{
     ViewData["Title"] = "Đăng nhập";
 }
+<style>
+    .dnkq{
+        text-align:center;
+    }
+    .oi{
+        justify-content:center;
+    }
+</style>
 <section class="login_box_area section_gap">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="login_box_img">
-                    <img class="img-fluid" src="/img/login.jpg" alt="">
-                    <div class="hover">
-                        <h4>Bạn mới lần đầu vào website của chúng tôi</h4>
-                        <p>There are advances being made in science and technology everyday, and a good example of this is the</p>
-
-						<a class="primary-btn"  asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" >Tạo tài khoản mới</a>
-                        
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
+        <div class="row oi">
+            <div>
                 <div class="login_form_inner">
-                    <h3>Log in to enter</h3>
                     <form class="row login_form" asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
                         <div class="col-md-12 form-group">
-                            <input asp-for="UserNameOrEmail" type="text" class="form-control">
+                            <label>Tài Khoản</label>
+                            <input asp-for="UserNameOrEmail" type="text" class="form-control" placeholder="Nhập Sđt/Email">
                                  <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
                         </div>
                         <div class="col-md-12 form-group">
-                            <input asp-for="Password" type="password" class="form-control" id="name">
+                            <label>Mật Khẩu</label>
+                            <input asp-for="Password" type="password" class="form-control" id="name" placeholder="Nhập mật khẩu">
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
                         <div class="col-md-12 form-group">
@@ -43,10 +40,11 @@
                                     @Html.DisplayNameFor(m => m.RememberMe)
                                 </label>
                             </div>
+
                         </div>
-                        <div class="col-md-12 form-group">
-                            <button type="submit" value="submit" class="primary-btn">Log In</button>
-                            <a <a asp-action="ForgotPassword">Forgot Password?</a>
+                        <div class="form-group dnkq">
+                            <button type="submit" value="submit" class="btn btn-primary">Đăng Nhập</button><br />
+                            <a asp-action="ForgotPassword">Forgot Password?</a>
                         </div>
                     </form>
                 </div>
