@@ -1,25 +1,23 @@
-﻿@using BookShop.DAL.Entities;
+﻿@using App.Areas.Identity.Models.AccountViewModels;
+@using BookShop.DAL.Entities;
 @using Microsoft.AspNetCore.Identity
 
 @inject SignInManager<Userr> SignInManager
 @inject UserManager<Userr> UserManager
-
-
+@model LoginViewModel
+@inject SignInManager<Userr> SignInManager
 @if (SignInManager.IsSignedIn(User))
 {
    @* <partial name="_ManagerMenu"></partial>*@
     <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
-        <ul class="">
-            <li class="nav-item dropdown">
-                <span class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+        <div>
+            <div class="dropdown">
+                <h6 class="text-dark dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                     Xin chào @((await UserManager.GetUserAsync(User)).UserName)!
-                </span>
+                </h6>
                 <div class="dropdown-menu">
 
                     <a class="dropdown-item" asp-controller="Home" asp-action="Danhsachyeuthich" title="">
-                        Thông tin tài khoản
-                    </a>
-                    <a class="dropdown-item" asp-area="Identity" asp-controller="Manage" asp-action="Index" title="Manage">
                         Thông tin tài khoản
                     </a>
                     <div role="separator" class="dropdown-divider"></div>
@@ -31,16 +29,16 @@
                         Đăng xuất
                     </button>
                 </div>
-            </li>
-        </ul>
+            </div>
+        </div>
     </form>
 }
 else
 {
     <div class="modal-body">
         <div class="row">
-            <div class="col-md-6"> <h5 class="dndk"> <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Register">Đăng ký</a></h5></div>
-            <div class="col-md-6 "><h5 class="dndk">      <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Login">Đăng nhập</a></h5></div>
+            <div class="col-md-6"> <h5 class="dndk"><a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Register">Đăng ký</a></h5></div>
+            <div class="col-md-6 "><h5 class="dndk"><a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Login">Đăng nhập</a></h5></div>
         </div>
     </div>
     @*  <ul class="nav navbar-nav navbar-right">
@@ -51,5 +49,4 @@ else
             <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Login">Đăng nhập</a>
         </li>
     </ul> *@
-
 }

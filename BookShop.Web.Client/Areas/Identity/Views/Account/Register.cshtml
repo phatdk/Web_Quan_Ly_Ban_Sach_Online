@@ -5,22 +5,47 @@
 @{
     ViewData["Title"] = "Đăng ký tài khoản";
 }
-<div class="row">
-    <div>
-        <section>   
+<style>
+    .fomdangnhap {
+        background-color: white;
+    }
+
+    .oi {
+        justify-content: center;
+    }
+    .dktk{
+        margin-top:30px;
+    }
+
+    .dangkytk{
+        width:250px;
+        height:40px;
+        background-color: #F6F1EE;
+        color: #A9A9A9;
+        border:none;
+        font-weight:700;
+    }
+    .dangkytk:hover{
+            background-color: #C51605;
+            color:white;
+    }
+</style>
+<div class="container fomdangnhap">
+    <div class="row oi">
+        <section class="col-6 dktk">   
             <form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="Name" class="control-label">Họ và Tên</label>
                     <div> 
-                        <input asp-for="Name" class="form-control" />
+                        <input asp-for="Name" class="form-control" placeholder="Nhập họ và tên"/>
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label asp-for="UserName" class="control-label"></label>
                     <div>
-                        <input asp-for="UserName" class="form-control" />
+                        <input asp-for="UserName" class="form-control" placeholder="Nhập tên tài khoản"/>
                         <span asp-validation-for="UserName" class="text-danger"></span>
                     </div>
                 </div>
@@ -28,27 +53,27 @@
                 <div class="form-group">
                     <label asp-for="Email" class="control-label"></label>
                     <div>
-                        <input asp-for="Email" class="form-control" />
+                        <input asp-for="Email" class="form-control" placeholder="Nhâp Email"/>
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label asp-for="Password" class="control-label"></label>
                     <div>
-                        <input asp-for="Password" class="form-control" />
+                        <input asp-for="Password" class="form-control" placeholder="Nhập mật khẩu"/>
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label asp-for="ConfirmPassword" class="control-label"></label>
                     <div>
-                        <input asp-for="ConfirmPassword" class="form-control" />
+                        <input asp-for="ConfirmPassword" class="form-control" placeholder="Nhập lại mật khẩu"/>
                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group" style="text-align:center">
                     <div>
-                        <button type="submit" class="btn btn-primary">Đăng ký</button>
+                        <button type="submit" class="dangkytk">Đăng ký</button>
                     </div>
                 </div>
             </form>          

@@ -1,11 +1,5 @@
-@using App.Areas.Identity.Models.AccountViewModels;
-@using BookShop.DAL.Entities;
-@using Microsoft.AspNetCore.Identity
-@using System.Collections.Generic
-@using Microsoft.AspNetCore.Http
-@using Microsoft.AspNetCore.Authentication;
-
-@model LoginViewModel
+﻿@using BookShop.DAL.Entities;
+@using Microsoft.AspNetCore.Identity;
 @inject SignInManager<Userr> SignInManager
 @inject UserManager<Userr> UserManager
 <!DOCTYPE html>
@@ -22,95 +16,100 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
-	<!-- jQuery library -->
-	<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+    <!-- jQuery library -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
 
-	<!-- Popper JS -->
-	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 
-	<!-- Latest compiled JavaScript -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-	@* <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous"> *@
-	<link rel="stylesheet" href="~/lib/fontawesome-6.4.2/css/all.min.css" />
-	<style>
-		.dropdown:hover > .dropdown-menu {
-			display: block;
-		}
-
-		.dropdown > .dropdown-toggle:active {
-			pointer-events: none;
-		}
-
-		.dropdown {
-			margin: 33px auto 32px auto;
-		}
-
-		.timkiem {
-			margin: 26px auto 25px auto;
-			margin-left: 30px;
-		}
-
-		.m26 {
-			margin: auto;
-			justify-content: flex-start;
-			height: 68px;
-			text-align: center;
-			webkit-align-items: center;
-		}
-
-		.search_box {
-			display: block;
-			width: 100%;
-		}
-
-    .bb {
-        background-color: rgb(224, 224, 224);
-    }
-
-    .dndk a{
-        text-align: center;
-        font-weight: 700;
-        padding-bottom: 5px;
-        color: black;
-        cursor:pointer;
-    }
-
-        .dndk a:hover {
-            color: orangered;
-            border: 1px solid orangered;
-            text-decoration: none;
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    @* <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous"> *@
+    <link rel="stylesheet" href="~/lib/fontawesome-6.4.2/css/all.min.css" />
+    <style>
+        .dropdown:hover > .dropdown-menu {
+            display: block;
         }
 
-    .dn1 {
-    }
-
-    .form .btn {
-        justify-content: center;
-    }
-
-    .t {
-        cursor: pointer;
-    }
-
-    .cuoitrang {
-        background-color: white;
-        margin-top: 30px;
-        border-radius: 10px;
-    }
-    .cuoicc{
-        margin-top:15px;
-        padding-top:30px;   }
-        .cuoicc .col-4{
-            border-left-color:black;
+        .dropdown > .dropdown-toggle:active {
+            pointer-events: none;
         }
-</style>
-<</head>
+
+        .timkiem {
+            margin: 26px auto 25px auto;
+            margin-left: 30px;
+        }
+
+        .m26 {
+            margin: auto;
+            justify-content: flex-start;
+            height: 68px;
+            text-align: center;
+            webkit-align-items: center;
+        }
+
+        .danhmuc {
+            margin: 33px auto 33px auto;
+        }
+
+        .search_box {
+            display: block;
+            width: 100%;
+        }
+
+        .bb {
+            background-color: rgb(224, 224, 224);
+        }
+
+        .dndk a {
+            text-align: center;
+            font-weight: 700;
+            padding-bottom: 5px;
+            color: black;
+            cursor: pointer;
+        }
+
+            .dndk a:hover {
+                color: orangered;
+                border: 1px solid orangered;
+                text-decoration: none;
+            }
+
+        .dn1 {
+        }
+
+        .form .btn {
+            justify-content: center;
+        }
+
+        .t {
+            cursor: pointer;
+        }
+
+        .cuoitrang {
+            background-color: white;
+            margin-top: 30px;
+            border-radius: 10px;
+            padding-bottom:40px;
+        }
+
+        .cuoicc {
+            margin-top: 15px;
+            padding-top: 30px;
+        }
+
+            .cuoicc .col-4 {
+                border-left-color: black;
+            }
+    </style>
+    <
+</head>
 <body class="bb">
     <header>
 
         <div class="gi">
             <div style="justify-content:center">
-                <img style="text-align:center;width:100%;height:55px" src="https://cdn0.fahasa.com/media/wysiwyg/Thang-09-2023/MCBOOKBirthdayT923_Diamond_BannerHeader_1263x60.jpg" />
+                <img style="text-align:center;width:100%;height:55px" src="https://cdn0.fahasa.com/media/wysiwyg/Thang-11-2023/FahasaSaleThu3T1123_W1_Header_1263x60.jpg" />
             </div>
         </div>
         <div>
@@ -124,7 +123,7 @@
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <div class="dropdown">
+                                <div class="dropdown danhmuc">
                                     <div class=" dropdown-toggle" data-toggle="dropdown">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-grid" viewBox="0 0 16 16">
                                             <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
@@ -151,7 +150,7 @@
                                 </form>
                             </li>
                         </ul>
-                        <ul class="navbar-nav justify-content-end">
+                        <ul class="navbar navbar-nav justify-content-end">
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
@@ -167,100 +166,81 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark t" data-bs-toggle="modal" data-bs-target="#myModal">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
-                                    </svg> Tài Khoản
-                                </a>
+
+                                @{
+                                    var user = await UserManager.GetUserAsync(User);
+
+                                    if (user != null)
+                                    {
+                                        //<a class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#myModal">
+                                        //    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                        //        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                        //        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                                        //    </svg>
+                                        //    @user.UserName
+                                        //</a>
+                                        <div class="nav-link text-dark">
+                                            <partial name="_LoginPartial" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="nav-link text-dark">
+                                            <div class="dropdown">
+                                                <a class="dropdown-toggle nav-link text-dark" data-toggle="dropdown" style="cursor:pointer">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                                                    </svg>
+                                                    Tài khoản
+
+                                                </a>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item aidn1" asp-area="Identity" asp-controller="Account" asp-action="Login">Đăng Nhập</a>
+                                                    <a class="dropdown-item aidn2" asp-area="Identity" asp-controller="Account" asp-action="Register">Đăng Ký</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
                             </li>
                         </ul>
                     </div>
                 </div>
             </nav>
         </div>
-        <div>
-            <!-- The Modal -->
-            <div class="modal" id="myModal">
-                <div class="modal-dialog container">
-                    <div class="modal-content" role="tablist">
+        @*<div>
+        <!-- The Modal -->
+        <div class="modal" id="myModal">
+        <div class="modal-dialog">
+        <div class="modal-content">
 
-                        <!-- Modal Header -->
-                        <div class="modal-body nav nav-tabs" role="tablist">
-                            @if (SignInManager.IsSignedIn(User))
-                            {
-                                <partial name="_ManagerMenu"></partial>
-                                <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
-                                    <ul class="">
-                                        <li class="nav-item dropdown">
-                                            <span class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                                Xin chào @((await UserManager.GetUserAsync(User)).UserName)!
-                                            </span>
-                                            <div class="dropdown-menu">
-
-                                                <a class="dropdown-item" asp-area="Identity" asp-controller="Manage" asp-action="Index" title="Manage">
-                                                    Thông tin tài khoản
-                                                </a>
-                                                <div role="separator" class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="#">
-                                                    Trạng thái đơn hàng
-                                                </a>
-                                                <div role="separator" class="dropdown-divider"></div>
-                                                <button type="submit" class="dropdown-item">
-                                                    Đăng xuất
-                                                </button>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </form>
-                            }
-                            else
-                            {
-                                <div class="modal-body">
-                                    <ul class="nav" role="tablist">
-                                        <li class="col-6 nav-item dndk">
-                                            <a class="nav-link active" data-bs-toggle="pill" href="#home">Đăng Nhập</a>
-                                        </li>
-                                        <li class="col-6 nav-item dndk">
-                                            <a class="nav-link" data-bs-toggle="pill" href="#menu1">Đăng Ký</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                @*  <ul class="nav navbar-nav navbar-right">
-                            <li class="nav-item">
-                            <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Register">Đăng ký</a>
-                            </li>
-                            <li class="nav-item">
-                            <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Login">Đăng nhập</a>
-                            </li>
-                            </ul> *@
-                            }
-                            <div class="modal-body">
-                                <div class="row container tab-content">
-                                    <div class="container tab-pane active col-12" id="home" style="left:15px">
-                                        <!-- Tab panes -->
-                                        <!-- Nhúng View -->
-                                        @await Html.PartialAsync("~/Areas/Identity/Views/Account/Login.cshtml")
-
-                                    </div>
-                                    <div class="container tab-pane fade col-12" id="menu1" style="left:15px">
-                                        <!-- Tab panes -->
-                                        <!-- Nhúng View -->
-                                        @await Html.PartialAsync("~/Areas/Identity/Views/Account/Register.cshtml")
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                        
-                    </div>
-                   
-                </div>
-            </div>
+        <!-- Modal Header -->
+        <div class="modal-header">
+        <h5 class="modal-title">Chào mừng bạn đến với website của chúng tôi!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+        <div class="row">
+        <div class="col-md-6"> <h5 class="dndk">Đăng Nhập</h5></div>
+        <div class="col-md-6 "><h5 class="dndk">Đăng Ký</h5></div>
+        </div>
+        </div>
+        <partial name="_LoginPartial" />
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+
+        </div>
+
+        </div>
+        </div>
+        </div>*@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -268,12 +248,15 @@
         </main>
     </div>
 
-    <div class="container cuoitrang">
+    <footer class="">
+        <div class="container cuoitrang">
         <div class="row cuoicc">
             <div class="col-4">
                 <img src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/logo.png" />
+                <hr />
                 <p>Lầu 5, 387-389 Hai Bà Trưng Quận 3 TP HCMCông Ty Cổ Phần Phát Hành Sách TP HCM - FAHASA60 - 62 Lê Lợi, Quận 1, TP. HCM, Việt Nam</p>
                 <p>Fahasa.com nhận đặt hàng trực tuyến và giao hàng tận nơi. KHÔNG hỗ trợ đặt mua và nhận hàng trực tiếp tại văn phòng cũng như tất cả Hệ Thống Fahasa trên toàn quốc.</p>
+                <img src="https://cdn0.fahasa.com/media/wysiwyg/Logo-NCC/logo-bo-cong-thuong-da-thong-bao1.png" style="width: 100px;" height="40px">
             </div>
             <div class="col-8">
                 <div class="row">
@@ -301,9 +284,24 @@
                         <p>Lịch sử mua hàng</p>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-4">
+                        <h6>Liên Hệ</h6>
+                        <p>60-62 Lê Lợi, Q.1, TP. HCM</p>
+                    </div>
+                    <div class="col-4">
+                        <h6>Email</h6>
+                        <p>lequangkhanh150103@gmail.com</p>
+                    </div>
+                    <div class="col-4">
+                        <h6>Số điện thoại</h6>
+                        <p>0987117521</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+        </div>
+    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
