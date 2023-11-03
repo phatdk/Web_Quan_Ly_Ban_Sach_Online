@@ -1,0 +1,433 @@
+﻿@using BookShop.BLL.ConfigurationModel.OrderDetailModel;
+@using BookShop.BLL.ConfigurationModel.OrderModel;
+@using BookShop.BLL.ConfigurationModel.UserModel;
+@using BookShop.DAL.Entities;
+@using System.Globalization;
+@model BookShop.BLL.ConfigurationModel.OrderModel.OrderViewModel;
+@{
+	ViewData["Title"] = "Bán hàng offline";
+	Layout = "~/Areas/Admin/Views/Shared/_offlineSaleLayout.cshtml";
+	Userr staff = ViewBag.Staff;
+	List<UserModel> users = ViewBag.Users;
+	int total = 0;
+}
+<form asp-action="CreateOfflineOrder">
+	<div class="row">
+		<div class="col-9 row bg-light" style="margin: 0px; padding	: 0px">
+			<div class="col-4">
+				<table class="table table-striped border border-2 border-secondary">
+					<thead>
+						<tr>
+							<th scope="col">Stt</th>
+							<th scope="col">Code</th>
+							<th scope="col">Tên KH</th>
+							<th scope="col">Action</th>
+						</tr>
+					</thead>
+					<tbody id="waitingOrderList">
+					</tbody>
+				</table>
+			</div>
+			<div class="col-8">
+				<div class="justify-content-center text-center m-2">
+					<input hidden asp-for="Id" value="0" id="orderId" />
+					<input asp-for="Code" id="orderCode" readonly class="text-center" />
+				</div>
+				<table id="tableDetail" class="table table-striped border border-2 border-primary">
+					<thead>
+						<tr>
+							<th scope="col">Stt</th>
+							<th scope="col">Tên Sp</th>
+							<th scope="col">Giá bán</th>
+							<th scope="col">Số lượng</th>
+							<th scope="col">Action</th>
+						</tr>
+					</thead>
+					<tbody id="deatilOrder">
+					</tbody>
+				</table>
+			</div>
+			<div class="col-10">
+				<table class="table table-striped border border-2 border-success">
+					<thead>
+						<tr>
+							<th scope="col">Hình ảnh</th>
+							<th scope="col">Tên Sp</th>
+							<th scope="col">Giá bán</th>
+							<th scope="col">Số lượng tồn</th>
+							<th scope="col">Số lượng</th>
+							<th scope="col">Trạng thái</th>
+							<th scope="col">Action</th>
+						</tr>
+					</thead>
+					<tbody id="productList">
+					</tbody>
+				</table>
+			</div>
+			<div class="col-2">
+				<input type="button" onclick="getData()" value="GetData" />
+			</div>
+		</div>
+		<div class="col-3 border border-2 border-secondary ps-2 pt-2 pb-2 bg-light">
+			<label class="text-black-50">Nhân viên trực ca</label>
+			<div class="form-group row">
+				<input type="text" asp-for="@Model.Id_Staff" id="orderIdStaff" hidden value="@staff.Id" />
+				<div class="flex-column justify-content-center text-center">
+					<span class="me-4 text-center text-success text-decoration-underline"><i class="fa-solid fa-user-clock"></i> @staff.Name </span>
+					<span class="text-center text-danger text-decoration-underline"><i class="fa-solid fa-barcode"></i> @staff.Code</span>
+				</div>
+			</div><hr />
+
+			<label class="text-black-50">Thông tin khách hàng</label>
+
+			<div class="mt-2 p-2 border border-top-1 border-dark">
+				<div class="form-group">
+					<label class="form-label">Tên khách hàng</label>
+					<input type="text" asp-for="@Model.Id_User" id="orderIdUser" hidden />
+					<input type="text" class="form-control" asp-for="@Model.Receiver" id="orderReceiver" />
+				</div>
+				<div class="form-group">
+					<label class="form-label">Tài khoản khách hàng</label>
+					<input type="text" class="form-control" asp-for="@Model.NameUser" id="orderNameUser" readonly />
+					<input type="text" class="form-control" asp-for="@Model.UserCode" list="codeList" id="orderUserCode" onchange="checkUser(this.value)" />
+					<datalist id="codeList">
+						@if (users != null)
+						{
+							foreach (var item in users)
+							{
+								<option value="@item.Code" />
+							}
+						}
+					</datalist>
+				</div>
+				<div class="form-group">
+					<label class="form-label">Email</label>
+					<input type="text" class="form-control" id="orderEmail" list="emailList" onchange="checkUser(this.value)" asp-for="@Model.Email" />
+					<datalist id="emailList">
+						@if (users != null)
+						{
+							foreach (var item in users)
+							{
+								<option value="@item.Email" />
+							}
+						}
+					</datalist>
+				</div>
+				<div class="form-group">
+					<label class="form-label">Số điện thoại</label>
+					<input type="text" class="form-control" list="phoneList" id="orderPhone" asp-for="@Model.Phone" />
+					<datalist id="phoneList">
+						@if (users != null)
+						{
+							foreach (var item in users)
+							{
+								<option value="@item.Phone" />
+							}
+						}
+					</datalist>
+				</div>
+			</div>
+			<div class="form-group mt-2">
+				<span class="d-block w-100 m-2">Khuyến mại được kích hoạt tự động</span>
+				<input hidden asp-for="Id_Promotion" />
+				<span class="d-block w-100 m-2">Tổng tiền: @string.Format(new CultureInfo("vi-VN"), "{0:C0}", total)</span>
+				<hr />
+				<span class="d-block w-100">Thanh toán: @string.Format(new CultureInfo("vi-VN"), "{0:C0}", total)</span>
+
+			</div>
+			<div class="justify-content-center text-center mt-5">
+				<div class="btn-group" role="group" aria-label="Basic outlined example">
+					<input type="button" class="btn btn-outline-primary" onclick="reFresh()" value="Làm mới" />
+					<input type="button" class="btn btn-outline-warning" onclick="saveOrder()" value="Lưu tạm" />
+					<input type="submit" class="btn btn-outline-success" value="Tạo đơn" />
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+<script>
+	function getWaitingOrders() {
+		$.ajax({
+			url: '/Admin/OfflineSale/GetWaitingOrder',
+			type: 'GET',
+			dataType: 'json',
+			success: function (data) {
+				var detailsList = $("#waitingOrderList");
+				detailsList.empty();
+				data.forEach(function (item, index) {
+					index += 1;
+					var orderRow =
+						'<tr>' +
+						'<th>' + index + '</th>' +
+						'<td>' + item.code + '</td>' +
+						'<td>' + item.nameUser + '</td>' +
+						'<td><input type="button" class="btn btn-info" onclick = "checkChange(' + item.id + ')" value="Xem"/></td >' +
+						'</tr>';
+					detailsList.append(orderRow);
+				});
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	}
+
+	function checkChange(id) {
+		var checkId = document.getElementById('orderId').value;
+		if (checkId !== id) {
+			if (changeChecked) {
+				if (confirm("Thay đổi chưa được lưu! \n Bạn có muốn lưu thay đổi ?")) {
+					saveOrder();
+					getDetailOrders(id);
+				}
+				else {
+					$.ajax({
+						url: '/Admin/OfflineSale/ClearTemporary',
+						type: 'POST',
+						success: function (result) {
+							document.getElementById('orderId').value = id;
+							getDetailOrders(id);
+						},
+					});
+				}
+				changeChecked = false;
+			}
+			else {
+				$.ajax({
+					url: '/Admin/OfflineSale/ClearTemporary',
+					type: 'POST',
+					success: function (result) {
+						document.getElementById('orderId').value = id;
+						getDetailOrders(id);
+					},
+				});
+				getDetailOrders(id);
+			}
+		}
+	}
+
+	function getDetailOrders(id) {
+		var orderId = document.getElementById('orderId').value;
+		$.ajax({
+			url: '/Admin/OfflineSale/GetDetails',
+			type: 'GET',
+			data: { id: id },
+			dataType: 'json',
+			success: function (data) {
+				var detailsList = $("#deatilOrder");
+				detailsList.empty();
+				if (data.order.id !== orderId) {
+					$('#orderCode').val(data.order.code);
+					$('#orderIdUser').val(data.order.id_User);
+					$('#orderNameUser').val(data.order.nameUser);
+					$('#orderUserCode').val(data.order.userCode);
+					$('#orderEmail').val(data.order.email);
+					$('#orderPhone').val(data.order.phone);
+				}
+				data.details.forEach(function (item, index) {
+					index += 1;
+					var orderRow =
+						'<tr>' +
+						'<th>' + index + '</th>' +
+						'<td>' + item.nameProduct + '</td>' +
+						'<td>' + item.price + '</td>' +
+						'<td>' + item.quantity + '</td>' +
+						'<td hidden>' + item.id_Order + '</td>' +
+						'<td hidden>' + item.id_Product + '</td>' +
+						'<th>' +
+						'<div class="btn-group w-25 me-2" role="group">' +
+						'<input type="number" class="text-center w-50" id="removeQuantity-' + item.id_Product + '" min="1" max="' + item.quantity + '" value="1"/>' +
+						'<input type="button" class="btn btn-warning w-50" onclick = "removeProduct(' + item.id_Product + ')" value="Bỏ" /> ' +
+						'</div>' +
+						'<input type="button" class="btn btn-danger" onclick = "removeAll(' + item.id_Product + ',' + item.quantity + ')" value="Bỏ hết" /> ' +
+						'</th >' +
+						'</tr>';
+					detailsList.append(orderRow);
+				});
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	}
+
+	function getProduct() {
+		$.ajax({
+			url: '/Admin/OfflineSale/GetProducts',
+			type: 'GET',
+			data: {},
+			success: function (data) {
+				var detailsList = $("#productList");
+				detailsList.empty();
+				let statusColor = "";
+				let status = "";
+				data.forEach(function (item, index) {
+					index += 1;
+					if (item.status === 1) {
+						status = "Đang bán";
+						statusColor = "text-success";
+					} else if (item.status === 0) {
+						status = "Không bán";
+						statusColor = "text-danger";
+					} else {
+						status = "Không xác định";
+						statusColor = "text-warning";
+					}
+					var orderRow =
+						'<tr>' +
+						'<td><img width=75px src="' + item.imgUrl + '" /> </td>' +
+						'<td>' + item.name + '</td>' +
+						'<td>' + item.price + '</td>' +
+						'<td>' + item.quantity + '</td>' +
+						'<td> <input id="quantity-' + item.id + '" class="text-center" style = "max-width: 70px" type = "number" min = "1" max = "' + item.quantity + '" value = "1" /> </td>' +
+						'<th class="' + statusColor + '">' + status + '</th>' +
+						'<td> <input type="button" class="btn btn-success" onclick = "addProduct(' + item.id + ')" value="Thêm"/></td >' +
+						'</tr>';
+					detailsList.append(orderRow);
+				});
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	}
+	// chuyển đổi chuỗi mã hóa html qua tiếng việt dm
+	function decodeHtml(html) {
+		var txt = document.createElement("textarea");
+		txt.innerHTML = html;
+		return txt.value;
+	}
+
+	var changeChecked = false;
+
+	function checkUser(key) {
+		$.ajax({
+			url: '/Admin/OfflineSale/GetUser',
+			type: 'POST',
+			data: { keyWord: key },
+			success: function (data) {
+				debugger;
+				if (data != null && data.id !== 0) {
+					$('#orderIdUser').val(data.id);
+					$('#orderNameUser').val(data.name);
+					$('#orderUserCode').val(data.code);
+					$('#orderPhone').val(data.phone);
+					$('#orderEmail').val(data.email);
+				}
+				else {
+					var decodedString = decodeHtml("@Model.NameUser");
+					$('#orderIdUser').val("@Model.Id_User");
+					$('#orderNameUser').val(decodedString);
+					$('#orderUserCode').val("@Model.UserCode");
+				}
+			},
+		});
+	}
+
+	function addProduct(id) {
+		changeChecked = true;
+		var orderId = document.getElementById('orderId').value;
+		var quantity = document.getElementById('quantity-' + id).value;
+		$.ajax({
+			url: '/Admin/OfflineSale/AddProduct',
+			type: 'POST',
+			data: { id: id, orderId: orderId, quantity: quantity },
+			success: function (result) {
+				getDetailOrders(orderId);
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	}
+
+	function removeProduct(id) {
+		changeChecked = true;
+		var orderId = document.getElementById('orderId').value;
+		var quantity = document.getElementById('removeQuantity-' + id).value;
+		$.ajax({
+			url: '/Admin/OfflineSale/AddProduct',
+			type: 'POST',
+			data: { id: id, orderId: orderId, quantity: -quantity },
+			success: function (result) {
+				getDetailOrders(orderId);
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	}
+
+	function removeAll(id, quantity) {
+		changeChecked = true;
+		var orderId = document.getElementById('orderId').value;
+		$.ajax({
+			url: '/Admin/OfflineSale/AddProduct',
+			type: 'POST',
+			data: { id: id, orderId: orderId, quantity: -quantity },
+			success: function (result) {
+				getDetailOrders(orderId);
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	}
+	//function test
+	function getData() {
+		var table = document.getElementById("tableDetail");
+		var rows = table.getElementsByTagName("tr");
+
+		for (var i = 0; i < rows.length; i++) {
+			var cells = rows[i].getElementsByTagName("td"); // Hoặc "th" nếu bạn muốn lấy dữ liệu từ cả ô tiêu đề (header).
+
+			for (var j = 0; j < cells.length; j++) {
+				var cellData = cells[j].innerText; // Lấy dữ liệu trong ô.
+				console.log(cellData);
+			}
+		}
+
+	}
+
+	function reFresh() {
+		checkChange(0);
+		getWaitingOrders();
+		getProduct();
+	};
+
+	function saveOrder() {
+		var id = document.getElementById('orderId').value;
+		var id_Staff = document.getElementById('orderIdStaff').value;
+		var id_User = document.getElementById('orderIdUser').value;
+		var nameUser = document.getElementById('orderNameUser').value;
+		var email = document.getElementById('orderEmail').value;
+		var phone = document.getElementById('orderPhone').value;
+		var receiver = document.getElementById('orderReceiver').value;
+		$.ajax({
+			url: '/Admin/OfflineSale/SaveTemprory',
+			type: 'POST',
+			data: { Id: id, Id_Staff: id_Staff, Id_User: id_User, Email: email, Phone: phone, Receiver: receiver, NameUser: nameUser },
+			success: function (result) {
+				if (result.success) {
+					alert(result.message);
+					getWaitingOrders();
+					changeChecked = false;
+					checkChange(0);
+					getProduct();
+				} else {
+					alert('Xác nhận thất bại: ' + result.errorMessage);
+				}
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	};
+
+	$(document).ready(function () {
+		getWaitingOrders();
+		getProduct();
+		getDetailOrders(0);
+	});
+</script>

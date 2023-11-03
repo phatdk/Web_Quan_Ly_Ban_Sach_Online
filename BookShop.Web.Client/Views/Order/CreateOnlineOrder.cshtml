@@ -11,6 +11,7 @@
 	List<UserPromotionViewModel> userPromotions = ViewBag.UserPromotions;
 	List<PromotionViewModel> promotions = ViewBag.Promotions;
 	UserModel user = ViewBag.User;
+	int carUse = ViewBag.Cart;
 	int total = 0;
 }
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -21,6 +22,7 @@
 <form asp-action="CreateOnlineOrder" class="row pt-5 pb-5 bg-info">
 	<div class="col-7">
 		<input asp-for="Id_User" id="UserId" value="@Model.Id_User" hidden />
+		<input value="@carUse" type="text" name="cartUse" hidden/>
 		@if (Model.Id_User != 0)
 		{
 			<div class="form-group">
@@ -176,7 +178,8 @@
 
 	</div>
 </form>
-<script type="text/javascript">
+
+<script>
 
 	// Thêm sự kiện "change" cho các input radio
 	document.getElementById('selectPromotion').addEventListener('change', handleRadioChange);

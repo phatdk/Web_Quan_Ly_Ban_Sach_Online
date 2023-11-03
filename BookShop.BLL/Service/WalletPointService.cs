@@ -31,6 +31,8 @@ namespace BookShop.BLL.Service
         {
             try
             {
+                var obj = await _repository.GetByIdAsync(userId);
+                obj.Point += model.Point;
                 await _repository.UpdateAsync(userId, model);
                 return true;
             }

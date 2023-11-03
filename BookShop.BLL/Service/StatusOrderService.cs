@@ -17,6 +17,21 @@ namespace BookShop.BLL.Service
 		{
 			_statusRepository = new Repository<StatusOrder>();
 		}
+
+		public async Task<bool> Add(StatusOrder model)
+		{
+			try
+			{
+				var result = await _statusRepository.CreateAsync(model);
+				if (result != null)
+				{
+					return true;
+				}
+				return false;
+			}
+			catch { return false; }
+		}
+
 		public async Task<List<StatusViewModel>> GetAll()
 		{
 			var listvm = new List<StatusViewModel>();
