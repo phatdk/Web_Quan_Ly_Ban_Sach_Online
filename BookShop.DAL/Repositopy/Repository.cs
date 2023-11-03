@@ -48,6 +48,16 @@ namespace BookShop.DAL.Repositopy
             }
             return obj;
         }
+		public async Task<T> RemoveAsync(T obj)
+		{
+            //var obj = await _context.Set<T>().FindAsync(id);
+            if (obj != null)
+            {
+                _context.Set<T>().Remove(obj);
+                await _context.SaveChangesAsync();
+            }
+            return obj;
+        }
 
 		public async Task<T> UpdateAsync(int id, T updatedEntity)
         {

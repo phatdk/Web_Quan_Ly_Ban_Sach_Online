@@ -27,6 +27,10 @@
             <div class="col-lg-6">
                 <div class="login_form_inner">
                     <h3>Log in to enter</h3>
+                    @if (!string.IsNullOrEmpty(ViewBag.Error))
+                    {
+                        <p class="text-danger">@ViewBag.Error</p>
+                    }
                     <form class="row login_form" asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
                         <div class="col-md-12 form-group">
                             <input asp-for="UserNameOrEmail" type="text" class="form-control">

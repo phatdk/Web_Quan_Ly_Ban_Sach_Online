@@ -107,6 +107,10 @@ builder.Services.AddTransient<IOrderPaymentService, OrderPaymentService>();
 builder.Services.AddTransient<IStatusOrderService, StatusOrderService>();
 builder.Services.AddTransient<IPromotionService, PromotionService>();
 builder.Services.AddTransient<IWalletpointService, WalletPointService>();
+builder.Services.AddTransient<IPromotionTypeService, PromotionTypeService>();
+builder.Services.AddTransient<IWishListService, WishListService>();
+
+builder.Services.AddTransient<IUserRoleService, UserRoleService>();
 
 builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromMinutes(30); });
 
