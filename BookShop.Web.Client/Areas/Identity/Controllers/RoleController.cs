@@ -31,11 +31,11 @@ namespace App.Areas.Identity.Controllers
         //private readonly ApplicationDbcontext _context;
         private readonly UserManager<Userr> _userManager;
 
-        public RoleController(ILogger<RoleController> logger, RoleManager<Role> roleManager, ApplicationDbcontext context, UserManager<Userr> userManager)
+        public RoleController(ILogger<RoleController> logger, RoleManager<Role> roleManager, UserManager<Userr> userManager)
         {
             _logger = logger;
             _roleManager = roleManager;
-            _context = context;
+          //  _context = context;
             _userManager = userManager;
         }
 
