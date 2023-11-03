@@ -85,7 +85,7 @@ namespace BookShop.BLL.Service
 							Status = c.Status,
 							CreatedDate = c.CreatedDate,
 							Email = c.Email,
-							// Phone = c.Phone,
+							Phone = c.PhoneNumber,
 							UserName = c.UserName,
 							// Password = c.Password,
 							Point = (a1 == null) ? 0 : a1.Point,

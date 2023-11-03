@@ -15,7 +15,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 	{
 		private List<OrderViewModel> _orders;
 		private OrderViewModel _order;
-		private string _filter;
 		private readonly UserManager<Userr> _userManager;
 		private readonly IOrderService _orderService;
 		private readonly IOrderDetailService _orderDetailService;
@@ -32,7 +31,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		{
 			_orders = new List<OrderViewModel>();
 			_order = new OrderViewModel();
-			_filter = "1";
 			_userManager = userManager;
 			_orderService = orderService;
 			_orderDetailService = orderDetailService;
@@ -43,7 +41,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			_productBookService = productBookService;
 			_bookService = bookService;
 
-			_productPreviewService = new ProductPreviewService(_productService, _orderDetailService, _orderService);
+			_productPreviewService = new ProductPreviewService();
 			_accumulatePointService = new AccumulatePointService();
 		}
 
@@ -75,7 +73,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					|| x.NameStaff.ToLower().Contains(keyWord.ToLower())
 					).ToList();
 			}
-			var orders = _orders.OrderByDescending(x=>x.CreatedDate).ToList();
+			var orders = _orders.OrderByDescending(x => x.CreatedDate).ToList();
 			return Json(orders);
 		}
 		public async Task<IActionResult> GetDetails(int id)
@@ -86,7 +84,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		// GET: OrderManageController
 		public IActionResult Index()
 		{
-			ViewBag.Filter = _filter;
+			ViewBag.Filter = "1";
 			return View();
 		}
 
@@ -188,7 +186,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 3).First().Id;
 					order.Id_Status = statusId;
 					order.DeliveryDate = DateTime.Now;
-					order.ModifiDate= DateTime.Now;
+					order.ModifiDate = DateTime.Now;
 					order.ModifiNotes = order.ModifiNotes + "\n" + DateTime.Now + " : Đơn được xác nhận giao bởi " + staff.Name + " Mã code [" + staff.Code + "]\n";
 					var result = await _orderService.Update(order);
 					return Json(new { success = result });
@@ -361,12 +359,11 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 							foreach (var item1 in detailProducts)
 							{
 								var book = await _bookService.GetById(item1.Id_Book);
-								await _bookService.ChangeQuantity(book.Id, item.Quantity); // giam so luong sach trong kho
+								await _bookService.ChangeQuantity(book.Id, item.Quantity); // tang so luong sach trong kho
 							}
+							await _productPreviewService.ChangeQuantity(item.Id_Product, item.Quantity);	// tang lai sp
 						}
 					}
-					// tang lai sp
-					await _productPreviewService.ChangeQuantity(id, 1);
 				}
 				return Json(new { success = result });
 			}

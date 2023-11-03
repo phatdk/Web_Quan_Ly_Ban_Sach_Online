@@ -165,7 +165,7 @@ namespace App.Areas.Identity.Controllers
 					_logger.LogInformation("Email đã được sử dụng.");
 					return View(model);
 				}
-				var user = new Userr { Code = "KH" + await GenerateCode(7), UserName = model.UserName, Email = model.Email, Name = model.Name, Gender = 0, CreatedDate = DateTime.Now };
+				var user = new Userr { Code = "KH" + await GenerateCode(7), UserName = model.UserName, Email = model.Email, Name = model.Name, Gender = 0, CreatedDate = DateTime.Now, Status = 1 };
 				var result = await _userManager.CreateAsync(user, model.Password);
 
 				if (result.Succeeded)

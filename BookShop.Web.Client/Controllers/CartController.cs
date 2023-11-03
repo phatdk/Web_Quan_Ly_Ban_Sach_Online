@@ -127,10 +127,6 @@ namespace BookShop.Web.Client.Controllers
 						return Json(new { success = true });
 					}
 				}
-				else
-				{
-					HttpContext.Session.SetString("sessionCart", JsonConvert.SerializeObject(customCart));
-				}
 				pc = new CartDetailViewModel()
 				{
 					Id_Product = product.Id,

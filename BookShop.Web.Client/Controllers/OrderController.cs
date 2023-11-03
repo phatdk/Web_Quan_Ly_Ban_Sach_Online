@@ -47,7 +47,7 @@ namespace BookShop.Web.Client.Controllers
             _promotionService = promotionService;
             _userPromotionService = userPromotionService;
 
-            _productPreviewService = new ProductPreviewService(_productService, _orderDetailService, _orderService);
+            _productPreviewService = new ProductPreviewService();
         }
 
         private Task<Userr> GetCurrentUserAsync()
@@ -80,7 +80,7 @@ namespace BookShop.Web.Client.Controllers
             {
                 _order.Total += item.Quantity * item.Price;
             }
-            if (_order.Id_Promotion != null)
+            if (_order.Id_Promotion != null || _order.Id_Promotion != 0)
             {
                 var promotion = await _promotionService.GetById(Convert.ToInt32(_order.Id_Promotion));
                 if (promotion.PercentReduct != null)
@@ -212,6 +212,11 @@ namespace BookShop.Web.Client.Controllers
                 var result = await _orderService.Add(request);
                 if (result.Id != 0)
                 {
+                    foreach(var item in request.orderDetails)
+                    {
+                    await _productPreviewService.ChangeQuantity(item.Id_Product, -item.Quantity);
+
+                    }
                     foreach (var item in request.paymentsId)
                     {
                         var op = new CreateOrderPaymentModel()
@@ -223,7 +228,6 @@ namespace BookShop.Web.Client.Controllers
                         };
                         await _orderPaymentService.Add(op);
                     }
-                    await _productPreviewService.ChangeQuantity(result.Id, -1);
                     if (cartUse == 1)
                     {
                         var cartUser = await GetCurrentUserAsync();

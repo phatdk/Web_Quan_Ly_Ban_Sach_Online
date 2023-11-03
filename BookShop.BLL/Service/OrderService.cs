@@ -1,5 +1,4 @@
-﻿using BookShop.BLL.ConfigurationModel.OrderDetailModel;
-using BookShop.BLL.ConfigurationModel.OrderModel;
+﻿using BookShop.BLL.ConfigurationModel.OrderModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;
@@ -17,8 +16,6 @@ namespace BookShop.BLL.Service
 		private readonly IRepository<Userr> _userRepository;
 		private readonly IRepository<Promotion> _promotionRepository;
 		private readonly IRepository<OrderDetail> _orderDetailRepository;
-		private readonly IRepository<ReturnOrder> _returnOrderRepository;
-		private readonly IRepository<Product> _productRepository;
 		private readonly IRepository<StatusOrder> _statusRepository;
 
 		public OrderService()
@@ -27,8 +24,6 @@ namespace BookShop.BLL.Service
 			_userRepository = new Repository<Userr>();
 			_promotionRepository = new Repository<Promotion>();
 			_orderDetailRepository = new Repository<OrderDetail>();
-			_returnOrderRepository = new Repository<ReturnOrder>();
-			_productRepository = new Repository<Product>();
 			_statusRepository = new Repository<StatusOrder>();
 		}
 
@@ -104,9 +99,8 @@ namespace BookShop.BLL.Service
 					PointAmount = model.PointAmount,
 				};
 				var ObjStatus = await _orderRepository.CreateAsync(obj);
-				if (ObjStatus != null)
+				if (ObjStatus != null && model.orderDetails != null)
 				{
-
 					foreach (var item in model.orderDetails)
 					{
 						await _orderDetailRepository.CreateAsync(new OrderDetail()
@@ -118,8 +112,8 @@ namespace BookShop.BLL.Service
 							Quantity = item.Quantity,
 						});
 					}
-					model.Id = ObjStatus.Id;
 				}
+				model.Id = ObjStatus.Id;
 				return model;
 			}
 			catch (Exception ex) { return model; }
@@ -330,6 +324,7 @@ namespace BookShop.BLL.Service
 				obj.Id_StatusOrder = model.Id_Status;
 				obj.Id_User = model.Id_User;
 				//thêm
+				obj.IsOnlineOrder = model.IsOnlineOrder;
 				obj.IsUsePoint = model.IsUsePoint;
 				obj.PointUsed = model.PointUsed;
 				obj.PointAmount = model.PointAmount;

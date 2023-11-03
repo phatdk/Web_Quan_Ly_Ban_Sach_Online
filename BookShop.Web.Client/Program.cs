@@ -121,9 +121,15 @@ var app = builder.Build();
 //}
 //using (var scope = app.Services.CreateScope())
 //{
-//    var service1 = scope.ServiceProvider.GetRequiredService<IStatusOrderService>();
+//    var service = scope.ServiceProvider.GetRequiredService<IStatusOrderService>();
 
-//    SeedDataMD.SeedDataProduct(service1).Wait();
+//    SeedDataMD.SeedDataStatus(service).Wait();
+//}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var service1 = scope.ServiceProvider.GetRequiredService<IPaymentFormService>();
+
+//    SeedDataMD.SeedDataPayment(service1).Wait();
 //}
 #endregion
 if (!app.Environment.IsDevelopment())

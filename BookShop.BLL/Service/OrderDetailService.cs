@@ -32,30 +32,11 @@ namespace BookShop.BLL.Service
 				{
 					Id_Order = model.Id_Order,
 					Id_Product = model.Id_Product,
+					UserId = model.Id_User,
 					Quantity = model.Quantity,
 					Price = model.Price,
 				};
 				await _orderDetailRepository.CreateAsync(obj);
-				return true;
-			}
-			catch (Exception ex) { return true; }
-		}
-		public async Task<bool> AddRange(OrderDetailViewModel model, List<CartDetail> ListItem)
-		{
-			try
-			{
-				foreach (var item in ListItem)
-				{
-					var obj = new OrderDetail()
-					{
-						Id_Order = model.Id_Order,
-						Id_Product = item.Id_Product,
-						Quantity = item.Quantity,
-						Price = (await _productRepository.GetByIdAsync(model.Id_Product)).Price,
-					};
-					await _orderDetailRepository.CreateAsync(obj);
-				}
-
 				return true;
 			}
 			catch (Exception ex) { return true; }

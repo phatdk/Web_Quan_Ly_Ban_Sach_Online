@@ -290,13 +290,6 @@
 		let confi = "xác nhận trả hàng về kho?";
 		var action = 0;
 		var detail = document.getElementById('detail-' + id);
-		// if (confirm(confi) == true) {
-		// 	action = 1;
-		// 	detail.innerHTML = "Hoàn trả";
-		// } else {
-		// 	action = 0;
-		// 	detail.innerHTML = "Xử lý lỗi";
-		// }
 		action = Number(document.getElementById('details-' + id).value);
 		myAction[id] = action;
 		let count = 0;
@@ -317,20 +310,20 @@
 			type: 'GET',
 			data: { id: @Model.Id },
 			success: function (data) {
+				var detailsList = $("#listDetail");
+				detailsList.empty();
 				data.forEach(function (item) {
 					condition++;
-					var detailsList = $("#listDetail");
-					detailsList.empty();
 					var orderRow =
 						'<tr class="row">' +
 						'<td class="col-5"><label>' + item.nameProduct + '</label></td>' +
 						'<td class="col-2"><label>' + item.quantity + '</label></td>' +
 						'<td class="col-5">' +
-							'<select id="details-' + item.id + '" onchange="HandleReturn(' + item.id + ')">' +
-							'<option value="" selected disabled>--Sellect action--</option>' +
-							'<option value="1">Hàng có thể trả về kho</option>' +
-							'<option value="0">Hàng lỗi cần xử lý</option>' +
-							'</select>' +
+						'<select id="details-' + item.id + '" onchange="HandleReturn(' + item.id + ')">' +
+						'<option value="" selected disabled>--Sellect action--</option>' +
+						'<option value="1">Hàng có thể trả về kho</option>' +
+						'<option value="0">Hàng lỗi cần xử lý</option>' +
+						'</select>' +
 						'</td>' +
 						'</tr>';
 					detailsList.append(orderRow);
