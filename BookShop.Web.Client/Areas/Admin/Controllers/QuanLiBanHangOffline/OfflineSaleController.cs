@@ -96,7 +96,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 
 		public async Task<IActionResult> GetProducts()
 		{
-			var list = (await _productService.GetAll()).OrderByDescending(x => x.CreatedDate);
+			var list = (await _productService.GetAll()).Where(x=>x.Status == 1).OrderByDescending(x => x.CreatedDate);
 			return Json(list.Take(10));
 		}
 
@@ -333,7 +333,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 
 		// POST: OfflineSaleController/Create
 		[HttpPost]
-		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> CreateOfflineOrder(OrderViewModel request)
 		{
 			try

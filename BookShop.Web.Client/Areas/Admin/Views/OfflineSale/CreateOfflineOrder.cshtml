@@ -139,7 +139,7 @@
 				<div class="btn-group" role="group" aria-label="Basic outlined example">
 					<input type="button" class="btn btn-outline-primary" onclick="reFresh()" value="Làm mới" />
 					<input type="button" class="btn btn-outline-warning" onclick="saveOrder()" value="Lưu tạm" />
-					<input type="submit" class="btn btn-outline-success" value="Tạo đơn" />
+					<input type="button" class="btn btn-outline-success" onclick="createOrder()" value="Tạo đơn" />
 				</div>
 			</div>
 		</div>
@@ -406,6 +406,35 @@
 		var receiver = document.getElementById('orderReceiver').value;
 		$.ajax({
 			url: '/Admin/OfflineSale/SaveTemprory',
+			type: 'POST',
+			data: { Id: id, Id_Staff: id_Staff, Id_User: id_User, Email: email, Phone: phone, Receiver: receiver, NameUser: nameUser },
+			success: function (result) {
+				if (result.success) {
+					alert(result.message);
+					getWaitingOrders();
+					changeChecked = false;
+					checkChange(0);
+					getProduct();
+				} else {
+					alert('Xác nhận thất bại: ' + result.errorMessage);
+				}
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	};
+
+	function createOrder() {
+		var id = document.getElementById('orderId').value;
+		var id_Staff = document.getElementById('orderIdStaff').value;
+		var id_User = document.getElementById('orderIdUser').value;
+		var nameUser = document.getElementById('orderNameUser').value;
+		var email = document.getElementById('orderEmail').value;
+		var phone = document.getElementById('orderPhone').value;
+		var receiver = document.getElementById('orderReceiver').value;
+		$.ajax({
+			url: '/Admin/OfflineSale/CreateOfflineOrder',
 			type: 'POST',
 			data: { Id: id, Id_Staff: id_Staff, Id_User: id_User, Email: email, Phone: phone, Receiver: receiver, NameUser: nameUser },
 			success: function (result) {
