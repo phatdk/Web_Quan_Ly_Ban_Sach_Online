@@ -49,19 +49,18 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             if (status == 1)
             {
                 return list.Where(p => p.Status == 1).ToList();
-
             }
             else
             {
                 return list;
             }
         }
-        public async Task<List<GenreModel>> LoadGenre(int index)
+        public async Task<List<GenreModel>> LoadGenre(int status)
         {
             var list = await _genreService.GetAll();
-            if (index == 1)
+            if (status == 1)
             {
-                return list.Where(p => p.Index == 1).ToList();
+                return list.Where(p => p.Status == 1).ToList();
             }
             else
             {
@@ -81,20 +80,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
                 return list;
             }
         }
-        public async Task<List<CollectionModel>> LoadCollection(int status)
-        {
-            var list = await _collectionService.GetAll();
-            if (status == 1)
-            {
-                return list.Where(x => x.Status == 1).ToList();
-            }
-            else
-            {
-                return list;
-            }
-        }
-
-
         // GET: BookController
         [HttpGet("listbook")]
         public async Task<IActionResult> Index()
@@ -119,7 +104,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             ViewBag.Authors = await LoadAuthor(1);
             ViewBag.Genres = await LoadGenre(1);
             ViewBag.Supplier = await LoadSupplier(1);
-            ViewBag.Collection = await LoadCollection(1);
             return View();
         }
 
@@ -166,6 +150,9 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
         [HttpGet("Edit")]
         public async Task<IActionResult> Edit(int id)
         {
+            ViewBag.Authors = await LoadAuthor(1);
+            ViewBag.Genres = await LoadGenre(1);
+            ViewBag.Supplier = await LoadSupplier(1);
             _book = await _bookService.GetById(id);
             var updateBookModel = new UpdateBookModel()
             {
@@ -187,16 +174,20 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
                 Height = _book.Height,
                 CreatedDate = _book.CreatedDate.HasValue ? _book.CreatedDate.Value : default(DateTime),
                 Status = _book.Status ?? 0,
-                Id_Supplier = _book.Id_Supplier ?? 0
+                Id_Supplier = _book.Id_Supplier ?? 0,
+                authorModels = _book.authorModels,
+                genreModels = _book.genreModels               
             };
-            updateBookModel.authorModels = new List<AuthorModel> { };
-            foreach (var item in updateBookModel.authorModels)
+            updateBookModel.authorSelected = new List<int>();
+            updateBookModel.genreSelected = new List<int>();
+            foreach(var item in _book.authorModels)
             {
-                updateBookModel.authorModels.Add(item);
+                updateBookModel.authorSelected.Add(item.Id);
             }
-            ViewBag.Authors = await LoadAuthor(1);
-            ViewBag.Genres = await LoadGenre(1);
-            ViewBag.Supplier = await LoadSupplier(1);
+            foreach(var item in _book.genreModels)
+            {
+                updateBookModel.genreSelected.Add(item.Id);
+            }
             return View(updateBookModel);
         }
 

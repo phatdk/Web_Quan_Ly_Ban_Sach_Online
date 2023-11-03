@@ -7,8 +7,6 @@ using System.Net;
 using BookShop.BLL.IService;
 using BookShop.BLL.Service;
 using BookShop.DAL.Repositopy;
-using BookShop.BLL.Service.GenreService;
-using BookShop.BLL.Service.CategoryService;
 
 var builder = WebApplication.CreateBuilder(args);
 
