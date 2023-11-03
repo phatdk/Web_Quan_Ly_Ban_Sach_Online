@@ -5,13 +5,12 @@
 @{
 	ViewData["Title"] = "Index";
 	Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
-	string selectFilter = ViewBag.Filter;
 }
 
 <div class="row bg-light">
 	<div class="m-1 row">
 		<select class="col-3 border-info text-danger" id="filterSelect" onchange="filterChange()" aria-label="Default select example">
-			<option value="">Tất cả</option>
+			<option value="" selected>Tất cả</option>
 			<option value="1">Chờ xử lý</option>
 			<option value="2">Đã xác nhận</option>
 			<option value="3">Đang giao</option>
@@ -126,7 +125,6 @@
 
 	// Gọi hàm getProducts() khi trang được tải
 	$(document).ready(function () {
-		document.getElementById("filterSelect").value = @selectFilter;
 		getOrder();
 	});
 </script>

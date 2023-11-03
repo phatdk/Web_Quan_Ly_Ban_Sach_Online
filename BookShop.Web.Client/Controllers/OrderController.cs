@@ -80,7 +80,7 @@ namespace BookShop.Web.Client.Controllers
             {
                 _order.Total += item.Quantity * item.Price;
             }
-            if (_order.Id_Promotion != null || _order.Id_Promotion != 0)
+            if (_order.Id_Promotion != null && _order.Id_Promotion != 0)
             {
                 var promotion = await _promotionService.GetById(Convert.ToInt32(_order.Id_Promotion));
                 if (promotion.PercentReduct != null)

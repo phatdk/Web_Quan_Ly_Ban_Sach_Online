@@ -84,7 +84,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		// GET: OrderManageController
 		public IActionResult Index()
 		{
-			ViewBag.Filter = "1";
 			return View();
 		}
 
