@@ -619,7 +619,7 @@ namespace BookShop.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ModifiNotes")
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("PaymentDate")
                         .HasColumnType("datetime2");

@@ -12,7 +12,7 @@ namespace App.Areas.Identity.Models.UserViewModels
     public Userr user { get; set; }
 
     [DisplayName("Các role gán cho user")]
-    public string[] RoleNames { get; set; }
+    public string[]? RoleNames { get; set; }
 
     public List<RoleClaims> claimsInRole { get; set; }
     public List<UserClaims> claimsInUserClaim { get; set; }

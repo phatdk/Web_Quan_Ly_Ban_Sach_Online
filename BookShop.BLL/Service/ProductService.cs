@@ -284,10 +284,15 @@ namespace BookShop.BLL.Service
 
 		public async Task<bool> ChangeQuantity(int id, int changeAmount)
 		{
+			getAgain:;
+			var product = await _productRepository.GetByIdAsync(id);
 			try
 			{
-				var product = await _productRepository.GetByIdAsync(id);
-				product.Quantity += changeAmount;
+				if (product != null)
+				{
+					product.Quantity += changeAmount;
+				}
+				else goto getAgain;
 				await _productRepository.UpdateAsync(id, product);
 				return true;
 			}
