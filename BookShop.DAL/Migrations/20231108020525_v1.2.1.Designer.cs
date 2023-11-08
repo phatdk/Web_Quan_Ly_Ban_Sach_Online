@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookShop.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbcontext))]
-    [Migration("20231028092721_v1.2.1")]
+    [Migration("20231108020525_v1.2.1")]
     partial class v121
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -349,6 +349,9 @@ namespace BookShop.DAL.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

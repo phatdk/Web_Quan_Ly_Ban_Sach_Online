@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using BookShop.DAL.Repositopy;
 using BookShop.BLL.IService;
 using BookShop.BLL.ConfigurationModel.PaymentFormModel;
+using BookShop.BLL.ConfigurationModel.PromotionTypeModel;
 
 public static class SeedDataMD
 {
@@ -150,4 +151,32 @@ public static class SeedDataMD
 		await service.Add(form2);
 		await service.Add(form3);
 	}
+	public static async Task SeedPromotionType(IPromotionTypeService service)
+	{
+		var form = new CreatePromotionTypeModel()
+		{
+			Name = "Tự động",
+			Status = 1,
+		};
+		var form1 = new CreatePromotionTypeModel()
+		{
+			Name = "Điểm quy đổi",
+			Status = 1,
+		};
+		var form2 = new CreatePromotionTypeModel()
+		{
+			Name = "Sản phẩm",
+			Status = 1,
+		};
+		var form3 = new CreatePromotionTypeModel()
+		{
+			Name = "Đơn hàng",
+			Status = 1,
+		};
+
+		await service.Add(form);
+		await service.Add(form1);
+		await service.Add(form2);
+		await service.Add(form3);
+	} 
 }

@@ -25,7 +25,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		private readonly IProductBookService _productBookService;
 		private readonly IBookService _bookService;
 		private readonly ProductPreviewService _productPreviewService;
-		private readonly AccumulatePointService _accumulatePointService;
+		private readonly PointNPromotionSerVice _pointNPromotionService;
 
 		public OrderManageController(UserManager<Userr> userManager, IOrderService orderService, IOrderDetailService orderDetailService, IOrderPaymentService orderPaymentService, IStatusOrderService statusOrderService, IPromotionService promotionService, IProductService productService, IProductBookService productBookService, IBookService bookService)
 		{
@@ -42,7 +42,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			_bookService = bookService;
 
 			_productPreviewService = new ProductPreviewService();
-			_accumulatePointService = new AccumulatePointService();
+			_pointNPromotionService = new PointNPromotionSerVice();
 		}
 
 		private Task<Userr> GetCurrentUserAsync()
@@ -234,7 +234,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					int point = Convert.ToInt32(Math.Floor(Convert.ToDouble(order.Total / 20000))); // 20k = 1 điểm
 					if (point > 0)
 					{
-						await _accumulatePointService.Accumulate(order.Id_User, point);
+						await _pointNPromotionService.Accumulate(order.Id_User, point);
 					}
 					var result = await _orderService.Update(order);
 					return Json(new { success = result });
