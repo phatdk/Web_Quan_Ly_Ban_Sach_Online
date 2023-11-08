@@ -100,7 +100,7 @@ namespace BookShop.BLL.Service
 			return objlist;
 		}
 
-		public async Task<bool> Update(int id, UpdateNewsModel model)
+		public async Task<bool> Update(int id, NewsViewModel model)
 		{
 			try
 			{

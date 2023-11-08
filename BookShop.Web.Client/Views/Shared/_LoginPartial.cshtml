@@ -7,33 +7,43 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-   @* <partial name="_ManagerMenu"></partial>*@
-    <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
-        <ul class="">
-            <li class="nav-item dropdown">
-                <span class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                    Xin chào @((await UserManager.GetUserAsync(User)).UserName)!
-                </span>
-                <div class="dropdown-menu">
+    <div class="row">
+        <div class="col-6">
+            <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
+                <ul class="">
+                    <li class="nav-item dropdown">
+                        <span class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            Xin chào @((await UserManager.GetUserAsync(User)).UserName)!
+                        </span>
+                        <div class="dropdown-menu">
 
-                    <a class="dropdown-item" asp-controller="Home" asp-action="Danhsachyeuthich" title="">
-                        Thông tin tài khoản
-                    </a>
-                    <a class="dropdown-item" asp-area="Identity" asp-controller="Manage" asp-action="Index" title="Manage">
-                        Thông tin tài khoản
-                    </a>
-                    <div role="separator" class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">
-                        Trạng thái đơn hàng
-                    </a>
-                    <div role="separator" class="dropdown-divider"></div>
-                    <button type="submit" class="dropdown-item">
-                        Đăng xuất
-                    </button>
-                </div>
-            </li>
-        </ul>
-    </form>
+                            <a class="dropdown-item" asp-controller="Home" asp-action="Danhsachyeuthich" title="">
+                                Thông tin tài khoản
+                            </a>
+                            <a class="dropdown-item" asp-area="Identity" asp-controller="Manage" asp-action="Index" title="Manage">
+                                Thông tin tài khoản
+                            </a>
+                            <div role="separator" class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">
+                                Trạng thái đơn hàng
+                            </a>
+                            <div role="separator" class="dropdown-divider"></div>
+                            <button type="submit" class="dropdown-item">
+                                Đăng xuất
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+        <div class="col-6">
+
+            <partial name="_ManagerMenu"></partial>
+        </div>
+
+    </div>
+ 
+
 }
 else
 {

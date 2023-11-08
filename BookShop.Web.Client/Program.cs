@@ -109,6 +109,7 @@ builder.Services.AddTransient<IPromotionService, PromotionService>();
 builder.Services.AddTransient<IWalletpointService, WalletPointService>();
 builder.Services.AddTransient<IPromotionTypeService, PromotionTypeService>();
 builder.Services.AddTransient<IWishListService, WishListService>();
+builder.Services.AddTransient<INewsService, NewsService>();
 
 builder.Services.AddTransient<IUserRoleService, UserRoleService>();
 
@@ -134,6 +135,12 @@ var app = builder.Build();
 //    var service1 = scope.ServiceProvider.GetRequiredService<IPaymentFormService>();
 
 //    SeedDataMD.SeedDataPayment(service1).Wait();
+//}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var service2 = scope.ServiceProvider.GetRequiredService<IPromotionTypeService>();
+
+//    SeedDataMD.SeedPromotionType(service2).Wait();
 //}
 #endregion
 if (!app.Environment.IsDevelopment())

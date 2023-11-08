@@ -31,6 +31,7 @@ namespace ShopWheyProject.MVC.Areas.Identity.Controllers
     /// [Authorize(Roles = RoleName.Administrator)]
     /// </summary>
     [Area("Identity")]
+    [Authorize(Roles = "Admin")]
     [Route("/ManageUser/[action]")]
     public class UserController : Controller
     {

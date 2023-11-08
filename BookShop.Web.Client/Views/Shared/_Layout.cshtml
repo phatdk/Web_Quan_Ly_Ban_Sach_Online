@@ -76,27 +76,6 @@
 <body class="bb">
 
 	<header>
-		@{
-			if (true)
-			{
-				var usercheck = await UserManager.GetUserAsync(User);
-				if (usercheck != null)
-				{
-					var role = await UserManager.GetRolesAsync(usercheck);
-
-					if (role != null)
-					{
-						@role
-					}
-					else
-					{
-						<p>Tài khoản</p>
-					}
-				}
-
-
-			}
-		}
 		<div class="gi">
 			<div style="justify-content:center">
 				<img style="text-align:center;width:100%;height:55px" src="https://cdn0.fahasa.com/media/wysiwyg/Thang-09-2023/MCBOOKBirthdayT923_Diamond_BannerHeader_1263x60.jpg" />

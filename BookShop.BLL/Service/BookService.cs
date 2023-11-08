@@ -363,5 +363,10 @@ namespace BookShop.BLL.Service
                            }).ToList();
             return objlist;
         }
+
+        public Task<bool> ChangeQuantity(int id, int quantity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
