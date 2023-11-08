@@ -16,10 +16,21 @@ namespace BookShop.DAL.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(100)",
                 oldNullable: true);
+
+            migrationBuilder.AddColumn<int>(
+                name: "Status",
+                table: "Genres",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "Status",
+                table: "Genres");
+
             migrationBuilder.AlterColumn<string>(
                 name: "ModifiNotes",
                 table: "Orders",

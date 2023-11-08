@@ -2,6 +2,7 @@
 using BookShop.BLL.ConfigurationModel.OrderDetailModel;
 using BookShop.BLL.ConfigurationModel.OrderModel;
 using BookShop.BLL.ConfigurationModel.OrderPaymentModel;
+using BookShop.BLL.ConfigurationModel.PromotionModel;
 using BookShop.BLL.ConfigurationModel.UserModel;
 using BookShop.BLL.IService;
 using BookShop.BLL.Service;
@@ -35,6 +36,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 		private readonly IPromotionService _promotionService;
 		private readonly UserManager<Userr> _userManager;
 		private readonly ProductPreviewService _productPreviewService;
+		private readonly PointNPromotionSerVice _pointNPromotionService;
 
 		public OfflineSaleController(IOrderService orderService, IOrderDetailService orderDetailService, IProductService productService, IProductBookService productBookService, IUserService userService, UserManager<Userr> userManager, IStatusOrderService statusOrderService, IPaymentFormService paymentFormService, IOrderPaymentService orderPaymentService, IBookService bookService, IPromotionService promotionService)
 		{
@@ -51,6 +53,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 			_promotionService = promotionService;
 
 			_productPreviewService = new ProductPreviewService();
+			_pointNPromotionService = new PointNPromotionSerVice();
 		}
 
 		// GET: OfflineSaleController
@@ -91,13 +94,45 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 			}
 			sessionDetails = HttpContext.Session.GetString("sessionOrder");
 			var data = JsonConvert.DeserializeObject<List<OrderDetailViewModel>>(sessionDetails);
-			return Json(new { order = order, details = data });
+			int total = 0;
+			foreach (var item in data)
+			{
+				total += item.Price * item.Quantity;
+			}
+			return Json(new { order = order, details = data, total = total });
 		}
 
 		public async Task<IActionResult> GetProducts()
 		{
-			var list = (await _productService.GetAll()).Where(x=>x.Status == 1).OrderByDescending(x => x.CreatedDate);
+			var list = (await _productService.GetAll()).Where(x => x.Status == 1).OrderByDescending(x => x.CreatedDate);
 			return Json(list.Take(10));
+		}
+
+		public async Task<IActionResult> CheckPromotion(int condition)
+		{
+			var promotions = (await _pointNPromotionService.GetActivePromotion()).Where(x=>x.NameType.Equals("Tự động"));
+			var validPromotions = new List<PromotionViewModel>();
+			foreach(var item in promotions)
+			{
+				if(item.Condition <= condition)
+				{
+					validPromotions.Add(item);
+				}
+			}
+			var usePromotion = validPromotions.OrderByDescending(x => x.Condition).ThenByDescending(x=>x.CreatedDate).FirstOrDefault();
+			if(usePromotion != null)
+			{
+				if (usePromotion.PercentReduct != null && usePromotion.PercentReduct > 0)
+				{
+					usePromotion.TotalReduct = Convert.ToInt32(Math.Floor(Convert.ToDouble((condition / 100) * usePromotion.PercentReduct)));
+					if(usePromotion.TotalReduct > usePromotion.ReductMax)
+					{
+						usePromotion.TotalReduct = usePromotion.ReductMax;
+					}
+				}
+				else usePromotion.TotalReduct = Convert.ToInt32(usePromotion.AmountReduct);
+			}
+			return Json(usePromotion);
 		}
 
 		public async Task<IActionResult> GetUser(string keyWord)
@@ -147,6 +182,26 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 		editquantity:
 			HttpContext.Session.SetString("sessionOrder", JsonConvert.SerializeObject(listDetails));
 			return Json(new { success = true });
+		}
+
+		public async Task<string> GenerateCode(int length)
+		{
+			// Khởi tạo đối tượng Random
+			Random random = new Random();
+
+			// Tạo một chuỗi các ký tự ngẫu nhiên
+			string characters = "0123456789";
+			string code = "";
+			for (int i = 0; i < length; i++)
+			{
+				code += characters[random.Next(characters.Length)];
+			}
+			var duplicate = (await _orderService.GetAll()).Where(c => c.Code.Equals(code));
+			if (!duplicate.Any())
+			{
+				return code;
+			}
+			return (await GenerateCode(length)).ToString();
 		}
 
 		public async Task<OrderViewModel> SaveOrder(OrderViewModel request)
@@ -251,26 +306,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 			}
 		}
 
-		public async Task<string> GenerateCode(int length)
-		{
-			// Khởi tạo đối tượng Random
-			Random random = new Random();
-
-			// Tạo một chuỗi các ký tự ngẫu nhiên
-			string characters = "0123456789";
-			string code = "";
-			for (int i = 0; i < length; i++)
-			{
-				code += characters[random.Next(characters.Length)];
-			}
-			var duplicate = (await _orderService.GetAll()).Where(c => c.Code.Equals(code));
-			if (!duplicate.Any())
-			{
-				return code;
-			}
-			return (await GenerateCode(length)).ToString();
-		}
-
 		public async Task<IActionResult> SuccessOfflineOrder(int orderId)
 		{
 			var order = await _orderService.GetById(orderId);
@@ -319,7 +354,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 			var staff = await _userManager.GetUserAsync(HttpContext.User);
 			if (staff != null)
 			{
-				ViewBag.Users = (await _userService.GetAll()).Where(x=>x.Status == 1).ToList();
+				ViewBag.Users = (await _userService.GetAll()).Where(x => x.Status == 1).ToList();
 				var createModel = new OrderViewModel();
 				var user = (await _userService.GetAll()).Where(x => x.Code.Equals("KH0000000")).FirstOrDefault();
 				createModel.Id_User = user.Id;
