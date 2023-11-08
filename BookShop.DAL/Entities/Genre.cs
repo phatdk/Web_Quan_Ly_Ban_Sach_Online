@@ -19,7 +19,6 @@ namespace BookShop.DAL.Entities
 		public int Index { get; set; }
 		public int Status { get; set; }
 		
-		public int Status { get; set; }
 		//foreign key
 		public int Id_Category { get; set; }
 		public virtual Category Category { get; set; }
