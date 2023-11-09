@@ -7,9 +7,10 @@ using System.Net;
 using BookShop.BLL.IService;
 using BookShop.BLL.Service;
 using BookShop.DAL.Repositopy;
+using BookShop.Web.Client;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddWebDependency(builder.Configuration);
 #region Gửi email
 builder.Services.AddOptions();
 var _Mailsetting = builder.Configuration.GetSection("MailSettings");
