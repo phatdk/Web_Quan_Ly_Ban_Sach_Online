@@ -1,11 +1,35 @@
 ﻿@using BookShop.BLL.ConfigurationModel.BookModel;
 @using BookShop.BLL.ConfigurationModel.CollectionBookModel;
 @model BookShop.BLL.ConfigurationModel.ProductModel.CreateProductModel
+@* <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> *@
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+@* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> *@
+<link rel="stylesheet" href="~/lib/fontawesome-6.4.2/css/all.min.css" />
+
+<!-- Bootstrap JS and dependencies -->
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+@* <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> *@
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="~/js/layout.js"></script>
+<style>
+body{
+	width:100%;
+}
+.form-group{
+	width: 100%;
+}
+
+</style>
 @{
 	ViewData["Title"] = "Create";
 	List<BookViewModel> listBook = ViewBag.listBook;
 	List<CollectionModel> listCollection = ViewBag.listCollection;
 }
+<body>
 <h4>Create Product</h4>
 
 @using (Html.BeginForm("Create", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
@@ -33,12 +57,12 @@
 	</div>
 
 
-	<div class="form-group">
+	<div class="form-group" style="width: 200px;">
 		@Html.Label("Bộ sưu tập")
 		@Html.DropDownListFor(m => m.CollectionId, new SelectList(listCollection, "Id", "Name"),"-- Select Collection --", new { @class = "form-control chosen-select" })
 	</div>
 
-	<div class="form-group">
+		<div class="form-group" style="width: 200px;" >
 		@Html.Label("List Sách")
 		@Html.ListBoxFor(m => m.bookSelected, new MultiSelectList(listBook, "Id", "Title"), new { @class = "form-control chosen-select", @required = "required"})
 	</div>
@@ -51,6 +75,7 @@
 
 	<button type="submit" class="btn btn-primary">Create</button>
 }
+</body>
 <script>
 
 	const uploadInput = document.getElementById('img-input');
