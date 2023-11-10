@@ -7,9 +7,11 @@ using System.Net;
 using BookShop.BLL.IService;
 using BookShop.BLL.Service;
 using BookShop.DAL.Repositopy;
+using BookShop.Web.Client;
+using BLL.Services.Implements;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddWebDependency(builder.Configuration);
 #region Gửi email
 builder.Services.AddOptions();
 var _Mailsetting = builder.Configuration.GetSection("MailSettings");
@@ -108,6 +110,7 @@ builder.Services.AddTransient<IStatusOrderService, StatusOrderService>();
 builder.Services.AddTransient<IPromotionService, PromotionService>();
 builder.Services.AddTransient<IWalletpointService, WalletPointService>();
 builder.Services.AddTransient<IPromotionTypeService, PromotionTypeService>();
+builder.Services.AddTransient<IVNPayService, VNPayService>();
 builder.Services.AddTransient<IWishListService, WishListService>();
 
 builder.Services.AddTransient<IUserRoleService, UserRoleService>();

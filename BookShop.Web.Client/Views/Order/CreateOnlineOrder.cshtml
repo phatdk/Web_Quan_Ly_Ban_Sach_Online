@@ -216,7 +216,7 @@
 <h4>Tạo đơn hàng</h4>
 
 
-<form asp-action="CreateOnlineOrder" class="row pt-5 pb-5 bg-info">
+<form asp-action="CreateOnlineOrder" class="row pt-5 pb-5 bg-info" id="frmSubmitCheckout">
 	<div class="col-7">
 		<input asp-for="Id_User" id="UserId" value="@Model.Id_User" hidden />
 		<input value="@carUse" type="text" name="cartUse" hidden/>
@@ -329,7 +329,7 @@
 			{
 				<div class="form-group">
 					<label>Sử dụng diểm</label>
-					<input asp-for="PointUsed" type="number" min="0" max="@user.Point" value="0" style="width: 70px"/>
+					<input asp-for="PointUsed" type="number" min="0" max="@user.Point" value="0" style="width: 70px" />
 					<span>Số điểm hiện có @user.Point</span>
 				</div>
 				<div>
@@ -364,38 +364,41 @@
 				<select asp-for="paymentsId" required class="form-control" id="paymentMethod">
 					@foreach (var item in payments)
 					{
-						<option value="@item.Id">@item.Name</option>
+						<option selected="selected" name="Payment" value="@item.Name">@item.Name</option>
 					}
 				</select>
 			</div>
 
 		</div>
 
-		<input type="submit" value="Đặt hàng" />
+		@* <input type="submit" value="Đặt hàng" /> *@
+		<button class="site-btn submit-order-btn" id="btn-submit-order">Đặt hàng</button>
 
 	</div>
 </form>
+<script src="~/js/application/web/checkout.js"></script>
+<script type="text/javascript">
 
 <script>
 
-    // Thêm sự kiện "change" cho các input radio
-    document.getElementById('selectPromotion').addEventListener('change', handleRadioChange);
-    document.getElementById('useCodePromotion').addEventListener('change', handleRadioChange);
+	// Thêm sự kiện "change" cho các input radio
+	document.getElementById('selectPromotion').addEventListener('change', handleRadioChange);
+	document.getElementById('useCodePromotion').addEventListener('change', handleRadioChange);
 
-    // Hàm xử lý khi input radio thay đổi
-    function handleRadioChange(event) {
-        const chonma = document.getElementById('chonma');
-        const nhapma = document.getElementById('nhapma');
-        const selectedValue = event.target.value;
-        if (selectedValue == 1) {
-            chonma.setAttribute('hidden', 'hidden');
-            nhapma.removeAttribute('hidden');
-        }
-        else {
-            nhapma.setAttribute('hidden', 'hidden');
-            chonma.removeAttribute('hidden');
-        }
-    }
+	// Hàm xử lý khi input radio thay đổi
+	function handleRadioChange(event) {
+		const chonma = document.getElementById('chonma');
+		const nhapma = document.getElementById('nhapma');
+		const selectedValue = event.target.value;
+		if (selectedValue == 1) {
+			chonma.setAttribute('hidden', 'hidden');
+			nhapma.removeAttribute('hidden');
+		}
+		else {
+			nhapma.setAttribute('hidden', 'hidden');
+			chonma.removeAttribute('hidden');
+		}
+	}
 </script>
 
 <script type="text/javascript">
