@@ -13,7 +13,7 @@ using BookShop.BLL.ConfigurationModel.GenreModel;
 
 namespace BookShop.BLL.Service
 {
-    public class BookService : IBookService
+	public class BookService : IBookService
     {
         protected readonly IRepository<Book> _bookRepository;
         protected readonly IRepository<Supplier> _supplierRepository;
