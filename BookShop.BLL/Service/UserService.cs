@@ -14,140 +14,152 @@ using System.Xml.Linq;
 
 namespace BookShop.BLL.Service
 {
-    public class UserService : IUserService
-    {
-        protected readonly IRepository<Userr> _Userrepository;
-        protected readonly IRepository<Cart> _CartRepository;
-        protected readonly IRepository<WalletPoint> _WalletPointRepository;
-        protected readonly IRepository<WishList> _WishListRepository;
-        public UserService()
-        {
-            _WishListRepository = new Repository<WishList>();
-            _CartRepository = new Repository<Cart>();
-            _Userrepository = new Repository<Userr>();
-        }
-        public async Task<bool> Add(CreateUserModel requet)
-        {
-            try
-            {
-                var obj = new Userr()
-                {
-                    Name = requet.Name,
-                    Birth = requet.Birth,
-                    Gender = requet.Gender,
-                    Email = requet.Email,
-                  //  Phone = requet.Phone,
-                    UserName = requet.UserName,
-                    //Password = requet.Password,
-                    CreatedDate = DateTime.Now,
-                    Status = 1,
-                };
-                var userstatus = await _Userrepository.CreateAsync(obj);
+	public class UserService : IUserService
+	{
+		protected readonly IRepository<Userr> _Userrepository;
+		protected readonly IRepository<Cart> _CartRepository;
+		protected readonly IRepository<WalletPoint> _WalletPointRepository;
+		protected readonly IRepository<WishList> _WishListRepository;
+		public UserService()
+		{
+			_WishListRepository = new Repository<WishList>();
+			_CartRepository = new Repository<Cart>();
+			_Userrepository = new Repository<Userr>();
+			_WalletPointRepository = new Repository<WalletPoint>();
+		}
+		public async Task<bool> Add(CreateUserModel requet)
+		{
+			try
+			{
+				var obj = new Userr()
+				{
+					Name = requet.Name,
+					Birth = requet.Birth,
+					Gender = requet.Gender,
+					Email = requet.Email,
+					//  Phone = requet.Phone,
+					UserName = requet.UserName,
+					//Password = requet.Password,
+					CreatedDate = DateTime.Now,
+					Status = 1,
+				};
+				var userstatus = await _Userrepository.CreateAsync(obj);
 
-                var cart = new Cart()
-                {
-                    Id_User = userstatus.Id,
-                    CreatedDate = DateTime.Now,
-                    Status = 1,
-                };
-                await _CartRepository.CreateAsync(cart);
-                var walletPoint = new WalletPoint()
-                {
-                    Id_User = userstatus.Id,
-                    CreatedDate = DateTime.Now,
-                    Status = 1,
-                    Point = 0,
-                };
-                await _WalletPointRepository.CreateAsync(walletPoint);
-                return true;
-            }
-            catch (Exception)
-            {
+				var cart = new Cart()
+				{
+					Id_User = userstatus.Id,
+					CreatedDate = DateTime.Now,
+					Status = 1,
+				};
+				await _CartRepository.CreateAsync(cart);
+				var walletPoint = new WalletPoint()
+				{
+					Id_User = userstatus.Id,
+					CreatedDate = DateTime.Now,
+					Status = 1,
+					Point = 0,
+				};
+				await _WalletPointRepository.CreateAsync(walletPoint);
+				return true;
+			}
+			catch (Exception)
+			{
 
-                return false;
-            }
-        }
+				return false;
+			}
+		}
 
-        public async Task<List<UserModel>> GetAll()
-        {
-            var obj = await _Userrepository.GetAllAsync();
-            var query = from c in obj
+		public async Task<List<UserModel>> GetAll()
+		{
+			var obj = await _Userrepository.GetAllAsync();
+			var wallet = await _WalletPointRepository.GetAllAsync();
+			var query = from c in obj
+						join a in wallet on c.Id equals a.Id_User into i
+						from a1 in i.DefaultIfEmpty()
+						select new UserModel()
+						{
+							Code = c.Code,
+							Gender = c.Gender,
+							Id = c.Id,
+							Name = c.Name,
+							Status = c.Status,
+							CreatedDate = c.CreatedDate,
+							Email = c.Email,
+							Phone = c.PhoneNumber,
+							UserName = c.UserName,
+							// Password = c.Password,
+							Point = (a1 == null) ? 0 : a1.Point,
+						};
+			return query.ToList();
+		}
 
-                        select new UserModel()
-                        {
-                            Gender = c.Gender,
-                            Id = c.Id,
-                            Name = c.Name,
-                            Status = c.Status,
-                            CreatedDate = c.CreatedDate,
-                            Email = c.Email,
-                           // Phone = c.Phone,
-                            UserName = c.UserName,
-                           // Password = c.Password,
-                        };
-            return query.ToList();
-        }
+		public async Task<UserModel> GetById(int id)
+		{
+			var obj = (await _Userrepository.GetAllAsync()).Where(x=>x.Id == id);
+			var wallet = await _WalletPointRepository.GetAllAsync();
+			var query = (from c in obj
+						join a in wallet on c.Id equals a.Id_User into i
+						from a1 in i.DefaultIfEmpty()
+						select new UserModel()
+						{
+							Code = c.Code,
+							Gender = c.Gender,
+							Id = c.Id,
+							Name = c.Name,
+							Status = c.Status,
+							CreatedDate = c.CreatedDate,
+							Email = c.Email,
+							// Phone = c.Phone,
+							UserName = c.UserName,
+							// Password = c.Password,
+							Point = (a1 == null)? 0 : a1.Point,
+						}).FirstOrDefault();
+			return query;
+		}
 
-        public async Task<UserModel> GetById(int id)
-        {
-            var obj = await _Userrepository.GetByIdAsync(id);
-            return new UserModel()
-            {
-                Gender = obj.Gender,
-                Id = obj.Id,
-                Name = obj.Name,
-                Status = obj.Status,
-                CreatedDate = obj.CreatedDate,
-                Email = obj.Email,
-               // Phone = obj.Phone,
-                UserName = obj.UserName,
-              //  Password = obj.Password,
-            };
-        }
+		public async Task<bool> Delete(int id)
+		{
+			try
+			{
+				var obj = await _Userrepository.GetByIdAsync(id);
+				if (obj != null)
+				{
+					await _Userrepository.RemoveAsync(id);
+					return true;
+				}
+				return false;
+			}
+			catch (Exception)
+			{
 
-        public async Task<bool> Delete(int id)
-        {
-            try
-            {
-                var obj = await _Userrepository.GetByIdAsync(id);
-                if (obj != null)
-                {
-                    await _Userrepository.RemoveAsync(id);
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception)
-            {
+				return false;
+			}
+		}
 
-                return false;
-            }
-        }
-
-        public async Task<bool> Update(int id, UpdateUserModel requet)
-        {
-            try
-            {
-                var obj = await _Userrepository.GetByIdAsync(id);
-                if (obj != null)
-                {
-                    obj.Name = requet.Name;
-                    obj.Birth = requet.Birth;
-                    obj.Gender = requet.Gender;
-                    obj.Email = requet.Email;
-                    //obj.Phone = requet.Phone;
-                   // obj.Password = requet.Password;
-                    obj.CreatedDate = DateTime.Now;
-                    obj.Status = requet.Status;
-                    await _Userrepository.UpdateAsync(id, obj);
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-    }
+		public async Task<bool> Update(int id, UpdateUserModel requet)
+		{
+			try
+			{
+				var obj = await _Userrepository.GetByIdAsync(id);
+				if (obj != null)
+				{
+					obj.Name = requet.Name;
+					obj.Birth = requet.Birth;
+					obj.Gender = requet.Gender;
+					obj.Email = requet.Email;
+					//obj.Phone = requet.Phone;
+					// obj.Password = requet.Password;
+					obj.CreatedDate = DateTime.Now;
+					obj.Status = requet.Status;
+					await _Userrepository.UpdateAsync(id, obj);
+					return true;
+				}
+				return false;
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+		}
+	}
 }

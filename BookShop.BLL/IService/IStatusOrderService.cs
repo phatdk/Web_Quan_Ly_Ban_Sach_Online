@@ -10,8 +10,7 @@ namespace BookShop.BLL.IService
 {
 	public interface IStatusOrderService
 	{
-		 Task<List<StatusViewModel>> GetAll();
-		Task<StatusOrder> CreateAsync(StatusOrder model);
-
-    }
+		public Task<bool> Add(StatusOrder model);
+		public Task<List<StatusViewModel>> GetAll();
+	}
 }

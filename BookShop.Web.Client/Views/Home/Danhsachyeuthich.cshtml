@@ -1,0 +1,92 @@
+﻿@model IEnumerable<BookShop.BLL.ConfigurationModel.WishListModel.WishListViewModel>
+
+@{
+	ViewData["Title"] = "Danhsachyeuthich";
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<h1>Danh sách yêu thích của bạn</h1>
+<div class="container">
+    <input type="text" id="searchInput" placeholder="Nhập từ khóa tìm kiếm...">
+    <button class="btn btn-primary" id="searchBtn">Tìm kiếm</button>
+
+    <div class="table-responsive">
+        <table class="table table-striped" id="wishlistTable">
+            <thead>
+                <tr>
+                    <th>Tên</th>
+                    <th>Giá</th>
+                    <th>Mô tả</th>
+                    <th>trạng thái</th>
+                    <th>Kiểu</th>
+                    <th>Ảnh</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="wishlist-item" data-id="@item.Id_Product">
+                     
+                        <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Type)</td>
+                        <td>@Html.DisplayFor(modelItem => item.CollectionName)</td>
+                        <td><img src="@Html.DisplayFor(modelItem => item.ImgUrl)" alt="Ảnh sản phẩm" class="img-thumbnail" style="max-width: 100px;" /></td>
+                        <td><button class="btn btn-danger delete-btn">Xóa</button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		$(".delete-btn").click(function () {
+			var productId = $(this).closest("tr").data("id");
+
+			$.ajax({
+				type: "POST",
+				url: "/Home/XoaYeuThich",
+				headers: {
+					"Cache-Control": "no-cache, no-store, must-revalidate",
+					"Pragma": "no-cache",
+					"Expires": "0"
+				},
+				data: { id: productId },
+				success: function (result) {
+					if (result.success) {
+
+						$(`.wishlist-item[data-id='${productId}']`).remove();
+						alert("Xóa sản phẩm khỏi danh sách yêu thích thành công.");
+					} else {
+						alert("Có lỗi xảy ra khi xóa sản phẩm khỏi danh sách yêu thích.");
+					}
+				},
+				error: function () {
+					alert("Có lỗi xảy ra khi gửi yêu cầu.");
+				}
+			});
+		});
+	});
+</script>
+@*tìm kiếm đang chống cháy search theo dữ liệu của cột , nhược điểm chỉ search được khi ở trang được chọn *@
+<script>
+    $(document).ready(function () {
+        $("#searchBtn").on("click", function () {
+            var searchText = $("#searchInput").val().toLowerCase();
+            $(".wishlist-item").each(function () {
+                var itemPrice = $(this).find("td:nth-child(2)").text().toLowerCase();
+                var itemName = $(this).find("td:nth-child(1)").text().toLowerCase();
+                if (itemPrice.includes(searchText) || itemName.includes(searchText)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+</script>

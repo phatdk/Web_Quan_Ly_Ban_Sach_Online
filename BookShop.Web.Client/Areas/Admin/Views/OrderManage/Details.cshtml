@@ -1,0 +1,410 @@
+﻿@using BookShop.BLL.ConfigurationModel.OrderDetailModel;
+@using System.Globalization;
+@model BookShop.BLL.ConfigurationModel.OrderModel.OrderViewModel
+
+@{
+	ViewData["Title"] = "Chi tiết đơn hàng";
+	Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
+	List<OrderDetailViewModel> details = ViewBag.Details;
+	int total = 0;
+}
+
+<h1>OrderDetails</h1>
+
+<div>
+	<h4>OrderViewModel</h4>
+	<hr />
+	<div class="row">
+		<dl class="col-6">
+			<dd class="col-sm-10" hidden>
+				@Html.DisplayFor(model => model.Id)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Code)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Code)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Receiver)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Receiver)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Phone)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Phone)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Email)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Email)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.CreatedDate)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.CreatedDate)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Description)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Description)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Address)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Address)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Shipfee)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Shipfee)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Total)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Total)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.NamePromotion)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.NamePromotion)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Status)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Status)
+			</dd>
+		</dl>
+		<div class="col-6">
+			<ul class="ps-0" style="list-style: none" id="menuDetail">
+				@foreach (var item in details)
+				{
+					total += (item.Price * item.Quantity);
+					<li class="row">
+						<div class="col-3 position-relative">
+							<img class="bg-light" src="@item.Img" style="width: 100%; z-index: 0" />
+							<span class="badge" style="color: orange; position: absolute; top: 0; right: 15px; background-color: gray">@item.Quantity</span>
+						</div>
+						<span class="col-6">@item.NameProduct</span>
+						<span class="col-3">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)</span>
+					</li>
+				}
+			</ul>
+			<table id="tableDetail" hidden>
+				<thead>
+					<tr class="row">
+						<th class="col-5">Tên sách</th>
+						<th class="col-2">Số lượng</th>
+						<th class="col-5">Hành động</th>
+					</tr>
+				</thead>
+				<tbody id="listDetail">
+				</tbody>
+			</table>
+			<div id="textModify">
+				<label>Ghi chú đơn hàng</label>
+				<textarea id="modifyChange" class="form-control" rows="5"></textarea>
+				<label class="text-danger" id="valid" hidden></label>
+			</div>
+		</div>
+	</div>
+</div>
+<div>
+	<a href="@Url.Action("Index", "OrderManage")" class="btn btn-outline-info"><i class="fa-solid fa-arrow-left"></i> Trở lại</a>
+	<button class="btn btn-outline-success" id="acceptOrder" hidden onclick="AcceptOrder()">Xác nhận đơn hàng</button>
+	<button class="btn btn-outline-success" id="deliveryOrder" hidden onclick="DeliveryOrder()">Xác nhận giao hàng</button>
+	<button class="btn btn-outline-success" id="completeOrder" hidden onclick="SuccessOrder()">Xác nhận hoàn thành đơn hàng</button>
+	<button class="btn btn-outline-warning" id="returnOrder" hidden onclick="ReturnOrder()">Xác nhận trả hàng</button>
+	<button class="btn btn-outline-warning" id="waitHandleReturn" hidden onclick="WaitHandleReturn()">Xác nhận hàng đã trả về</button>
+	<button class="btn btn-outline-success" id="completeReturn" hidden onclick="SuccessReturn()">Xác nhận xử lý hoàn tất</button>
+	<button class="btn btn-outline-danger" id="cancelOrder" hidden onclick="CancelOrder()">Xác nhận hủy đơn</button>
+	<button class="btn btn-outline-success" id="closeOrder" hidden onclick="CloseOrder()">Xác nhận đóng đơn</button>
+	<a href="@Url.Action("Edit", "OrderManage", new { id = Model.Id })" id="modifyOrder" hidden class="btn btn-outline-warning"> Chỉnh sửa</a>
+
+</div>
+<script type="text/javascript">
+	function checkStatus() {
+		switch (@Model.Status) {
+			case 1:
+				document.getElementById('acceptOrder').removeAttribute('hidden');
+				document.getElementById('modifyOrder').removeAttribute('hidden');
+				break;
+			case 2:
+				document.getElementById('deliveryOrder').removeAttribute('hidden');
+				document.getElementById('modifyOrder').removeAttribute('hidden');
+				document.getElementById('cancelOrder').removeAttribute('hidden');
+				break;
+			case 3:
+				document.getElementById('completeOrder').removeAttribute('hidden');
+				document.getElementById('returnOrder').removeAttribute('hidden');
+				break;
+			case 4:
+				document.getElementById('closeOrder').removeAttribute('hidden');
+				break;
+			case 5:
+				document.getElementById('waitHandleReturn').removeAttribute('hidden');
+				break;
+			case 6:
+				document.getElementById('completeReturn').removeAttribute('hidden');
+				document.getElementById('completeReturn').setAttribute('disabled', 'disabled');
+				document.getElementById('menuDetail').setAttribute('hidden', 'hidden');
+				document.getElementById('tableDetail').removeAttribute('hidden');
+				LoadDetailToTable();
+				break;
+			case 7:
+				document.getElementById('acceptOrder').removeAttribute('hidden');
+				break;
+			case 8:
+				break;
+			case 9:
+				break;
+			case 0:
+				break;
+			default:
+				break;
+		}
+	}
+	$(document).ready(function () {
+		checkStatus();
+	})
+
+	var url = "@Url.Action("Index", "OrderManage")";
+
+	function AcceptOrder() {
+		$.ajax({
+			url: '/Admin/OrderManage/AcceptOrder',
+			type: 'POST',
+			data: { id: @Model.Id },
+			success: function (result) {
+				if (result.success) {
+					alert('Xác nhận thành công.');
+					window.location.href = url;
+				} else {
+					alert('Xác nhận thất bại: ' + result.errorMessage);
+				}
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	}
+
+	function DeliveryOrder() {
+		$.ajax({
+			url: '/Admin/OrderManage/DeliveryOrder',
+			type: 'POST',
+			data: { id: @Model.Id },
+			success: function (result) {
+				if (result.success) {
+					alert('Xác nhận giao hàng thành công.');
+					window.location.href = url;
+				} else {
+					alert('Xác nhận thất bại: ' + result.errorMessage);
+				}
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	}
+
+	function SuccessOrder() {
+		$.ajax({
+			url: '/Admin/OrderManage/SuccessOrder',
+			type: 'POST',
+			data: { id: @Model.Id },
+			success: function (result) {
+				if (result.success) {
+					alert('Xác nhận hoàn thành đơn hàng thành công.');
+					window.location.href = url;
+				} else {
+					alert('Xác nhận thất bại: ' + result.errorMessage);
+				}
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	}
+
+	function ReturnOrder() {
+		var modifyChange = document.getElementById('modifyChange').value;
+		if (modifyChange.trim() === "") {
+			document.getElementById('valid').innerHTML = "*Hãy thêm ghi chú về lý do trả hàng";
+			document.getElementById('valid').removeAttribute('hidden');
+		}
+		else {
+			document.getElementById('valid').setAttribute('hidden', 'hidden');
+			$.ajax({
+				url: '/Admin/OrderManage/ReturnOrder',
+				type: 'POST',
+				data: { id: @Model.Id, modifyChange: modifyChange },
+				success: function (result) {
+					if (result.success) {
+						alert('Xác nhận trả hàng thành công.');
+						window.location.href = url;
+					} else {
+						alert('Xác nhận thất bại: ' + result.errorMessage);
+					}
+				},
+				error: function (error) {
+					alert('Có lỗi xảy ra: ' + error.responseText);
+				}
+			});
+		}
+	}
+
+	function WaitHandleReturn() {
+		$.ajax({
+			url: '/Admin/OrderManage/WaitHandleReturn',
+			type: 'POST',
+			data: { id: @Model.Id },
+			success: function (result) {
+				if (result.success) {
+					alert('Xác nhận hàng đã trả về đến nơi.');
+					window.location.href = url;
+				} else {
+					alert('Xác nhận thất bại: ' + result.errorMessage);
+				}
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	}
+
+	var myAction = {};
+	var condition = 0;
+	function HandleReturn(id) {
+		let confi = "xác nhận trả hàng về kho?";
+		var action = 0;
+		var detail = document.getElementById('detail-' + id);
+		action = Number(document.getElementById('details-' + id).value);
+		myAction[id] = action;
+		let count = 0;
+		for (const key in myAction) {
+			count++;
+		}
+
+		if (quantity = count) {
+			document.getElementById('completeReturn').removeAttribute('disabled');
+		}
+		else {
+			document.getElementById('completeReturn').setAttribute('disabled', 'disabled');
+		}
+	}
+	function LoadDetailToTable() {
+		$.ajax({
+			url: '/Admin/OrderManage/GetDetails',
+			type: 'GET',
+			data: { id: @Model.Id },
+			success: function (data) {
+				var detailsList = $("#listDetail");
+				detailsList.empty();
+				data.forEach(function (item) {
+					condition++;
+					var orderRow =
+						'<tr class="row">' +
+						'<td class="col-5"><label>' + item.nameProduct + '</label></td>' +
+						'<td class="col-2"><label>' + item.quantity + '</label></td>' +
+						'<td class="col-5">' +
+						'<select id="details-' + item.id + '" onchange="HandleReturn(' + item.id + ')">' +
+						'<option value="" selected disabled>--Sellect action--</option>' +
+						'<option value="1">Hàng có thể trả về kho</option>' +
+						'<option value="0">Hàng lỗi cần xử lý</option>' +
+						'</select>' +
+						'</td>' +
+						'</tr>';
+					detailsList.append(orderRow);
+				});
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	}
+
+	function SuccessReturn() {
+		var modifyChange = document.getElementById('modifyChange').value;
+		if (modifyChange.trim() === "") {
+			document.getElementById('valid').innerHTML = "*Thêm ghi chú cách xử lý đơn hàng trả về";
+			document.getElementById('valid').removeAttribute('hidden');
+		}
+		else {
+			document.getElementById('valid').setAttribute('hidden', 'hidden');
+			$.ajax({
+				url: '/Admin/OrderManage/SuccessReturn',
+				type: 'POST',
+				data: { id: @Model.Id, modifyChange: modifyChange, myAction: myAction },
+				success: function (result) {
+					if (result.success) {
+						alert('Xác nhận xủ lý hàng trả thành công.');
+						window.location.href = url;
+					} else {
+						alert('Xác nhận thất bại: ' + result.errorMessage);
+					}
+				},
+				error: function (error) {
+					alert('Có lỗi xảy ra: ' + error.responseText);
+				}
+			});
+		}
+	}
+
+	function CancelOrder() {
+		var modifyChange = document.getElementById('modifyChange').value;
+		if (modifyChange.trim() === "") {
+			document.getElementById('valid').innerHTML = "*Hãy thêm lý do hủy đơn";
+			document.getElementById('valid').removeAttribute('hidden');
+		}
+		else {
+			document.getElementById('valid').setAttribute('hidden', 'hidden');
+			$.ajax({
+				url: '/Admin/OrderManage/CancelOrder',
+				type: 'POST',
+				data: { id: @Model.Id, modifyChange: modifyChange },
+				success: function (result) {
+					if (result.success) {
+						alert('Xác nhận hủy đơn hàng thành công.');
+						window.location.href = url;
+					} else {
+						alert('Xác nhận thất bại: ' + result.errorMessage);
+					}
+				},
+				error: function (error) {
+					alert('Có lỗi xảy ra: ' + error.responseText);
+				}
+			});
+		}
+	}
+
+	function CloseOrder() {
+		$.ajax({
+			url: '/Admin/OrderManage/CloseOrder',
+			type: 'POST',
+			data: { id: @Model.Id },
+			success: function (result) {
+				if (result.success) {
+					alert('Xác nhận đóng đơn hàng thành công.');
+					window.location.href = url;
+				} else {
+					alert('Xác nhận thất bại: ' + result.errorMessage);
+				}
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	}
+</script>

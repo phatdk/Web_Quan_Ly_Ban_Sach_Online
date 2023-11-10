@@ -348,6 +348,9 @@ namespace BookShop.DAL.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Id_Category");
@@ -619,7 +622,7 @@ namespace BookShop.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ModifiNotes")
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("PaymentDate")
                         .HasColumnType("datetime2");

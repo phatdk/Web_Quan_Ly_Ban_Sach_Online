@@ -1,0 +1,130 @@
+﻿@using BookShop.BLL.ConfigurationModel.OrderModel;
+@using System.Globalization;
+@model IEnumerable<BookShop.BLL.ConfigurationModel.OrderModel.OrderViewModel>
+
+@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
+}
+
+<div class="row bg-light">
+	<div class="m-1 row">
+		<select class="col-3 border-info text-danger" id="filterSelect" onchange="filterChange()" aria-label="Default select example">
+			<option value="" selected>Tất cả</option>
+			<option value="1">Chờ xử lý</option>
+			<option value="2">Đã xác nhận</option>
+			<option value="3">Đang giao</option>
+			<option value="5">Đơn hàng bị trả về</option>
+			<option value="6">Hàng trả chờ xử lý</option>
+			<option value="8">Đơn bị hủy</option>
+			<option value="7">Đơn hàng trả lại đã xử lý</option>
+			<option value="4">Đơn đã hoành thành</option>
+			<option value="9">Đơn đã đóng</option>
+			<option value="0">Đơn lưu tạm</option>
+		</select>
+		<div class="btn-group col-4">
+			<input id="keyWordFind" class="btn btn-outline-info" placeholder="nhập mã hoặc tên" onkeypress="searchOnEnter(event)">
+			<button onclick="findOrder()" class="btn btn-info"><i class="fa-solid fa-magnifying-glass"></i></button>
+		</div>
+	</div>
+	<div>
+		<table class="table table-bordered border-dark table-hover">
+			<thead class="thead-light">
+				<tr>
+					<th class="text-center">STT</th>
+					<th class="text-center">Mã đơn</th>
+					<th class="text-center">Mã KH</th>
+					<th class="text-center">Giá trị đơn</th>
+					<th class="text-center">Ngày tạo</th>
+					<th class="text-center">Nv tiếp nhận</th>
+					<th class="text-center">Trạng thái</th>
+					<th class="text-center"></th>
+				</tr>
+			</thead>
+			<tbody id="ordersList">
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<script>
+	function formatCurrency(amount) {
+		return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+	}
+	function getDetail(id) {
+		var url = "@Url.Action("Details", "OrderManage")?id=" + id
+		window.location.href = url;
+	}
+	function getOrder() {
+		// Gửi yêu cầu Ajax đến máy chủ
+		var status = document.getElementById("filterSelect").value;
+		var keyWord = document.getElementById("keyWordFind").value;
+		var sortDate = 
+		$.ajax({
+			url: '@Url.Action("GetOrder", "OrderManage")',
+			type: 'GET',
+			data: { status: status, keyWord: keyWord },
+			success: function (data) {
+				// Xóa danh sách cũ trước khi thêm danh sách mới
+				var ordersList = $("#ordersList");
+				ordersList.empty();
+				let statusColor = "";
+				// Thêm danh sách đơn hàng vào HTML
+				data.forEach(function (item, index) {
+					index += 1;
+					const datetime = item.createdDate;
+					const formattedDateTime = moment(datetime).format("YYYY-MM-DD HH:mm:ss");
+					if (item.status === 0 || item.status === 5 || item.status === 8) {
+						statusColor = "table-danger";
+					} 
+					else if(item.status === 6 || item.status === 1){
+						statusColor = "table-warning";
+					}
+					else if (item.status === 7) {
+						statusColor = "table-info"
+					}
+					else if (item.status === 2 || item.status === 3) {
+						statusColor = "table-primary"
+					}
+					else if(item.status === 4 || item.status === 9){
+						statusColor = "table-success"
+					}
+					var orderRow =
+						'<tr class="table table-bordered border-dark ' + statusColor + '">' +
+						'<td class="text-center">' + index + '</td>' +
+						'<td class="text-center"><label>' + item.code + '</label></td>' +
+						'<td class="text-center"><label>' + item.userCode + '</label></td>' +
+						'<td class="text-center"><label>' + formatCurrency(item.total) + '</label></td>' +
+						'<td class="text-center"><label>' + formattedDateTime + '</label></td>' +
+						'<td class="text-center"><label>' + item.nameStaff + '</label></td>' +
+						'<td class="text-center"><label>' + item.statusName + '</label></td>' +
+						'<td class="text-center"><button class="btn btn-warning" onclick="getDetail('+ item.id +')">Xem</button></td>' +
+						'</tr>';
+
+					ordersList.append(orderRow);
+				});
+			},
+			error: function (error) {
+				console.log('Lỗi: ' + error.responseText);
+			}
+		});
+	}
+
+	function filterChange() {
+		getOrder()
+	}
+	function findOrder() {
+		getOrder()
+	}
+	function searchOnEnter(event) {
+		if (event.key === 'Enter') {
+			event.preventDefault(); // Ngăn chặn hành vi mặc định của Enter (chẳng hạn là submit biểu mẫu)
+			getOrder();
+		}
+	}
+
+	// Gọi hàm getProducts() khi trang được tải
+	$(document).ready(function () {
+		getOrder();
+	});
+</script>

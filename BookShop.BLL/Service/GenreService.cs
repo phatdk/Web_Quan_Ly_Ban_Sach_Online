@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookShop.BLL.Service.BookGenreCategoryService
+namespace BookShop.BLL.Service
 {
 	public class GenreService : IGenreService
 	{
@@ -27,6 +27,7 @@ namespace BookShop.BLL.Service.BookGenreCategoryService
 					Name = requet.Name,
 					CreatedDate = DateTime.Now,
 					Id_Category = requet.Id_Category,
+					Status = requet.Status,
 					Index = requet.Index,
 				};
 				await _repository.CreateAsync(obj);
@@ -47,6 +48,7 @@ namespace BookShop.BLL.Service.BookGenreCategoryService
 						{
 							Id = g.Id,
 							Name = g.Name,
+							Status= g.Status,
 							CreatedDate = g.CreatedDate,
 							Id_Category = g.Id_Category,
 							Index = g.Index,
@@ -62,6 +64,7 @@ namespace BookShop.BLL.Service.BookGenreCategoryService
 			{
 				Id = obj.Id,
 				Name = obj.Name,
+				Status=obj.Status,
 				CreatedDate = obj.CreatedDate,
 				Id_Category = obj.Id_Category,
 				Index = obj.Index,
@@ -96,6 +99,7 @@ namespace BookShop.BLL.Service.BookGenreCategoryService
 				{
 					obj.Name = requet.Name;
 					obj.Id_Category = requet.Id_Category;
+					obj.Status = requet.Status;
 					obj.Index = requet.Index;
 					await	_repository.UpdateAsync(id, obj);
 					return true;
@@ -117,6 +121,7 @@ namespace BookShop.BLL.Service.BookGenreCategoryService
 						{
 							Id = g.Id,
 							Name = g.Name,
+							Status = g.Status,
 							CreatedDate = g.CreatedDate,
 							Id_Category = g.Id_Category,
 							Index = g.Index,

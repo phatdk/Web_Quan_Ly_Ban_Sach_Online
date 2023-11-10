@@ -13,5 +13,6 @@ namespace BookShop.DAL.Repositopy
         Task<List<T>> GetAllAsync();
         Task<T> GetByIdAsync(int id);
         Task<T> RemoveAsync(int id);
+        Task<T> RemoveAsync(T obj);
     }
 }

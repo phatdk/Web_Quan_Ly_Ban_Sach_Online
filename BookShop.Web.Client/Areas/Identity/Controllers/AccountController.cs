@@ -8,14 +8,17 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using App.Areas.Identity.Models.AccountViewModels;
+using BookShop.BLL.ConfigurationModel.CartDetailModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
+using BookShop.DAL.Repositopy;
 using BookShop.Web.Client.ExtendMethods;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 
@@ -30,28 +33,31 @@ namespace App.Areas.Identity.Controllers
         private readonly SignInManager<Userr> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<AccountController> _logger;
-        private readonly IOrderService _OrderService;
+        private readonly IUserService _userService;
+        private readonly ICartService _CartRepository;
+        private readonly IWalletpointService _WalletPointRepository;
 
-        public AccountController(
-            UserManager<Userr> userManager,
-            SignInManager<Userr> signInManager,
-            IEmailSender emailSender,
-            ILogger<AccountController> logger,
-            IOrderService orderService)
+        public AccountController(UserManager<Userr> userManager, SignInManager<Userr> signInManager, IEmailSender emailSender, ILogger<AccountController> logger, IUserService userService, ICartService cartRepository, IWalletpointService walletPointRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
-            _OrderService = orderService;
+            _userService = userService;
+            _CartRepository = cartRepository;
+            _WalletPointRepository = walletPointRepository;
         }
 
+        private Task<Userr> GetCurrentUserAsync()
+        {
+            return _userManager.GetUserAsync(HttpContext.User);
+        }
         // GET: /Account/Login
         [HttpGet("/login/")]
         [AllowAnonymous]
-        public IActionResult Login(string returnUrl = null)
+        public IActionResult Login()
         {
-            ViewData["ReturnUrl"] = returnUrl;
+
             return View();
         }
 
@@ -60,10 +66,10 @@ namespace App.Areas.Identity.Controllers
         [HttpPost("/login/")]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            returnUrl ??= Url.Content("~/");
-            ViewData["ReturnUrl"] = returnUrl;
+            //returnUrl ??= Url.Content("~/");
+            //ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
                 if (model.Password == null && model.UserNameOrEmail == null)
@@ -74,35 +80,48 @@ namespace App.Areas.Identity.Controllers
                 // Tìm UserName theo Email, đăng nhập lại
                 if ((!result.Succeeded))
                 {
-                    var user = await _userManager.FindByEmailAsync(model.UserNameOrEmail);
-                    if (user != null)
-                    {
-                        result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: true);
-                    }
+                    ModelState.AddModelError("Sai mật khẩu tài khoản");
+                    ViewBag.Error = "Sai tài khoản mật khẩu";
+                    return View(model);
                 }
 
                 if (result.Succeeded)
                 {
+                    var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == model.UserNameOrEmail);
+                    var roleuser = await _userManager.GetRolesAsync(user);
+                    if (roleuser != null)
+                    {
+                        if (roleuser.Contains("Admin"))
+                        {
+                            return Redirect("/Admin/Home/Index");
+                        }
+                    }
                     _logger.LogInformation(1, "User logged in.");
-                    return LocalRedirect(returnUrl);
+                    return Redirect("Home/Index");
                 }
                 if (result.RequiresTwoFactor)
                 {
-                    return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    return RedirectToAction(nameof(SendCode), new { ReturnUrl = "~/", RememberMe = model.RememberMe });
                 }
-
                 if (result.IsLockedOut)
                 {
+                    ViewBag.Error = "Tài khoản đã bị khoá";
                     _logger.LogWarning(2, "Tài khoản bị khóa");
                     return View("Lockout");
                 }
                 else
                 {
+                    ViewBag.Error = "Tài khoản đã bị khoá";
                     ModelState.AddModelError("Sai mật khẩu tài khoản");
                     return View(model);
                 }
             }
-            return View(model);
+            else
+            {
+                ViewBag.Error = "Sai tài khoản mật khẩu";
+                return View(model);
+            }
+
         }
 
         // POST: /Account/LogOff
@@ -125,21 +144,63 @@ namespace App.Areas.Identity.Controllers
             return View();
         }
         //
-        // POST: /Account/Register
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
+
+        public async Task<string> GenerateCode(int length)
         {
-            returnUrl ??= Url.Content("~/");
-            ViewData["ReturnUrl"] = returnUrl;
-            if (ModelState.IsValid)
+            // Khởi tạo đối tượng Random
+            Random random = new Random();
+
+            // Tạo một chuỗi các ký tự ngẫu nhiên
+            string characters = "0123456789";
+            string code = "";
+            for (int i = 0; i < length; i++)
             {
-                var user = new Userr { Code = "KH" + await _OrderService.GenerateCode(9), UserName = model.UserName, Email = model.Email, Name = model.Name, Gender = 0, CreatedDate = DateTime.Now };
-                var result = await _userManager.CreateAsync(user, model.Password);
+                code += characters[random.Next(characters.Length)];
+            }
+            var duplicate = (await _userService.GetAll()).Where(c => c.Code.Equals(code));
+            if (!duplicate.Any())
+            {
+                return code;
+            }
+            return (await GenerateCode(length)).ToString();
+        }
+
+		// POST: /Account/Register
+		[HttpPost]
+		[AllowAnonymous]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
+		{
+			returnUrl ??= Url.Content("~/");
+			ViewData["ReturnUrl"] = returnUrl;
+			if (ModelState.IsValid)
+			{
+				// kiểm cha email
+				var emailCheck = (await _userService.GetAll()).Where(x=>x.Email.Equals(model.Email));
+				if (emailCheck.Any())
+				{
+					_logger.LogInformation("Email đã được sử dụng.");
+					return View(model);
+				}
+				var user = new Userr { Code = "KH" + await GenerateCode(7), UserName = model.UserName, Email = model.Email, Name = model.Name, Gender = 0, CreatedDate = DateTime.Now, Status = 1 };
+				var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
                 {
+                    var cart = new CartViewModel()
+                    {
+                        Id_User = user.Id,
+
+                    };
+                    await _CartRepository.Add(cart);
+                    var walletPoint = new WalletPoint()
+                    {
+                        Id_User = user.Id,
+                        CreatedDate = DateTime.Now,
+                        Status = 1,
+                        Point = 0,
+                    };
+                    await _WalletPointRepository.Add(walletPoint);
                     _logger.LogInformation("Đã tạo user mới.");
                     var users = await _userManager.FindByNameAsync(user.UserName);
                     if (users != null)

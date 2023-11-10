@@ -1,0 +1,87 @@
+﻿@using BookShop.BLL.ConfigurationModel.ProductModel;
+@{
+    ViewData["Title"] = "Home Page";
+    List<ProductViewModel> products = ViewBag.Products;
+}
+<style>
+    .giaban {
+        font-weight: 700;
+        color: #C92127;
+        font-size: 30px;
+    }
+
+    .giagoc {
+        color: rgb(189, 189, 189);
+        text-decoration-line: line-through;
+    }
+
+    .dssanphammua{
+        background-color: white;
+        padding: 20px;
+    }
+    .testsp {
+        display: flex;
+    }
+
+    .marginxx {
+        margin: 0px 5px 0px 5px;
+        border: 1px solid #EBE3D5;
+        width: 180px;
+        padding: 10px;
+    }
+
+    .progress-value {
+        margin-top: 20px;
+        right: 0;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        color: #ffffff;
+        background-color: rgb(191, 0, 45);
+        font-size: 1em;
+        text-align: center;
+        font-weight: 700;
+        border-radius: 20px
+    }
+</style>
+<div class="dssanphammua">
+    <h3>Danh Sách Sản Phẩm</h3>
+    <div class="testsp">
+        @if (products != null)
+        {
+            @foreach (var item in products)
+            {
+                <div class="marginxx">
+                    <div class="product-image">
+                        <div class="flashsale-image-container">
+                            <img src="@item.ImgUrl" class="card-img-top" alt="...">
+                        </div>
+                        <!--
+                        <div class="outstock-container">
+                            <img class="flashsale-item-chay-hang" src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/flashsale/Chay-hang-icon.svg">
+                        </div>
+                        <div class="new-label-pro-sale"><span class="new-p-sale-label discount-l-fs">99%</span></div>-->
+                    </div>
+                    <div class="ttsp">
+                        <p>
+                            @item.Name
+                        </p>
+                        <div>
+                        </div>
+                        <div class="giaban">
+                            @item.Price
+                        </div>
+                        <div class="giagoc">
+                            600
+                        </div>
+                        <p onclick="location.href='@Url.Action("ChiTietSanPham", new{id = item.Id})'" class="progress-value">Mua</p>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>khong có sản phảm</p>
+        }
+    </div>
+</div>

@@ -7,9 +7,11 @@ using System.Net;
 using BookShop.BLL.IService;
 using BookShop.BLL.Service;
 using BookShop.DAL.Repositopy;
+using BookShop.Web.Client;
+using BLL.Services.Implements;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddWebDependency(builder.Configuration);
 #region Gửi email
 builder.Services.AddOptions();
 var _Mailsetting = builder.Configuration.GetSection("MailSettings");
@@ -86,10 +88,17 @@ op.AddPolicy("ManagerMenu", builder =>
 #endregion
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<IAuthorService, AuthorService>();
+builder.Services.AddTransient<ISupplierService, SupplierService>();
+builder.Services.AddTransient<IGenreService, GenreService>();
+builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IUserPromotionService, UserPromotionService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IOrderDetailService, OrderDetailService>();
 builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<IProductBookService, ProductBookService>();
 builder.Services.AddTransient<IImageService, ImageService>();
 builder.Services.AddTransient<IBookService, BookService>();
 builder.Services.AddTransient<ICollectionService, CollectionService>();
@@ -98,6 +107,15 @@ builder.Services.AddTransient<ICartDetailService, CartDetailService>();
 builder.Services.AddTransient<IPaymentFormService, PaymentFormService>();
 builder.Services.AddTransient<IOrderPaymentService, OrderPaymentService>();
 builder.Services.AddTransient<IStatusOrderService, StatusOrderService>();
+builder.Services.AddTransient<IPromotionService, PromotionService>();
+builder.Services.AddTransient<IWalletpointService, WalletPointService>();
+builder.Services.AddTransient<IPromotionTypeService, PromotionTypeService>();
+builder.Services.AddTransient<IVNPayService, VNPayService>();
+builder.Services.AddTransient<IWishListService, WishListService>();
+
+builder.Services.AddTransient<IUserRoleService, UserRoleService>();
+
+builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromMinutes(30); });
 
 // Configure the HTTP request pipeline.
 var app = builder.Build();
@@ -106,14 +124,25 @@ var app = builder.Build();
 //{
 //    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Userr>>();
 //    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
-//    var oderManager = scope.ServiceProvider.GetRequiredService<IOrderService>();
-//    SeedDataMD.SeedAsync(userManager, roleManager, oderManager).Wait();
+//    SeedDataMD.SeedAsync(userManager, roleManager).Wait();
 //}
 //using (var scope = app.Services.CreateScope())
 //{
-//    var serviice1 = scope.ServiceProvider.GetRequiredService<IStatusOrderService>();
- 
-//    SeedDataMD.SeedDataProduct(serviice1).Wait();
+//    var service = scope.ServiceProvider.GetRequiredService<IStatusOrderService>();
+
+//    SeedDataMD.SeedDataStatus(service).Wait();
+//}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var service1 = scope.ServiceProvider.GetRequiredService<IPaymentFormService>();
+
+//    SeedDataMD.SeedDataPayment(service1).Wait();
+//}
+//using (var scope = app.Services.CreateScope())
+//{ 
+//var service2 = scope.ServiceProvider.GetRequiredService<IPromotionTypeService>();
+
+//SeedDataMD.SeedPromotionType(service2).Wait();
 //}
 #endregion
 if (!app.Environment.IsDevelopment())

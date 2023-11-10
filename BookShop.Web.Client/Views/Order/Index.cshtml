@@ -1,6 +1,82 @@
-﻿@using BookShop.BLL.ConfigurationModel.OrderModel;
+﻿@model IEnumerable<BookShop.BLL.ConfigurationModel.OrderModel.OrderViewModel>
+
 @{
-    ViewData["Title"] = "Đơn hàng của bạn";
-    List<OrderViewModel> orders = ViewBag.Orders;
+	ViewData["Title"] = "Index";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h1>Danh sách đơn hàng của bạn</h1>
+
+<h1>Index</h1>
+
+<p>
+	<a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Id)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Code)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Receiver)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Phone)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Email)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.CreatedDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Description)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.NameUser)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.NamePromotion)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Id)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Code)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Receiver)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Phone)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Email)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Description)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.NameUser)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.NamePromotion)
+				</td>
+				<td>
+					@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+					@Html.ActionLink("Details", "OrderDetails", new { id=item.Id }) |
+					@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
