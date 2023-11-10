@@ -14,6 +14,7 @@ namespace BookShop.BLL.IService
 		public Task<List<BookViewModel>> GetByGenre(int genrerId);
 		public Task<BookViewModel> GetById(int id);
 		public Task<bool> Update(UpdateBookModel requet);
+		public Task<bool> ChangeQuantity(int id, int quantity);
 		public Task<bool> Delete(int id);
 		public Task<bool> Add(CreateBookModel requet);
 	}

@@ -8,7 +8,7 @@ namespace BookShop.BLL.ConfigurationModel.OrderPaymentModel
 {
 	public class UpdateOrderPaymentModel
 	{
-		public int paymentAmount { get; set; }
+		public int PaymentAmount { get; set; }
 		public int Status { get; set; }
 
 		//foreign key

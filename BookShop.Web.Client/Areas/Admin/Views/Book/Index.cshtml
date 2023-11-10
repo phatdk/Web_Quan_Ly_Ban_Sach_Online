@@ -7,7 +7,7 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+   <button class="btn btn-primary" onclick="location.href='@Url.Action("Create")'"><i class="fa-solid fa-circle-plus"></i> Create</button>
 </p>
 <table class="table">
     <thead>
@@ -24,9 +24,6 @@
             <th>
                 Mô tả
             </th>
-           @* <th>
-                Độc giả
-            </th>*@
             <th>
                 Giá bìa
             </th>
@@ -36,42 +33,21 @@
             <th>
                 Số lượng
             </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.PageSize)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Pages)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cover)
-            </th>*@
             <th>
                Ngày xuất bản
-            </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.Weight)
-            </th>*@
-            @*<th>
-                @Html.DisplayNameFor(model => model.Widght)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Length)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Height)
-            </th>*@
-            <th>
-               Ngày tạo
             </th>
             <th>
                 Trạng thái
             </th>
             <th>
+               Tác giả
+            </th>
+            <th>
+                Thể loại
+            </th>
+            <th>
                 Nhà xuất bản
             </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.Id_Supplier)
-            </th>*@
             <th>Thao tác</th>
         </tr>
     </thead>
@@ -90,9 +66,6 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
-           @* <td>
-                @Html.DisplayFor(modelItem => item.Reader)
-            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
@@ -102,42 +75,27 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Quantity)
             </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.PageSize)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Pages)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cover)
-            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.PublicationDate)
-            </td>
-           @* <td>
-                @Html.DisplayFor(modelItem => item.Weight)
-            </td>*@
-           @* <td>
-                @Html.DisplayFor(modelItem => item.Widght)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Length)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Height)
-            </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
+                 @foreach (var author in item.authors)
+                {
+                    <div>@author</div>
+                }       
+            </td>
+            <td>
+                 @foreach (var genre in item.genres)
+                {
+                    <div>@genre</div>
+                }      
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.SupplierName)
             </td>
-           @* <td>
-                @Html.DisplayFor(modelItem => item.Id_Supplier)
-            </td>*@
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
                 @Html.ActionLink("Details", "Details", new { id=item.Id }) |

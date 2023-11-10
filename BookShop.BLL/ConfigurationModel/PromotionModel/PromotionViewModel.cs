@@ -25,6 +25,7 @@ namespace BookShop.BLL.ConfigurationModel.PromotionModel
 
 		// join properties
 		public string NameType { get; set; }
+		public int TotalReduct { get; set; }
 
 		//foreign key
 		public int Id_Type { get; set; }
