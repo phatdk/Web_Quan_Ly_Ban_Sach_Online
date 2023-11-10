@@ -80,6 +80,22 @@
                 border-right: 2px solid rgba(0,0,0,0.2);
                 pointer-events: none;
             }
+
+    .nosanpham{
+        background-color:white;
+        height:500px;
+        text-align:center;
+        padding-top:100px;
+    }
+
+    .nosanpham a{
+            padding: 20px;
+        margin-top:20px;
+        color:white;
+        background-color:red;
+        border: 1px solid red;
+        font-weight:700;
+    }
 </style>
 <table class="table">
     <thead>
@@ -115,84 +131,90 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TotalPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id_User)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id_Product)
-            </td>
-            <td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id_User)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id_Product)
+                </td>
+                <td>
                     @Html.ActionLink("Delete", "RemoveProduct", new { id=item.Id_Product })
-            </td>
-        </tr>
-}
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 <div>
     <p>Giỏ hàng</p>
 </div>
+@if (Model.Count() != 0)
+        {
 <div class="row">
     <div class="col-8 ">
-        <table border="1" id="mytable" class="table tt">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" name="" id="checkAll" onchange="checkAll(this)"></th>
-                    <th>Sản Phẩm</th>
-                    <th>Đơn giá</th>
-                    <th>Số lượng</th>
-                    <th>Thành tiền</th>
-                </tr>
-            </thead>
-            <tbody id="mylist">
-                @foreach (var item in Model) {
-                <tr class="">
-                    <td><input type="checkbox" name="checkbox" id="" onchange="turnQtyInput(this)"></td>
-                    <td>
-                        <div class="dsanh">
-                            <!--<img src="~/img/IMG_565456.png"/>-->
-                            <div class="thongtin">
-                                @Html.DisplayFor(modelItem => item.ProductName)
-                            </div>
-                        </div>
-                    </td>
-                    <td id="khanh">@Html.DisplayFor(modelItem => item.ProductPrice)</td>
-                    <td>
-                            <input type="number" value="@Html.DisplayFor(modelItem => item.Quantity)" min="1" onchange="countCost()">
-                    </td>
-                    <td><span class="cost"></span></td>
-                </tr>
-                }
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="4">TỔNG</td>
-                    <td><span id="totalcost"></span></td>
-                </tr>
-            </tfoot>
-        </table>
+            <table border="1" id="mytable" class="table tt">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" name="" id="checkAll" onchange="checkAll(this)"></th>
+                        <th>Sản Phẩm</th>
+                        <th>Đơn giá</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody id="mylist">
+
+                    @foreach (var item in Model)
+                    {
+                        <tr class="">
+                            <td><input type="checkbox" name="checkbox" id="" onchange="turnQtyInput(this)"></td>
+                            <td>
+                                <div class="dsanh">
+                                    <!--<img src="~/img/IMG_565456.png"/>-->
+                                    <div class="thongtin">
+                                        @Html.DisplayFor(modelItem => item.ProductName)
+                                    </div>
+                                </div>
+                            </td>
+                            <td id="khanh">@Html.DisplayFor(modelItem => item.ProductPrice)</td>
+                            <td>
+                                <input type="number" value="@Html.DisplayFor(modelItem => item.Quantity)" min="1" onchange="countCost()">
+                            </td>
+                            <td><span class="cost"></span></td>
+                        </tr>
+                    }
+
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">TỔNG</td>
+                        <td><span id="totalcost"></span></td>
+                    </tr>
+                </tfoot>
+            </table>
     </div>
     <div class="col-4">
         <div>
@@ -208,53 +230,62 @@
             </div>
         </div>
     </div>
+</div>
+}
+else
+{
+    <div class="nosanpham">
+        <h2>Chưa có sản phẩm được thêm vào</h2>
+        <a type="button" xc asp-area="" asp-controller="Home" asp-action="DanhGia">MUA SẮM NGAY</a>
+    </div>
+}
 <script>
-        var priceRange = document.getElementById("price-range")
-        var mylist = document.getElementById("mylist")
-        var rows = mylist.getElementsByTagName("tr")
-        var cost = document.getElementsByClassName("cost")
-        var qty = document.getElementsByName("qty")
-        var checkboxes = document.getElementsByName("checkbox")
-        var totalcost = document.getElementById("totalcost")
-        function turnQtyInput(source) {
-            var row = source.parentElement.parentElement
-            var qtyInput = row.getElementsByTagName("input")[1]
-            if (source.checked == true) {
-                qtyInput.disabled = false
-            } else {
-                qtyInput.disabled = true
-                resetCost(source)
-            }
+    var priceRange = document.getElementById("price-range")
+    var mylist = document.getElementById("mylist")
+    var rows = mylist.getElementsByTagName("tr")
+    var cost = document.getElementsByClassName("cost")
+    var qty = document.getElementsByName("qty")
+    var checkboxes = document.getElementsByName("checkbox")
+    var totalcost = document.getElementById("totalcost")
+    function turnQtyInput(source) {
+        var row = source.parentElement.parentElement
+        var qtyInput = row.getElementsByTagName("input")[1]
+        if (source.checked == true) {
+            qtyInput.disabled = false
+        } else {
+            qtyInput.disabled = true
+            resetCost(source)
         }
+    }
 
-        function checkAll(source) {
-            for (let i = 0; i < rows.length; i++) {
-                checkboxes[i].checked = source.checked
-                qty[i].disabled = !source.checked
-            }
-            resetCost("all")
+    function checkAll(source) {
+        for (let i = 0; i < rows.length; i++) {
+            checkboxes[i].checked = source.checked
+            qty[i].disabled = !source.checked
         }
-        function countCost() {
-            var sum = 0
-            for (let i = 0; i < rows.length; i++) {
-                var price = +rows[i].getElementsById("khanh").value
-                var tt = qty[i].ariaValueMax * price
-                console.log(tt)
-                sum += +cost[i].value
-                console.log(sum)
-            }
-            totalcost.innerHTML = "$" + sum
+        resetCost("all")
+    }
+    function countCost() {
+        var sum = 0
+        for (let i = 0; i < rows.length; i++) {
+            var price = +rows[i].getElementsById("khanh").value
+            var tt = qty[i].ariaValueMax * price
+            console.log(tt)
+            sum += +cost[i].value
+            console.log(sum)
         }
+        totalcost.innerHTML = "$" + sum
+    }
 
-        function resetCost(source) {
-            if (source == "all") {
-                for (let i = 0; i < rows.length; i++) {
-                    //rows[i].getElementsByTagName("input")[1].value = 0
-                }
-                countCost()
+    function resetCost(source) {
+        if (source == "all") {
+            for (let i = 0; i < rows.length; i++) {
+                //rows[i].getElementsByTagName("input")[1].value = 0
             }
-            var row = source.parentElement.parentElement
-            row.getElementsByTagName("input")[1].value = 0
             countCost()
         }
+        var row = source.parentElement.parentElement
+        row.getElementsByTagName("input")[1].value = 0
+        countCost()
+    }
 </script>

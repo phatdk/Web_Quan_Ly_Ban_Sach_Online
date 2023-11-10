@@ -235,7 +235,7 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
                             <div class="col-4">
                                 <label>Số Lượng: </label>
                             </div>
-                            <div class="col-4"
+                            <div class="col-4">
                                 <div id="quantity" class="form-group">
                                     <div style="display: flex">
                                         <input id="quantityInput" class="form-control" min="1" max="@Model.Quantity" value="1" type="number"
@@ -251,6 +251,9 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
                     </div>
                 </div>
                 <div class="mua">
+                    <button id="product" class="btn btn-outline-danger">
+                        <i class="fa-solid fa-face-kiss-wink-heart"></i> Thêm Yêu Thích
+                    </button>
                     <input type="button" class="m1" id="addToCart" value="Thêm Vào Giỏ Hàng" data-bs-toggle="modal" data-bs-target="#spModal" />
                     <input type="button" id="buyNow" class="m2" value="Mua" />
                 </div>
@@ -294,7 +297,6 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
     <div class="row danhgia">
         <div>
             <p>Đánh Giá Sản Phẩm</p>
-            <!---@await Html.PartialAsync("DanhGia");--->
             <div>
                 <div>
                     0<span>/5</span>

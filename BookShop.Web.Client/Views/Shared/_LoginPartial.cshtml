@@ -10,7 +10,7 @@
 {
    @* <partial name="_ManagerMenu"></partial>*@
     <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
-        <div>
+        <div class="nav-link text-dark">
             <div class="dropdown">
                 <h6 class="text-dark dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                     Xin chào @((await UserManager.GetUserAsync(User)).UserName)!

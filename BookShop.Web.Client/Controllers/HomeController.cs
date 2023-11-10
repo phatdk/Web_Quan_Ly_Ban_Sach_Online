@@ -39,7 +39,11 @@ namespace BookShop.Web.Client.Controllers
 		{
 			return View();
 		}
-
+        public async Task<IActionResult> DanhGia()
+        {
+            ViewBag.Products = await _productService.GetAll();
+            return View();
+        }
         public async Task<IActionResult> ChiTietSanPham(int id)
         {
 			_product = await _productService.GetById(id);
