@@ -98,6 +98,7 @@ builder.Services.AddTransient<IUserPromotionService, UserPromotionService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IOrderDetailService, OrderDetailService>();
 builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<IProductBookService, ProductBookService>();
 builder.Services.AddTransient<IImageService, ImageService>();
 builder.Services.AddTransient<IBookService, BookService>();
 builder.Services.AddTransient<ICollectionService, CollectionService>();
@@ -110,9 +111,11 @@ builder.Services.AddTransient<IPromotionService, PromotionService>();
 builder.Services.AddTransient<IWalletpointService, WalletPointService>();
 builder.Services.AddTransient<IPromotionTypeService, PromotionTypeService>();
 builder.Services.AddTransient<IVNPayService, VNPayService>();
+builder.Services.AddTransient<IWishListService, WishListService>();
 
+builder.Services.AddTransient<IUserRoleService, UserRoleService>();
 
-builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromSeconds(1800); });
+builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromMinutes(30); });
 
 // Configure the HTTP request pipeline.
 var app = builder.Build();
@@ -125,9 +128,21 @@ var app = builder.Build();
 //}
 //using (var scope = app.Services.CreateScope())
 //{
-//    var serviice1 = scope.ServiceProvider.GetRequiredService<IStatusOrderService>();
+//    var service = scope.ServiceProvider.GetRequiredService<IStatusOrderService>();
 
-//    SeedDataMD.SeedDataProduct(serviice1).Wait();
+//    SeedDataMD.SeedDataStatus(service).Wait();
+//}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var service1 = scope.ServiceProvider.GetRequiredService<IPaymentFormService>();
+
+//    SeedDataMD.SeedDataPayment(service1).Wait();
+//}
+//using (var scope = app.Services.CreateScope())
+//{ 
+//var service2 = scope.ServiceProvider.GetRequiredService<IPromotionTypeService>();
+
+//SeedDataMD.SeedPromotionType(service2).Wait();
 //}
 #endregion
 if (!app.Environment.IsDevelopment())

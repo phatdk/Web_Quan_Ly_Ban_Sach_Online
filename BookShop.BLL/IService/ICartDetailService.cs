@@ -14,5 +14,6 @@ namespace BookShop.BLL.IService
 		public Task<bool> Add(CreateCartDetailModel model);
 		public Task<bool> Update(int id, UpdateCartDetailModel model);
 		public Task<bool> Delete(int id);
+		public Task<bool> DeleteByCart(int userId);
 	}
 }

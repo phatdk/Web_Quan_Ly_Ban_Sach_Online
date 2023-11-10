@@ -61,7 +61,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
                 {
                     Name = genre.Name,
                     Index = genre.Index,
-                    CreatedDate = genre.CreatedDate,
+                    CreatedDate = DateTime.Now,
+                    Status = genre.Status,
                     Id_Category = genre.Id_Category == 0 ? 1 : genre.Id_Category
                 };
                 var result = await _genreService.Add(createGenerModel);
@@ -81,6 +82,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             {
                 Name = _genre.Name,
                 Index = _genre.Index ?? 0,
+                Status = _genre.Status ?? 0,
                 Id_Category = _genre.Id_Category ?? 0
             };
 
@@ -99,6 +101,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
                 {
                     Name = gener.Name,
                     Index = gener.Index,
+                    Status = gener.Status,
                     Id_Category = gener.Id_Category
                 };
                 await _genreService.Update(id, gener);
