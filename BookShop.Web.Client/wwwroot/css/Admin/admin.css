@@ -189,11 +189,11 @@
 .home-section{
     position: relative;
     background-color: #3498db;
-    height: 11px;
+    height: 50px;
     left: 260px;
     width: calc(100% - 260px);
 }
-.home-section .home-content{
+.home-section .home-content .text{
         color: #fff;
         font-size: 35px;
         padding: 10px;
