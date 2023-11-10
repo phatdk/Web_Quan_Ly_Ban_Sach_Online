@@ -1,11 +1,30 @@
 ﻿@using System.Globalization;
 @model IEnumerable<BookShop.BLL.ConfigurationModel.ProductModel.ProductViewModel>
+@* <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> *@
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
+@* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> *@
+<link rel="stylesheet" href="~/lib/fontawesome-6.4.2/css/all.min.css" />
+
+<!-- Bootstrap JS and dependencies -->
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+@* <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> *@
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="~/js/layout.js"></script>
+<style>
+	body {
+		width: 100%;
+	}
+</style>
 @{
 	ViewData["Title"] = "Index";
 	Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
 }
 
+<body>
 <h1>Index</h1>
 
 <p>
@@ -66,6 +85,7 @@
 		}
 	</tbody>
 </table>
+</body>
 <script type="text/javascript">
 	function deleteSanPham(id) {
 		console.log(id);

@@ -99,11 +99,11 @@ namespace BookShop.BLL.Gembox
 			};
 
 			// Save the document as a PDF
-			var pdfFilePath = @"wwwroot\PDF\XinheMau.pdf";
-			workbook.Save(pdfFilePath);
+			//var pdfFilePath = @"wwwroot\PDF\XinheMau.pdf";
+			//workbook.Save(pdfFilePath);
 
 			// Return the PDF file as a response
-			workbook.Save("Spreadsheet.xlsx");
+			workbook.Save(@"wwwroot\exel\Spreadsheet.xlsx");
 
 		}
 	}
