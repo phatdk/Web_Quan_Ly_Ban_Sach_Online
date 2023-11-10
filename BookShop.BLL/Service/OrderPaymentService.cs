@@ -96,7 +96,7 @@ namespace BookShop.BLL.Service
                 var obj = await _orderPaymentRepository.GetByIdAsync(id);
                 obj.Id_Payment = model.Id_Payment;
                 obj.Status = model.Status;
-                obj.paymentAmount = model.paymentAmount;
+                obj.paymentAmount = model.PaymentAmount;
                 await _orderPaymentRepository.UpdateAsync(id, obj);
                 return true;
             }

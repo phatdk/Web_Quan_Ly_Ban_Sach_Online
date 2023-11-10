@@ -15,7 +15,7 @@
 	<h4>OrderViewModel</h4>
 	<hr />
 	<div class="row">
-		<dl class="col-8">
+		<dl class="col-6">
 			<dd class="col-sm-10" hidden>
 				@Html.DisplayFor(model => model.Id)
 			</dd>
@@ -86,13 +86,13 @@
 				@Html.DisplayFor(model => model.Status)
 			</dd>
 		</dl>
-		<div class="col-4">
-			<ul class="ps-0" style="list-style: none">
+		<div class="col-6">
+			<ul class="ps-0" style="list-style: none" id="menuDetail">
 				@foreach (var item in details)
 				{
 					total += (item.Price * item.Quantity);
 					<li class="row">
-						<div class="col-3 position-relativelative">
+						<div class="col-3 position-relative">
 							<img class="bg-light" src="@item.Img" style="width: 100%; z-index: 0" />
 							<span class="badge" style="color: orange; position: absolute; top: 0; right: 15px; background-color: gray">@item.Quantity</span>
 						</div>
@@ -101,24 +101,35 @@
 					</li>
 				}
 			</ul>
+			<table id="tableDetail" hidden>
+				<thead>
+					<tr class="row">
+						<th class="col-5">Tên sách</th>
+						<th class="col-2">Số lượng</th>
+						<th class="col-5">Hành động</th>
+					</tr>
+				</thead>
+				<tbody id="listDetail">
+				</tbody>
+			</table>
 			<div id="textModify">
 				<label>Ghi chú đơn hàng</label>
-				<textarea id="modifyChange" class="form-control" rows="5" ></textarea>
-				<label class="text-warning" id="valid" hidden></label>
+				<textarea id="modifyChange" class="form-control" rows="5"></textarea>
+				<label class="text-danger" id="valid" hidden></label>
 			</div>
 		</div>
 	</div>
 </div>
 <div>
 	<a href="@Url.Action("Index", "OrderManage")" class="btn btn-outline-info"><i class="fa-solid fa-arrow-left"></i> Trở lại</a>
-	<button class="btn btn-outline-danger" id="acceptOrder" hidden onclick="AcceptOrder()">Xác nhận đơn hàng</button>
-	<button class="btn btn-outline-danger" id="deliveryOrder" hidden onclick="DeliveryOrder()">Xác nhận giao hàng</button>
-	<button class="btn btn-outline-danger" id="completeOrder" hidden onclick="SuccessOrder()">Xác nhận hoàn thành đơn hàng</button>
-	<button class="btn btn-outline-danger" id="returnOrder" hidden onclick="ReturnOrder()">Xác nhận trả hàng</button>
-	<button class="btn btn-outline-danger" id="handleReturn" hidden onclick="HandleReturn()">Xử lý hàng trả</button>
-	<button class="btn btn-outline-danger" id="completeReturn" hidden onclick="SuccessReturn()">Xác nhận xử lý hoàn tất</button>
+	<button class="btn btn-outline-success" id="acceptOrder" hidden onclick="AcceptOrder()">Xác nhận đơn hàng</button>
+	<button class="btn btn-outline-success" id="deliveryOrder" hidden onclick="DeliveryOrder()">Xác nhận giao hàng</button>
+	<button class="btn btn-outline-success" id="completeOrder" hidden onclick="SuccessOrder()">Xác nhận hoàn thành đơn hàng</button>
+	<button class="btn btn-outline-warning" id="returnOrder" hidden onclick="ReturnOrder()">Xác nhận trả hàng</button>
+	<button class="btn btn-outline-warning" id="waitHandleReturn" hidden onclick="WaitHandleReturn()">Xác nhận hàng đã trả về</button>
+	<button class="btn btn-outline-success" id="completeReturn" hidden onclick="SuccessReturn()">Xác nhận xử lý hoàn tất</button>
 	<button class="btn btn-outline-danger" id="cancelOrder" hidden onclick="CancelOrder()">Xác nhận hủy đơn</button>
-	<button class="btn btn-outline-danger" id="closeOrder" hidden onclick="CloseOrder()">Xác nhận đóng đơn</button>
+	<button class="btn btn-outline-success" id="closeOrder" hidden onclick="CloseOrder()">Xác nhận đóng đơn</button>
 	<a href="@Url.Action("Edit", "OrderManage", new { id = Model.Id })" id="modifyOrder" hidden class="btn btn-outline-warning"> Chỉnh sửa</a>
 
 </div>
@@ -135,17 +146,21 @@
 				document.getElementById('cancelOrder').removeAttribute('hidden');
 				break;
 			case 3:
-				document.getElementById('acceptOrder').removeAttribute('hidden');
+				document.getElementById('completeOrder').removeAttribute('hidden');
 				document.getElementById('returnOrder').removeAttribute('hidden');
 				break;
 			case 4:
 				document.getElementById('closeOrder').removeAttribute('hidden');
 				break;
 			case 5:
-				document.getElementById('handleReturn').removeAttribute('hidden');
+				document.getElementById('waitHandleReturn').removeAttribute('hidden');
 				break;
 			case 6:
 				document.getElementById('completeReturn').removeAttribute('hidden');
+				document.getElementById('completeReturn').setAttribute('disabled', 'disabled');
+				document.getElementById('menuDetail').setAttribute('hidden', 'hidden');
+				document.getElementById('tableDetail').removeAttribute('hidden');
+				LoadDetailToTable();
 				break;
 			case 7:
 				document.getElementById('acceptOrder').removeAttribute('hidden');
@@ -160,7 +175,9 @@
 				break;
 		}
 	}
-	checkStatus();
+	$(document).ready(function () {
+		checkStatus();
+	})
 
 	var url = "@Url.Action("Index", "OrderManage")";
 
@@ -224,9 +241,9 @@
 	function ReturnOrder() {
 		var modifyChange = document.getElementById('modifyChange').value;
 		if (modifyChange.trim() === "") {
-			document.getElementById('valid').innerHTML("*Hãy thêm ghi chú về lý do trả hàng");
+			document.getElementById('valid').innerHTML = "*Hãy thêm ghi chú về lý do trả hàng";
 			document.getElementById('valid').removeAttribute('hidden');
-		} 
+		}
 		else {
 			document.getElementById('valid').setAttribute('hidden', 'hidden');
 			$.ajax({
@@ -248,14 +265,14 @@
 		}
 	}
 
-	function HandleReturn() {
+	function WaitHandleReturn() {
 		$.ajax({
-			url: '/Admin/OrderManage/HandleReturn',
+			url: '/Admin/OrderManage/WaitHandleReturn',
 			type: 'POST',
 			data: { id: @Model.Id },
 			success: function (result) {
 				if (result.success) {
-					alert('Xác nhận hàng đã trả về thành công.');
+					alert('Xác nhận hàng đã trả về đến nơi.');
 					window.location.href = url;
 				} else {
 					alert('Xác nhận thất bại: ' + result.errorMessage);
@@ -267,10 +284,61 @@
 		});
 	}
 
+	var myAction = {};
+	var condition = 0;
+	function HandleReturn(id) {
+		let confi = "xác nhận trả hàng về kho?";
+		var action = 0;
+		var detail = document.getElementById('detail-' + id);
+		action = Number(document.getElementById('details-' + id).value);
+		myAction[id] = action;
+		let count = 0;
+		for (const key in myAction) {
+			count++;
+		}
+
+		if (quantity = count) {
+			document.getElementById('completeReturn').removeAttribute('disabled');
+		}
+		else {
+			document.getElementById('completeReturn').setAttribute('disabled', 'disabled');
+		}
+	}
+	function LoadDetailToTable() {
+		$.ajax({
+			url: '/Admin/OrderManage/GetDetails',
+			type: 'GET',
+			data: { id: @Model.Id },
+			success: function (data) {
+				var detailsList = $("#listDetail");
+				detailsList.empty();
+				data.forEach(function (item) {
+					condition++;
+					var orderRow =
+						'<tr class="row">' +
+						'<td class="col-5"><label>' + item.nameProduct + '</label></td>' +
+						'<td class="col-2"><label>' + item.quantity + '</label></td>' +
+						'<td class="col-5">' +
+						'<select id="details-' + item.id + '" onchange="HandleReturn(' + item.id + ')">' +
+						'<option value="" selected disabled>--Sellect action--</option>' +
+						'<option value="1">Hàng có thể trả về kho</option>' +
+						'<option value="0">Hàng lỗi cần xử lý</option>' +
+						'</select>' +
+						'</td>' +
+						'</tr>';
+					detailsList.append(orderRow);
+				});
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	}
+
 	function SuccessReturn() {
 		var modifyChange = document.getElementById('modifyChange').value;
 		if (modifyChange.trim() === "") {
-			document.getElementById('valid').innerHTML("*Thêm ghi chú cách xử lý đơn hàng trả về");
+			document.getElementById('valid').innerHTML = "*Thêm ghi chú cách xử lý đơn hàng trả về";
 			document.getElementById('valid').removeAttribute('hidden');
 		}
 		else {
@@ -278,7 +346,7 @@
 			$.ajax({
 				url: '/Admin/OrderManage/SuccessReturn',
 				type: 'POST',
-				data: { id: @Model.Id, modifyChange: modifyChange },
+				data: { id: @Model.Id, modifyChange: modifyChange, myAction: myAction },
 				success: function (result) {
 					if (result.success) {
 						alert('Xác nhận xủ lý hàng trả thành công.');
@@ -297,7 +365,7 @@
 	function CancelOrder() {
 		var modifyChange = document.getElementById('modifyChange').value;
 		if (modifyChange.trim() === "") {
-			document.getElementById('valid').innerHTML("*Hãy thêm lý do hủy đơn");
+			document.getElementById('valid').innerHTML = "*Hãy thêm lý do hủy đơn";
 			document.getElementById('valid').removeAttribute('hidden');
 		}
 		else {

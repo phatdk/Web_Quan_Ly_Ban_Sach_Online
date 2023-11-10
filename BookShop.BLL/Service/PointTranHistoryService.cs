@@ -17,12 +17,12 @@ namespace BookShop.BLL.Service
         private readonly IRepository<Promotion> _promotionRepository;
         private readonly IRepository<WalletPoint> _WalletPointRepository;
 
-        public PointTranHistoryService(IRepository<PointTransactionsHistory> historyRepository, IRepository<Order> orderRepository, IRepository<Promotion> promotionRepository, IRepository<WalletPoint> walletPointRepository)
+        public PointTranHistoryService()
         {
-            _historyRepository = historyRepository;
-            _orderRepository = orderRepository;
-            _promotionRepository = promotionRepository;
-            _WalletPointRepository = walletPointRepository;
+            _historyRepository = new Repository<PointTransactionsHistory>();
+            _orderRepository = new Repository<Order>();
+            _promotionRepository = new Repository<Promotion>();
+            _WalletPointRepository = new Repository<WalletPoint>();
         }
 
         public async Task<bool> Add(CreatePointTranHistoryModel model)

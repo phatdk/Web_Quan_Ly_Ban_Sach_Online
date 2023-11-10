@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 namespace App.Areas.Identity.Controllers
 {
 
-   // [Authorize]
+    // [Authorize]
     [Area("Identity")]
     [Route("/Member/[action]")]
     public class ManageController : Controller
@@ -23,17 +23,19 @@ namespace App.Areas.Identity.Controllers
         private readonly SignInManager<Userr> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ManageController> _logger;
-
+        private readonly IWebHostEnvironment _hostingEnvironment;
         public ManageController(
         UserManager<Userr> userManager,
         SignInManager<Userr> signInManager,
         IEmailSender emailSender,
-        ILogger<ManageController> logger)
+        ILogger<ManageController> logger,
+        IWebHostEnvironment hostingEnvironment)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _hostingEnvironment = hostingEnvironment;
         }
         [TempData]
         public string StatusMessage { get; set; }
@@ -42,10 +44,45 @@ namespace App.Areas.Identity.Controllers
         public async Task<IActionResult> UpLoadAvata(IndexViewModel indexViewModel)
         {
             StatusMessage = "Tải lên ảnh đại điện thành công";
-            return RedirectToAction(nameof(Index));
+            var user = await GetCurrentUserAsync();
+            if (user == null)
+            {
+                return NotFound();
+            }
+            if (indexViewModel._file != null)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(Path.GetRandomFileName()) + Path.GetExtension(indexViewModel._file.FileName);
+                var uploadPath = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+                string filePath = Path.Combine(uploadPath, "users", fileName);
+                using (var filestream = new FileStream(filePath, FileMode.Create))
+                {
+                    await indexViewModel._file.CopyToAsync(filestream);
+                }
+                if (user.Img == null)
+                {
+                    user.Img = fileName;
+                    await _userManager.UpdateAsync(user);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    var uploadPath1 = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+                    var productPath = Path.Combine(uploadPath1, "users");
+                    var filename = Path.Combine(productPath, user.Img);
+                    if (System.IO.File.Exists(filename))
+                    {
+                        System.IO.File.Delete(filename);
+                    }
+                    user.Img = fileName;
+                    await _userManager.UpdateAsync(user);
+                    return RedirectToAction(nameof(Index));
+                }
+                
+
+            }
+            return View();
+           
         }
-
-
 
         // GET: /Manage/Index
         [HttpGet]
@@ -71,7 +108,7 @@ namespace App.Areas.Identity.Controllers
                 //AuthenticatorKey = await _userManager.GetAuthenticatorKeyAsync(user),
                 profile = new EditExtraProfileModel()
                 {
-                  
+
                     UserName = user.UserName,
                     UserEmail = user.Email,
                     PhoneNumber = user.PhoneNumber,
@@ -126,6 +163,7 @@ namespace App.Areas.Identity.Controllers
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation(3, "User changed their password successfully.");
+                    StatusMessage = "Đổi mật khẩu thành công";
                     return RedirectToAction(nameof(Index), new { Message = ManageMessageId.ChangePasswordSuccess });
                 }
                 ModelState.AddModelError(result);
@@ -265,7 +303,7 @@ namespace App.Areas.Identity.Controllers
             // Generate the token and send it
             var user = await GetCurrentUserAsync();
             var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, model.PhoneNumber);
-            await _emailSender.SendEmailAsync(user.Email,"Sdt", "Mã xác thực là: " + code);
+            await _emailSender.SendEmailAsync(user.Email, "Sdt", "Mã xác thực là: " + code);
             StatusMessage = "Hãy check Email của mình để nhận code";
             return RedirectToAction(nameof(VerifyPhoneNumber), new { PhoneNumber = model.PhoneNumber });
         }
@@ -403,7 +441,7 @@ namespace App.Areas.Identity.Controllers
             };
             return View(model);
         }
-        [HttpPost,ActionName("EditProfile"),ValidateAntiForgeryToken]
+        [HttpPost, ActionName("EditProfile"), ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProfileConfirm(IndexViewModel model)
         {
             var user = await GetCurrentUserAsync();
@@ -411,7 +449,7 @@ namespace App.Areas.Identity.Controllers
             user.PhoneNumber = model.profile.PhoneNumber;
             user.Gender = model.profile.Gender;
             user.Birth = model.profile.Birth;
-          
+
             await _userManager.UpdateAsync(user);
             StatusMessage = "Cập nhập thông tin thành công";
             await _signInManager.RefreshSignInAsync(user);
