@@ -6,6 +6,203 @@
 @using BookShop.BLL.ConfigurationModel.UserModel;
 @model BookShop.BLL.ConfigurationModel.OrderModel.OrderViewModel;
 @{
+    ViewData["Title"] = "Thanh Toán";
+    List<PaymentFormViewModel> payments = ViewBag.Payments;
+    List<UserPromotionViewModel> userPromotions = ViewBag.UserPromotions;
+    List<PromotionViewModel> promotions = ViewBag.Promotions;
+    UserModel user = ViewBag.User;
+    int total = 0;
+}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<style>
+    .tt{
+        background-color:white;
+
+    }
+    .tendh {
+        padding:15px;
+        border-bottom:1px solid black;
+    }
+    .ttt{
+        text-align:right;
+    }
+    .dathang{
+        font-weight:700;
+        background-color: #FFFBF5;
+        border:none;
+
+        width:200px;
+        height:35px;
+    }
+    .dathang:hover{
+        background-color:wheat;
+        color:red;
+    }
+</style>
+<div class="container tt">
+    <div class="tendh">
+        <h4>Tạo Đơn Hàng</h4>
+    </div>
+<form asp-action="CreateOnlineOrder" class="row pt-5 pb-5">
+    <div class="col-7">
+        <input asp-for="Id_User" id="UserId" value="@Model.Id_User" hidden />
+        @if (Model.Id_User != 0)
+        {
+                <div class="form-group" style="margin-top:10px;">
+                <label class="control-label">Tên tài khoản</label>
+                <input asp-for="NameUser" id="NameUser" class="form-control" type="text" readonly />
+                <input asp-for="Email" class="form-control" type="text" hidden id="Email" placeholder="Nhập email" />
+            </div>
+        }
+        else
+        {
+            <span style="color:red">Bạn chưa đăng nhập?</span>
+                <div class="form-group" style="margin-top:10px;">
+                <label class="control-label">Email</label>
+                    <input asp-for="Email" class="form-control" type="text" id="Email" placeholder="Nhập email" />
+            </div>
+        }
+
+        <div class="row">
+
+            <div class="form-group col-7">
+                <label class="control-label">Tên người nhận</label>
+                <input asp-for="Receiver" class="form-control" required type="text" id="receiverAddress" placeholder="Nhập Họ và Tên"/>
+            </div>
+
+            <div class="form-group col-5">
+                <label class="control-label">Số điện thoại</label>
+                <input asp-for="Phone" class="form-control" required type="text" id="receiverAddress" placeholder="Ví dụ: 09876543xxx"/>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Địa chỉ nhận hàng</label>
+            <input asp-for="Address" class="form-control" required type="text" id="receiverAddress" placeholder="Nhập địa chỉ giao hàng"/>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <label for="provinceSelectReceiver">Tỉnh/Thành phố</label>
+                <select asp-for="City" id="provinceSelectReceiver" required onchange="getDistrict('receiver')" style="width: 100%"></select>
+            </div>
+
+            <div class="col-4">
+                <label for="districtSelectReceiver">Quận/Huyện</label>
+                <select asp-for="District" id="districtSelectReceiver" required onchange="getWard('receiver')" style="width: 100%">
+                </select>
+            </div>
+
+            <div class="col-4">
+                <label for="wardSelectReceiver">Phường/Xã</label>
+                <select asp-for="Commune" id="wardSelectReceiver" required style="width: 100%">
+                </select>
+            </div>
+
+            <div id="sender" hidden>
+                <input type="text" id="provinceSelectSender" value="201" />
+                <input type="text" id="districtSelectSender" value="3440" />
+                <input type="text" id="wardSelectSender" value="13010" />
+            </div>
+        </div>
+
+        <div class="form-group mt-4">
+            <label>Ghi chú giao hàng</label>
+            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+        </div>
+
+    </div>
+
+    <div class="col-5">
+
+        <ul class="ps-0" style="list-style: none">
+            @for (var i = 0; i < Model.orderDetails.Count; i++)
+            {
+                total += (Model.orderDetails[i].Price * Model.orderDetails[i].Quantity);
+                <li class="row">
+                    <div class="col-3 position-relativelative">
+                        <img class="bg-light" src="@Model.orderDetails[i].Img" style="width: 100%; z-index: 0" />
+                        <span class="badge"
+                              style="color: orange; position: absolute; top: 0; right: 15px; background-color: gray">@Model.orderDetails[i].Quantity</span>
+                    </div>
+                    <span class="col-6">@Model.orderDetails[i].NameProduct</span>
+                    <span class="col-3">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.orderDetails[i].Price)</span>
+                    @Html.HiddenFor(model => model.orderDetails[i].Id_Product) <!-- Add hidden input for ID -->
+                @Html.HiddenFor(model => model.orderDetails[i].Quantity)
+                    @Html.HiddenFor(model => model.orderDetails[i].Price)
+                </li>
+            }
+        </ul>
+
+        <div class="payment">
+            <div class="form-group">
+                <label for="tongGia">Tạm tính:</label>
+                <input asp-for="Total" id="tongGia" value="@total" readonly>
+            </div>
+
+            <div class="form-group" hidden>
+                <input type="number" id="weight" value="@Model.Weight" />
+                <input type="number" id="length" value="@Model.Length" />
+                <input type="number" id="width" value="@Model.Width" />
+                <input type="number" id="height" value="@Model.Height" />
+            </div>
+
+            <div class="form-group">
+                <label for="phiShip">Phí vận chuyển:</label>
+                <input asp-for="Shipfee" id="phiShip" readonly />
+            </div>
+            @if (Model.Id_User != 0)
+            {
+                <div class="form-group">
+                    <label>Sử dụng diểm</label>
+                    <input asp-for="PointUsed" type="number" min="0" max="@user.Point" value="0" style="width: 70px" />
+                    <span>Số điểm hiện có @user.Point</span>
+                </div>
+                <div>
+                    <input name="promotion" id="selectPromotion" type="radio" value="1" checked /><span> Nhập mã </span> |
+                    <input name="promotion" id="useCodePromotion" type="radio" value="2" /><span> Chọn mã</span>
+                </div>
+                <div class="form-group" id="chonma" hidden>
+                    <label>Chọn khuyến mãi</label>
+                    <select asp-for="paymentsId" class="form-control" id="selectPromotion">
+                        @if (userPromotions != null)
+                        {
+                            foreach (var item in userPromotions)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+
+                        }
+                    </select>
+                </div>
+            }
+            <div class="form-group" id="nhapma">
+                <label>Nhập mã khuyến mãi</label>
+                <input asp-for="PromotionCode" id="userPromotionCode" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="totalShip">Tổng tiền:</label>
+                <span id="totalShip">0</span>
+            </div>
+
+            <div class="form-group">
+                <label>Hình thức thanh toán</label>
+                <select asp-for="paymentsId" required class="form-control" id="paymentMethod">
+                    @foreach (var item in payments)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div>
+
+        </div>
+    </div>
+    <div class="ttt">
+            <input class="dathang" type="submit" value="Đặt hàng" />
+    </div>
+</form>
+</div>
+<script type="text/javascript">
 	ViewData["Title"] = "Tạo đơn hàng";
 	List<PaymentFormViewModel> payments = ViewBag.Payments;
 	List<UserPromotionViewModel> userPromotions = ViewBag.UserPromotions;
@@ -181,195 +378,195 @@
 
 <script>
 
-	// Thêm sự kiện "change" cho các input radio
-	document.getElementById('selectPromotion').addEventListener('change', handleRadioChange);
-	document.getElementById('useCodePromotion').addEventListener('change', handleRadioChange);
+    // Thêm sự kiện "change" cho các input radio
+    document.getElementById('selectPromotion').addEventListener('change', handleRadioChange);
+    document.getElementById('useCodePromotion').addEventListener('change', handleRadioChange);
 
-	// Hàm xử lý khi input radio thay đổi
-	function handleRadioChange(event) {
-		const chonma = document.getElementById('chonma');
-		const nhapma = document.getElementById('nhapma');
-		const selectedValue = event.target.value;
-		if (selectedValue == 1) {
-			chonma.setAttribute('hidden', 'hidden');
-			nhapma.removeAttribute('hidden');
-		} 
-		else {
-			nhapma.setAttribute('hidden', 'hidden');
-			chonma.removeAttribute('hidden');
-		}
-	}
+    // Hàm xử lý khi input radio thay đổi
+    function handleRadioChange(event) {
+        const chonma = document.getElementById('chonma');
+        const nhapma = document.getElementById('nhapma');
+        const selectedValue = event.target.value;
+        if (selectedValue == 1) {
+            chonma.setAttribute('hidden', 'hidden');
+            nhapma.removeAttribute('hidden');
+        }
+        else {
+            nhapma.setAttribute('hidden', 'hidden');
+            chonma.removeAttribute('hidden');
+        }
+    }
 </script>
 
 <script type="text/javascript">
 
-	function getProvinces() {
-		axios.get("https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province", {
-			headers: {
-				'token': '0df1a22d-1bfe-11ee-8bfa-8a2dda8ec551'
-			}
-		})
-			.then(function (response) {
-				var provinceSelectReceiver = document.getElementById("provinceSelectReceiver");
-				//var provinceSelectSender = document.getElementById("provinceSelectSender");
-				provinceSelectReceiver.innerHTML = "<option value='' selected disabled>--Select City--</option>";
-				//provinceSelectSender.innerHTML = "<option value='' selected disabled>Chọn tỉnh/thành phố</option>";
+    function getProvinces() {
+        axios.get("https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province", {
+            headers: {
+                'token': '0df1a22d-1bfe-11ee-8bfa-8a2dda8ec551'
+            }
+        })
+            .then(function (response) {
+                var provinceSelectReceiver = document.getElementById("provinceSelectReceiver");
+                //var provinceSelectSender = document.getElementById("provinceSelectSender");
+                provinceSelectReceiver.innerHTML = "<option value='' selected disabled>--Select City--</option>";
+                //provinceSelectSender.innerHTML = "<option value='' selected disabled>Chọn tỉnh/thành phố</option>";
 
 
-				for (var i = 0; i < response.data.data.length; i++) {
-					var option = document.createElement("option");
-					option.value = response.data.data[i].ProvinceID;
-					option.text = response.data.data[i].ProvinceName;
-					provinceSelectReceiver.appendChild(option);
-					provinceSelectSender.appendChild(option.cloneNode(true));
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
+                for (var i = 0; i < response.data.data.length; i++) {
+                    var option = document.createElement("option");
+                    option.value = response.data.data[i].ProvinceID;
+                    option.text = response.data.data[i].ProvinceName;
+                    provinceSelectReceiver.appendChild(option);
+                    provinceSelectSender.appendChild(option.cloneNode(true));
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
 
-	}
-	// Gọi hàm để lấy danh sách tỉnh/thành phố ban đầu
-	getProvinces();
+    }
+    // Gọi hàm để lấy danh sách tỉnh/thành phố ban đầu
+    getProvinces();
 
-	function getDistrict(type) {
-		var provinceID;
-		var districtSelect;
-		if (type === "receiver") {
-			provinceID = document.getElementById("provinceSelectReceiver").value;
-			districtSelect = document.getElementById("districtSelectReceiver");
-		} else if (type === "sender") {
-			provinceID = document.getElementById("provinceSelectSender").value;
-			districtSelect = document.getElementById("districtSelectSender");
-		}
+    function getDistrict(type) {
+        var provinceID;
+        var districtSelect;
+        if (type === "receiver") {
+            provinceID = document.getElementById("provinceSelectReceiver").value;
+            districtSelect = document.getElementById("districtSelectReceiver");
+        } else if (type === "sender") {
+            provinceID = document.getElementById("provinceSelectSender").value;
+            districtSelect = document.getElementById("districtSelectSender");
+        }
 
-		axios.get("https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=" + provinceID, {
-			headers: {
-				'token': '0df1a22d-1bfe-11ee-8bfa-8a2dda8ec551'
-			}
-		})
-			.then(function (response) {
-				districtSelect.innerHTML = "<option value='' selected disabled>--Select District--</option>";
+        axios.get("https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=" + provinceID, {
+            headers: {
+                'token': '0df1a22d-1bfe-11ee-8bfa-8a2dda8ec551'
+            }
+        })
+            .then(function (response) {
+                districtSelect.innerHTML = "<option value='' selected disabled>--Select District--</option>";
 
 
 
-				var wardSelect;
-				if (type === "receiver") {
-					wardSelect = document.getElementById("wardSelectReceiver");
-				} else if (type === "sender") {
-					wardSelect = document.getElementById("wardSelectSender");
-				}
+                var wardSelect;
+                if (type === "receiver") {
+                    wardSelect = document.getElementById("wardSelectReceiver");
+                } else if (type === "sender") {
+                    wardSelect = document.getElementById("wardSelectSender");
+                }
 
-				for (var i = 0; i < response.data.data.length; i++) {
-					var option = document.createElement("option");
-					option.value = response.data.data[i].DistrictID;
-					option.text = response.data.data[i].DistrictName;
-					districtSelect.appendChild(option);
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
+                for (var i = 0; i < response.data.data.length; i++) {
+                    var option = document.createElement("option");
+                    option.value = response.data.data[i].DistrictID;
+                    option.text = response.data.data[i].DistrictName;
+                    districtSelect.appendChild(option);
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
 
-	}
+    }
 
-	function getWard(type) {
-		var districtID;
-		var wardSelect;
-		if (type === "receiver") {
-			districtID = document.getElementById("districtSelectReceiver").value;
-			wardSelect = document.getElementById("wardSelectReceiver");
-		} else if (type === "sender") {
-			districtID = document.getElementById("districtSelectSender").value;
-			wardSelect = document.getElementById("wardSelectSender");
-		}
+    function getWard(type) {
+        var districtID;
+        var wardSelect;
+        if (type === "receiver") {
+            districtID = document.getElementById("districtSelectReceiver").value;
+            wardSelect = document.getElementById("wardSelectReceiver");
+        } else if (type === "sender") {
+            districtID = document.getElementById("districtSelectSender").value;
+            wardSelect = document.getElementById("wardSelectSender");
+        }
 
-		axios.get("https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=" + districtID, {
-			headers: {
-				'token': '0df1a22d-1bfe-11ee-8bfa-8a2dda8ec551'
-			}
-		})
-			.then(function (response) {
-				wardSelect.innerHTML = "<option value='' selected disabled>--Select Ward--</option>";
-				for (var i = 0; i < response.data.data.length; i++) {
-					var option = document.createElement("option");
-					option.value = response.data.data[i].WardCode;
-					option.text = response.data.data[i].WardName;
-					wardSelect.appendChild(option);
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
+        axios.get("https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=" + districtID, {
+            headers: {
+                'token': '0df1a22d-1bfe-11ee-8bfa-8a2dda8ec551'
+            }
+        })
+            .then(function (response) {
+                wardSelect.innerHTML = "<option value='' selected disabled>--Select Ward--</option>";
+                for (var i = 0; i < response.data.data.length; i++) {
+                    var option = document.createElement("option");
+                    option.value = response.data.data[i].WardCode;
+                    option.text = response.data.data[i].WardName;
+                    wardSelect.appendChild(option);
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
 
-	}
+    }
 
-	function calculateShipping() {
+    function calculateShipping() {
 
-		var fromDistrictID = document.getElementById("districtSelectSender").value;
-		var fromWardCode = document.getElementById("wardSelectSender").value;
+        var fromDistrictID = document.getElementById("districtSelectSender").value;
+        var fromWardCode = document.getElementById("wardSelectSender").value;
 
-		var toDistrictID = document.getElementById("districtSelectReceiver").value;
-		var toWardCode = document.getElementById("wardSelectReceiver").value;
+        var toDistrictID = document.getElementById("districtSelectReceiver").value;
+        var toWardCode = document.getElementById("wardSelectReceiver").value;
 
-		var height = document.getElementById("height").value;
-		var length = document.getElementById("length").value;
-		var weight = document.getElementById("weight").value;
-		var width = document.getElementById("width").value;
+        var height = document.getElementById("height").value;
+        var length = document.getElementById("length").value;
+        var weight = document.getElementById("weight").value;
+        var width = document.getElementById("width").value;
 
-		// check khi nào nhập đủ dữ liệu dài rộng cao nặng thì hiển thị ra
+        // check khi nào nhập đủ dữ liệu dài rộng cao nặng thì hiển thị ra
 
-		if (height !== "" && length !== "" && weight !== "" && width !== "") {
-			var phiShip = document.getElementById("phiShip");
-			var totalShip = document.getElementById("totalShip");
+        if (height !== "" && length !== "" && weight !== "" && width !== "") {
+            var phiShip = document.getElementById("phiShip");
+            var totalShip = document.getElementById("totalShip");
 
-			axios
-				.get("https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee", {
-					params: {
-						from_district_id: fromDistrictID,
-						from_ward_code: fromWardCode,
-						service_id: 53320,
-						service_type_id: null,
-						to_district_id: toDistrictID,
-						to_ward_code: toWardCode,
-						height: height,
-						length: length,
-						weight: weight,
-						width: width,
-						cod_failed_amount: 2000,
-						insurance_value: 10000,
-						coupon: null
-					},
-					headers: {
-						'token': '0df1a22d-1bfe-11ee-8bfa-8a2dda8ec551',
-						'shop_id': '125022'
-					}
-				})
+            axios
+                .get("https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee", {
+                    params: {
+                        from_district_id: fromDistrictID,
+                        from_ward_code: fromWardCode,
+                        service_id: 53320,
+                        service_type_id: null,
+                        to_district_id: toDistrictID,
+                        to_ward_code: toWardCode,
+                        height: height,
+                        length: length,
+                        weight: weight,
+                        width: width,
+                        cod_failed_amount: 2000,
+                        insurance_value: 10000,
+                        coupon: null
+                    },
+                    headers: {
+                        'token': '0df1a22d-1bfe-11ee-8bfa-8a2dda8ec551',
+                        'shop_id': '125022'
+                    }
+                })
 
-				.then(function (response) {
+                .then(function (response) {
 
-					phiShip.value = response.data.data.total;
-					var parsedPhiShip = parseFloat(response.data.data.total);
-					var tongGiaInput = document.getElementById("tongGia");
-					var parsedTongGia = parseFloat(tongGiaInput.value);
+                    phiShip.value = response.data.data.total;
+                    var parsedPhiShip = parseFloat(response.data.data.total);
+                    var tongGiaInput = document.getElementById("tongGia");
+                    var parsedTongGia = parseFloat(tongGiaInput.value);
 
-					if (!isNaN(parsedPhiShip) && !isNaN(parsedTongGia)) {
-						var total = parsedPhiShip + parsedTongGia;
-						totalShip.innerHTML = total.toLocaleString("vi-VN", {
-							style: "currency",
-							currency: "VND"
-						});
-					} else {
-						totalShip.innerHTML = "NaN";
-					}
+                    if (!isNaN(parsedPhiShip) && !isNaN(parsedTongGia)) {
+                        var total = parsedPhiShip + parsedTongGia;
+                        totalShip.innerHTML = total.toLocaleString("vi-VN", {
+                            style: "currency",
+                            currency: "VND"
+                        });
+                    } else {
+                        totalShip.innerHTML = "NaN";
+                    }
 
-				});
-		}
+                });
+        }
 
-	}
-	var inputElements = document.querySelectorAll("input, select");
-	inputElements.forEach(function (element) {
-		element.addEventListener("input", calculateShipping);
-	});
+    }
+    var inputElements = document.querySelectorAll("input, select");
+    inputElements.forEach(function (element) {
+        element.addEventListener("input", calculateShipping);
+    });
 
 </script>
