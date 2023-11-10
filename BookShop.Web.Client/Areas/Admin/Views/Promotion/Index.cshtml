@@ -1,106 +1,169 @@
 ﻿@model IEnumerable<BookShop.BLL.ConfigurationModel.PromotionModel.PromotionViewModel>
 
 @{
-    ViewData["Title"] = "Danh sách khuyến mãi";
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+	ViewData["Title"] = "Danh sách khuyến mãi";
+	Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
+
+@if (TempData["SuccessMessage"] != null)
+{
+	<script>
+		alert('@TempData["SuccessMessage"]');
+	</script>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+	<script>
+		alert('@TempData["ErrorMessage"]');
+	</script>
+}
+
 <div class="page-header">
-    <div class="header-sub-title">
-        <nav class="breadcrumb breadcrumb-dash">
-            <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Trang chủ</a>
-            <span class="breadcrumb-item active">Danh sách khuyến mãi</span>
-        </nav>
-    </div>
+	<div class="header-sub-title">
+		<nav class="breadcrumb breadcrumb-dash">
+			<a asp-area="Admin" asp-controller="Home" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Trang chủ</a>
+			<span class="breadcrumb-item active">Danh sách khuyến mãi</span>
+		</nav>
+	</div>
 </div>
 <div class="card">
-    <div class="card-body">
-        <div class="row m-b-30">
-            <div class="col-lg-8">
-                <a class="btn btn-primary" asp-area="Admin" asp-controller="Promotion" asp-action="Create"><i class="anticon anticon-plus-circle m-r-5"></i><span>Thêm mới khuyến mãi</span></a>
-            </div>
-            <div class="col-lg-4 text-right">
+	<div class="card-body">
+		<div class="row m-b-30">
+			<div class="col-lg-8">
+				<a class="btn btn-primary" asp-area="Admin" asp-controller="Promotion" asp-action="Create"><i class="anticon anticon-plus-circle m-r-5"></i><span>Thêm mới khuyến mãi</span></a>
+					<a class="btn btn-success btn-tone m-r-5" asp-area="Admin" asp-controller="Promotion" asp-action="Delete" id="deleteButton">Xóa</a>
+			</div>
+			<div class="col-lg-4 text-right">
+			</div>
+		</div>
+		<div class ="table-responsive">
+			<table class="table table-hover e-commerce-table">
+				<thead>
+					<tr>
+						<th><input type="checkbox" id="selectAll"></th>
+						<th>ID</th>
+						<th>Tên</th>
+						<th>Code</th>
+						<th>Loại khuyến mãi</th>
+						<th>Tình trạng</th>
+						<th>Thời hạn</th>
+						<th>số tiền giảm</th>
+						<th>phần trăm giảm</th>
+						<th>Giảm tối đa</th>
+						<th>Số lượng</th>
+						<th>Ngày tạo</th>
+						<th>Ngày bắt đầu</th>
+						<th>Ngày kết thúc</th>
+						<th>Mô tả</th>
+						<th>Trạng thái</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (Model != null)
+					{
+						foreach (var item in Model)
+						{
+							<tr>
+								<td>
+									<input type="checkbox" class="checkbox-item" data-id="@item.Id">
+								</td>
+								<td>@item.Id</td>
+								<td>
+									<div class="d-flex align-items-center">
+										<img class="img-fluid rounded" src="assets/images/others/thumb-9.jpg" style="max-width: 60px" alt="">
+										<h6 class="m-b-0 m-l-10">@item.Name</h6>
+									</div>
+								</td>
+								<td>@item.Code</td>
+								<td>@item.NameType</td>
+								<td>@item.Condition</td>
+								<td>@item.StorageTerm</td>
+								<td>@item.AmountReduct</td>
+								<td>@item.PercentReduct</td>
+								<td>@item.ReductMax</td>
+								<td>@item.Quantity</td>
+								<td>@item.Description</td>
+								<td>@item.CreatedDate</td>
+								<td>@item.StartDate</td>
+								<td>@item.EndDate</td>
+								<td>
+									@if (item.Status <= 1)
+									{
+										<div class="d-flex align-items-center">
+											<div class="badge badge-success badge-dot m-r-10"></div>
+											<div>Mở</div>
+										</div>
+									}
+									else
+									{
+										<div class="d-flex align-items-center">
+											<div class="badge badge-success badge-dot m-r-10"></div>
+											<div>Khóa</div>
+										</div>
+									}
+								</td>
+								<td>
+									<a class="btn btn-primary btn-tone m-r-5" asp-area="Admin" asp-controller="Promotion" asp-action="Details" asp-route-id="@item.Id">Chi tiết</a>
+									<a class="btn btn-secondary btn-tone m-r-5" asp-area="Admin" asp-controller="Promotion" asp-action="Edit" asp-route-id="@item.Id">Sửa</a>
+								</td>
+							</tr>
+						}
+					}
+				</tbody>
+			</table>
 
-            </div>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-hover e-commerce-table">
-                <thead>
-                    <tr>
-
-                        <th>ID</th>
-                        <th>Tên</th>
-                        <th>Code</th>
-                        <th>Loại khuyến mãi</th>
-                        <th>Tình trạng</th>
-                        <th>Thời hạn</th>
-                        <th>số tiền giảm</th>
-                        <th>phần trăm giảm</th>
-                        <th>Giảm tối đa</th>
-                        <th>Số lượng</th>
-                        <th>Ngày tạo</th>
-                        <th>Ngày bắt đầu</th>
-                        <th>Ngày kết thúc</th>
-                        <th>Mô tả</th>
-                        <th>Trạng thái</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model != null)
-                    {
-                        foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>
-                                    @item.Id
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <img class="img-fluid rounded" src="assets/images/others/thumb-9.jpg" style="max-width: 60px" alt="">
-                                        <h6 class="m-b-0 m-l-10">@item.Name</h6>
-                                    </div>
-                                </td>
-                                <td>@item.Code</td>
-                                <td>@item.NameType</td>
-                                <td>@item.Condition</td>
-                                <td>@item.StorageTerm</td>
-                                <td>@item.AmountReduct</td>
-                                <td>@item.PercentReduct</td>
-                                <td>@item.ReductMax</td>
-                                <td>@item.Quantity</td>
-                                <td>@item.Description</td>
-                                <td>@item.CreatedDate</td>
-                                <td>@item.StartDate</td>
-                                <td>@item.EndDate</td>
-                                <td>
-                                    @if (item.Status <=1)
-                                    {
-                                        <div class="d-flex align-items-center">
-                                            <div class="badge badge-success badge-dot m-r-10"></div>
-                                            <div>Mở</div>
-                                        </div> 
-                                    }
-                                    else
-                                    {
-                                        <div class="d-flex align-items-center">
-                                            <div class="badge badge-success badge-dot m-r-10"></div>
-                                            <div>Khóa</div>
-                                        </div>
-                                    }
-                                </td>
-                                <td>
-                                    <a class="btn btn-primary btn-tone m-r-5" asp-area="Admin" asp-controller="Promotion" asp-action="Details" asp-route-id="@item.Id">Chi tiết</a>
-                                    <a class="btn btn-secondary btn-tone m-r-5" asp-area="Admin" asp-controller="Promotion" asp-action="Edit" asp-route-id="@item.Id">Sửa</a>
-                                    <a class="btn btn-success btn-tone m-r-5" asp-area="Admin" asp-controller="Promotion" asp-action="Delete" asp-route-id="@item.Id">Xóa</a>
-
-                                </td>
-                            </tr>
-}
-                    }
-
-
-                </tbody>
-            </table>
-        </div>
-    </div>
+		
+		</div>
+	</div>
 </div>
+
+<script>
+	//document.addEventListener("click", function (event) {
+	//	if (event.target && event.target.id === 'deleteButton') {
+	document.addEventListener("DOMContentLoaded", function () {
+		
+
+	document.getElementById('deleteButton').addEventListener('click', function (event) {
+		var selectedIds = [];
+		var checkboxes = document.getElementsByClassName('checkbox-item');
+		for (var i = 0; i < checkboxes.length; i++) {
+			if (checkboxes[i].checked) {
+				selectedIds.push(parseInt(checkboxes[i].getAttribute('data-id')));
+			}
+		}
+
+		if (selectedIds.length > 0 && confirmDelete()) {
+			$.ajax({
+				url: '/Admin/Promotion/Delete',
+				method: 'POST',
+				data: { ids: selectedIds },
+				success: function (data) {
+					for (var i = 0; i < selectedIds.length; i++) {
+						var row = document.querySelector('tr[data-id="' + selectedIds[i] + '"]');
+						if (row) {
+							row.remove();
+						}
+					}
+					alert('Xóa thành công');
+					var deleteButton = document.getElementById('deleteButton');
+					if (deleteButton && document.getElementsByClassName('checkbox-item').length === 0) {
+						deleteButton.style.display = 'none';
+					}
+				},
+				error: function (error) {
+					console.error(error);
+				}
+			});
+		} else {
+			alert('Please select items to delete.');
+			event.preventDefault();
+		}
+	});
+
+	function confirmDelete() {
+		return confirm("Bạn có chắc chắn muốn xóa các mục đã chọn không?");
+	}
+	});
+</script>
