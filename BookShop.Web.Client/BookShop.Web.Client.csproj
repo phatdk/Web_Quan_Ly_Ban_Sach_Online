@@ -9,10 +9,12 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="wwwroot\img\product\" />
+    <Folder Include="wwwroot\exel\" />
     <Folder Include="wwwroot\uploads\users\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="GemBox.Spreadsheet" Version="49.0.1454" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	  <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="6.0.16" />
