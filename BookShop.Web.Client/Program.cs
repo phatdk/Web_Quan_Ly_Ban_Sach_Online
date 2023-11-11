@@ -140,10 +140,11 @@ var app = builder.Build();
 //    SeedDataMD.SeedDataPayment(service1).Wait();
 //}
 //using (var scope = app.Services.CreateScope())
-//{
-//    var service2 = scope.ServiceProvider.GetRequiredService<IPromotionTypeService>();
 
-//    SeedDataMD.SeedPromotionType(service2).Wait();
+//{ 
+//var service2 = scope.ServiceProvider.GetRequiredService<IPromotionTypeService>();
+
+//SeedDataMD.SeedPromotionType(service2).Wait();
 //}
 #endregion
 if (!app.Environment.IsDevelopment())

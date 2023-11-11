@@ -369,4 +369,23 @@ namespace BookShop.BLL.Service
             throw new NotImplementedException();
         }
     }
+
+		public async Task<bool> ChangeQuantity(int id, int quantity)
+		{
+		getAgain:;
+			var book = await _bookRepository.GetByIdAsync(id);
+			try
+			{
+				if (book != null)
+				{
+					book.Quantity += quantity;
+				}
+				else goto getAgain;
+				await _bookRepository.UpdateAsync(id, book);
+				return true;
+			}
+			catch { return false; }
+		}
+	}
+
 }
