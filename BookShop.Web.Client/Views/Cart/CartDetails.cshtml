@@ -288,4 +288,12 @@ else
         row.getElementsByTagName("input")[1].value = 0
         countCost()
     }
+    <button class="btn btn-warning" id="buyNow">Mua ngay</button>
+</div>
+
+<script>
+    document.getElementById('buyNow').addEventListener('click', function () {
+        var url = "@Url.Action("CreateOnlineOrder", "Order")";
+        window.location.href = url;
+    });
 </script>
