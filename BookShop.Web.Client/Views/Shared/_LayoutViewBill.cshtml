@@ -1,0 +1,34 @@
+﻿@{
+    Layout = "_LayoutUser.cshtml";
+}
+<header class=" text-white py-3">
+    <div class="container">
+        <h1>Quản lý các đơn hàng</h1>
+    </div>
+</header>
+
+<nav class="bg-light py-3">
+    <div class="container">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link btn btn-outline-success" asp-area="Identity" asp-controller="Manage" asp-action="ViewAllBill">Tất cả các đơn hàng</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn  btn-outline-warning" asp-area="Identity" asp-controller="Manage" asp-action="ViewBillConfirm">Đơn hàng chờ xác nhận</a>
+            </li> 
+            <li class="nav-item">
+                <a class="nav-link btn  btn-outline-success" asp-area="Identity" asp-controller="Manage" asp-action="ViewBillShipping">Đang giao</a>
+            </li> 
+            <li class="nav-item">
+                <a class="nav-link btn  btn-outline-success" asp-area="Identity" asp-controller="Manage" asp-action="ViewBillSuccess">Đơn hàng đã nhận</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn  btn-outline-danger" asp-area="Identity" asp-controller="Manage" asp-action="ViewBillCancel">Đơn hàng  huỷ</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<hr />
+<main class="container py-4">
+    @RenderBody()
+</main>

@@ -1,11 +1,14 @@
 ﻿using BookShop.BLL.ConfigurationModel.SupplierModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
+using BookShop.Web.Client.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 {
     [Area("Admin")] // cấu hình cái này để nó biết đây là trang quan lí
+    [Authorize(Roles = "Admin")]
     [Route("admin/Supplier")] // thêm đường dẫn ở đây để tránh bị trùng với với các from khác ( bắt buộc ) đặt tên giống Bảng code u
     public class SuppliersController : Controller
     {
@@ -17,9 +20,32 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 
         [HttpGet]
         [Route("listsupplier")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages)
         {
             var suppliers = await _supplierService.GetAll();
+            int pagesize = 10;
+            if (pagesize <= 0)
+            {
+                pagesize = 10;
+            }
+            int countPages = (int)Math.Ceiling((double)suppliers.Count() / pagesize);
+            if (currentPages > countPages)
+            {
+                currentPages = countPages;
+            }
+            if (currentPages < 1)
+            {
+                currentPages = 1;
+            }
+
+            var pagingmodel = new PagingModel()
+            {
+                currentpage = currentPages,
+                countpages = countPages,
+                generateUrl = (int? p) => Url.Action("Index", "Suppliers", new { areas = "Admin", p = p, pagesize = pagesize })
+            };
+            ViewBag.pagingmodel = pagingmodel;
+            suppliers = suppliers.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
             return View(suppliers);
         }
 

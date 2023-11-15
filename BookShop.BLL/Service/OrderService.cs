@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Microsoft.EntityFrameworkCore;
 namespace BookShop.BLL.Service
 {
 	public class OrderService : IOrderService
@@ -17,6 +17,7 @@ namespace BookShop.BLL.Service
 		private readonly IRepository<Promotion> _promotionRepository;
 		private readonly IRepository<OrderDetail> _orderDetailRepository;
 		private readonly IRepository<StatusOrder> _statusRepository;
+		private readonly IRepository<Product> _ProductRepository;
 
 		public OrderService()
 		{
@@ -26,8 +27,60 @@ namespace BookShop.BLL.Service
 			_orderDetailRepository = new Repository<OrderDetail>();
 			_statusRepository = new Repository<StatusOrder>();
 		}
+        public async Task<List<ViewOrder>> GetOrderByUser(int userId)
+        {
+            var orders = (await _orderRepository.GetAllAsync()).Where(c => c.Id_User == userId);
 
-		public async Task<string> GenerateCode(int length)
+			
+
+            var users = (await _userRepository.GetAllAsync());
+            var promotions = await _promotionRepository.GetAllAsync();
+            var status = await _statusRepository.GetAllAsync();
+            var OrderDetails = await _orderDetailRepository.GetAllAsync();
+         //   var Products = await _ProductRepository.GetAllAsync();
+
+            var objlist = (from a in orders
+						   join od in OrderDetails on a.Id equals od.Id_Order
+                           join b in users on a.Id_User equals b.Id into t
+                           from b1 in t.DefaultIfEmpty()
+                           join c in promotions on a.Id_Promotion equals c.Id into i
+                           from c1 in i.DefaultIfEmpty()
+                           join d in status on a.Id_StatusOrder equals d.Id
+                           join e in users on a.Id_Staff equals e.Id into j
+                           from e1 in j.DefaultIfEmpty()
+                           select new ViewOrder()
+                           {
+                               Id = a.Id,
+                               Code = a.Code,
+                               Phone = a.Phone,
+                               Email = a.Email,
+                               Receiver = a.Receiver,
+                               Address = a.Address,
+                               Description = a.Description,
+                               CreatedDate = a.CreatedDate,
+                               AcceptDate = a.AcceptDate,
+                               DeliveryDate = a.DeliveryDate,
+                               PaymentDate = a.PaymentDate,
+                               ModifiDate = a.ModifiDate,
+                               ReceiveDate = a.ReceiveDate,
+                               CompleteDate = a.CompleteDate,
+                               Shipfee = a.Shipfee,
+                               Id_Status = a.Id_StatusOrder,
+                               Status = d.Status,
+                               StatusName = d.StatusName,
+                               Id_User = a.Id_User,
+                               UserCode = b1.Code,
+                               NameUser = b1.Name,
+                               Id_Staff = a.Id_Staff,
+                               StaffCode = e1 == null ? "Trống" : e1.Code,
+                               NameStaff = e1 == null ? "Trống" : e1.Name,
+                               Id_Promotion = a.Id_Promotion,
+                               PromotionCode = c1 == null ? "Trống" : c1.Code,
+                               NamePromotion = c1 == null ? "Trống" : c1.Name,
+                           }).ToList();
+            return objlist;
+        }
+        public async Task<string> GenerateCode(int length)
 		{
 			// Khởi tạo đối tượng Random
 			Random random = new Random();
@@ -183,13 +236,14 @@ namespace BookShop.BLL.Service
 			}
 			return objlist;
 		}
+     
 
-		public async Task<List<OrderViewModel>> GetByUser(int userId)
+        public async Task<List<OrderViewModel>> GetByUser(int userId)
 		{
 			var orders = (await _orderRepository.GetAllAsync()).Where(c => c.Id_User == userId);
 			var users = await _userRepository.GetAllAsync();
 			var promotions = await _promotionRepository.GetAllAsync();
-			var status = await _statusRepository.GetAllAsync();
+			var status = await _statusRepository.GetAllAsync();	
 			var objlist = (from a in orders
 						   join b in users on a.Id_User equals b.Id into t
 						   from b1 in t.DefaultIfEmpty()
