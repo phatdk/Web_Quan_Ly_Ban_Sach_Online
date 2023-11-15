@@ -1,0 +1,69 @@
+﻿@using BookShop.BLL.ConfigurationModel.OrderModel;
+@using BookShop.BLL.IService;
+@using BookShop.BLL.Service;
+@model List<ViewOrder>
+@inject IProductService ProductService
+@inject IOrderDetailService OrderDetailsService
+@{
+    ViewData["Title"] = "Đơn hàng chờ xác nhận";
+    Layout = "_LayoutViewBill";
+}
+
+<div class="container">
+    <h1 class=" text-capitalize">@ViewData["Title"]</h1>
+    @if (Model.Count > 0)
+    {
+        @foreach (var bill in Model)
+        {
+
+           
+                var BillDetails = await OrderDetailsService.GetByOrder(bill.Id);
+            
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">Bill ID: @bill.Id</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Status: @bill.StatusName</h6>
+                    <p class="card-text">User: @bill.NameUser</p>
+                    <p class="card-text">Thời gian (@bill.CreatedDate)</p>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Giá</th>
+                                <th>Số lượng</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in BillDetails)
+                            {
+                                var product = await ProductService.GetById(item.Id_Product);
+                                <tr>
+                                    <td>@product.Name</td>
+                                    <td>@item.Price.ToString("N0")</td>
+                                    <td>@item.Quantity</td>
+                                </tr>
+
+                            }
+                            <tr>
+                                <td class="text-right">Tổng tiền</td>
+                                <td>@(bill.Total.ToString("N0")) VND</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        }
+    }
+    else
+    {
+        <p>Hiện chưa có đơn hàng nào</p>
+    }
+
+
+</div>
+
+

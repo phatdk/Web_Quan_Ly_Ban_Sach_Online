@@ -11,6 +11,7 @@ using BookShop.DAL.ApplicationDbContext;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Entities.Identity;
 using BookShop.Web.Client.ExtendMethods;
+using BookShop.Web.Client.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -50,7 +51,7 @@ namespace App.Areas.Identity.Controllers
         }
         // GET: /Role/Index
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages)
         {
 
             var r = _roleManager.Roles.ToList();
@@ -68,7 +69,29 @@ namespace App.Areas.Identity.Controllers
                 };
                 roles.Add(rm);
             }
+            int pagesize = 10;
+            if (pagesize <= 0)
+            {
+                pagesize = 10;
+            }
+            int countPages = (int)Math.Ceiling((double)roles.Count() / pagesize);
+            if (currentPages > countPages)
+            {
+                currentPages = countPages;
+            }
+            if (currentPages < 1)
+            {
+                currentPages = 1;
+            }
 
+            var pagingmodel = new PagingModel()
+            {
+                currentpage = currentPages,
+                countpages = countPages,
+                generateUrl = (int? p) => Url.Action("Index", "Role", new { areas = "Identity", p = p, pagesize = pagesize })
+            };
+            ViewBag.pagingmodel = pagingmodel;
+            roles = roles.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
             return View(roles);
         }
 

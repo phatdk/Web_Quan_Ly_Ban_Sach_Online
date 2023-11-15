@@ -219,7 +219,7 @@
 <form asp-action="CreateOnlineOrder" class="row pt-5 pb-5 bg-info" id="frmSubmitCheckout">
 	<div class="col-7">
 		<input asp-for="Id_User" id="UserId" value="@Model.Id_User" hidden />
-		<input value="@carUse" type="text" name="cartUse" hidden/>
+		@* <input value="@carUse" type="text" name="cartUse" hidden/> *@
 		@if (Model.Id_User != 0)
 		{
 			<div class="form-group">

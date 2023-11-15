@@ -1,22 +1,17 @@
 ﻿@using App.Areas.Identity.Models.AccountViewModels;
 @using BookShop.DAL.Entities;
+@using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Identity
-
 @inject SignInManager<Userr> SignInManager
 @inject UserManager<Userr> UserManager
 @inject SignInManager<Userr> SignInManager
+@inject IAuthorizationService _IAuthorizationService
+@{
+    var isAdmin = (await _IAuthorizationService.AuthorizeAsync(User, "ManagerMenu")).Succeeded;
+}
 @if (SignInManager.IsSignedIn(User))
 {
-    <div class="row">
-        <div class="col-6">
-            <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
-                <ul class="">
-                    <li class="nav-item dropdown">
-                        <span class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            Xin chào @((await UserManager.GetUserAsync(User)).UserName)!
-                        </span>
-                        <div class="dropdown-menu">
-   @* <partial name="_ManagerMenu"></partial>*@
+
     <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
         <div class="nav-link text-dark">
             <div class="dropdown">
@@ -25,40 +20,20 @@
                 </h6>
                 <div class="dropdown-menu">
 
-                            <a class="dropdown-item" asp-controller="Home" asp-action="Danhsachyeuthich" title="">
-                                Thông tin tài khoản
-                            </a>
-                            <a class="dropdown-item" asp-area="Identity" asp-controller="Manage" asp-action="Index" title="Manage">
-                                Thông tin tài khoản
-                            </a>
-                            <div role="separator" class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">
-                                Trạng thái đơn hàng
-                            </a>
-                            <div role="separator" class="dropdown-divider"></div>
-                            <button type="submit" class="dropdown-item">
-                                Đăng xuất
-                            </button>
-                        </div>
-                    </li>
-                </ul>
-            </form>
-        </div>
-        <div class="col-6">
-
-            <partial name="_ManagerMenu"></partial>
-        </div>
-
-    </div>
- 
-
-                    <a class="dropdown-item" asp-controller="Home" asp-action="Danhsachyeuthich" title="">
+                    <a class="dropdown-item" asp-area="Identity" asp-controller="Manage" asp-action="Index" title="">
                         Thông tin tài khoản
                     </a>
                     <div role="separator" class="dropdown-divider"></div>
                     <a class="dropdown-item" href="#">
                         Trạng thái đơn hàng
                     </a>
+                    @if (isAdmin)
+                    {
+                        <div role="separator" class="dropdown-divider"></div>
+                        <a class="dropdown-item" asp-area="Admin" asp-controller="Blog" asp-action="Index">
+                            Trang admin
+                        </a>
+                    }
                     <div role="separator" class="dropdown-divider"></div>
                     <button type="submit" class="dropdown-item">
                         Đăng xuất
@@ -76,12 +51,5 @@ else
             <div class="col-md-6 "><h5 class="dndk"><a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Login">Đăng nhập</a></h5></div>
         </div>
     </div>
-    @*  <ul class="nav navbar-nav navbar-right">
-        <li class="nav-item">
-            <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Register">Đăng ký</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Login">Đăng nhập</a>
-        </li>
-    </ul> *@
+
 }
