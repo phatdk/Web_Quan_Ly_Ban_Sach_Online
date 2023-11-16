@@ -2,7 +2,7 @@
 using BookShop.BLL.Options;
 using BookShop.DAL.Helpers;
 using BookShop.DAL.Libs;
-using Mapster;
+//using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -54,10 +54,10 @@ public class VNPayService : IVNPayService
 		};
 	}
 
-	public PaymentResponseModel PaymentExecute(IQueryCollection collection)
-	{
-		var response = PaymentHelper.GetParamPaymentCallBack(collection, _options.Value.HashSecret);
+	//public PaymentResponseModel PaymentExecute(IQueryCollection collection)
+	//{
+	//	var response = PaymentHelper.GetParamPaymentCallBack(collection, _options.Value.HashSecret);
 
-		return response.Adapt<PaymentResponseModel>();
-	}
+	//	return response.Adapt<PaymentResponseModel>();
+	//}
 }
