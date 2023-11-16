@@ -58,7 +58,7 @@ namespace BookShop.DAL.ApplicationDbContext
             if (!optionsBuilder.IsConfigured)
             {
                 //optionsBuilder.UseSqlServer("Data Source=DESKTOP-21G560I\\SQLEXPRESS;Initial Catalog=BookShop.Datn2;Integrated Security=True");
-                optionsBuilder.UseSqlServer("Data Source=DESKTOP-21G560I\SQLEXPRESS;Initial Catalog=BookShop.Datn;Integrated Security=True");
+                optionsBuilder.UseSqlServer("Data Source=DESKTOP-21G560I\\SQLEXPRESS;Initial Catalog=BookShop.Datn;Integrated Security=True");
                 //  optionsBuilder.UseSqlServer(@"Data Source=PHUCDEPZAI2003\SQLEXPRESS;Initial Catalog=BookShopDatn;Integrated Security=True;Encrypt=False");
             }
         }
