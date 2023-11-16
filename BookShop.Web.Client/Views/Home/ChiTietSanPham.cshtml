@@ -47,7 +47,8 @@
             color: #C92127;
             border-radius: 5px;
             font-weight: 600;
-            font-size: 10px
+            font-size: 10px;
+            margin-left:10px
         }
 
         .mua .m2 {
@@ -362,7 +363,7 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
     });
     document.getElementById('buyNow').addEventListener('click', function () {
         var quantity = document.getElementById('quantityInput').value;
-        // var result = "@Url.Action("AddToCart", "Cart")?id=@Model.Id&quantity=" + quantity;
+        var result = "@Url.Action("AddToCart", "Cart")?id=@Model.Id&quantity=" + quantity;
         var url = "@Url.Action("CreateOnlineOrder", "Order")?id=@Model.Id&quantity=" + quantity
         window.location.href = url;
     });

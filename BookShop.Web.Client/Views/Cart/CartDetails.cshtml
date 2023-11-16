@@ -4,97 +4,61 @@
     ViewData["Title"] = "Giỏ Hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+﻿@using BookShop.BLL.ConfigurationModel.CartDetailModel;
 <style>
-    a {
-        margin: 0px;
-        padding: 0px;
-    }
-
-    .tt {
-        background-color: white;
-        border-radius: 10px
-    }
-
-    .t1, .col-2 p {
-        margin-top: 10px;
-    }
-
-    .dssanpham {
+    .giohangtong {
+        width: 100%;
         margin-top: 20px;
         background-color: white;
-        border-radius: 10px;
-        padding: 5px;
+        border-radius:10px;
+        padding: 1%;
     }
 
-    .dsanh {
-        display: flex;
-    }
-
-    .col-1 input {
-        justify-content: center;
-        margin: 20px 0;
-        padding: 10px;
-    }
-
-    .dsanh img {
-        height: 120px;
-        width: 120px;
-    }
-
-    .thongtin {
-        margin-left: 10px;
-        display: flex;
-    }
-
-    .giaban, .giagoc {
-        margin-top: 40px;
-    }
-
-    .giaban {
-        color: red;
-    }
-
-    .giagoc {
-        margin-left: 10px;
-        color: #878683;
-        text-decoration: line-through;
-    }
-
-    .wrapper {
-        border: 1px solid rgba(0,0,0,0.2);
-        display: flex;
-        justify-content: center;
-        border-radius: 12px;
-        cursor: pointer;
-    }
-
-        .wrapper span {
+        .giohangtong .table {
             width: 100%;
-            text-align: center;
-            font-weight: 600;
+            border-collapse: collapse;
+            border:none;
         }
 
-            .wrapper span.num {
-                font-size: 20px;
-                border-left: 2px solid rgba(0,0,0,0.2);
-                border-right: 2px solid rgba(0,0,0,0.2);
-                pointer-events: none;
-            }
-
-    .nosanpham{
-        background-color:white;
-        height:500px;
-        text-align:center;
-        padding-top:100px;
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
     }
 
-    .nosanpham a{
-            padding: 20px;
-        margin-top:20px;
-        color:white;
-        background-color:red;
-        border: 1px solid red;
-        font-weight:700;
+    tr th {
+        background-color: #f2f2f2;
+    }
+
+    input[type="number"] {
+        width: 50px;
+        text-align: center;
+    }
+
+    input[type="checkbox"] {
+        transform: scale(1.5);
+    }
+
+    .tongketgiohang {
+        height:35px;
+        display:flex;
+    }
+    .tongketgiohang p{
+        margin-top:2px;
+    }
+    .thanhtoangiohang{
+        justify-content:flex-end;
+    }
+    .thanhtoangiohang button{
+        border:none;
+        border-radius:7px;
+    }
+    .thanhtoangiohang button:hover{
+                background-color: red;
+                color: black;
+    }
+    .item1 {
+        flex-grow: 2;
     }
 </style>
 <table class="table">
@@ -168,132 +132,115 @@
         }
     </tbody>
 </table>
-<div>
+@*@if (Model.Count() != 0)
+        {*@
+<h3>
     <p>Giỏ hàng</p>
-</div>
-@if (Model.Count() != 0)
-        {
-<div class="row">
-    <div class="col-8 ">
-            <table border="1" id="mytable" class="table tt">
-                <thead>
-                    <tr>
-                        <th><input type="checkbox" name="" id="checkAll" onchange="checkAll(this)"></th>
-                        <th>Sản Phẩm</th>
-                        <th>Đơn giá</th>
-                        <th>Số lượng</th>
-                        <th>Thành tiền</th>
-                    </tr>
-                </thead>
-                <tbody id="mylist">
-
-                    @foreach (var item in Model)
-                    {
-                        <tr class="">
-                            <td><input type="checkbox" name="checkbox" id="" onchange="turnQtyInput(this)"></td>
-                            <td>
-                                <div class="dsanh">
-                                    <!--<img src="~/img/IMG_565456.png"/>-->
-                                    <div class="thongtin">
-                                        @Html.DisplayFor(modelItem => item.ProductName)
-                                    </div>
-                                </div>
-                            </td>
-                            <td id="khanh">@Html.DisplayFor(modelItem => item.ProductPrice)</td>
-                            <td>
-                                <input type="number" value="@Html.DisplayFor(modelItem => item.Quantity)" min="1" onchange="countCost()">
-                            </td>
-                            <td><span class="cost"></span></td>
-                        </tr>
-                    }
-
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="4">TỔNG</td>
-                        <td><span id="totalcost"></span></td>
-                    </tr>
-                </tfoot>
-            </table>
-    </div>
-    <div class="col-4">
-        <div>
-            List Khuyến Mãi
-        </div>
-        <div>
-            <div>
-                <p>Thành Tiền</p>
-                <p><span id="totalcost"></span></p>
-            </div>
-            <div>
-                <a type="button" disabled class="btn btn-warning" asp-area="" asp-controller="Home" asp-action="ThanhToan">Thanh Toán</a>
-            </div>
+</h3>
+<div class="giohangtong">
+    <table class="table">
+        <tbody>
+            <tr>
+                <th></th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Product Price</th>
+                <th>Total Price</th>
+                <th>Option</th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" @(item.IsSelected ? "checked" : "") />
+                    </td>
+                    <td>@item.ProductName</td>
+                    <td>
+                        <input type="number" value="@item.Quantity" min="1" />
+                    </td>
+                    <td>@item.ProductPrice</td>
+                    <td>@item.TotalPrice</td>
+                    <td>
+                        <button class="btn btn-btn-waning" onclick="removeProduct('@item.Id_Product')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <hr />
+    <div class="tongketgiohang">
+        <p>Thành Tiền: <span id="totalCost">@Model.Sum(x => x.IsSelected ? x.TotalPrice : 0)</span></p>
+        <div class="item1"></div>
+        <div class="thanhtoangiohang">
+            <button>Thanh Toán</button>
         </div>
     </div>
 </div>
-}
+@*}
 else
 {
     <div class="nosanpham">
         <h2>Chưa có sản phẩm được thêm vào</h2>
         <a type="button" xc asp-area="" asp-controller="Home" asp-action="DanhGia">MUA SẮM NGAY</a>
     </div>
-}
-<script>
-    var priceRange = document.getElementById("price-range")
-    var mylist = document.getElementById("mylist")
-    var rows = mylist.getElementsByTagName("tr")
-    var cost = document.getElementsByClassName("cost")
-    var qty = document.getElementsByName("qty")
-    var checkboxes = document.getElementsByName("checkbox")
-    var totalcost = document.getElementById("totalcost")
-    function turnQtyInput(source) {
-        var row = source.parentElement.parentElement
-        var qtyInput = row.getElementsByTagName("input")[1]
-        if (source.checked == true) {
-            qtyInput.disabled = false
-        } else {
-            qtyInput.disabled = true
-            resetCost(source)
-        }
-    }
+}*@
 
-    function checkAll(source) {
-        for (let i = 0; i < rows.length; i++) {
-            checkboxes[i].checked = source.checked
-            qty[i].disabled = !source.checked
-        }
-        resetCost("all")
-    }
-    function countCost() {
-        var sum = 0
-        for (let i = 0; i < rows.length; i++) {
-            var price = +rows[i].getElementsById("khanh").value
-            var tt = qty[i].ariaValueMax * price
-            console.log(tt)
-            sum += +cost[i].value
-            console.log(sum)
-        }
-        totalcost.innerHTML = "$" + sum
-    }
+@section scripts {
+    <script>
 
-    function resetCost(source) {
-        if (source == "all") {
-            for (let i = 0; i < rows.length; i++) {
-                //rows[i].getElementsByTagName("input")[1].value = 0
+        $(document).ready(function () {
+            updateTotalCost();
+
+            $('input[type="checkbox"]').change(function () {
+                updateTotalCost();
+            });
+
+            $('input[type="number"]').change(function () {
+                updateTotalCost();
+            });
+
+            function updateTotalCost() {
+                var totalCost = 0;
+
+                $('tbody tr').each(function () {
+                    var checkbox = $(this).find('input[type="checkbox"]');
+                    var quantityInput = $(this).find('input[type="number"]');
+                    var productPrice = parseInt($(this).find('td:eq(3)').text());
+                    var isSelected = checkbox.is(":checked");
+                    var quantity = parseInt(quantityInput.val());
+
+                    var individualCost = quantity * productPrice;
+
+                    $(this).find('td:eq(4)').text(individualCost);
+
+                    if (isSelected) {
+                        totalCost += individualCost;
+                    }
+                });
+
+                $('#totalCost').text(totalCost);
             }
-            countCost()
+        });
+    </script>
+    <script>
+        function removeProduct(productId) {
+            $.ajax({
+                type: "POST",
+                url: "/Cart/RemoveProduct",
+                data: { id: productId },
+                success: function (result) {
+                },
+                error: function (error) {
+                    console.error("Error removing product:", error);
+                }
+            });
         }
-        var row = source.parentElement.parentElement
-        row.getElementsByTagName("input")[1].value = 0
-        countCost()
-    }
-    <button class="btn btn-warning" id="buyNow">Mua ngay</button>
-</div>
+    </script>
 
-<script>
-    document.getElementById('buyNow').addEventListener('click', function () {
-        var url = "@Url.Action("CreateOnlineOrder", "Order")";
-        window.location.href = url;
-    });
-</script>
+
+}
