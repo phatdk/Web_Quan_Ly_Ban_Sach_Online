@@ -1,0 +1,181 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}<style>
+     .tt {
+         margin-top: 10px;
+         padding: 10px;
+         background-color: white;
+     }
+
+     .chon {
+         display: flex;
+     }
+
+     .dai {
+         width: 40%;
+     }
+     .dc{
+         margin-top:10px;
+     }
+     .xn{
+         display:flex;
+     }
+
+     .switch {
+         position: relative;
+         display: inline-block;
+         width: 60px;
+         height: 34px;
+     }
+
+         .switch input {
+             opacity: 0;
+             width: 0;
+             height: 0;
+         }
+
+     .slider {
+         position: absolute;
+         cursor: pointer;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         background-color: #ccc;
+         -webkit-transition: .4s;
+         transition: .4s;
+     }
+
+         .slider:before {
+             position: absolute;
+             content: "";
+             height: 26px;
+             width: 26px;
+             left: 4px;
+             bottom: 4px;
+             background-color: white;
+             -webkit-transition: .4s;
+             transition: .4s;
+         }
+
+     input:checked + .slider {
+         background-color: #2196F3;
+     }
+
+     input:focus + .slider {
+         box-shadow: 0 0 1px #2196F3;
+     }
+
+     input:checked + .slider:before {
+         -webkit-transform: translateX(26px);
+         -ms-transform: translateX(26px);
+         transform: translateX(26px);
+     }
+
+     /* Rounded sliders */
+     .slider.round {
+         border-radius: 34px;
+     }
+
+         .slider.round:before {
+             border-radius: 50%;
+         }
+</style>
+<div>
+    <div class="tt">
+        <div>
+            <h4>ĐỊA CHỈ GIAO HÀNG</h4>
+        </div>
+        <hr />
+        <div>
+            <form>
+                <div class="row dc">
+                    <label class="col-2">Họ và tên người nhận</label>
+                    <input class="dai" type="text" max="256" placeholder="Nhập họ và tên người nhận"/>
+                </div>
+                <div class="row dc">
+                    <label class="col-2">Số điện thoại</label>
+                    <input class="dai" type="text" max="256" placeholder="Nhập số điện thoại"/>
+                </div>
+                <div class="chon row dc">
+                    <label class="col-2">Tỉnh/Thành Phố</label>
+                    <select class="dai" id="city" aria-label=".form-select-sm">
+                        <option value="" selected>Chọn tỉnh thành</option>
+                    </select>
+                </div>
+                <div class="chon row dc">
+                    <label class="col-2">Quận/Huyện</label>
+                    <select class="dai" id="district" aria-label=".form-select-sm">
+                        <option value="" selected>Chọn quận huyện</option>
+                    </select>
+                </div>
+                <div class="chon row dc">
+                    <label class="col-2">Phường/Xã</label>
+                    <select class="dai" id="ward" aria-label=".form-select-sm">
+                        <option value="" selected>Chọn phường xã</option>
+                    </select>
+                </div>
+                <div class="row dc">
+                    <label class="col-2">Địa chỉ nhận hàng</label>
+                    <input class="dai" type="text" max="256" placeholder="Nhập địa chỉ người nhận"/>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="tt xn">
+        <div>
+            <a type="button" asp-area="" asp-controller="Home" asp-action="GioHang">Quay về Giỏ Hàng</a>
+        </div>
+        <div>
+            <button type="button" class="btn btn-success" style="align-content:end">Xác Nhận Thanh Toán</button>
+        </div>
+        <label class="switch">
+            <input type="checkbox">
+            <span class="slider"></span>
+        </label>
+    </div>
+</div>
+<script>
+    var citis = document.getElementById("city");
+    var districts = document.getElementById("district");
+    var wards = document.getElementById("ward");
+    var Parameter = {
+        url: "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
+        method: "GET",
+        responseType: "application/json",
+    };
+    var promise = axios(Parameter);
+    promise.then(function (result) {
+        renderCity(result.data);
+    });
+
+    function renderCity(data) {
+        for (const x of data) {
+            citis.options[citis.options.length] = new Option(x.Name, x.Id);
+        }
+        citis.onchange = function () {
+            district.length = 1;
+            ward.length = 1;
+            if (this.value != "") {
+                const result = data.filter(n => n.Id === this.value);
+
+                for (const k of result[0].Districts) {
+                    district.options[district.options.length] = new Option(k.Name, k.Id);
+                }
+            }
+        };
+        district.onchange = function () {
+            ward.length = 1;
+            const dataCity = data.filter((n) => n.Id === citis.value);
+            if (this.value != "") {
+                const dataWards = dataCity[0].Districts.filter(n => n.Id === this.value)[0].Wards;
+
+                for (const w of dataWards) {
+                    wards.options[wards.options.length] = new Option(w.Name, w.Id);
+                }
+            }
+        };
+    }
+</script>

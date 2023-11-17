@@ -1,0 +1,248 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<style>
+    .anh {
+        background-color: white;
+        border-radius: 7px;
+        padding: 7px 0px;
+    }
+
+    .Gia {
+        display: flex;
+    }
+
+    .wrapper {
+        border: 1px solid rgba(0,0,0,0.2);
+        display:flex;
+        justify-content: center;
+        border-radius: 12px;
+        cursor: pointer;
+    }
+
+        .wrapper span {
+            width: 100%;
+            text-align: center;
+            font-weight: 600;
+        }
+
+            .wrapper span.num {
+                font-size: 20px;
+                border-left: 2px solid rgba(0,0,0,0.2);
+                border-right: 2px solid rgba(0,0,0,0.2);
+                pointer-events: none;
+            }
+
+    .mua {
+        display: flex;
+    }
+
+        .mua .m1 {
+            background-color: white;
+            border-color: #C92127;
+            color: #C92127;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 10px
+        }
+
+        .mua .m2 {
+            margin-left: 10px;
+            border-radius: 5px;
+            background-color: #C92127;
+            color: white;
+            font-weight: 600;
+            border-color: #C92127;
+        }
+
+    .r {
+        width: 250px;
+    }
+
+    .thongtinvesach {
+        margin-top: 30px;
+        background-color: white;
+        border-radius: 7px;
+        padding: 7px
+    }
+
+    .col-4 .a1{
+        width: 95%;
+        height: 95%;
+    }
+    .danhgia{
+        margin-top:20px;
+        background-color:white;
+        border-radius:10px;
+    }
+    .Giaban h3{
+        color:red;
+    }
+    .Giagoc p{
+        margin-left:15px;
+        color: rgba(0,0,0,0.2);
+        text-decoration:line-through;
+    }
+</style>
+<div class="container">
+    <div class="anh row">
+        <div class="col-4">
+            <img class="a1" src="~/img/IMG_565456.png" />
+        </div>
+        <div class="col-8">
+            <div class="tensach">
+                <h3>
+                    Tên Sách
+                </h3>
+                <div class="row">
+                    <div class="col-6">
+                        <p>Nhà cung cấp: Nhà Xuất Bản Kim Đồng</p>
+                        <p>Nhà xuất bản: Kim Đồng</p>
+                    </div>
+                    <div class="col-6">
+                        <p>Tác giả: Lê Quang Khánh</p>
+                        <p>Hình thức bìa: Bìa Mềm</p>
+                    </div>
+                </div>
+                <div class="danhgia">
+                    <a asp-area="" asp-controller="Home" asp-action="DanhGia">Đánh Giá</a>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="Gia">
+                            <div class="Giaban">
+                                <h3>28000 đ</h3>
+                            </div>
+                            <div class="Giagoc">
+                                <p>30000 đ</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-4">
+                                <label>Số Lượng: </label>
+                            </div>
+                            <div class="col-4">
+                                <div class="wrapper">
+                                    <span class="minus">-</span>
+                                    <span class="num">01</span>
+                                    <span class="plus">+</span>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mua">
+                    <input type="submit" class="m1" value="Thêm Vào Giỏ Hàng" data-bs-toggle="modal" data-bs-target="#spModal" />
+                    <input type="submit" class="m2" value="Mua" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="thongtinvesach row">
+        <h5>Thông Tin Sản Phẩm</h5>
+        <div class="row">
+            <div class="col-4">
+                <p>Mã hàng</p>
+                <p>Dộ tuổi</p>
+                <p>Tên nhà hàng cup cấp</p>
+                <p>Tác Giả</p>
+                <p>Nhà Xuất Bản</p>
+                <p>Năm BX</p>
+                <p>Ngôn Ngữ</p>
+                <p>Số trang</p>
+                <p>Hình thức</p>
+                <p>Mã hàng</p>
+                <p>Mã hàng</p>
+                <p>Mã hàng</p>
+
+            </div>
+            <div class="col-8">
+                <p>Mã hàng</p>
+                <p>Dộ tuổi</p>
+                <p>Tên nhà hàng cup cấp</p>
+                <p>Tác Giả</p>
+                <p>Nhà Xuất Bản</p>
+                <p>Năm BX</p>
+                <p>Ngôn Ngữ</p>
+                <p>Số trang</p>
+                <p>Hình thức</p>
+                <p>Mã hàng</p>
+                <p>Mã hàng</p>
+                <p>Mã hàng</p>
+            </div>
+        </div>
+    </div>
+    <div class="row danhgia">
+        <div>
+            <p>Đánh Giá Sản Phẩm</p>
+            <!---@await Html.PartialAsync("DanhGia");--->
+            <div>
+                <div>
+                    0<span>/5</span>
+                </div>
+                <div>
+                    <div class="rating-box">
+                        <div class="rating" style="width:0%"></div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div>
+                    (0&nbsp;đánh giá)
+                </div>
+            </div>
+        </div>
+        <div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="spModal">
+    <div class="modal-dialog r">
+        <div class="modal-content group-tabs">
+
+            <!-- Modal Header -->
+            <div class="modal-header nav nav-tabs" role="tablist">
+                Sản Phẩm đã được thêm vào giỏ hàng của bạn
+                <img src="~/img/IMG_565456.png" width="150px" height="150px" style="align-content:center;" />
+            </div>
+
+            <!-- Modal body -->
+            <!-- Modal footer -->
+            <div class="modal-footer group-tabs">
+                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Mua Thêm</button>
+                <a type="button" class="btn btn-warning" asp-area="" asp-controller="Home" asp-action="GioHang">Thanh Toán</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- JavaSript -->
+<script>
+    const plus = document.querySelector(".plus"),
+        minus = document.querySelector(".minus"),
+        num = document.querySelector(".num");
+
+    let a = 1;
+    plus.addEventListener("click", () => {
+        a++;
+        a = (a < 10) ? "0" + a : a;
+        num.innerText = a;
+        console.log(a);
+    });
+    minus.addEventListener("click", () => {
+        if (a > 1) {
+            a--;
+            a = (a < 10) ? "0" + a : a;
+            num.innerText = a;
+        }
+    });
+</script>

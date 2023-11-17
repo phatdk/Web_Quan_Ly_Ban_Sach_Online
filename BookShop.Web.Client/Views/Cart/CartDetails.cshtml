@@ -1,90 +1,117 @@
-﻿@model IEnumerable<BookShop.BLL.ConfigurationModel.CartDetailModel.CartDetailViewModel>
+﻿@using BookShop.BLL.ConfigurationModel.CartDetailModel;
+@model List<CartDetailViewModel>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
 
-@{
-    ViewData["Title"] = "Giỏ Hàng";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
 
-<h1>CartDetails</h1>
+    th {
+        background-color: #f2f2f2;
+    }
 
+    input[type="number"] {
+        width: 50px;
+        text-align: center;
+    }
 
-<table class="table">
+    input[type="checkbox"] {
+        transform: scale(1.5); 
+    }
+</style>
+<table>
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TotalPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Id_User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Id_Product)
-            </th>
-            <th></th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Product Price</th>
+            <th>Total Price</th>
+            <th>Select</th>
+            <th>Option</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TotalPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id_User)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id_Product)
-            </td>
-            <td>
-                    @Html.ActionLink("Delete", "RemoveProduct", new { id=item.Id_Product })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ProductName</td>
+                <td>
+                    <input type="number" value="@item.Quantity" min="1" />
+                </td>
+                <td>@item.ProductPrice</td>
+                <td>@item.TotalPrice</td>
+                <td>
+                    <input type="checkbox" @(item.IsSelected ? "checked" : "") />
+                </td>
+                <td>
+                    <button onclick="removeProduct('@item.Id_Product')">Xóa</button>
+
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
-<div>
-    <button class="btn btn-warning" id="buyNow">Mua ngay</button>
-</div>
 
-<script>
-    document.getElementById('buyNow').addEventListener('click', function () {
-        var url = "@Url.Action("CreateOnlineOrder", "Order")";
-        window.location.href = url;
-    });
-</script>
+<p>Total Cost: <span id="totalCost">@Model.Sum(x => x.IsSelected ? x.TotalPrice : 0)</span></p>
+
+@section scripts {
+    <script>
+       
+        $(document).ready(function () {
+            updateTotalCost();
+
+            $('input[type="checkbox"]').change(function () {
+                updateTotalCost();
+            });
+
+            $('input[type="number"]').change(function () {
+                updateTotalCost();
+            });
+
+            function updateTotalCost() {
+                var totalCost = 0;
+
+                $('tbody tr').each(function () {
+                    var checkbox = $(this).find('input[type="checkbox"]');
+                    var quantityInput = $(this).find('input[type="number"]');
+                    var productPrice = parseInt($(this).find('td:eq(2)').text());
+                    var isSelected = checkbox.is(":checked");
+                    var quantity = parseInt(quantityInput.val());
+
+                    var individualCost = quantity * productPrice;
+
+                    $(this).find('td:eq(3)').text(individualCost);
+
+                    if (isSelected) {
+                        totalCost += individualCost;
+                    }
+                });
+
+                $('#totalCost').text(totalCost);
+            }
+        });
+    </script>
+    <script>
+        function removeProduct(productId) {
+            $.ajax({
+                type: "POST",
+                url: "/Cart/RemoveProduct", 
+                data: { id: productId },
+                success: function (result) {
+                },
+                error: function (error) {
+                    console.error("Error removing product:", error);
+                }
+            });
+        }
+    </script>
+
+
+}

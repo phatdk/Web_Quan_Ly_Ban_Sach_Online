@@ -34,34 +34,50 @@ namespace BookShop.Web.Client.Controllers
 			return View();
 		}
 
-		// GET: CartController/Details/5
-		public async Task<IActionResult> CartDetails()
-		{
-			var user = await GetCurrentUserAsync();
-			List<CartDetailViewModel> detail = new List<CartDetailViewModel>();
-			if (user != null)
-			{
-				var cartCheck = await _cartService.GetByUser(user.Id);
-				if (cartCheck == null)
-				{
-					await _cartService.Add(new CartViewModel() { Id_User = user.Id, });
-				}
-				detail = await _cartDetailService.GetByCart(user.Id);
-			}
-			else
-			{
-				var customCartChar = HttpContext.Session.GetString("sessionCart");
-				if (!string.IsNullOrEmpty(customCartChar))
-				{
-					detail = JsonConvert.DeserializeObject<List<CartDetailViewModel>>(customCartChar);
-				}
-				else HttpContext.Session.SetString("sessionCart", JsonConvert.SerializeObject(detail));
-			}
-			return View(detail);
-		}
+        // GET: CartController/Details/5
+        public async Task<IActionResult> CartDetails()
+        {
+            var user = await GetCurrentUserAsync();
+            List<CartDetailViewModel> detail = new List<CartDetailViewModel>();
 
-		// GET: CartController/Create
-		public async Task<IActionResult> AddToCart(int id, int quantity)
+            if (user != null)
+            {
+                var cartCheck = await _cartService.GetByUser(user.Id);
+
+                if (cartCheck == null)
+                {
+                    await _cartService.Add(new CartViewModel() { Id_User = user.Id });
+                }
+
+                detail = await _cartDetailService.GetByCart(user.Id);
+
+                // Set IsSelected to true for all items initially
+                foreach (var item in detail)
+                {
+                    item.IsSelected = true;
+                    item.IsCanceled = false;
+                }
+            }
+            else
+            {
+                var customCartChar = HttpContext.Session.GetString("sessionCart");
+                if (!string.IsNullOrEmpty(customCartChar))
+                {
+                    detail = JsonConvert.DeserializeObject<List<CartDetailViewModel>>(customCartChar);
+                }
+                else
+                {
+                    HttpContext.Session.SetString("sessionCart", JsonConvert.SerializeObject(detail));
+                }
+            }
+
+            return View(detail);
+        }
+
+
+
+        // GET: CartController/Create
+        public async Task<IActionResult> AddToCart(int id, int quantity)
 		{
 			var user = await GetCurrentUserAsync();
 			var product = await _productService.GetById(id);

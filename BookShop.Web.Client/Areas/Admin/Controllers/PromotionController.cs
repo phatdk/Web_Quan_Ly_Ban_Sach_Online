@@ -7,6 +7,7 @@ using BookShop.DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Security.Principal;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers
@@ -15,9 +16,11 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
     public class PromotionController : Controller
     {
         IPromotionService _promotionService;
+        IPromotionTypeService _promotionTypeService;
         private readonly ApplicationDbcontext _dbcontext;
-        public PromotionController(IPromotionService promotionService, ApplicationDbcontext dbcontext)
+        public PromotionController(IPromotionService promotionService, ApplicationDbcontext dbcontext, IPromotionTypeService promotionTypeService)
         {
+            _promotionTypeService = promotionTypeService;
             _promotionService = promotionService;
             _dbcontext = dbcontext;
         }
@@ -48,25 +51,41 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
             {
                 var createPromotion = new CreatePromotionModel
                 {
-                   Name = model.Name,
-                   Code = model.Code,
-                   Condition = model.Condition,
-                   StorageTerm = model.StorageTerm,
-                   AmountReduct = model.AmountReduct,
-                   PercentReduct = model.PercentReduct,
-                   ReductMax = model.ReductMax,
-                   Quantity = model.Quantity,
-                   StartDate = model.StartDate,
-                   EndDate = model.EndDate,
-                   Description = model.Description,
-                   Status = model.Status,
-                   Id_Type = model.Id_Type,
+                    Name = model.Name,
+                    Code = model.Code,
+                    Condition = model.Condition,
+                    StorageTerm = model.StorageTerm,
+                    AmountReduct = model.AmountReduct,
+                    PercentReduct = model.PercentReduct,
+                    ReductMax = model.ReductMax,
+                    Quantity = model.Quantity,
+                    StartDate = model.StartDate,
+                    EndDate = model.EndDate,
+                    Description = model.Description,
+                    Status = model.Status,
+                    Id_Type = model.Id_Type,
                 };
+                if (await _promotionService.Add(createPromotion))
+                {
+                    var typePromotion = await _promotionTypeService.GetById(model.Id_Type);
 
-                await _promotionService.Add(createPromotion);
-                return RedirectToAction("Index");
+                    if (typePromotion.Name == "Sản phẩm")
+                    {
+                        HttpContext.Session.SetString("PromotionId", model.Id.ToString());
+                        TempData["SuccessMessage"] = "Promotion created successfully!";
+                        return RedirectToAction("Index", "AddPromotionsToProducts");
+                    }
+                    else
+                    {
+                        TempData["SuccessMessage"] = "Promotion created successfully!";
+                        return RedirectToAction("Index");
+                    }
+                }
             }
-            return View(model);
+
+            TempData["ErrorMessage"] = "Failed to create promotion.";
+            return RedirectToAction("Index");
+
         }
         public async Task<IActionResult> Edit(int id)
         {
@@ -79,7 +98,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
             return View(promotion);
         }
         [HttpPost]
- 
+
         public async Task<IActionResult> Edit(int id, UpdatePromotionModel model)
         {
             if (ModelState.IsValid)
@@ -90,26 +109,29 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
             ViewData["PromotionTypeId"] = new SelectList(_dbcontext.PromotionTypes, "Id", "Name", model.Id_Type);
             return View(model);
         }
-        public async Task<IActionResult> Delete(int id)
-        {
+		//public async Task<IActionResult> Delete(int id)
+		//{
 
 
-            var promotion = await _promotionService.GetById(id);
-            if (promotion == null)
-            {
-                return NotFound();
-            }
-            ViewData["PromotionTypeId"] = new SelectList(_dbcontext.PromotionTypes, "Id", "Name", promotion.Id_Type);
-            return View(promotion);
-        }
-        [HttpPost, ActionName("Delete")]
- 
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var promotion = await _promotionService.GetById(id);
+		//    var promotion = await _promotionService.GetById(id);
+		//    if (promotion == null)
+		//    {
+		//        return NotFound();
+		//    }
+		//    ViewData["PromotionTypeId"] = new SelectList(_dbcontext.PromotionTypes, "Id", "Name", promotion.Id_Type);
+		//    return View(promotion);
+		//}
 
-            await _promotionService.Delete(id);
-            return RedirectToAction(nameof(Index));
-        }
-    }
+		public async Task<IActionResult> Delete(List<int> ids)
+		{
+			if (ids != null)
+			{
+				foreach (var id in ids)
+				{
+					await _promotionService.Delete(id);
+				}
+			}
+			return RedirectToAction(nameof(Index));
+		}
+	}
 }
