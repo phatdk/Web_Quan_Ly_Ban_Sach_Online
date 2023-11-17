@@ -11,6 +11,7 @@
     List<UserPromotionViewModel> userPromotions = ViewBag.UserPromotions;
     List<PromotionViewModel> promotions = ViewBag.Promotions;
     UserModel user = ViewBag.User;
+    int cartUse = ViewBag.Cart;
     int total = 0;
 }
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -164,7 +165,7 @@
                 </div>
                 <div class="form-group" id="chonma" hidden>
                     <label>Chọn khuyến mãi</label>
-                    <select asp-for="paymentsId" class="form-control" id="selectPromotion">
+                    <select asp-for="paymentId" class="form-control" id="selectPromotion">
                         @if (userPromotions != null)
                         {
                             foreach (var item in userPromotions)
@@ -187,7 +188,7 @@
 
             <div class="form-group">
                 <label>Hình thức thanh toán</label>
-                <select asp-for="paymentsId" required class="form-control" id="paymentMethod">
+                <select asp-for="paymentId" required class="form-control" id="paymentMethod">
                     @foreach (var item in payments)
                     {
                         <option value="@item.Id">@item.Name</option>
@@ -205,21 +206,16 @@
 <script type="text/javascript">
 	ViewData["Title"] = "Tạo đơn hàng";
 	List<PaymentFormViewModel> payments = ViewBag.Payments;
-	List<UserPromotionViewModel> userPromotions = ViewBag.UserPromotions;
-	List<PromotionViewModel> promotions = ViewBag.Promotions;
+	PromotionViewModel promotion = ViewBag.Promotion;
 	UserModel user = ViewBag.User;
 	int carUse = ViewBag.Cart;
-	int total = 0;
 }
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-<h4>Tạo đơn hàng</h4>
-
-
-<form asp-action="CreateOnlineOrder" class="row pt-5 pb-5 bg-info" id="frmSubmitCheckout">
+<form asp-action="CreateOnlineOrder" class="row pt-5 pb-5 bg-info">
 	<div class="col-7">
 		<input asp-for="Id_User" id="UserId" value="@Model.Id_User" hidden />
-		<input value="@carUse" type="text" name="cartUse" hidden/>
+		<input value="@cartUse" type="text" name="cartUse" hidden />
 		@if (Model.Id_User != 0)
 		{
 			<div class="form-group">
@@ -292,7 +288,6 @@
 		<ul class="ps-0" style="list-style: none">
 			@for (var i = 0; i < Model.orderDetails.Count; i++)
 			{
-				total += (Model.orderDetails[i].Price * Model.orderDetails[i].Quantity);
 				<li class="row">
 					<div class="col-3 position-relativelative">
 						<img class="bg-light" src="@Model.orderDetails[i].Img" style="width: 100%; z-index: 0" />
@@ -310,8 +305,8 @@
 
 		<div class="payment">
 			<div class="form-group">
-				<label for="tongGia">Tạm tính:</label>
-				<input asp-for="Total" id="tongGia" value="@total" readonly>
+				<label for="tongGia">Tổng tiền: </label>
+				<input asp-for="Total" id="tongGia" readonly>
 			</div>
 
 			<div class="form-group" hidden>
@@ -325,43 +320,29 @@
 				<label for="phiShip">Phí vận chuyển:</label>
 				<input asp-for="Shipfee" id="phiShip" readonly />
 			</div>
+
 			@if (Model.Id_User != 0)
 			{
-				<div class="form-group">
+				<div class="form-group" id="khuyenMaiSuDung">
 					<label>Sử dụng diểm</label>
 					<input asp-for="PointUsed" type="number" min="0" max="@user.Point" value="0" style="width: 70px" />
 					<span>Số điểm hiện có @user.Point</span>
 				</div>
-				<div>
-					<input name="promotion" id="selectPromotion" type="radio" value="1" checked /><span> Nhập mã </span> |
-					<input name="promotion" id="useCodePromotion" type="radio" value="2" /><span> Chọn mã</span>
-				</div>
-				<div class="form-group" id="chonma" hidden>
-					<label>Chọn khuyến mãi</label>
-					<select asp-for="paymentsId" class="form-control" id="selectPromotion">
-						@if (userPromotions != null)
-						{
-							foreach (var item in userPromotions)
-							{
-								<option value="@item.Id">@item.Name</option>
-							}
-
-						}
-					</select>
-				</div>
+				<label>Chọn khuyến mãi</label>
+				<select asp-for="Id_Promotion" class="form-control" id="selectPromotion" onchange="promotionSelected()">
+					<option value="" selected>--Select promotion--</option>
+				</select>
+				<label class="w-100">Số tiền giảm: <span id="totalReduct"></span></label>
 			}
-			<div class="form-group" id="nhapma">
-				<label>Nhập mã khuyến mãi</label>
-				<input asp-for="PromotionCode" id="userPromotionCode" class="form-control" />
-			</div>
+
 			<div class="form-group">
-				<label for="totalShip">Tổng tiền:</label>
-				<span id="totalShip">0</span>
+				<label for="totalShip">Thanh toán: <span id="totalShip">0</span></label>
+				<input asp-for="TotalPayment" id="totalPayment"/>
 			</div>
 
 			<div class="form-group">
-				<label>Hình thức thanh toán</label>
-				<select asp-for="paymentsId" required class="form-control" id="paymentMethod">
+				<label>Chọn hình thức thanh toán</label>
+				<select asp-for="paymentId" required class="form-control" id="paymentMethod">
 					@foreach (var item in payments)
 					{
 						<option selected="selected" name="Payment" value="@item.Name">@item.Name</option>
@@ -379,7 +360,10 @@
 <script src="~/js/application/web/checkout.js"></script>
 <script type="text/javascript">
 
-<script>
+<script type="text/javascript">
+	function formatCurrency(amount) {
+		return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+	};
 
 	// Thêm sự kiện "change" cho các input radio
 	document.getElementById('selectPromotion').addEventListener('change', handleRadioChange);
@@ -393,12 +377,39 @@
 		if (selectedValue == 1) {
 			chonma.setAttribute('hidden', 'hidden');
 			nhapma.removeAttribute('hidden');
-		}
+		} 
 		else {
-			nhapma.setAttribute('hidden', 'hidden');
-			chonma.removeAttribute('hidden');
+			var reduct = document.getElementById('totalReduct');
+			totalReduct = 0;
+			reduct.innerHTML = formatCurrency(0);
+			calculateShipping();
 		}
 	}
+
+	function getPromotions(id) {
+		$.ajax({
+			url: '/Order/GetPromotionByUser',
+			type: 'GET',
+			data: { id: id },
+			success: function (data) {
+				var userPromotionList = $("#selectPromotion");
+				data.forEach(function (item) {
+					var promotionRow = '<option value="' + item.id_Promotion + '">' + item.name + '</option>';
+					userPromotionList.append(promotionRow);
+				});
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	};
+
+	$(document).ready(function () {
+		if (@Model.Id_User !== 0) {
+			getPromotions(@Model.Id_User);
+			promotionSelected();
+		}
+	});
 </script>
 
 <script type="text/javascript">
@@ -553,15 +564,15 @@
                     var tongGiaInput = document.getElementById("tongGia");
                     var parsedTongGia = parseFloat(tongGiaInput.value);
 
-                    if (!isNaN(parsedPhiShip) && !isNaN(parsedTongGia)) {
-                        var total = parsedPhiShip + parsedTongGia;
-                        totalShip.innerHTML = total.toLocaleString("vi-VN", {
-                            style: "currency",
-                            currency: "VND"
-                        });
-                    } else {
-                        totalShip.innerHTML = "NaN";
-                    }
+					if (!isNaN(parsedPhiShip) && !isNaN(parsedTongGia)) {
+						var total = parsedPhiShip + parsedTongGia;
+						totalShip.innerHTML = total.toLocaleString("vi-VN", {
+							style: "currency",
+							currency: "VND"
+						});
+					} else {
+						totalShip.innerHTML = "NaN";
+					}
 
                 });
         }
