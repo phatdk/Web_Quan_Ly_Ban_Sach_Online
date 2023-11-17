@@ -11,6 +11,7 @@
     List<UserPromotionViewModel> userPromotions = ViewBag.UserPromotions;
     List<PromotionViewModel> promotions = ViewBag.Promotions;
     UserModel user = ViewBag.User;
+    int cartUse = ViewBag.Cart;
     int total = 0;
 }
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -164,7 +165,7 @@
                 </div>
                 <div class="form-group" id="chonma" hidden>
                     <label>Chọn khuyến mãi</label>
-                    <select asp-for="paymentsId" class="form-control" id="selectPromotion">
+                    <select asp-for="paymentId" class="form-control" id="selectPromotion">
                         @if (userPromotions != null)
                         {
                             foreach (var item in userPromotions)
@@ -187,7 +188,7 @@
 
             <div class="form-group">
                 <label>Hình thức thanh toán</label>
-                <select asp-for="paymentsId" required class="form-control" id="paymentMethod">
+                <select asp-for="paymentId" required class="form-control" id="paymentMethod">
                     @foreach (var item in payments)
                     {
                         <option value="@item.Id">@item.Name</option>
@@ -214,7 +215,7 @@
 <form asp-action="CreateOnlineOrder" class="row pt-5 pb-5 bg-info">
 	<div class="col-7">
 		<input asp-for="Id_User" id="UserId" value="@Model.Id_User" hidden />
-		<input value="@carUse" type="text" name="cartUse" hidden />
+		<input value="@cartUse" type="text" name="cartUse" hidden />
 		@if (Model.Id_User != 0)
 		{
 			<div class="form-group">
