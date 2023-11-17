@@ -23,7 +23,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 	[Area("Admin")]
 	public class OfflineSaleController : Controller
 	{
-
 		private readonly IOrderService _orderService;
 		private readonly IOrderDetailService _orderDetailService;
 		private readonly IProductService _productService;
@@ -108,33 +107,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 			return Json(list.Take(10));
 		}
 
-		public async Task<IActionResult> CheckPromotion(int condition)
-		{
-			var promotions = (await _pointNPromotionService.GetActivePromotion()).Where(x=>x.NameType.Equals("Tự động"));
-			var validPromotions = new List<PromotionViewModel>();
-			foreach(var item in promotions)
-			{
-				if(item.Condition <= condition)
-				{
-					validPromotions.Add(item);
-				}
-			}
-			var usePromotion = validPromotions.OrderByDescending(x => x.Condition).ThenByDescending(x=>x.CreatedDate).FirstOrDefault();
-			if(usePromotion != null)
-			{
-				if (usePromotion.PercentReduct != null && usePromotion.PercentReduct > 0)
-				{
-					usePromotion.TotalReduct = Convert.ToInt32(Math.Floor(Convert.ToDouble((condition / 100) * usePromotion.PercentReduct)));
-					if(usePromotion.TotalReduct > usePromotion.ReductMax)
-					{
-						usePromotion.TotalReduct = usePromotion.ReductMax;
-					}
-				}
-				else usePromotion.TotalReduct = Convert.ToInt32(usePromotion.AmountReduct);
-			}
-			return Json(usePromotion);
-		}
-
 		public async Task<IActionResult> GetUser(string keyWord)
 		{
 			var user = new UserModel();
@@ -147,6 +119,33 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 					).FirstOrDefault();
 			}
 			return Json(user);
+		}
+
+		public async Task<IActionResult> CheckActivePromotion(int total)
+		{
+			var promotions = (await _pointNPromotionService.GetActivePromotion()).Where(x => x.NameType.Equals("Tự động"));
+			var validPromotions = new List<PromotionViewModel>();
+			foreach (var item in promotions)
+			{
+				if (item.Condition <= total)
+				{
+					validPromotions.Add(item);
+				}
+			}
+			var usePromotion = validPromotions.OrderByDescending(x => x.Condition).ThenByDescending(x => x.CreatedDate).FirstOrDefault();
+			if (usePromotion != null)
+			{
+				if (usePromotion.PercentReduct != null && usePromotion.PercentReduct > 0)
+				{
+					usePromotion.TotalReduct = Convert.ToInt32(Math.Floor(Convert.ToDouble((total / 100) * usePromotion.PercentReduct)));
+					if (usePromotion.TotalReduct > usePromotion.ReductMax)
+					{
+						usePromotion.TotalReduct = usePromotion.ReductMax;
+					}
+				}
+				else usePromotion.TotalReduct = Convert.ToInt32(usePromotion.AmountReduct);
+			}
+			return Json(usePromotion);
 		}
 
 		public async Task<IActionResult> AddProduct(int id, int orderId, int quantity)

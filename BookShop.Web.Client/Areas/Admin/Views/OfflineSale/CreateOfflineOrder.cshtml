@@ -11,7 +11,7 @@
 	List<UserModel> users = ViewBag.Users;
 	int total = 0;
 }
-<form asp-action="CreateOfflineOrder">
+<form>
 	<div class="row">
 		<div class="col-9 row bg-light" style="margin: 0px; padding	: 0px">
 			<div class="col-4">
@@ -68,6 +68,7 @@
 				<input type="button" onclick="getData()" value="GetData" />
 			</div>
 		</div>
+
 		<div class="col-3 border border-2 border-secondary ps-2 pt-2 pb-2 bg-light">
 			<label class="text-black-50">Nhân viên trực ca</label>
 			<div class="form-group row">
@@ -129,8 +130,8 @@
 			</div>
 			<div class="form-group mt-2">
 				<span class="d-block w-100 m-2">Khuyến mại được kích hoạt tự động</span>
-				<input id="orderIdPromotion" type="text" />
-				<span class="d-block w-100 m-2">Khuyến mãi được kịch hoạt: <span id="orderNamePromotion"></span></span>
+				<input asp-for="Id_Promotion" hidden id="orderIdPromotion" />
+				<span class="d-block w-100 m-2">Tên khuyễn mãi: <span id="orderNamePromotion"></span></span>
 				<span class="d-block w-100 m-2">Số tiền giảm: <span id="orderReduct"></span></span>
 
 				<span class="d-block w-100 m-2">Tổng tiền: <span id="total"></span></span>
@@ -216,25 +217,36 @@
 	var total = 0;
 	var payment = 0;
 	function checkPromotion(total) {
-		$.ajax({
-			url: 'Admin/OfflineSale/CheckPromotion',
-			type: 'GET',
-			data: { condition: total },
-			success: function (data) {
-				if (data != null && data.id != 0) {
-					$('#orderIdPromotion').val(data.id);
-					document.getElementById('orderNamePromotion').innerHTML = data.name;
-					document.getElementById('orderReduct').innerHTML = data.totalReduct;
-					payment = total - data.totalReduct;
+		if (total > 0) {
+			$.ajax({
+				url: '/Admin/OfflineSale/CheckActivePromotion',
+				type: 'GET',
+				data: { total: total },
+				success: function (data) {
+					if (data != null && data.id != 0) {
+						$('#orderIdPromotion').val(data.id);
+						document.getElementById('orderNamePromotion').innerHTML = data.name;
+						document.getElementById('orderReduct').innerHTML = formatCurrency(data.totalReduct);
+						payment = total - data.totalReduct;
+						document.getElementById('payment').innerHTML = formatCurrency(payment);
+					}
+					else {
+						$('#orderIdPromotion').val('');
+						document.getElementById('orderNamePromotion').innerHTML = "Không";
+						document.getElementById('orderReduct').innerHTML = formatCurrency(0);
+						payment = total - data.totalReduct;
+						document.getElementById('payment').innerHTML = formatCurrency(payment);
+					}
 				}
-				else {
-					$('#orderIdPromotion').val(data.id);
-					document.getElementById('orderNamePromotion').innerHTML = "";
-					document.getElementById('orderReduct').innerHTML = data.totalReduct;
-					payment = total - data.totalReduct;
-				}
-			};
-		});
+			});
+		}
+		else {
+			$('#orderIdPromotion').val('');
+			document.getElementById('orderNamePromotion').innerHTML = "Không";
+			document.getElementById('orderReduct').innerHTML = formatCurrency(0);
+			payment = total - data.totalReduct;
+			document.getElementById('payment').innerHTML = formatCurrency(payment);
+		}
 	};
 
 	function getDetailOrders(id) {
@@ -278,7 +290,6 @@
 				total = data.total; // tinh tien
 				document.getElementById('total').innerHTML = formatCurrency(data.total);
 				checkPromotion(total);
-				document.getElementById('payment').innerHTML = formatCurrency(payment);
 			},
 			error: function (error) {
 				alert('Có lỗi xảy ra: ' + error.responseText);
@@ -428,6 +439,7 @@
 		checkChange(0);
 		getWaitingOrders();
 		getProduct();
+		checkPromotion(0);
 	};
 
 	function saveOrder() {
@@ -501,5 +513,6 @@
 		getWaitingOrders();
 		getProduct();
 		getDetailOrders(0);
+		checkPromotion(total);
 	});
 </script>
