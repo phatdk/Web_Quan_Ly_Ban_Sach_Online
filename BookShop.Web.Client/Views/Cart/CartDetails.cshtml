@@ -60,6 +60,11 @@
     .item1 {
         flex-grow: 2;
     }
+    .nosanpham{
+        background-color:white;
+        text-align:center;
+        padding:10px;
+    }
 </style>
 <table class="table">
     <thead>
@@ -132,8 +137,8 @@
         }
     </tbody>
 </table>
-@*@if (Model.Count() != 0)
-        {*@
+@if (Model.Count() != 0)
+        {
 <h3>
     <p>Giỏ hàng</p>
 </h3>
@@ -177,18 +182,18 @@
         <p>Thành Tiền: <span id="totalCost">@Model.Sum(x => x.IsSelected ? x.TotalPrice : 0)</span></p>
         <div class="item1"></div>
         <div class="thanhtoangiohang">
-            <button>Thanh Toán</button>
+                <button id="buyNow">Thanh Toán</button>
         </div>
     </div>
 </div>
-@*}
+}
 else
 {
     <div class="nosanpham">
         <h2>Chưa có sản phẩm được thêm vào</h2>
-        <a type="button" xc asp-area="" asp-controller="Home" asp-action="DanhGia">MUA SẮM NGAY</a>
+        <a type="button" xc asp-area="" asp-controller="Home" asp-action="DanhSachSanPham">MUA SẮM NGAY</a>
     </div>
-}*@
+}
 
 @section scripts {
     <script>
@@ -227,7 +232,7 @@ else
             }
         });
     </script>
-    <script>
+    <script type="text/javascript">
         function removeProduct(productId) {
             $.ajax({
                 type: "POST",
@@ -240,6 +245,11 @@ else
                 }
             });
         }
+        document.getElementById('buyNow').addEventListener('click', function () {
+            var quantity = document.getElementById('quantityInput').value;
+            var url = "@Url.Action("CreateOnlineOrder", "Order")?id=@Model.Id&quantity=" + quantity
+            window.location.href = url;
+        });
     </script>
 
 
