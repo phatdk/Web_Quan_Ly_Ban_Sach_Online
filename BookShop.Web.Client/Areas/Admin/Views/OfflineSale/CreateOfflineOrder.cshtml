@@ -6,7 +6,7 @@
 @model BookShop.BLL.ConfigurationModel.OrderModel.OrderViewModel;
 @{
 	ViewData["Title"] = "Bán hàng offline";
-	Layout = "~/Areas/Admin/Views/Shared/_offlineSaleLayout.cshtml";
+	Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
 	Userr staff = ViewBag.Staff;
 	List<UserModel> users = ViewBag.Users;
 	int total = 0;
@@ -244,7 +244,7 @@
 			$('#orderIdPromotion').val('');
 			document.getElementById('orderNamePromotion').innerHTML = "Không";
 			document.getElementById('orderReduct').innerHTML = formatCurrency(0);
-			payment = total - data.totalReduct;
+			payment = total;
 			document.getElementById('payment').innerHTML = formatCurrency(payment);
 		}
 	};
@@ -274,7 +274,7 @@
 						'<th>' + index + '</th>' +
 						'<td>' + item.nameProduct + '</td>' +
 						'<td>' + item.price + '</td>' +
-						'<td>' + item.quantity + '</td>' +
+						'<td id="removeProdq-' + item.id_Product + '">' + item.quantity + '</td>' +
 						'<td hidden>' + item.id_Order + '</td>' +
 						'<td hidden>' + item.id_Product + '</td>' +
 						'<th>' +
@@ -324,7 +324,7 @@
 						'<td><img width=75px src="' + item.imgUrl + '" /> </td>' +
 						'<td>' + item.name + '</td>' +
 						'<td>' + item.price + '</td>' +
-						'<td>' + item.quantity + '</td>' +
+						'<td id="prodq-' + item.id + '">' + item.quantity + '</td>' +
 						'<td> <input id="quantity-' + item.id + '" class="text-center" style = "max-width: 70px" type = "number" min = "1" max = "' + item.quantity + '" value = "1" /> </td>' +
 						'<th class="' + statusColor + '">' + status + '</th>' +
 						'<td> <input type="button" class="btn btn-success" onclick = "addProduct(' + item.id + ')" value="Thêm"/></td >' +
@@ -352,7 +352,6 @@
 			type: 'POST',
 			data: { keyWord: key },
 			success: function (data) {
-				debugger;
 				if (data != null && data.id !== 0) {
 					$('#orderIdUser').val(data.id);
 					$('#orderNameUser').val(data.name);
@@ -373,66 +372,68 @@
 	function addProduct(id) {
 		changeChecked = true;
 		var orderId = document.getElementById('orderId').value;
+		var productQuantity = parseInt(document.getElementById('prodq-' + id).innerHTML);
 		var quantity = document.getElementById('quantity-' + id).value;
-		$.ajax({
-			url: '/Admin/OfflineSale/AddProduct',
-			type: 'POST',
-			data: { id: id, orderId: orderId, quantity: quantity },
-			success: function (result) {
-				getDetailOrders(orderId);
-			},
-			error: function (error) {
-				alert('Có lỗi xảy ra: ' + error.responseText);
-			}
-		});
+		if (quantity <= productQuantity) {
+			$.ajax({
+				url: '/Admin/OfflineSale/AddProduct',
+				type: 'POST',
+				data: { id: id, orderId: orderId, quantity: quantity },
+				success: function (result) {
+					document.getElementById('prodq-' + id).innerHTML = productQuantity - quantity;
+					getDetailOrders(orderId);
+				},
+				error: function (error) {
+					alert('Có lỗi xảy ra: ' + error.responseText);
+				}
+			});
+		}
+		else {
+			alert("Số lượng vượt quá số lượng tồn");
+		}
 	};
 
 	function removeProduct(id) {
 		changeChecked = true;
 		var orderId = document.getElementById('orderId').value;
-		var quantity = document.getElementById('removeQuantity-' + id).value;
-		$.ajax({
-			url: '/Admin/OfflineSale/AddProduct',
-			type: 'POST',
-			data: { id: id, orderId: orderId, quantity: -quantity },
-			success: function (result) {
-				getDetailOrders(orderId);
-			},
-			error: function (error) {
-				alert('Có lỗi xảy ra: ' + error.responseText);
-			}
-		});
+		var removeProductQuantity = parseInt(document.getElementById('removeProdq-' + id).innerHTML);
+		var quantity = parseInt(document.getElementById('removeQuantity-' + id).value);
+		var productQuantity = parseInt(document.getElementById('prodq-' + id).innerHTML);
+		if (quantity <= removeProductQuantity) {
+			$.ajax({
+				url: '/Admin/OfflineSale/AddProduct',
+				type: 'POST',
+				data: { id: id, orderId: orderId, quantity: -quantity },
+				success: function (result) {
+					document.getElementById('prodq-' + id).innerHTML = productQuantity + quantity;
+					getDetailOrders(orderId);
+				},
+				error: function (error) {
+					alert('Có lỗi xảy ra: ' + error.responseText);
+				}
+			});
+		} 
+		else {
+			alert("Số lượng vượt quá số lượng sản phẩm trong đơn");
+		}
 	};
 
 	function removeAll(id, quantity) {
 		changeChecked = true;
 		var orderId = document.getElementById('orderId').value;
+		var productQuantity = parseInt(document.getElementById('prodq-' + id).innerHTML);
 		$.ajax({
 			url: '/Admin/OfflineSale/AddProduct',
 			type: 'POST',
 			data: { id: id, orderId: orderId, quantity: -quantity },
 			success: function (result) {
+				document.getElementById('prodq-' + id).innerHTML = productQuantity + quantity;
 				getDetailOrders(orderId);
 			},
 			error: function (error) {
 				alert('Có lỗi xảy ra: ' + error.responseText);
 			}
 		});
-	};
-	//function test
-	function getData() {
-		var table = document.getElementById("tableDetail");
-		var rows = table.getElementsByTagName("tr");
-
-		for (var i = 0; i < rows.length; i++) {
-			var cells = rows[i].getElementsByTagName("td"); // Hoặc "th" nếu bạn muốn lấy dữ liệu từ cả ô tiêu đề (header).
-
-			for (var j = 0; j < cells.length; j++) {
-				var cellData = cells[j].innerText; // Lấy dữ liệu trong ô.
-				console.log(cellData);
-			}
-		}
-
 	};
 
 	function reFresh() {
@@ -488,7 +489,7 @@
 			url: '/Admin/OfflineSale/CreateOfflineOrder',
 			type: 'POST',
 			data: {
-				Id: id, Id_Staff: id_Staff, Id_User: id_User, Id_Promotion: promotion,
+				Id: id, Id_Staff: id_Staff, Id_User: id_User, Id_Promotion: id_Promotion,
 				Email: email, Phone: phone,
 				Receiver: receiver, NameUser: nameUser
 			},
