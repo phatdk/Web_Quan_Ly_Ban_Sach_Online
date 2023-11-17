@@ -42,22 +42,17 @@
 				<thead>
 					<tr>
 						<th><input type="checkbox" id="selectAll"></th>
-						<th>ID</th>
+					 
 						<th>Tên</th>
 						<th>Code</th>
 						<th>Loại khuyến mãi</th>
-						<th>Tình trạng</th>
-						<th>Thời hạn</th>
-						<th>số tiền giảm</th>
-						<th>phần trăm giảm</th>
-						<th>Giảm tối đa</th>
+						<th>Số tiền giảm</th>
+						<th>Phần trăm giảm</th>
 						<th>Số lượng</th>
-						<th>Ngày tạo</th>
 						<th>Ngày bắt đầu</th>
 						<th>Ngày kết thúc</th>
-						<th>Mô tả</th>
 						<th>Trạng thái</th>
-						<th></th>
+						<th>Thao tác</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -68,8 +63,7 @@
 							<tr>
 								<td>
 									<input type="checkbox" class="checkbox-item" data-id="@item.Id">
-								</td>
-								<td>@item.Id</td>
+								</td>								 
 								<td>
 									<div class="d-flex align-items-center">
 										<img class="img-fluid rounded" src="assets/images/others/thumb-9.jpg" style="max-width: 60px" alt="">
@@ -78,18 +72,13 @@
 								</td>
 								<td>@item.Code</td>
 								<td>@item.NameType</td>
-								<td>@item.Condition</td>
-								<td>@item.StorageTerm</td>
 								<td>@item.AmountReduct</td>
 								<td>@item.PercentReduct</td>
-								<td>@item.ReductMax</td>
-								<td>@item.Quantity</td>
-								<td>@item.Description</td>
-								<td>@item.CreatedDate</td>
+								<td>@item.Quantity</td>													 
 								<td>@item.StartDate</td>
 								<td>@item.EndDate</td>
 								<td>
-									@if (item.Status <= 1)
+									@if (item.Status == 1)
 									{
 										<div class="d-flex align-items-center">
 											<div class="badge badge-success badge-dot m-r-10"></div>

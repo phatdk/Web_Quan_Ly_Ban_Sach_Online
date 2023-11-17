@@ -12,6 +12,7 @@ namespace BookShop.BLL.ConfigurationModel.PromotionModel
 		public string Name { get; set; }
 		public string Code { get; set; }
 		public int? Condition { get; set; }
+        public int? ConversionPoint { get; set; }
         public int? StorageTerm { get; set; }
         public int? AmountReduct { get; set; }
 		public int? PercentReduct { get; set; }
@@ -22,9 +23,12 @@ namespace BookShop.BLL.ConfigurationModel.PromotionModel
 		public DateTime? EndDate { get; set; }
 		public string? Description { get; set; }
 		public int Status { get; set; }
+        public bool StatusCheckbox { get; set; }
+        public bool ReduceByAmount { get; set; }
+        public bool ReduceByPercentage { get; set; }
 
-		// join properties
-		public string NameType { get; set; }
+        // join properties
+        public string NameType { get; set; }
 		public int TotalReduct { get; set; }
 
 		//foreign key

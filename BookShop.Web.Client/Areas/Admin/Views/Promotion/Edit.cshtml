@@ -1,92 +1,174 @@
 ﻿@model BookShop.BLL.ConfigurationModel.PromotionModel.PromotionViewModel
 
 @{
-    ViewData["Title"] = "Edit";
-    Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
+	ViewData["Title"] = "Edit";
+	Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
 }
 
- 
+
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Code" class="control-label"></label>
-                <input asp-for="Code" class="form-control" />
-                <span asp-validation-for="Code" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Condition" class="control-label"></label>
-                <input asp-for="Condition" class="form-control" />
-                <span asp-validation-for="Condition" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StorageTerm" class="control-label"></label>
-                <input asp-for="StorageTerm" class="form-control" />
-                <span asp-validation-for="StorageTerm" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AmountReduct" class="control-label"></label>
-                <input asp-for="AmountReduct" class="form-control" />
-                <span asp-validation-for="AmountReduct" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PercentReduct" class="control-label"></label>
-                <input asp-for="PercentReduct" class="form-control" />
-                <span asp-validation-for="PercentReduct" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ReductMax" class="control-label"></label>
-                <input asp-for="ReductMax" class="form-control" />
-                <span asp-validation-for="ReductMax" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Quantity" class="control-label"></label>
-                <input asp-for="Quantity" class="form-control" />
-                <span asp-validation-for="Quantity" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
-                <input asp-for="EndDate" class="form-control" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label class="font-weight-semibold">loại KM</label>
-                    <select class="custom-select" style="min-width: 200px;" asp-for="Id_Type" asp-items="ViewBag.PromotionTypeId" required>
-                        <option value="" disabled selected>Chọn loại KM</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+	<div class="col-md-4">
+		<form asp-action="Edit">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="Name" class="control-label">Tên khuyến mãi</label>
+				<input asp-for="Name" class="form-control" />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+			<div class="form-group">
+				<div class="radio-group">
+					<label asp-for="ReduceByAmount" class="control-label radio-label">
+						Giảm theo tiền:
+						<input asp-for="ReduceByAmount" type="radio" name="reductionType" value="amount" class="reduction-radio" data-target="amountFields" />
+					</label>
+					<div id="amountFields" class="reduction-fields hidden">
+						<label asp-for="AmountReduct" class="control-label">Số tiền giảm:</label>
+						<input asp-for="AmountReduct" class="form-control" />
+						<span asp-validation-for="AmountReduct" class="text-danger"></span>
+					</div>
+				</div>
+				<div class="radio-group">
+					<label asp-for="ReduceByPercentage" class="control-label radio-label">
+						Giảm theo phần trăm:
+						<input asp-for="ReduceByPercentage" type="radio" name="reductionType" value="percentage" class="reduction-radio" data-target="percentageFields" />
+					</label>
+					<div id="percentageFields" class="reduction-fields hidden">
+						<label asp-for="PercentReduct" class="control-label">Phần trăm giảm:</label>
+						<input asp-for="PercentReduct" class="form-control" />
+						<span asp-validation-for="PercentReduct" class="text-danger"></span>
+
+						<label asp-for="ReductMax" class="control-label">Giảm tối đa:</label>
+						<input asp-for="ReductMax" class="form-control" />
+						<span asp-validation-for="ReductMax" class="text-danger"></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="Id_Type">Loại khuyến mãi: </label>
+				<select class="form-control" asp-for="Id_Type" asp-items="@ViewBag.LoaiKhuyenMai" id="Id_Type" name="Id_Type" required>
+					<option value="0" disabled selected>Chọn loại khuyến mãi</option>
+				</select>
+			</div>
+			<div id="condition" class="form-group" style="display:none;">
+				<label asp-for="Condition" class="control-label">Số tiền tối thiểu: </label>
+				<input asp-for="Condition" type="text" class="form-control" id="Condition" name="Condition" />
+				<span asp-validation-for="Condition" class="text-danger"></span>
+			</div>
+			<div cid="storageTerm" class="form-group" style="display:none;">
+				<label asp-for="StorageTerm" class="control-label">Thời hạn lưu trữ: </label>
+				<input asp-for="StorageTerm" type="text" class="form-control" id="StorageTerm" name="StorageTerm" />
+				<span asp-validation-for="StorageTerm" class="text-danger"></span>
+			</div>
+			<div id="quantityLimit" class="form-group" style="display:none;">
+				<label asp-for="Quantity" class="control-label">Số lượng: </label>
+				<input asp-for="Quantity" type="text" class="form-control" id="Quantity" name="Quantity" />
+				<span asp-validation-for="Quantity" class="text-danger"></span>
+			</div>
+			<div id="conversionPoint" class="form-group" style="display:none;">
+				<label asp-for="ConversionPoint">Điểm quy đổi:</label>
+				<input asp-for="ConversionPoint" type="text" class="form-control" id="ConversionPoint" name="ConversionPoint" />
+				<span asp-validation-for="ConversionPoint" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="StartDate" class="control-label">Ngày bắt đầu: </label>
+				<input asp-for="StartDate" class="form-control" />
+				<span asp-validation-for="StartDate" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="EndDate" class="control-label">Ngày kết thúc: </label>
+				<input asp-for="EndDate" class="form-control" />
+				<span asp-validation-for="EndDate" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Description" class="control-label">Mô tả: </label>
+				<input asp-for="Description" class="form-control" />
+				<span asp-validation-for="Description" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label>Trạng thái: </label>
+				<input type="hidden" asp-for="Status" id="statusHidden" />
+				<input type="checkbox" asp-for="StatusCheckbox" id="statusCheckbox" onchange="updateStatus()" />
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Save" class="btn btn-primary" />
+				<a asp-action="Index">Back to List</a>
+			</div>
+		</form>
+	</div>
 </div>
+<script>
+	function updateStatus() {
+		var checkbox = document.getElementById('statusCheckbox');
+		var hiddenField = document.getElementById('statusHidden');
+
+		if (checkbox.checked) {
+			hiddenField.value = 1;
+		} else {
+			hiddenField.value = 0;
+		}
+	}
+</script>
+<script>
+	// Xử lý sự kiện khi radiobutton được chọn
+	var radioButtons = document.querySelectorAll('.reduction-radio');
+	radioButtons.forEach(function (radioButton) {
+		radioButton.addEventListener('change', function () {
+			// Lấy tất cả các radiobuttons trong cùng một nhóm
+			var radioGroup = document.getElementsByName('reductionType');
+
+			// Duyệt qua từng radiobutton và ẩn trường dựa trên trạng thái của radiobutton được chọn
+			radioGroup.forEach(function (radio) {
+				var targetId = radio.getAttribute('data-target');
+				var targetFields = document.getElementById(targetId);
+
+				if (radio.checked) {
+					targetFields.classList.remove('hidden');
+				} else {
+					targetFields.classList.add('hidden');
+				}
+			});
+		});
+	});
+</script>
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var selectBox = document.getElementById('Id_Type');
+		var quantityLimit = document.getElementById('quantityLimit');
+		var storageTerm = document.getElementById('storageTerm');
+		var condition = document.getElementById('condition');
+		var conversionPoint = document.getElementById('conversionPoint');
+
+		selectBox.addEventListener('change', function () {
+			hideAllInputFields();
+			var selectedValue = selectBox.value;
+
+			switch (selectedValue) {
+				case '4':
+					quantityLimit.style.display = 'block';
+					storageTerm.style.display = 'block';
+					break;
+				case '3':
+					storageTerm.style.display = 'block';
+					break;
+				case '2':
+					quantityLimit.style.display = 'block';
+					condition.style.display = 'block';
+					conversionPoint.style.display = 'block';
+					storageTerm.style.display = 'block';
+					break;
+				// Add cases for other types if needed
+			}
+		});
+
+		function hideAllInputFields() {
+			quantityLimit.style.display = 'none';
+			storageTerm.style.display = 'none';
+			condition.style.display = 'none';
+			conversionPoint.style.display = 'none';
+		}
+	});
+</script>
 
