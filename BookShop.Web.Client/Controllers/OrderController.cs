@@ -248,7 +248,7 @@ namespace BookShop.Web.Client.Controllers
 					{
 						Id_Order = result.Id,
 						Id_Payment = request.paymentId,
-						paymentAmount = Convert.ToInt32(request.Total + request.Shipfee),
+						paymentAmount = request.TotalPayment,
 						Status = 0,
 					};
 					await _orderPaymentService.Add(op);
