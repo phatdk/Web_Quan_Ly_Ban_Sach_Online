@@ -245,11 +245,6 @@ else
                 }
             });
         }
-        document.getElementById('buyNow').addEventListener('click', function () {
-            var quantity = document.getElementById('quantityInput').value;
-            var url = "@Url.Action("CreateOnlineOrder", "Order")?id=@Model.Id&quantity=" + quantity
-            window.location.href = url;
-        });
     </script>
 
 
