@@ -4,11 +4,11 @@
 
 @inject SignInManager<Userr> SignInManager
 @inject UserManager<Userr> UserManager
-@model LoginViewModel
+@*@model LoginViewModel*@
 @inject SignInManager<Userr> SignInManager
 @if (SignInManager.IsSignedIn(User))
 {
-   @* <partial name="_ManagerMenu"></partial>*@
+    @*<partial name="_ManagerMenu"></partial>*@
     <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
         <div class="nav-link text-dark">
             <div class="dropdown">

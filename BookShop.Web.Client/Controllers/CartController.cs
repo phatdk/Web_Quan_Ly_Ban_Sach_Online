@@ -34,9 +34,9 @@ namespace BookShop.Web.Client.Controllers
 			return View();
 		}
 
-		// GET: CartController/Details/5
-		public async Task<IActionResult> CartDetails()
-		{
+        // GET: CartController/Details/5
+        public async Task<IActionResult> CartDetails()
+        {
             var user = await GetCurrentUserAsync();
             List<CartDetailViewModel> detail = new List<CartDetailViewModel>();
 
@@ -74,8 +74,10 @@ namespace BookShop.Web.Client.Controllers
             return View(detail);
         }
 
-		// GET: CartController/Create
-		public async Task<IActionResult> AddToCart(int id, int quantity)
+
+
+        // GET: CartController/Create
+        public async Task<IActionResult> AddToCart(int id, int quantity)
 		{
 			var user = await GetCurrentUserAsync();
 			var product = await _productService.GetById(id);

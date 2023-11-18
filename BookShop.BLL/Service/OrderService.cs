@@ -90,6 +90,7 @@ namespace BookShop.BLL.Service
 					Shipfee = model.Shipfee,
 					Id_StatusOrder = model.Id_Status,
 					Id_User = model.Id_User,
+					Id_Staff = model.Id_Staff,
 					Id_Promotion = model.Id_Promotion,
 
 					//thêm

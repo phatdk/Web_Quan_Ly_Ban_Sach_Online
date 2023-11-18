@@ -66,72 +66,32 @@
         padding:10px;
     }
 </style>
-<table class="table">
+<table>
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TotalPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Id_User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Id_Product)
-            </th>
-            <th></th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Product Price</th>
+            <th>Total Price</th>
+            <th>Select</th>
+            <th>Option</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
+            <tr id="pdc-@item.Id">
+                <td>@item.ProductName</td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Id)
+                    <input type="number" value="@item.Quantity" min="1" />
+                </td>
+                <td>@item.ProductPrice</td>
+                <td>@item.TotalPrice</td>
+                <td>
+                    <input type="checkbox" @(item.IsSelected ? "checked" : "") />
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Quantity)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreatedDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProductName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProductPrice)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TotalPrice)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id_User)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id_Product)
-                </td>
-                <td>
-                    @Html.ActionLink("Delete", "RemoveProduct", new { id=item.Id_Product })
+                    <button onclick="removeProduct('@item.Id_Product')">Xóa</button>
                 </td>
             </tr>
         }
