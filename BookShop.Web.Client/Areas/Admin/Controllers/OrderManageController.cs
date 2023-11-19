@@ -1,11 +1,13 @@
 ﻿using BookShop.BLL.ConfigurationModel.OrderModel;
 using BookShop.BLL.ConfigurationModel.OrderPaymentModel;
+using BookShop.BLL.ConfigurationModel.PointTranHistoryModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using BookShop.Web.Client.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers
@@ -16,6 +18,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		private List<OrderViewModel> _orders;
 		private OrderViewModel _order;
 		private readonly UserManager<Userr> _userManager;
+		private readonly IUserService _userService;
 		private readonly IOrderService _orderService;
 		private readonly IOrderDetailService _orderDetailService;
 		private readonly IOrderPaymentService _orderPaymentService;
@@ -27,11 +30,12 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		private readonly ProductPreviewService _productPreviewService;
 		private readonly PointNPromotionSerVice _pointNPromotionService;
 
-		public OrderManageController(UserManager<Userr> userManager, IOrderService orderService, IOrderDetailService orderDetailService, IOrderPaymentService orderPaymentService, IStatusOrderService statusOrderService, IPromotionService promotionService, IProductService productService, IProductBookService productBookService, IBookService bookService)
+		public OrderManageController(UserManager<Userr> userManager, IUserService userService, IOrderService orderService, IOrderDetailService orderDetailService, IOrderPaymentService orderPaymentService, IStatusOrderService statusOrderService, IPromotionService promotionService, IProductService productService, IProductBookService productBookService, IBookService bookService)
 		{
 			_orders = new List<OrderViewModel>();
 			_order = new OrderViewModel();
 			_userManager = userManager;
+			_userService = userService;
 			_orderService = orderService;
 			_orderDetailService = orderDetailService;
 			_orderPaymentService = orderPaymentService;
@@ -199,6 +203,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		public async Task<IActionResult> SuccessOrder(int id)
 		{
 			var order = await _orderService.GetById(id);
+			var user = await _userService.GetById(order.Id_User);
 			var staff = await GetCurrentUserAsync();
 			if (staff != null)
 			{
@@ -234,7 +239,14 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					int point = Convert.ToInt32(Math.Floor(Convert.ToDouble(order.Total / 20000))); // 20k = 1 điểm
 					if (point > 0)
 					{
-						await _pointNPromotionService.Accumulate(order.Id_User, point);
+						var history = new CreatePointTranHistoryModel()
+						{
+							PointUserd = point,
+							Remaining = user.Point + point,
+							Id_User = user.Id,
+							Id_Parents = id,
+						};
+						await _pointNPromotionService.Accumulate(order.Id_User, point, history);
 					}
 					var result = await _orderService.Update(order);
 					return Json(new { success = result });
