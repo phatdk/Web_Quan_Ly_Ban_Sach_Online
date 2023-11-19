@@ -2,6 +2,7 @@
 using BookShop.BLL.ConfigurationModel.OrderDetailModel;
 using BookShop.BLL.ConfigurationModel.OrderModel;
 using BookShop.BLL.ConfigurationModel.OrderPaymentModel;
+using BookShop.BLL.ConfigurationModel.PointTranHistoryModel;
 using BookShop.BLL.ConfigurationModel.PromotionModel;
 using BookShop.BLL.ConfigurationModel.UerPromotionModel;
 using BookShop.BLL.ConfigurationModel.UserModel;
@@ -234,7 +235,8 @@ namespace BookShop.Web.Client.Controllers
 				request.ModifiNotes = DateTime.Now + " : Đơn hàng được tạo\n";
 				request.Id_Status = (await _statusService.GetAll()).Where(x => x.Status == 1).FirstOrDefault().Id; // hóa đơn chờ
 				request.IsOnlineOrder = true;
-				request.IsUsePoint = request.PointUsed > 0 ? false : true;
+				request.IsUsePoint = request.PointUsed > 0 ? true : false;
+
 				// return Ok(request);
 				var result = await _orderService.Add(request);
 				if (result.Id != 0)
@@ -242,7 +244,6 @@ namespace BookShop.Web.Client.Controllers
 					foreach (var item in request.orderDetails)
 					{
 						await _productPreviewService.ChangeQuantity(item.Id_Product, -item.Quantity);
-
 					}
 					var op = new CreateOrderPaymentModel()
 					{
@@ -252,9 +253,20 @@ namespace BookShop.Web.Client.Controllers
 						Status = 0,
 					};
 					await _orderPaymentService.Add(op);
-					if (result.Id_Promotion != 0)
+					if (result.Id_Promotion != 0) // chuyen trang thai khuyen mai
 					{
 						await _pointNPromotionService.ModifyUserPromotion(result.Id_User, Convert.ToInt32(result.Id_Promotion), 0);
+					}
+					if (request.IsUsePoint && request.PointUsed > 0) // tru diem dã dung
+					{
+						var history = new CreatePointTranHistoryModel()
+						{
+							PointUserd = -Convert.ToInt32(request.PointUsed),
+							Remaining = user.Point - Convert.ToInt32(request.PointUsed),
+							Id_User = user.Id,
+							Id_Parents = result.Id,
+						};
+						await _pointNPromotionService.Accumulate(request.Id_User, -Convert.ToInt32(request.PointUsed), history);
 					}
 					if (cartUse == 1)
 					{

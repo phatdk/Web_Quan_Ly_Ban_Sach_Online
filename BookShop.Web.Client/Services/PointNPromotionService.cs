@@ -1,4 +1,5 @@
-﻿using BookShop.BLL.ConfigurationModel.PromotionModel;
+﻿using BookShop.BLL.ConfigurationModel.PointTranHistoryModel;
+using BookShop.BLL.ConfigurationModel.PromotionModel;
 using BookShop.BLL.ConfigurationModel.UerPromotionModel;
 using BookShop.BLL.IService;
 using BookShop.BLL.Service;
@@ -25,16 +26,24 @@ namespace BookShop.Web.Client.Services
 			_userPromotionService = new UserPromotionService();
 		}
 
-		public async Task<bool> Accumulate(int userId, int pointAmount)
+		public async Task<bool> Accumulate(int userId, int pointAmount, CreatePointTranHistoryModel model)
 		{
 			if (userId != 0)
 			{
-				var obj = new WalletPoint()
+				var wallet = await _userService.GetById(userId);
+				if (wallet != null)
 				{
-					Point = pointAmount,
-				};
-				var result = await _walletpointService.Update(userId, obj); // tao lich su tich diêm
-				return result;
+					var obj = new WalletPoint()
+					{
+						Point = wallet.Point + pointAmount,
+					};
+					var result = await _walletpointService.Update(userId, obj); // thay doi so diem
+					if (result) // tạo lịch sử tích điểm
+					{
+						result = await _pointTranHistoryService.Add(model);
+					}
+					return result;
+				}
 			}
 			return false;
 		}
