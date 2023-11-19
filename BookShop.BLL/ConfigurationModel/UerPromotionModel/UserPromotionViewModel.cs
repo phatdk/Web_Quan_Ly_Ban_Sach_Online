@@ -13,7 +13,11 @@ namespace BookShop.BLL.ConfigurationModel.UerPromotionModel
 		public int ReduceMax { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public int Status { get; set; }
+
+		//join
 		public string Name { get; set; }
+		public int StorageTerm { get; set; }
+		public string Code { get; set; }
 		public int Id_User { get; set; }
 		public int Id_Promotion { get; set; }
 	}

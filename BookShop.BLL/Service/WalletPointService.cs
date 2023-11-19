@@ -33,7 +33,7 @@ namespace BookShop.BLL.Service
             {
                 var obj = await _repository.GetByIdAsync(userId);
                 obj.Point += model.Point;
-                await _repository.UpdateAsync(userId, model);
+                await _repository.UpdateAsync(userId, obj);
                 return true;
             }
             catch (Exception ex) { return false; }
