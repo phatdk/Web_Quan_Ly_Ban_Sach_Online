@@ -10,6 +10,7 @@ namespace BookShop.BLL.IService
 	public interface IProductService
 	{
 		public Task<List<ProductViewModel>> GetAll();
+		public Task<List<ProductViewModel>> GetAllConditional();
 		public Task<List<ProductViewModel>> GetByAuthor(int  authorId);
 		public Task<List<ProductViewModel>> GetByGenre(int genreId);
 		public Task<ProductViewModel> GetById(int id);

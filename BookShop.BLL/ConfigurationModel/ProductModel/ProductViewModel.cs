@@ -19,6 +19,8 @@ namespace BookShop.BLL.ConfigurationModel.ProductModel
 		public int Status { get; set; }
 		public int Type { get; set; }
 		public int? CollectionId { get; set; }
+		public int? Discount { get; set; }
+		public float? PriceBuy { get; set; }
 		// join
 		public string? CollectionName { get; set; }
 		public string ImgUrl { get; set; }

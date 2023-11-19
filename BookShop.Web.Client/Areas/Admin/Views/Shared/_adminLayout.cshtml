@@ -9,10 +9,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 	@* <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> *@
-	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
 
 	@* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> *@
-	<link rel="stylesheet" href="~/lib/fontawesome-6.4.2/css/all.min.css" />
+	<link rel="stylesheet" href="~/lib/fontawesome-6.4.2/css/all.css" />
 
 	<!-- Bootstrap JS and dependencies -->
 
@@ -20,8 +20,8 @@
 	@* <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> *@
 	<script src="~/lib/bootstrap/dist/js/bootstrap.min.js" />
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.js"></script>
 	<script src="~/js/layout.js"></script>
 	<link rel="stylesheet" href="~/lib/chosen_v1.8.7/chosen.min.css" />
 	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -368,10 +368,16 @@
 						<a asp-area="Admin" asp-controller="Book" asp-action="Index"> Sách</a>
 					</li>
 					<li>
-						<a asp-area="Admin" asp-controller="Author" asp-action="Index"> Thể loại</a>
+						<a asp-area="Admin" asp-controller="Author" asp-action="Index"> Tác giả</a>
 					</li>
 					<li>
 						<a asp-area="Admin" asp-controller="Categories" asp-action="Index"> Danh mục</a>
+					</li>
+					<li>
+						<a asp-area="Admin" asp-controller="Suppliers" asp-action="Index"> Nhà xuất bản</a>
+					</li>
+					<li>
+						<a asp-area="Admin" asp-controller="Gener" asp-action="Index">Thể loại</a>
 					</li>
 				</ul>
 			</li>

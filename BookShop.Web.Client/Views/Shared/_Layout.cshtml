@@ -5,306 +5,268 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - SHOPBOOK</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/BookShop.Web.Client.styles.css" asp-append-version="true" />
-    <!-- Lọc Thành Phố, Quận Huyện, Xã phường -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - SHOPBOOK</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/BookShop.Web.Client.styles.css" asp-append-version="true" />
+	<!-- Lọc Thành Phố, Quận Huyện, Xã phường -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
-    <!-- jQuery library -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+	<!-- jQuery library -->
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
 
-    <!-- Popper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+	<!-- Popper JS -->
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 
-    <!-- Latest compiled JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-    @* <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous"> *@
-    <link rel="stylesheet" href="~/lib/fontawesome-6.4.2/css/all.min.css" />
-    <style>
-        .dropdown:hover > .dropdown-menu {
-            display: block;
-        }
+	<!-- Latest compiled JavaScript -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+	@* <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous"> *@
+	<link rel="stylesheet" href="~/lib/fontawesome-6.4.2/css/all.min.css" />
+	<style>
+		.dropdown:hover > .dropdown-menu {
+			display: block;
+		}
 
-        .dropdown > .dropdown-toggle:active {
-            pointer-events: none;
-        }
+		.dropdown > .dropdown-toggle:active {
+			pointer-events: none;
+		}
 
-        .timkiem {
-            margin: 26px auto 25px auto;
-            margin-left: 30px;
-        }
+		.timkiem {
+			margin: 26px auto 25px auto;
+			margin-left: 30px;
+		}
 
-        .m26 {
-            margin: auto;
-            justify-content: flex-start;
-            height: 68px;
-            text-align: center;
-            webkit-align-items: center;
-        }
+		.m26 {
+			margin: auto;
+			justify-content: flex-start;
+			height: 68px;
+			text-align: center;
+			webkit-align-items: center;
+		}
 
-        .danhmuc {
-            margin: 33px auto 33px auto;
-        }
+		.danhmuc {
+			margin: 33px auto 33px auto;
+		}
 
-        .search_box {
-            display: block;
-            width: 100%;
-        }
+		.search_box {
+			display: block;
+			width: 100%;
+		}
 
-        .bb {
-            background-color: rgb(224, 224, 224);
-        }
+		.bb {
+			background-color: rgb(224, 224, 224);
+		}
 
-        .dndk a {
-            text-align: center;
-            font-weight: 700;
-            padding-bottom: 5px;
-            color: black;
-            cursor: pointer;
-        }
+		.dndk a {
+			text-align: center;
+			font-weight: 700;
+			padding-bottom: 5px;
+			color: black;
+			cursor: pointer;
+		}
 
-            .dndk a:hover {
-                color: orangered;
-                border: 1px solid orangered;
-                text-decoration: none;
-            }
+			.dndk a:hover {
+				color: orangered;
+				border: 1px solid orangered;
+				text-decoration: none;
+			}
 
-        .dn1 {
-        }
+		.dn1 {
+		}
 
-        .form .btn {
-            justify-content: center;
-        }
+		.form .btn {
+			justify-content: center;
+		}
 
-        .t {
-            cursor: pointer;
-        }
+		.t {
+			cursor: pointer;
+		}
 
-        .cuoitrang {
-            background-color: white;
-            margin-top: 30px;
-            border-radius: 10px;
-            padding-bottom:40px;
-        }
+		.cuoitrang {
+			background-color: white;
+			margin-top: 30px;
+			border-radius: 10px;
+			padding-bottom: 40px;
+		}
 
-        .cuoicc {
-            margin-top: 15px;
-            padding-top: 30px;
-        }
+		.cuoicc {
+			margin-top: 15px;
+			padding-top: 30px;
+		}
 
-            .cuoicc .col-4 {
-                border-left-color: black;
-            }
-    </style>
-    <
+			.cuoicc .col-4 {
+				border-left-color: black;
+			}
+	</style>
+	<
 </head>
 <body class="bb">
-    <header>
+	<header>
 
-        <div class="gi">
-            <div style="justify-content:center">
-                <img style="text-align:center;width:100%;height:55px" src="https://cdn0.fahasa.com/media/wysiwyg/Thang-11-2023/FahasaSaleThu3T1123_W1_Header_1263x60.jpg" />
-            </div>
-        </div>
-        <div>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 m26">
-                <div class="container">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img width="216px" height="57px" src="https://cdn0.fahasa.com/media/quiz-game-T7/Avatar_IconApp_SN47_logoSN47_1.png" /></a>
-                    <button class=" navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <div class="dropdown danhmuc">
-                                    <div class=" dropdown-toggle" data-toggle="dropdown">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-grid" viewBox="0 0 16 16">
-                                            <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
-                                        </svg><span class="	glyphicon glyphicon-menu-hamburger"></span>
-                                    </div>
-                                    <div class="dropdown-menu row" style="width:760px;">
-                                        <div class="col-md-6">
-                                            <h5>Danh Mục Sản Phẩm</h5>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <h5>Danh Mục Sản Phẩm</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="nav-item">
-                                <form action="#" method="GET" class="timkiem">
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Từ khóa tìm kiếm" aria-label="Từ khóa tìm kiếm" aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="submit">Tìm Kiếm</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </li>
-                        </ul>
-                        <ul class="navbar navbar-nav justify-content-end">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
-                                        <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
-                                    </svg> Thông Báo
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="CartDetails">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cart4" viewBox="0 0 16 16">
-                                        <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l.5 2H5V5H3.14zM6 5v2h2V5H6zm3 0v2h2V5H9zm3 0v2h1.36l.5-2H12zm1.11 3H12v2h.61l.5-2zM11 8H9v2h2V8zM8 8H6v2h2V8zM5 8H3.89l.5 2H5V8zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z" />
-                                    </svg> Giỏ Hàng
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <div class="class=" nav-link text-dark"">
-                                @{
-                                    var user = await UserManager.GetUserAsync(User);
-                                    if (user != null)
-                                    {
-                                        //<a class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#myModal">
-                                        //    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                        //        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                                        //        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
-                                        //    </svg>
-                                        //    @user.UserName
-                                        //</a>
-                                        <div class="nav-link text-dark">
-                                            <partial name="_LoginPartial" />
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="nav-link text-dark">
-                                            <div class="dropdown">
-                                                <a class="dropdown-toggle nav-link text-dark" data-toggle="dropdown" style="cursor:pointer">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                                                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
-                                                    </svg>
-                                                    Tài khoản
+		<div class="gi">
+			<div style="justify-content:center">
+				<img style="text-align:center;width:100%;height:55px" src="https://cdn0.fahasa.com/media/wysiwyg/Thang-11-2023/FahasaSaleThu3T1123_W1_Header_1263x60.jpg" />
+			</div>
+		</div>
+		<div>
+			<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 m26">
+				<div class="container">
+					<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img width="216px" height="57px" src="https://cdn0.fahasa.com/media/quiz-game-T7/Avatar_IconApp_SN47_logoSN47_1.png" /></a>
+					<button class=" navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+							aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+						<ul class="navbar-nav flex-grow-1">
+							<li class="nav-item">
+								<div class="dropdown danhmuc">
+									<div class=" dropdown-toggle" data-toggle="dropdown">
+										<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-grid" viewBox="0 0 16 16">
+											<path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
+										</svg><span class="	glyphicon glyphicon-menu-hamburger"></span>
+									</div>
+									<div class="dropdown-menu row" style="width:760px;">
+										<div class="col-md-6">
+											<h5>Danh Mục Sản Phẩm</h5>
+										</div>
+										<div class="col-md-6">
+											<h5>Danh Mục Sản Phẩm</h5>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li class="nav-item">
+								<form action="#" method="GET" class="timkiem">
+									<div class="input-group mb-3">
+										<input type="text" class="form-control" placeholder="Từ khóa tìm kiếm" aria-label="Từ khóa tìm kiếm" aria-describedby="basic-addon2">
+										<div class="input-group-append">
+											<button class="btn btn-primary" type="submit">Tìm Kiếm</button>
+										</div>
+									</div>
+								</form>
+							</li>
+						</ul>
+						<ul class="navbar navbar-nav justify-content-end">
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+										<path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
+									</svg> Thông Báo
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="CartDetails">
+									<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cart4" viewBox="0 0 16 16">
+										<path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l.5 2H5V5H3.14zM6 5v2h2V5H6zm3 0v2h2V5H9zm3 0v2h1.36l.5-2H12zm1.11 3H12v2h.61l.5-2zM11 8H9v2h2V8zM8 8H6v2h2V8zM5 8H3.89l.5 2H5V8zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z" />
+									</svg> Giỏ Hàng
+								</a>
+							</li>
+							<li class="nav-item">
+								<div class="class=" nav-link text-dark"">
+									@{
+										var user = await UserManager.GetUserAsync(User);
+										if (user != null)
+										{
+											<div class="nav-link text-dark">
+												<partial name="_LoginPartial" />
+											</div>
+										}
+										else
+										{
+											<div class="nav-link text-dark">
+												<div class="dropdown">
+													<a class="dropdown-toggle nav-link text-dark" data-				  toggle="dropdown" style="cursor:pointer">
+														<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+															<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+															<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+														</svg>
+														Tài khoản
 
-                                                </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item aidn1" asp-area="Identity" asp-controller="Account" asp-action="Login">Đăng Nhập</a>
-                                                    <a class="dropdown-item aidn2" asp-area="Identity" asp-controller="Account" asp-action="Register">Đăng Ký</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                }
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-        </div>
-        @*<div>
-        <!-- The Modal -->
-        <div class="modal" id="myModal">
-        <div class="modal-dialog">
-        <div class="modal-content">
+													</a>
+													<div class="dropdown-menu">
+														<a class="dropdown-item aidn1" asp-area="Identity" asp-controller="Account" asp-action="Login">Đăng Nhập</a>
+														<a class="dropdown-item aidn2" asp-area="Identity" asp-controller="Account" asp-action="Register">Đăng Ký</a>
+													</div>
+												</div>
+											</div>
+										}
+									}
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+		</div>
+	</header>
+	<div class="container">
+		<main role="main" class="pb-3">
+			@RenderBody()
+		</main>
+	</div>
 
-        <!-- Modal Header -->
-        <div class="modal-header">
-        <h5 class="modal-title">Chào mừng bạn đến với website của chúng tôi!</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-
-        <!-- Modal body -->
-        <div class="modal-body">
-        <div class="row">
-        <div class="col-md-6"> <h5 class="dndk">Đăng Nhập</h5></div>
-        <div class="col-md-6 "><h5 class="dndk">Đăng Ký</h5></div>
-        </div>
-        </div>
-        <partial name="_LoginPartial" />
-
-        <!-- Modal footer -->
-        <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
-
-        </div>
-
-        </div>
-        </div>
-        </div>*@
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="">
-        <div class="container cuoitrang">
-        <div class="row cuoicc">
-            <div class="col-4">
-                <img src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/logo.png" />
-                <hr />
-                <p>Lầu 5, 387-389 Hai Bà Trưng Quận 3 TP HCMCông Ty Cổ Phần Phát Hành Sách TP HCM - FAHASA60 - 62 Lê Lợi, Quận 1, TP. HCM, Việt Nam</p>
-                <p>Fahasa.com nhận đặt hàng trực tuyến và giao hàng tận nơi. KHÔNG hỗ trợ đặt mua và nhận hàng trực tiếp tại văn phòng cũng như tất cả Hệ Thống Fahasa trên toàn quốc.</p>
-                <img src="https://cdn0.fahasa.com/media/wysiwyg/Logo-NCC/logo-bo-cong-thuong-da-thong-bao1.png" style="width: 100px;" height="40px">
-            </div>
-            <div class="col-8">
-                <div class="row">
-                    <div class="col-4">
-                        <h6>Dịch Vụ</h6>
-                        <p>Điều khoản sử dụng</p>
-                        <p>Chính sách bảo mật thông tin cá nhân</p>
-                        <p>Chính sách bảo mật thanh toán</p>
-                        <p>Giới thiệu Fahasa</p>
-                        <p>Hệ thống trung tâm - nhà sách</p>
-                    </div>
-                    <div class="col-4">
-                        <h6>Hỗ Trợ</h6>
-                        <p>Chính sách đổi - trả - hoàn tiền</p>
-                        <p>Chính sách bảo hành - bồi hoàn</p>
-                        <p>Chính sách vận chuyển</p>
-                        <p>Chính sách khách sỉ</p>
-                        <p>Phương thức thanh toán và xuất HĐ</p>
-                    </div>
-                    <div class="col-4">
-                        <h6>Tài Khoản Của Tôi</h6>
-                        <p>Đăng Nhâp/Tạo mới tài khoản</p>
-                        <p>Thay đổi địa chỉ </p>
-                        <p>Chi tiết tài khoản</p>
-                        <p>Lịch sử mua hàng</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-4">
-                        <h6>Liên Hệ</h6>
-                        <p>60-62 Lê Lợi, Q.1, TP. HCM</p>
-                    </div>
-                    <div class="col-4">
-                        <h6>Email</h6>
-                        <p>lequangkhanh150103@gmail.com</p>
-                    </div>
-                    <div class="col-4">
-                        <h6>Số điện thoại</h6>
-                        <p>0987117521</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+	<footer class="">
+		<div class="container cuoitrang">
+			<div class="row cuoicc">
+				<div class="col-4">
+					<img src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/logo.png" />
+					<hr />
+					<p>Lầu 5, 387-389 Hai Bà Trưng Quận 3 TP HCMCông Ty Cổ Phần Phát Hành Sách TP HCM - FAHASA60 - 62 Lê Lợi, Quận 1, TP. HCM, Việt Nam</p>
+					<p>Fahasa.com nhận đặt hàng trực tuyến và giao hàng tận nơi. KHÔNG hỗ trợ đặt mua và nhận hàng trực tiếp tại văn phòng cũng như tất cả Hệ Thống Fahasa trên toàn quốc.</p>
+					<img src="https://cdn0.fahasa.com/media/wysiwyg/Logo-NCC/logo-bo-cong-thuong-da-thong-bao1.png" style="width: 100px;" height="40px">
+				</div>
+				<div class="col-8">
+					<div class="row">
+						<div class="col-4">
+							<h6>Dịch Vụ</h6>
+							<p>Điều khoản sử dụng</p>
+							<p>Chính sách bảo mật thông tin cá nhân</p>
+							<p>Chính sách bảo mật thanh toán</p>
+							<p>Giới thiệu Fahasa</p>
+							<p>Hệ thống trung tâm - nhà sách</p>
+						</div>
+						<div class="col-4">
+							<h6>Hỗ Trợ</h6>
+							<p>Chính sách đổi - trả - hoàn tiền</p>
+							<p>Chính sách bảo hành - bồi hoàn</p>
+							<p>Chính sách vận chuyển</p>
+							<p>Chính sách khách sỉ</p>
+							<p>Phương thức thanh toán và xuất HĐ</p>
+						</div>
+						<div class="col-4">
+							<h6>Tài Khoản Của Tôi</h6>
+							<p>Đăng Nhâp/Tạo mới tài khoản</p>
+							<p>Thay đổi địa chỉ </p>
+							<p>Chi tiết tài khoản</p>
+							<p>Lịch sử mua hàng</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-4">
+							<h6>Liên Hệ</h6>
+							<p>60-62 Lê Lợi, Q.1, TP. HCM</p>
+						</div>
+						<div class="col-4">
+							<h6>Email</h6>
+							<p>lequangkhanh150103@gmail.com</p>
+						</div>
+						<div class="col-4">
+							<h6>Số điện thoại</h6>
+							<p>0987117521</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
 

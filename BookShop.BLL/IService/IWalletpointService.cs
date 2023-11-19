@@ -11,5 +11,6 @@ namespace BookShop.BLL.IService
     {
         public Task<bool> Add(WalletPoint model);
         public Task<bool> Update(int userId, WalletPoint model);
+        public Task<WalletPoint> GetById(int userId);
     }
 }

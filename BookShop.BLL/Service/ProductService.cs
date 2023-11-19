@@ -5,6 +5,7 @@ using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Crypto.Macs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,8 +23,14 @@ namespace BookShop.BLL.Service
 		private readonly IRepository<BookAuthor> _bookAuthorRepository;
 		private readonly IRepository<BookGenre> _bookGenreRepository;
 		private readonly IRepository<CollectionBook> _collectionBookRepository;
+		private readonly IRepository<ProductPromotion> _productPromotionRepository;
+		private readonly IRepository<PromotionType> _promotionTypeRepository;
+		private readonly IRepository<Promotion> _promotionRepository;
 		public ProductService()
 		{
+			_promotionRepository = new Repository<Promotion>();
+			_promotionTypeRepository = new Repository<PromotionType>();
+			_productPromotionRepository = new Repository<ProductPromotion>();
 			_productRepository = new Repository<Product>();
 			_imageRepository = new Repository<Image>();
 			_productBookRepository = new Repository<ProductBook>();
@@ -104,6 +111,77 @@ namespace BookShop.BLL.Service
 			}
 			return objlist;
 		}
+		public async Task<List<ProductViewModel>> GetAllConditional()
+		{
+			var products = await _productRepository.GetAllAsync();
+			var objList = new List<ProductViewModel>();
+
+			foreach (var product in products)
+			{
+				var promotion = (await _productPromotionRepository.GetAllAsync())
+					.FirstOrDefault(c => c.Id_Product == product.Id);
+
+				var km = promotion != null
+					? (await _promotionRepository.GetAllAsync())
+						.FirstOrDefault(c => c.Id == promotion.Id_Promotion)
+					: null;
+
+				var kmt = km != null
+					? (await _promotionTypeRepository.GetAllAsync())
+						.FirstOrDefault(c => c.Id == km.Id_Type && c.Name == "Tự động")
+					: null;
+
+				if (kmt != null)
+				{
+					var img = (await _imageRepository.GetAllAsync())
+						.FirstOrDefault(x => x.Id_Product == product.Id);
+
+					var discount = km.PercentReduct;
+					var discountedPrice = product.Price * (1 - discount / 100);
+
+					var obj = new ProductViewModel
+					{
+						Id = product.Id,
+						Name = product.Name,
+						Price = product.Price,
+						Quantity = product.Quantity,
+						Description = product.Description,
+						CreatedDate = product.CreatedDate,
+						Status = product.Status,
+						Type = product.Type,
+						ImgUrl = img?.ImageUrl,
+						Discount = km.PercentReduct,
+					};
+
+					objList.Add(obj);
+				}
+				else
+				{
+					var img1 = (await _imageRepository.GetAllAsync())
+						.FirstOrDefault(x => x.Id_Product == product.Id);
+
+					var obj1 = new ProductViewModel
+					{
+						Id = product.Id,
+						Name = product.Name,
+						Price = product.Price,
+						Quantity = product.Quantity,
+						Description = product.Description,
+						CreatedDate = product.CreatedDate,
+						Status = product.Status,
+						Type = product.Type,
+						ImgUrl = img1?.ImageUrl,
+					};
+
+					objList.Add(obj1);
+				}
+			}
+
+			return objList;
+		}
+
+
+
 
 		public async Task<List<ProductViewModel>> GetByAuthor(int authorId)
 		{
@@ -284,13 +362,17 @@ namespace BookShop.BLL.Service
 
 		public async Task<bool> ChangeQuantity(int id, int changeAmount)
 		{
-			getAgain:;
+		getAgain:;
 			var product = await _productRepository.GetByIdAsync(id);
 			try
 			{
 				if (product != null)
 				{
 					product.Quantity += changeAmount;
+					if (product.Quantity <= 0)
+					{
+						product.Status = 2;
+					}
 				}
 				else goto getAgain;
 				await _productRepository.UpdateAsync(id, product);

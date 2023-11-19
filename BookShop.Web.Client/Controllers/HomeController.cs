@@ -31,7 +31,7 @@ namespace BookShop.Web.Client.Controllers
 
         public async Task<IActionResult> Index()
 		{
-			ViewBag.Products = await _productService.GetAll();
+			ViewBag.Products = await _productService.GetAllConditional();
 			return View();
 		}
 
