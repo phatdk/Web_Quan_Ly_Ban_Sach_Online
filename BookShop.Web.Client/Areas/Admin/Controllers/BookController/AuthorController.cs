@@ -1,6 +1,7 @@
 ﻿using BookShop.BLL.ConfigurationModel.AuthorModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
+using BookShop.Web.Client.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
@@ -17,9 +18,32 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 
         [HttpGet]
         [Route("listauthor")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages)
         {
             var author = await _authorService.Getall();
+            int pagesize = 10;
+            if (pagesize <= 0)
+            {
+                pagesize = 10;
+            }
+            int countPages = (int)Math.Ceiling((double)author.Count() / pagesize);
+            if (currentPages > countPages)
+            {
+                currentPages = countPages;
+            }
+            if (currentPages < 1)
+            {
+                currentPages = 1;
+            }
+
+            var pagingmodel = new PagingModel()
+            {
+                currentpage = currentPages,
+                countpages = countPages,
+                generateUrl = (int? p) => Url.Action("Index", "Author", new { areas = "Admin", p = p, pagesize = pagesize })
+            };
+            ViewBag.pagingmodel = pagingmodel;
+            author = author.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
             return View(author);
         }
 

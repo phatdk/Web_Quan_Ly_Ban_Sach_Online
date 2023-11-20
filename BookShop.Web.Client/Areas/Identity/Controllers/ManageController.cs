@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using BookShop.BLL.IService;
+using BookShop.BLL.ConfigurationModel.OrderModel;
 
 namespace App.Areas.Identity.Controllers
 {
@@ -20,6 +22,7 @@ namespace App.Areas.Identity.Controllers
     public class ManageController : Controller
     {
         private readonly UserManager<Userr> _userManager;
+        private readonly IOrderService _Iorder;
         private readonly SignInManager<Userr> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ManageController> _logger;
@@ -29,16 +32,59 @@ namespace App.Areas.Identity.Controllers
         SignInManager<Userr> signInManager,
         IEmailSender emailSender,
         ILogger<ManageController> logger,
-        IWebHostEnvironment hostingEnvironment)
+        IWebHostEnvironment hostingEnvironment,
+        IOrderService iorder)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
             _hostingEnvironment = hostingEnvironment;
+            _Iorder = iorder;
         }
         [TempData]
         public string StatusMessage { get; set; }
+
+        private async Task<Userr> GetUser()
+        {
+            return await _userManager.GetUserAsync(HttpContext.User);
+        }
+
+        private async Task<List<ViewOrder>> GetBill()
+        {
+            var user = await GetUser();
+            var billOfUser = await _Iorder.GetOrderByUser(user.Id);
+            return billOfUser;
+        }
+        // tất cả bill
+        public async Task<IActionResult> ViewAllBill()
+        {
+            return View(await GetBill());
+        }
+        // bill đã xác nhận
+        public async Task<IActionResult> ViewBillAwaitConfirm()
+        {
+            return View((await GetBill()).Where(x=>x.Status==1));
+        } 
+        // bill đang giao
+        public async Task<IActionResult> ViewBillShipping()
+        {
+            return View((await GetBill()).Where(x=>x.Status==3));
+        } 
+        // bill đã giao
+        public async Task<IActionResult> ViewBillSuccess()
+        {
+            return View((await GetBill()).Where(x=>x.Status==4));
+        } 
+        // bill huỷ
+        public async Task<IActionResult> ViewBillCancel()
+        {
+            return View((await GetBill()).Where(x=>x.Status==8));
+        }
+
+
+
+
 
         [HttpPost]
         public async Task<IActionResult> UpLoadAvata(IndexViewModel indexViewModel)
@@ -77,11 +123,11 @@ namespace App.Areas.Identity.Controllers
                     await _userManager.UpdateAsync(user);
                     return RedirectToAction(nameof(Index));
                 }
-                
+
 
             }
             return View();
-           
+
         }
 
         // GET: /Manage/Index

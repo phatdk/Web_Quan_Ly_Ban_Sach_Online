@@ -48,7 +48,7 @@ namespace BookShop.BLL.Service
 
 		public async Task<List<NewsViewModel>> GetAll()
 		{
-			var list = await _repository.GetAllAsync();
+			var list = (await _repository.GetAllAsync());
 			var objlist = new List<NewsViewModel>();
 			foreach (var item in list)
 			{
@@ -100,7 +100,7 @@ namespace BookShop.BLL.Service
 			return objlist;
 		}
 
-		public async Task<bool> Update(int id, UpdateNewsModel model)
+		public async Task<bool> Update(int id, NewsViewModel model)
 		{
 			try
 			{
