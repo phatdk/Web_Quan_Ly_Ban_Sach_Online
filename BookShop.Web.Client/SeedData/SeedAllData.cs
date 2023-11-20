@@ -142,7 +142,7 @@ public static class SeedDataMD
 		};
 		var form3 = new CreatePaymentFormModel()
 		{
-			Name = "Thanh toán qua banking",
+			Name = "Thanh toán qua VNPay",
 			Status = 1,
 		};
 

@@ -232,20 +232,16 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
                     </div>
                     <div class="col-6">
                         <div class="row">
-                            <div class="col-4">
-                                <label>Số Lượng: </label>
-                            </div>
-                            <div class="col-4">
+                            <div class="col-12">
                                 <div id="quantity" class="form-group">
-                                    <div style="display: flex">
+                                    <div style="display: flex"> 
+                                        Số lượng: 
                                         <input id="quantityInput" class="form-control" min="1" max="@Model.Quantity" value="1" type="number"
-                                               style="width: 100px; height: 25px; border-bottom: 1px solid black;
+                                               style="width: 75px; height: 25px; border-bottom: 1px solid black;
 border-left: none; border-right: none;border-top:none; border-radius: 0px; text-align: center" />
                                         @Html.DisplayFor(model => model.Quantity) sản phẩm còn lại
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-4">
                             </div>
                         </div>
                     </div>
@@ -323,17 +319,14 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
 
             <!-- Modal Header -->
             <div class="modal-header nav nav-tabs" role="tablist">
-                Sản Phẩm đã được thêm vào giỏ hàng của bạn
-                @{
-                    imgUrl = Model.imageViewModels.FirstOrDefault().ImageUrl;
-                }
+				<img class="a1" src="@imgUrl" alt="ảnh sản phẩm" style="max-width: 100%" />
+				Sản Phẩm đã được thêm vào giỏ hàng của bạn
             </div>
 
             <!-- Modal body -->
             <!-- Modal footer -->
             <div class="modal-footer group-tabs">
-                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Mua Thêm</button>
-                <input type="button" id="buyNow2" class="m2" value="Thanh Toán" />
+                <a class="btn btn-primary">Đến giỏ hàng <i class="fa-solid fa-arrow-right"></i></a>
             </div>
 
         </div>
@@ -386,7 +379,7 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
     });
 </script>
 
-<script type="text/javascript">
+@* <script type="text/javascript">
     document.getElementById('addToCart').addEventListener('click', function () {
         var quantity = document.getElementById('quantityInput').value;
         $.ajax({
@@ -413,4 +406,4 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
         var url = "@Url.Action("CreateOnlineOrder", "Order")?id=@Model.Id&quantity=" + quantity
         window.location.href = url;
     });
-</script>
+</script> *@

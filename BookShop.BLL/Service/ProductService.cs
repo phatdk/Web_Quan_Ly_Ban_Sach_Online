@@ -291,6 +291,10 @@ namespace BookShop.BLL.Service
 				if (product != null)
 				{
 					product.Quantity += changeAmount;
+					if(product.Quantity <= 0)
+					{
+						product.Status = 2;
+					}
 				}
 				else goto getAgain;
 				await _productRepository.UpdateAsync(id, product);

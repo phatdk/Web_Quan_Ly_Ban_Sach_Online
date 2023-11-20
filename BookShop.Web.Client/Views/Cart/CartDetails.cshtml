@@ -40,7 +40,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
+            <tr id="pdc-@item.Id">
                 <td>@item.ProductName</td>
                 <td>
                     <input type="number" value="@item.Quantity" min="1" />
@@ -52,7 +52,6 @@
                 </td>
                 <td>
                     <button onclick="removeProduct('@item.Id_Product')">Xóa</button>
-
                 </td>
             </tr>
         }
@@ -105,6 +104,7 @@
                 url: "/Cart/RemoveProduct", 
                 data: { id: productId },
                 success: function (result) {
+                    $('#pdc-' + productId).remove();
                 },
                 error: function (error) {
                     console.error("Error removing product:", error);
@@ -112,6 +112,4 @@
             });
         }
     </script>
-
-
 }
