@@ -41,6 +41,7 @@ namespace BookShop.BLL.ConfigurationModel.OrderModel
 		public int Width { get; set; }
 		public int Height { get; set; }
 		public int Total { get; set; }
+		public int TotalPayment { get; set; }
 
 		// join properties
 		public string UserCode { get; set; }
@@ -58,7 +59,7 @@ namespace BookShop.BLL.ConfigurationModel.OrderModel
 		public int? Id_Promotion { get; set; }
 		public int Id_Status { get; set; }
 		
-		public List<int> paymentsId { get; set; }
+		public int paymentId { get; set; }
 		public List<OrderDetailViewModel> orderDetails { get; set; }
 		public List<ReturnOrderViewModel> returnOrders { get; set; }
 		public List<OrderPaymentViewModel> orderPayments { get; set; }

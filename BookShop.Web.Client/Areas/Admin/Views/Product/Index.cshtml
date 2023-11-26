@@ -1,19 +1,6 @@
-﻿	@using System.Globalization;
+﻿@using System.Globalization;
 @model IEnumerable<BookShop.BLL.ConfigurationModel.ProductModel.ProductViewModel>
-@* <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> *@
-<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
-@* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> *@
-<link rel="stylesheet" href="~/lib/fontawesome-6.4.2/css/all.min.css" />
-
-<!-- Bootstrap JS and dependencies -->
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-@* <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> *@
-<script src="~/lib/bootstrap/dist/js/bootstrap.min.js" />
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="~/js/layout.js"></script>
 <style>
 	body {
 		width: 100%;
@@ -25,67 +12,68 @@
 }
 
 <body>
-<h1>Index</h1>
+	<h1>Index</h1>
 
-<p>
-	<button class="btn btn-primary" onclick="location.href='@Url.Action("Create")'"><i class="fa-solid fa-circle-plus"></i> Create</button>
-</p>
-<table class="table">
-	<thead>
-		<tr>
-			<th>
-				@Html.DisplayName("Tên")
-			</th>
-			<th>
-				@Html.DisplayName("Số lượng")
-			</th>
-			<th>
-				@Html.DisplayName("Giá bán")
-			</th>
-			<th>
-				@Html.DisplayName("Ngày tạo")
-			</th>
-			<th>
-				@Html.DisplayName("Trạng thái")
-			</th>
-			<th>
-				@Html.DisplayName("Loại")
-			</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody id="prod-list">
-		@foreach (var item in Model)
-		{
+	<p>
+		<button class="btn btn-primary" onclick="location.href='@Url.Action("Create")'"><i class="fa-solid fa-circle-plus"></i> Create</button>
+	</p>
+	<table class="table">
+		<thead>
 			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => item.Name)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Quantity)
-				</td>
-				<td>
-					@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)
-				</td>
-				<td>
-					@Html.DisplayFor(modelTtem => item.CreatedDate)
-				</td>
-				<td>
-					@(item.Status == 1 ? "Đang bán" : "Chịu")
-				</td>
-				<td>
-					@(item.Type == 1 ? "Lẻ" : "Combo")
-				</td>
-				<td>
-					<button class="btn btn-outline-warning" onclick="location.href='@Url.Action("Edit", new { id = item.Id })' ">Sửa</button>
-					<button class="btn btn-outline-success" onclick="location.href='@Url.Action("Details", new { id = item.Id })'">Chi tiết</button>
-					<button class="btn btn-outline-danger" onclick="deleteSanPham('@item.Id')" value="Xóa">Xóa</button>
-				</td>
+				<th>
+					@Html.DisplayName("Tên")
+				</th>
+				<th>
+					@Html.DisplayName("Số lượng")
+				</th>
+				<th>
+					@Html.DisplayName("Giá bán")
+				</th>
+				<th>
+					@Html.DisplayName("Ngày tạo")
+				</th>
+				<th>
+					@Html.DisplayName("Trạng thái")
+				</th>
+				<th>
+					@Html.DisplayName("Loại")
+				</th>
+				<th></th>
 			</tr>
-		}
-	</tbody>
-</table>
-	<partial name="_Paging" model="@ViewBag.pagingmodel" />
+
+		</thead>
+		<tbody id="prod-list">
+			@foreach (var item in Model)
+			{
+				<tr id="prod-@item.Id">
+					<td>
+						@Html.DisplayFor(modelItem => item.Name)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Quantity)
+					</td>
+					<td>
+						@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)
+					</td>
+					<td>
+						@Html.DisplayFor(modelTtem => item.CreatedDate)
+					</td>
+					<td>
+						@(item.Status == 1 ? "Đang bán" : "Chịu")
+					</td>
+					<td>
+						@(item.Type == 1 ? "Lẻ" : "Combo")
+					</td>
+					<td>
+						<button class="btn btn-outline-warning" onclick="location.href='@Url.Action("Edit", new { id = item.Id })' ">Sửa</button>
+						<button class="btn btn-outline-success" onclick="location.href='@Url.Action("Details", new { id = item.Id })'">Chi tiết</button>
+						<button class="btn btn-outline-danger" onclick="deleteSanPham('@item.Id')" value="Xóa">Xóa</button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+
 </body>
 <script type="text/javascript">
 	function deleteSanPham(id) {

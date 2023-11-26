@@ -27,13 +27,18 @@ namespace BookShop.BLL.Service
             catch (Exception ex) { return false; }
         }
 
-        public async Task<bool> Update(int userId, WalletPoint model)
+		public async Task<WalletPoint> GetById(int userId)
+		{
+            return await _repository.GetByIdAsync(userId);
+		}
+
+		public async Task<bool> Update(int userId, WalletPoint model)
         {
             try
             {
                 var obj = await _repository.GetByIdAsync(userId);
-                obj.Point += model.Point;
-                await _repository.UpdateAsync(userId, model);
+                obj.Point = model.Point;
+                await _repository.UpdateAsync(userId, obj);
                 return true;
             }
             catch (Exception ex) { return false; }
