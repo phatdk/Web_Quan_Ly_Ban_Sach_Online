@@ -32,7 +32,7 @@ namespace BookShop.BLL.Service
                     Point = model.Point,
                     Content = model.Content,
                     CreatedDate = DateTime.Now,
-                    Id_Book = model.Id_Book,
+                    Id_Product = model.Id_Product,
                     Id_User = model.Id_User,
                     Id_Parents = model.Id_Parents,
                 };
@@ -70,7 +70,7 @@ namespace BookShop.BLL.Service
                                Point = a.Point,
                                Content = a.Content,
                                NameUser = b.Name,
-                               Id_Book = a.Id_Book,
+                               Id_Product = a.Id_Product,
                                Id_User = a.Id_User,
                                Id_Parents = a.Id_Parents,
                            }).ToList();
@@ -79,7 +79,7 @@ namespace BookShop.BLL.Service
 
         public async Task<List<EvaluateViewModel>> GetByBook(int bookId)
         {
-            var evaluates = (await _evaluateRepository.GetAllAsync()).Where(c => c.Id_Book == bookId && c.Id_Parents == null);
+            var evaluates = (await _evaluateRepository.GetAllAsync()).Where(c => c.Id_Product == bookId && c.Id_Parents == null);
             var users = await _userRepository.GetAllAsync();
             var objlist = (from a in evaluates
                            join b in users on a.Id_User equals b.Id into t
@@ -90,7 +90,7 @@ namespace BookShop.BLL.Service
                                Point = a.Point,
                                Content = a.Content,
                                NameUser = b.Name,
-                               Id_Book = a.Id_Book,
+                               Id_Product = a.Id_Product,
                                Id_User = a.Id_User,
                                Id_Parents = a.Id_Parents,
                            }).ToList();
@@ -110,7 +110,7 @@ namespace BookShop.BLL.Service
                                Point = a.Point,
                                Content = a.Content,
                                NameUser = b.Name,
-                               Id_Book = a.Id_Book,
+                               Id_Product = a.Id_Product,
                                Id_User = a.Id_User,
                                Id_Parents = a.Id_Parents,
                            }).ToList();
@@ -132,7 +132,7 @@ namespace BookShop.BLL.Service
                                Point = a.Point,
                                Content = a.Content,
                                NameUser = b.Name,
-                               Id_Book = a.Id_Book,
+                               Id_Product = a.Id_Product,
                                Id_User = a.Id_User,
                                Id_Parents = a.Id_Parents,
                            }).ToList();

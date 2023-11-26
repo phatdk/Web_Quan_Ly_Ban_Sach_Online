@@ -43,8 +43,6 @@ namespace BookShop.BLL.Service
 						   join od in OrderDetails on a.Id equals od.Id_Order
                            join b in users on a.Id_User equals b.Id into t
                            from b1 in t.DefaultIfEmpty()
-                           join c in promotions on a.Id_Promotion equals c.Id into i
-                           from c1 in i.DefaultIfEmpty()
                            join d in status on a.Id_StatusOrder equals d.Id
                            join e in users on a.Id_Staff equals e.Id into j
                            from e1 in j.DefaultIfEmpty()
@@ -74,9 +72,6 @@ namespace BookShop.BLL.Service
                                Id_Staff = a.Id_Staff,
                                StaffCode = e1 == null ? "Trống" : e1.Code,
                                NameStaff = e1 == null ? "Trống" : e1.Name,
-                               Id_Promotion = a.Id_Promotion,
-                               PromotionCode = c1 == null ? "Trống" : c1.Code,
-                               NamePromotion = c1 == null ? "Trống" : c1.Name,
                            }).ToList();
             return objlist;
         }
@@ -144,8 +139,6 @@ namespace BookShop.BLL.Service
 					Id_StatusOrder = model.Id_Status,
 					Id_User = model.Id_User,
 					Id_Staff = model.Id_Staff,
-					Id_Promotion = model.Id_Promotion,
-
 					//thêm
 					IsOnlineOrder = model.IsOnlineOrder,
 					IsUsePoint = model.IsUsePoint,
@@ -187,13 +180,10 @@ namespace BookShop.BLL.Service
 		{
 			var orders = await _orderRepository.GetAllAsync();
 			var users = await _userRepository.GetAllAsync();
-			var promotions = await _promotionRepository.GetAllAsync();
 			var status = await _statusRepository.GetAllAsync();
 			var objlist = (from a in orders
 						   join b in users on a.Id_User equals b.Id into t
 						   from b1 in t.DefaultIfEmpty()
-						   join c in promotions on a.Id_Promotion equals c.Id into i
-						   from c1 in i.DefaultIfEmpty()
 						   join d in status on a.Id_StatusOrder equals d.Id
 						   join e in users on a.Id_Staff equals e.Id into j
 						   from e1 in j.DefaultIfEmpty()
@@ -223,9 +213,6 @@ namespace BookShop.BLL.Service
 							   Id_Staff = a.Id_Staff,
 							   StaffCode = e1 == null ? "Trống" : e1.Code,
 							   NameStaff = e1 == null ? "Trống" : e1.Name,
-							   Id_Promotion = a.Id_Promotion,
-							   PromotionCode = c1 == null ? "Trống" : c1.Code,
-							   NamePromotion = c1 == null ? "Trống" : c1.Name,
 						   }).ToList();
 			foreach (var item in objlist)
 			{
@@ -243,13 +230,10 @@ namespace BookShop.BLL.Service
 		{
 			var orders = (await _orderRepository.GetAllAsync()).Where(c => c.Id_User == userId);
 			var users = await _userRepository.GetAllAsync();
-			var promotions = await _promotionRepository.GetAllAsync();
-			var status = await _statusRepository.GetAllAsync();	
+			var status = await _statusRepository.GetAllAsync();
 			var objlist = (from a in orders
 						   join b in users on a.Id_User equals b.Id into t
 						   from b1 in t.DefaultIfEmpty()
-						   join c in promotions on a.Id_Promotion equals c.Id into i
-						   from c1 in i.DefaultIfEmpty()
 						   join d in status on a.Id_StatusOrder equals d.Id
 						   join e in users on a.Id_Staff equals e.Id into j
 						   from e1 in j.DefaultIfEmpty()
@@ -279,9 +263,6 @@ namespace BookShop.BLL.Service
 							   Id_Staff = a.Id_Staff,
 							   StaffCode = e1 == null ? "Trống" : e1.Code,
 							   NameStaff = e1 == null ? "Trống" : e1.Name,
-							   Id_Promotion = a.Id_Promotion,
-							   PromotionCode = c1 == null ? "Trống" : c1.Code,
-							   NamePromotion = c1 == null ? "Trống" : c1.Name,
 						   }).ToList();
 			return objlist;
 		}
@@ -290,13 +271,10 @@ namespace BookShop.BLL.Service
 		{
 			var orders = (await _orderRepository.GetAllAsync()).Where(c => c.Id == id);
 			var users = await _userRepository.GetAllAsync();
-			var promotions = await _promotionRepository.GetAllAsync();
 			var status = await _statusRepository.GetAllAsync();
 			var objlist = (from a in orders
 						   join b in users on a.Id_User equals b.Id into t
 						   from b1 in t.DefaultIfEmpty()
-						   join c in promotions on a.Id_Promotion equals c.Id into i
-						   from c1 in i.DefaultIfEmpty()
 						   join d in status on a.Id_StatusOrder equals d.Id
 						   join e in users on a.Id_Staff equals e.Id into j
 						   from e1 in j.DefaultIfEmpty()
@@ -330,9 +308,6 @@ namespace BookShop.BLL.Service
 							   Id_Staff = a.Id_Staff,
 							   StaffCode = e1 == null ? "Trống" : e1.Code,
 							   NameStaff = e1 == null ? "Trống" : e1.Name,
-							   Id_Promotion = a.Id_Promotion,
-							   PromotionCode = c1 == null ? "Trống" : c1.Code,
-							   NamePromotion = c1 == null ? "Trống" : c1.Name,
 							   IsOnlineOrder = a.IsOnlineOrder,
 							   IsUsePoint = a.IsUsePoint,
 							   PointUsed = a.PointUsed,
@@ -375,7 +350,6 @@ namespace BookShop.BLL.Service
 				obj.Commune = model.Commune;
 				obj.Shipfee = model.Shipfee;
 				obj.Id_Staff = model.Id_Staff;
-				obj.Id_Promotion = model.Id_Promotion;
 				obj.Id_StatusOrder = model.Id_Status;
 				obj.Id_User = model.Id_User;
 				//thêm

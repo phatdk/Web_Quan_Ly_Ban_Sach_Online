@@ -127,20 +127,15 @@ public static class SeedDataMD
 	{
 		var form = new CreatePaymentFormModel()
 		{
-			Name = "Thanh toán tiền mặt tại quầy",
+			Name = "Thanh toán tại quầy",
 			Status = 2,
 		};
 		var form1 = new CreatePaymentFormModel()
 		{
-			Name = "Thanh toán banking tại quầy",
-			Status = 2,
-		};
-		var form2 = new CreatePaymentFormModel()
-		{
 			Name = "Thanh toán khi nhận hàng",
 			Status = 1,
 		};
-		var form3 = new CreatePaymentFormModel()
+		var form2 = new CreatePaymentFormModel()
 		{
 			Name = "Thanh toán qua VNPay",
 			Status = 1,
@@ -149,7 +144,6 @@ public static class SeedDataMD
 		await service.Add(form);
 		await service.Add(form1);
 		await service.Add(form2);
-		await service.Add(form3);
 	}
 	public static async Task SeedPromotionType(IPromotionTypeService service)
 	{
