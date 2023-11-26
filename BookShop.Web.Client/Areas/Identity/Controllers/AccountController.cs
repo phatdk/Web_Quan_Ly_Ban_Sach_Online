@@ -28,6 +28,7 @@ namespace App.Areas.Identity.Controllers
     //  [Authorize]
     [Area("Identity")]
     [Route("/Account/[action]")]
+    [Authorize(Roles = "Admin")]
     public class AccountController : Controller
     {
         private readonly UserManager<Userr> _userManager;
