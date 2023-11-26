@@ -14,8 +14,8 @@ namespace BookShop.DAL.Configuration
 		public void Configure(EntityTypeBuilder<PointTransactionsHistory> builder)
 		{
 			builder.HasOne(x=>x.WalletPoint).WithMany(x=>x.PointTransactionsHistories).HasForeignKey(x=>x.Id_User).OnDelete(DeleteBehavior.Cascade);
-			builder.HasOne(x=>x.Order).WithMany(x=>x.PointTransactionsHistories).HasForeignKey(x=>x.Id_Parents).OnDelete(DeleteBehavior.NoAction);
-			builder.HasOne(x=>x.Promotion).WithMany(x=>x.PointTransactionsHistories).HasForeignKey(x=>x.Id_Parents).OnDelete(DeleteBehavior.NoAction);
+			builder.HasOne(x=>x.Order).WithMany(x=>x.PointTransactionsHistories).HasForeignKey(x=>x.Id_Order).OnDelete(DeleteBehavior.NoAction).IsRequired(false);
+			builder.HasOne(x=>x.Promotion).WithMany(x=>x.PointTransactionsHistories).HasForeignKey(x=>x.Id_Promotion).OnDelete(DeleteBehavior.NoAction).IsRequired(false);
 		}
 	}
 }

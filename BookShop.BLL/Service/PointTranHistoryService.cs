@@ -25,31 +25,32 @@ namespace BookShop.BLL.Service
             _WalletPointRepository = new Repository<WalletPoint>();
         }
 
-        public async Task<bool> Add(CreatePointTranHistoryModel model)
+        public async Task<bool> Add(PointTranHistoryViewModel model)
         {
             try
             {
-                var wallpoint = await _WalletPointRepository.GetByIdAsync(model.Id_User);
-                if (wallpoint == null)
-                {
-                    return false;
-                }
-                var obj = new PointTransactionsHistory()
-                {
-                    Point_Amount_Userd = model.PointUserd,
-                    Remaining = wallpoint.Point - model.PointUserd,
-                    CreatedDate = DateTime.Now,
-                    Id_User = model.Id_User,
-                    Id_Parents = model.Id_Parents,
-                };
-                var PointTransaction = await _historyRepository.CreateAsync(obj);
-                if (PointTransaction == null)
-                {
-                    return false;
-                }
-                wallpoint.Point = PointTransaction.Remaining;
-                await _WalletPointRepository.UpdateAsync(wallpoint.Id_User, wallpoint);
-                return true;
+                //var wallpoint = await _WalletPointRepository.GetByIdAsync(model.Id_User);
+                //if (wallpoint != null)
+                //{
+                    var obj = new PointTransactionsHistory()
+                    {
+                        Point_Amount_Userd = model.PointUserd,
+                        Remaining = model.Remaining,
+                        CreatedDate = DateTime.Now,
+                        Id_User = model.Id_User,
+                        Id_Order = model.Id_Order,
+                        Id_Promotion = model.Id_Promotion,
+                    };
+                    var PointTransaction = await _historyRepository.CreateAsync(obj);
+                    //if (PointTransaction == null)
+                    //{
+                    //    return false;
+                    //}
+                    //wallpoint.Point = PointTransaction.Remaining;
+                    //await _WalletPointRepository.UpdateAsync(wallpoint.Id_User, wallpoint);
+                    return true;
+                //}
+                //return false;
             }
             catch (Exception ex) { return false; }
         }
@@ -60,9 +61,9 @@ namespace BookShop.BLL.Service
             var orders = await _orderRepository.GetAllAsync();
             var promotions = await _promotionRepository.GetAllAsync();
             var objlist = (from a in histories
-                           join b in orders on a.Id_Parents equals b.Id into t
+                           join b in orders on a.Id_Order equals b.Id into t
                            from b in t.DefaultIfEmpty()
-                           join c in promotions on a.Id_Parents equals c.Id into i
+                           join c in promotions on a.Id_Promotion equals c.Id into i
                            from c in i.DefaultIfEmpty()
                            select new PointTranHistoryViewModel()
                            {
@@ -71,7 +72,8 @@ namespace BookShop.BLL.Service
                                Remaining = a.Remaining,
                                CreatedDate = a.CreatedDate,
                                Id_User = a.Id_User,
-                               Id_Parents = a.Id_Parents,
+                               Id_Order = a.Id_Order,
+                               Id_Promotion = a.Id_Promotion,
                                Notif = orders != null ? "giao dịch mua hàng" : "giao dịch đổi phiếu giảm giá" + c.Name,
                            }).ToList();
             return objlist;

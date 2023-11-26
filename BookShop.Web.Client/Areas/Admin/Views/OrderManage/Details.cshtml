@@ -5,7 +5,6 @@
 @{
 	ViewData["Title"] = "Chi tiết đơn hàng";
 	Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
-	List<OrderDetailViewModel> details = ViewBag.Details;
 	int total = 0;
 }
 
@@ -88,7 +87,7 @@
 		</dl>
 		<div class="col-6">
 			<ul class="ps-0" style="list-style: none" id="menuDetail">
-				@foreach (var item in details)
+				@foreach (var item in Model.orderDetails)
 				{
 					total += (item.Price * item.Quantity);
 					<li class="row">

@@ -29,6 +29,7 @@ namespace BookShop.DAL.ApplicationDbContext
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<OrderPayment> OrderPayments { get; set; }
+        public virtual DbSet<OrderPromotion> OrderPromotions { get; set; }
         public virtual DbSet<PaymentForm> PaymentForms { get; set; }
         public virtual DbSet<PointTransactionsHistory> PointTransactionsHistories { get; set; }
         public virtual DbSet<Product> Products { get; set; }

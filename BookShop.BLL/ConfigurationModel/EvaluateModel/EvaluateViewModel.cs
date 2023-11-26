@@ -19,6 +19,6 @@ namespace BookShop.BLL.ConfigurationModel.EvaluateModel
 		//foreign key
 		public int? Id_Parents { get; set; }
 		public int Id_User { get; set; }
-		public int Id_Book { get; set; }
+		public int Id_Product { get; set; }
 	}
 }

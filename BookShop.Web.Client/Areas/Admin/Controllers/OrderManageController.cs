@@ -22,6 +22,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		private readonly IOrderService _orderService;
 		private readonly IOrderDetailService _orderDetailService;
 		private readonly IOrderPaymentService _orderPaymentService;
+		private readonly IOrderPromotionService _orderPromotionService;
 		private readonly IStatusOrderService _statusOrderService;
 		private readonly IPromotionService _promotionService;
 		private readonly IProductService _productService;
@@ -30,7 +31,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		private readonly ProductPreviewService _productPreviewService;
 		private readonly PointNPromotionSerVice _pointNPromotionService;
 
-		public OrderManageController(UserManager<Userr> userManager, IUserService userService, IOrderService orderService, IOrderDetailService orderDetailService, IOrderPaymentService orderPaymentService, IStatusOrderService statusOrderService, IPromotionService promotionService, IProductService productService, IProductBookService productBookService, IBookService bookService)
+		public OrderManageController(UserManager<Userr> userManager, IUserService userService, IOrderService orderService, IOrderDetailService orderDetailService, IOrderPaymentService orderPaymentService, IStatusOrderService statusOrderService, IPromotionService promotionService, IProductService productService, IProductBookService productBookService, IBookService bookService, IOrderPromotionService orderPromotionService)
 		{
 			_orders = new List<OrderViewModel>();
 			_order = new OrderViewModel();
@@ -38,6 +39,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			_userService = userService;
 			_orderService = orderService;
 			_orderDetailService = orderDetailService;
+			_orderPromotionService = orderPromotionService;
 			_orderPaymentService = orderPaymentService;
 			_statusOrderService = statusOrderService;
 			_promotionService = promotionService;
@@ -96,19 +98,25 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		{
 			_order = await _orderService.GetById(id);
 			var details = await _orderDetailService.GetByOrder(id);
-			ViewBag.Details = details;
+			var promotions = await _orderPromotionService.GetByOrder(id);
+			_order.orderDetails = details;
+			_order.orderPromotions = promotions;
 			foreach (var item in details)
 			{
 				_order.Total += item.Quantity * item.Price;
 			}
-			if (_order.Id_Promotion != null)
+			if (promotions != null)
 			{
-				var promotion = await _promotionService.GetById(Convert.ToInt32(_order.Id_Promotion));
-				if (promotion.PercentReduct != null)
+				foreach (var promotion in promotions)
 				{
-					_order.Total -= Convert.ToInt32(Math.Floor(Convert.ToDouble((_order.Total / 100) * promotion.PercentReduct)));
+					if (promotion.PercentReduct != null)
+					{
+						var amount = Convert.ToInt32(Math.Floor(Convert.ToDouble((_order.Total / 100) * promotion.PercentReduct)));
+						if (amount > promotion.ReductMax) amount = promotion.ReductMax;
+						_order.TotalPayment -= amount;
+					}
+					else _order.TotalPayment -= Convert.ToInt32(promotion.AmountReduct);
 				}
-				else _order.Total -= Convert.ToInt32(promotion.AmountReduct);
 			}
 			if (_order.IsUsePoint)
 			{
@@ -239,12 +247,11 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					int point = Convert.ToInt32(Math.Floor(Convert.ToDouble(order.Total / 20000))); // 20k = 1 điểm
 					if (point > 0)
 					{
-						var history = new CreatePointTranHistoryModel()
+						var history = new PointTranHistoryViewModel()
 						{
 							PointUserd = point,
-							Remaining = user.Point + point,
 							Id_User = user.Id,
-							Id_Parents = id,
+							Id_Order = id,
 						};
 						await _pointNPromotionService.Accumulate(order.Id_User, point, history);
 					}
@@ -372,7 +379,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 								var book = await _bookService.GetById(item1.Id_Book);
 								await _bookService.ChangeQuantity(book.Id, item.Quantity); // tang so luong sach trong kho
 							}
-							await _productPreviewService.ChangeQuantity(item.Id_Product, item.Quantity);	// tang lai sp
+							await _productPreviewService.ChangeQuantity(item.Id_Product, item.Quantity);    // tang lai sp
 						}
 					}
 				}
