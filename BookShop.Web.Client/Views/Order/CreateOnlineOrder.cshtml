@@ -161,7 +161,6 @@
 				</div>
 				<label class="w-100 fw-bold">Chọn khuyến mãi: </label>
 				<select asp-for="Id_Promotions" class="form-control" id="selectPromotion" onchange="promotionSelected(this.value)">
-					<option value="" selected>--Select promotion--</option>
 				</select>
 				<label class="w-100">Số tiền giảm: <span id="totalReduct">0đ</span></label>
 
@@ -224,10 +223,12 @@
 				type: 'GET',
 				data: { id: id },
 				success: function (data) {
+					debugger;
 					var userPromotionList = $("#selectPromotion");
 					data.forEach(function (item) {
 						var promotionRow = '<option value="' + item.id + '">' + item.name + '</option>';
 						userPromotionList.append(promotionRow);
+						userPromotionList.trigger('chosen:updated');
 					});
 				},
 				error: function (error) {
@@ -240,11 +241,12 @@
 	var totalReduct = 0;
 	var totalPromotion = 0;
 	function promotionSelected(id) {
+		debugger;
 		if (id != null && id != 0) {
 			$.ajax({
 				url: '/Order/GetPromotion',
 				type: 'GET',
-				data: { id: id, total: @Model.Total },
+				data: { listId: id, total: @Model.Total },
 				success: function (data) {
 					totalPromotion = data.totalReduct;
 					totalReduct = totalPromotion + totalPoint;
