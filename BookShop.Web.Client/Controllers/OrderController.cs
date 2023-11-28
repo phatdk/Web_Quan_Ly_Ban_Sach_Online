@@ -322,9 +322,9 @@ namespace BookShop.Web.Client.Controllers
 			var validPromotions = new List<PromotionViewModel>();
 
 			var promotionsPublic = await _pointNPromotionService.GetActivePromotion();
-			if(promotionsPublic != null)
+			if (promotionsPublic != null)
 			{
-				foreach(var item in promotionsPublic)
+				foreach (var item in promotionsPublic)
 				{
 					validPromotions.Add(item);
 				}
@@ -342,36 +342,26 @@ namespace BookShop.Web.Client.Controllers
 			return Json(validPromotions);
 		}
 
-		public async Task<IActionResult> GetPromotion(int id, int total)
+		public async Task<IActionResult> GetPromotion(List<int> listId, int total)
 		{
 			int totalReduct = 0;
-			var usePromotion = await _promotionService.GetById(id);
-			if (usePromotion != null)
+			foreach (var id in listId)
 			{
-				if (usePromotion.PercentReduct != null && usePromotion.PercentReduct > 0)
+				var usePromotion = await _promotionService.GetById(id);
+				if (usePromotion != null)
 				{
-					totalReduct = Convert.ToInt32(Math.Floor(Convert.ToDouble((total / 100) * usePromotion.PercentReduct)));
-					if (totalReduct > usePromotion.ReductMax)
+					if (usePromotion.PercentReduct != null && usePromotion.PercentReduct > 0)
 					{
-						totalReduct = usePromotion.ReductMax;
+						totalReduct = Convert.ToInt32(Math.Floor(Convert.ToDouble((total / 100) * usePromotion.PercentReduct)));
+						if (totalReduct > usePromotion.ReductMax)
+						{
+							totalReduct = usePromotion.ReductMax;
+						}
 					}
+					else totalReduct = Convert.ToInt32(usePromotion.AmountReduct);
 				}
-				else totalReduct = Convert.ToInt32(usePromotion.AmountReduct);
 			}
-			else
-			{
-				var promotion = await _promotionService.GetById(id);
-				if (promotion.PercentReduct != null && promotion.PercentReduct > 0)
-				{
-					totalReduct = Convert.ToInt32(Math.Floor(Convert.ToDouble((total / 100) * promotion.PercentReduct)));
-					if (totalReduct > promotion.ReductMax)
-					{
-						totalReduct = promotion.ReductMax;
-					}
-				}
-				else totalReduct = Convert.ToInt32(promotion.AmountReduct);
-			}
-			return Json(new {totalReduct = totalReduct});
+			return Json(new { totalReduct = totalReduct });
 		}
 
 		// GET: OrderController/Edit/5
