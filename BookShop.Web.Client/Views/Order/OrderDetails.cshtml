@@ -4,7 +4,6 @@
 
 @{
 	ViewData["Title"] = "OrderDetails";
-	List<OrderDetailViewModel> details = ViewBag.Details;
 	int total = 0;
 }
 
@@ -87,7 +86,7 @@
 		</dl>
 		<div class="col-4">
 			<ul class="ps-0" style="list-style: none">
-				@foreach (var item in details)
+				@foreach (var item in Model.orderDetails)
 				{
 					total += (item.Price * item.Quantity);
 					<li class="row">
@@ -117,21 +116,23 @@
 
 	function deleteOrder() {
 		var url = "@Url.Action("Index", "Home")";
-		$.ajax({
-			url: '/Order/DeleteOrder',
-			type: 'POST',
-			data: { id: @Model.Id },
-			success: function (result) {
-				if (result.success) {
-					alert('Hủy đơn thành công.');
-					window.location.href = url;
-				} else {
-					alert('Hủy đơn thất bại: ' + result.errorMessage);
+		if (confirm("Nếu bạn hủy đơn thì số điểm bạn đã sử dụng sẽ không được hoàn lại \n Bạn có chắc chắn muốn tiếp tục")) {
+			$.ajax({
+				url: '/Order/DeleteOrder',
+				type: 'POST',
+				data: { id: @Model.Id },
+				success: function (result) {
+					if (result.success) {
+						alert('Hủy đơn thành công.');
+						window.location.href = url;
+					} else {
+						alert('Hủy đơn thất bại: ' + result.errorMessage);
+					}
+				},
+				error: function (error) {
+					alert('Có lỗi xảy ra: ' + error.responseText);
 				}
-			},
-			error: function (error) {
-				alert('Có lỗi xảy ra: ' + error.responseText);
-			}
-		});
+			});
+		}
 	}
 </script>

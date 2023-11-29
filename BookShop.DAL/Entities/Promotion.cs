@@ -33,7 +33,7 @@ namespace BookShop.DAL.Entities
 		public virtual PromotionType PromotionType { get; set; }
 
 		//reference
-		public virtual List<Order> Orders { get; set; }
+		public virtual List<OrderPromotion> OrderPromotions { get; set; }
 		public virtual List<ProductPromotion> ProductPromotions { get; set; }
 		public virtual List<UserPromotion> UserPromotions { get; set; }	
 		public virtual List<PointTransactionsHistory> PointTransactionsHistories { get; set;}

@@ -90,7 +90,6 @@ namespace BookShop.BLL.Gembox
 				//worksheet.Cells[$"V{rowIndex}"].Value = order.;
 				worksheet.Cells[$"W{rowIndex}"].Value = order.Id_User;
 				//worksheet.Cells[$"X{rowIndex}"].Value = order.Id_Staff;
-				worksheet.Cells[$"Y{rowIndex}"].Value = order.Id_Promotion;
 				//worksheet.Cells[$"Z{rowIndex}"].Value = order.Id_Status;
 
 				rowIndex++;

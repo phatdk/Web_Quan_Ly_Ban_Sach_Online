@@ -29,6 +29,7 @@ namespace BookShop.DAL.ApplicationDbContext
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<OrderPayment> OrderPayments { get; set; }
+        public virtual DbSet<OrderPromotion> OrderPromotions { get; set; }
         public virtual DbSet<PaymentForm> PaymentForms { get; set; }
         public virtual DbSet<PointTransactionsHistory> PointTransactionsHistories { get; set; }
         public virtual DbSet<Product> Products { get; set; }
@@ -57,8 +58,8 @@ namespace BookShop.DAL.ApplicationDbContext
         {
             if (!optionsBuilder.IsConfigured)
             {
-               // optionsBuilder.UseSqlServer("Data Source=DESKTOP-L9TSC4C\\SQLEXPRESS;Initial Catalog=BookShop.Datn;Integrated Security=True");
-                optionsBuilder.UseSqlServer(@"Data Source=PHUCDEPZAI2003\SQLEXPRESS;Initial Catalog=BookShopDatn;Integrated Security=True;Encrypt=False");
+                optionsBuilder.UseSqlServer("Data Source=DESKTOP-L9TSC4C\\SQLEXPRESS;Initial Catalog=BookShop.Datn;Integrated Security=True");
+                //optionsBuilder.UseSqlServer(@"Data Source=PHUCDEPZAI2003\SQLEXPRESS;Initial Catalog=BookShopDatn;Integrated Security=True;Encrypt=False");
 
             }
         }
