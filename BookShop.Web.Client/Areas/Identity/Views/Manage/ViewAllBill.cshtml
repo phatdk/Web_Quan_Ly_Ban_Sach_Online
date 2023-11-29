@@ -7,6 +7,7 @@
 @{
     ViewData["Title"] = "Tất cả các đơn hàng";
     Layout = "_LayoutViewBill";
+    var total = 0;
 }
 
 <div class="container">
@@ -33,7 +34,7 @@
                                 <th>Sản phẩm</th>
                                 <th>Giá</th>
                                 <th>Số lượng</th>
-
+                                <th>Thành tiền</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -44,12 +45,13 @@
                                     <td>@product.Name</td>
                                     <td>@item.Price.ToString("N0")</td>
                                     <td>@item.Quantity</td>
+                                    <th>@(total+=item.Price * item.Quantity)</th>
                                 </tr>
 
                             }
                             <tr>
                                 <td class="text-right">Tổng tiền</td>
-                                <td>@(bill.Total.ToString("N0")) VND</td>
+                                <td>@(total.ToString("N0")) VND</td>
                             </tr>
                         </tbody>
                     </table>

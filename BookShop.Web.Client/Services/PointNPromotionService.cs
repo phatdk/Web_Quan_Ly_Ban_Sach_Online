@@ -26,28 +26,27 @@ namespace BookShop.Web.Client.Services
 			_userPromotionService = new UserPromotionService();
 		}
 
-		public async Task<bool> Accumulate(int userId, int pointAmount, CreatePointTranHistoryModel model)
+		public async Task<bool> Accumulate(int userId, int pointAmount, PointTranHistoryViewModel model)
 		{
 			if (userId != 0)
 			{
-				var wallet = await _userService.GetById(userId);
+				var wallet = await _walletpointService.GetById(userId);
 				if (wallet != null)
 				{
-					var obj = new WalletPoint()
-					{
-						Point = wallet.Point + pointAmount,
-					};
-					var result = await _walletpointService.Update(userId, obj); // thay doi so diem
+					wallet.Point = wallet.Point + pointAmount;
+					var result = await _walletpointService.Update(wallet.Id_User, wallet); // thay doi so diem
 					if (result) // tạo lịch sử tích điểm
 					{
-						result = await _pointTranHistoryService.Add(model);
+						model.Id_User = userId;
+						model.Remaining = wallet.Point;
+						result = await _pointTranHistoryService.Add(model); //add
 					}
 					return result;
 				}
 			}
 			return false;
 		}
-		
+
 		public async Task<List<PromotionViewModel>> GetActivePromotion()
 		{
 			var promotions = (await _promotionService.GetAll()).Where(x => x.Status == 1);
@@ -67,11 +66,52 @@ namespace BookShop.Web.Client.Services
 
 		public async Task<bool> ModifyUserPromotion(int userId, int promotionId, int status)
 		{
-			var promotion = (await _userPromotionService.GetByUser(userId)).Where(x=>x.Id_Promotion == promotionId).FirstOrDefault();
-			if(promotion != null)
+			var userpromotion = (await _userPromotionService.GetByUser(userId)).Where(x => x.Id_Promotion == promotionId).FirstOrDefault();
+			if (userpromotion != null)
 			{
-				promotion.Status = status;
-				return await _userPromotionService.Update(promotion);
+				userpromotion.Status = status;
+				return await _userPromotionService.Update(userpromotion);
+			}
+			else
+			{
+				var promotion = await _promotionService.GetById(promotionId);
+				if(promotion != null && promotion.Quantity >= 1)
+				{
+					var obj = new UpdatePromotionModel()
+					{
+						Name = promotion.Name,
+						Code = promotion.Code,
+						Condition = promotion.Condition,
+						StorageTerm = promotion.StorageTerm,
+						PercentReduct = promotion.PercentReduct,
+						AmountReduct = promotion.AmountReduct,
+						ReductMax = promotion.ReductMax,
+						Quantity = promotion.Quantity - 1,
+						StartDate = promotion.StartDate,
+						EndDate = promotion.EndDate,
+						Description = promotion.Description,
+						Status = promotion.Status,
+						Id_Type = promotion.Id_Type,
+					};
+					var result = await _promotionService.Update(promotion.Id, obj);
+					return result;
+				}
+				return false;
+			}
+		}
+
+		public async Task<bool> GetPromotion(int promotionId)
+		{
+			var promotion = await _promotionService.GetById(promotionId);
+			if (promotion != null)
+			{
+				var updatemodel = new UpdatePromotionModel()
+				{
+
+				};
+				promotion.Quantity -= 1;
+				//var result = await _promotionService.Update(promotion.Id, promotion);
+				return true;
 			}
 			return false;
 		}

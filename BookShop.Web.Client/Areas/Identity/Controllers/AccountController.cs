@@ -9,6 +9,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using App.Areas.Identity.Models.AccountViewModels;
 using BookShop.BLL.ConfigurationModel.CartDetailModel;
+using BookShop.BLL.ConfigurationModel.PointTranHistoryModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;
@@ -27,7 +28,6 @@ namespace App.Areas.Identity.Controllers
     //  [Authorize]
     [Area("Identity")]
     [Route("/Account/[action]")]
-    [Authorize(Roles = "Admin")]
     public class AccountController : Controller
     {
         private readonly UserManager<Userr> _userManager;
@@ -194,7 +194,7 @@ namespace App.Areas.Identity.Controllers
 
                     };
                     await _CartRepository.Add(cart);
-                    var walletPoint = new WalletPoint()
+                    var walletPoint = new WalletPointViewModel()
                     {
                         Id_User = user.Id,
                         CreatedDate = DateTime.Now,
