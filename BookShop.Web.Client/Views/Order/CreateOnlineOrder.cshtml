@@ -161,6 +161,7 @@
 				</div>
 				<label class="w-100 fw-bold">Chọn khuyến mãi: </label>
 				<select asp-for="Id_Promotions" class="form-control" id="selectPromotion" onchange="promotionSelected(this.value)">
+					<option value="">---</option>
 				</select>
 				<label class="w-100">Số tiền giảm: <span id="totalReduct">0đ</span></label>
 
@@ -218,6 +219,7 @@
 		}; *@
 
 		function getListPromotions(id) {
+			debugger;
 			$.ajax({
 				url: '/Order/GetPromotionByUser',
 				type: 'GET',
@@ -304,8 +306,8 @@
 	$(document).ready(function () {
 		if (@Model.Id_User !== 0) {
 			getUser(@Model.Id_User);
-			getListPromotions(@Model.Id_User);
 		}
+		getListPromotions(@Model.Id_User);
 	});
 </script>
 
