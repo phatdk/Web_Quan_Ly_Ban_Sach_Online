@@ -64,22 +64,22 @@ namespace App.Areas.Identity.Controllers
         // bill đã xác nhận
         public async Task<IActionResult> ViewBillAwaitConfirm()
         {
-            return View((await GetBill()).Where(x=>x.Status==1));
+            return View((await GetBill()).Where(x=>x.Status==1).ToList());
         } 
         // bill đang giao
         public async Task<IActionResult> ViewBillShipping()
         {
-            return View((await GetBill()).Where(x=>x.Status==3));
+            return View((await GetBill()).Where(x=>x.Status==3).ToList());
         } 
         // bill đã giao
         public async Task<IActionResult> ViewBillSuccess()
         {
-            return View((await GetBill()).Where(x=>x.Status==4));
+            return View((await GetBill()).Where(x=>x.Status==4).ToList());
         } 
         // bill huỷ
         public async Task<IActionResult> ViewBillCancel()
         {
-            return View((await GetBill()).Where(x=>x.Status==8));
+            return View((await GetBill()).Where(x=>x.Status==8).ToList());
         }
 
 
