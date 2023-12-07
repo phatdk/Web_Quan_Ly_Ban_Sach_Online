@@ -291,87 +291,87 @@ namespace BookShop.BLL.Service
                 }).ToList() ,
 			};
 		}
-		public async Task<ProductViewModel> GetByIdAndCommnet(int id)
-		{
-			var product = await _productRepository.GetByIdAsync(id);
-			var pb = (await _productBookRepository.GetAllAsync()).Where(x => x.Id_Product == id);
-			var books = new List<BookViewModel>();
-			if (pb.Count()>0)
-			{
-                foreach (var item in pb)
-                {
-                    var book = await _bookRepository.GetByIdAsync(item.Id_Book);
-                    var bookvm = new BookViewModel()
-                    {
-                        Id = book.Id,
-                        Title = book.Title,
-                        ImportPrice = book.ImportPrice,
-                        Status = book.Status,
-                        Weight = book.Weight,
-                        Widght = book.Widght,
-                        Length = book.Length,
-                        Height = book.Height,
-                    };
-                    books.Add(bookvm);
-                }
+		//public async Task<ProductViewModel> GetByIdAndCommnet(int id)
+		//{
+		//	var product = await _productRepository.GetByIdAsync(id);
+		//	var pb = (await _productBookRepository.GetAllAsync()).Where(x => x.Id_Product == id);
+		//	var books = new List<BookViewModel>();
+		//	if (pb.Count()>0)
+		//	{
+  //              foreach (var item in pb)
+  //              {
+  //                  var book = await _bookRepository.GetByIdAsync(item.Id_Book);
+  //                  var bookvm = new BookViewModel()
+  //                  {
+  //                      Id = book.Id,
+  //                      Title = book.Title,
+  //                      ImportPrice = book.ImportPrice,
+  //                      Status = book.Status,
+  //                      Weight = book.Weight,
+  //                      Widght = book.Widght,
+  //                      Length = book.Length,
+  //                      Height = book.Height,
+  //                  };
+  //                  books.Add(bookvm);
+  //              }
 
-                var image = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == id);
-                var imgages = new List<ImageViewModel>();
-                foreach (var item in image)
-                {
-                    var imagev = new ImageViewModel()
-                    {
-                        Id = item.Id,
-                        ImageUrl = item.ImageUrl,
-                        Index = item.Index,
-                        CreatedDate = item.CreatedDate,
-                        Status = item.Status,
-                    };
-                    imgages.Add(imagev);
-                }
+  //              var image = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == id);
+  //              var imgages = new List<ImageViewModel>();
+  //              foreach (var item in image)
+  //              {
+  //                  var imagev = new ImageViewModel()
+  //                  {
+  //                      Id = item.Id,
+  //                      ImageUrl = item.ImageUrl,
+  //                      Index = item.Index,
+  //                      CreatedDate = item.CreatedDate,
+  //                      Status = item.Status,
+  //                  };
+  //                  imgages.Add(imagev);
+  //              }
 
                
-            }
-            string collecionName = string.Empty;
-			//if (product.Id_Collection != null)
-			//{
-			//    collecionName = (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == product.Id_Collection).FirstOrDefault().Name;
-			//}
-			var comment = (await _CommentRepository.GetAllAsync()).Where(x => x.Id_Product == id).Select(x => new ConfigurationModel.EvaluateModel.EvaluateViewModel()
-			{
-				Point = x.Point,
-				Content = x.Content,
-				CreatedDate = DateTime.Now,
-				Id_Product = x.Id_Product,
-				Id_User = x.Id_User,
-				Id_Parents = x.Id_Parents,
-				Id = x.Id,
+  //          }
+  //          string collecionName = string.Empty;
+		//	//if (product.Id_Collection != null)
+		//	//{
+		//	//    collecionName = (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == product.Id_Collection).FirstOrDefault().Name;
+		//	//}
+		//	var comment = (await _CommentRepository.GetAllAsync()).Where(x => x.Id_Product == id).Select(x => new ConfigurationModel.EvaluateModel.EvaluateViewModel()
+		//	{
+		//		Point = x.Point,
+		//		Content = x.Content,
+		//		CreatedDate = DateTime.Now,
+		//		Id_Product = x.Id_Product,
+		//		Id_User = x.Id_User,
+		//		Id_Parents = x.Id_Parents,
+		//		Id = x.Id,
 
-			}).ToList();
-			var valueReturn = new ProductViewModel()
-			{
-				Id = product.Id,
-				Name = product.Name,
-				Price = product.Price,
-				Quantity = product.Quantity,
-				Description = product.Description,
-				CreatedDate = product.CreatedDate,
-				Status = product.Status,
-				Type = product.Type,
-				bookViewModels = books,
-				imageViewModels = null,
-				CollectionId = product.Id_Collection,
-				CollectionName = collecionName,
+		//	}).ToList();
+		//	var valueReturn = new ProductViewModel()
+		//	{
+		//		Id = product.Id,
+		//		Name = product.Name,
+		//		Price = product.Price,
+		//		Quantity = product.Quantity,
+		//		Description = product.Description,
+		//		CreatedDate = product.CreatedDate,
+		//		Status = product.Status,
+		//		Type = product.Type,
+		//		bookViewModels = books,
+		//		imageViewModels = null,
+		//		CollectionId = product.Id_Collection,
+		//		CollectionName = collecionName,
 				
-			};
-			if (comment==null)
-			{
-                return valueReturn;
+		//	};
+		//	if (comment==null)
+		//	{
+  //              return valueReturn;
 
-            }
-            valueReturn.Comment = comment;
-            return valueReturn;
-		}
+  //          }
+  //          valueReturn.Comment = comment;
+  //          return valueReturn;
+		//}
 
 		public async Task<List<ProductViewModel>> GetByCollection(int collectionId)
 		{
