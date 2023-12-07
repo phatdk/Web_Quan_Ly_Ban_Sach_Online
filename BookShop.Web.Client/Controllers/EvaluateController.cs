@@ -42,6 +42,7 @@ namespace BookShop.Web.Client.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateComment(CreateEvaluateModel Comment)
         {
+            Comment.Point =5;
             var statusadd = await Evaluate.Add(Comment);
             if (!statusadd)
             {
