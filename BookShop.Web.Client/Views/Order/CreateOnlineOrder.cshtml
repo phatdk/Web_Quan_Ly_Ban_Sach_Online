@@ -161,7 +161,7 @@
 				</div>
 				<label class="w-100 fw-bold">Chọn khuyến mãi: </label>
 				<select asp-for="Id_Promotions" class="form-control" id="selectPromotion" onchange="promotionSelected(this.value)">
-					<option value="">---</option>
+					<option value="">---Select promotion---</option>
 				</select>
 				<label class="w-100">Số tiền giảm: <span id="totalReduct">0đ</span></label>
 
@@ -304,6 +304,8 @@
 	}
 
 	$(document).ready(function () {
+		var element = document.getElementById('selectPromotion');
+		element.removeAttribute("multiple");
 		if (@Model.Id_User !== 0) {
 			getUser(@Model.Id_User);
 		}
