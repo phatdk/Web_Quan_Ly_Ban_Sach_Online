@@ -31,6 +31,7 @@ namespace ShopWheyProject.MVC.Areas.Identity.Controllers
     /// [Authorize(Roles = RoleName.Administrator)]
     /// </summary>
     [Area("Identity")]
+    [Authorize(Roles = "Admin")]
     [Route("/ManageUser/[action]")]
     public class UserController : Controller
     {
@@ -94,6 +95,11 @@ namespace ShopWheyProject.MVC.Areas.Identity.Controllers
 
         }
 
+        public async Task<IActionResult> ViewPromotionUser(int IdUser)
+        {
+            return View(await _userManager.Users.Include(x => x.UserPromotions).FirstOrDefaultAsync(x => x.Id == IdUser));
+        }
+
         // GET: /ManageUser/AddRole/id
         [HttpGet("{id}")]
         public async Task<IActionResult> AddRole(int id)
@@ -148,7 +154,7 @@ namespace ShopWheyProject.MVC.Areas.Identity.Controllers
                 List<string> roleNames = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
 
                 ViewBag.allRoles = new SelectList(roleNames);
-                if (addRoles!=null)
+                if (addRoles != null)
                 {
                     //var resultAdds = await _userManager.AddToRolesAsync(model.user, addRoles);
                     //if (!resultAdds.Succeeded)
@@ -159,7 +165,7 @@ namespace ShopWheyProject.MVC.Areas.Identity.Controllers
                     foreach (var item in addRoles)
                     {
                         var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.NormalizedName == item.ToUpper());
-                        var userole = new BookShop.BLL.ConfigurationModel.UserModel.UserRoleModel() {UserId=model.user.Id,RoleId=role.Id };
+                        var userole = new BookShop.BLL.ConfigurationModel.UserModel.UserRoleModel() { UserId = model.user.Id, RoleId = role.Id };
                         var statusdelete = await _UserRole.Add(userole);
                         if (statusdelete != true)
                         {
@@ -169,22 +175,22 @@ namespace ShopWheyProject.MVC.Areas.Identity.Controllers
                     }
                 }
 
-                if (deleteRoles!=null)
+                if (deleteRoles != null)
                 {
                     foreach (var item in deleteRoles)
                     {
                         var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.NormalizedName == item.ToUpper());
                         var userole = (await _UserRole.GetAll()).FirstOrDefault(x => x.RoleId == role.Id && x.UserId == model.user.Id);
-                        var statusdelete= await _UserRole.Delete(userole);
-                        if (statusdelete!=true)
+                        var statusdelete = await _UserRole.Delete(userole);
+                        if (statusdelete != true)
                         {
                             return View(model);
                         }
-                    
+
                     }
                 }
 
-               
+
             }
             else
             {

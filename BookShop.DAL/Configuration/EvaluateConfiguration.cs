@@ -17,7 +17,7 @@ namespace BookShop.DAL.Configuration
 			builder.Property(x => x.Content).HasColumnType("nvarchar(255)").IsRequired(false);
 
 			builder.HasOne(x=>x.User).WithMany(x=>x.Evaluates).HasForeignKey(x=>x.Id_User).OnDelete(DeleteBehavior.Cascade);
-			builder.HasOne(x=>x.OrderDetail).WithMany(x=>x.Evaluates).HasForeignKey(x=>x.Id_Book).OnDelete(DeleteBehavior.Cascade);
+			builder.HasOne(x=>x.OrderDetail).WithMany(x=>x.Evaluates).HasForeignKey(x=>x.Id_Product).OnDelete(DeleteBehavior.Cascade);
 			builder.HasOne(x=>x.Parents).WithMany(x=>x.Evaluates).HasForeignKey(x=>x.Id_Parents).OnDelete(DeleteBehavior.NoAction);
 		}
 	}

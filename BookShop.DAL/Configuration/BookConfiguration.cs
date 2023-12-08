@@ -14,6 +14,7 @@ namespace BookShop.DAL.Configuration
 		public void Configure(EntityTypeBuilder<Book> builder)
 		{
 			builder.Property(x => x.ISBN).HasColumnType("varchar(20)").IsRequired(false);
+			builder.Property(x => x.Barcode).HasColumnType("nvarchar(13)");
 			builder.Property(x => x.Title).HasColumnType("nvarchar(50)");
 			builder.Property(x => x.Reader).HasColumnType("nvarchar(50)");
 			builder.Property(x => x.Description).HasColumnType("nvarchar(255)");

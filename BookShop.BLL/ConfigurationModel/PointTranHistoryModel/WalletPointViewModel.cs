@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace BookShop.BLL.ConfigurationModel.PointTranHistoryModel
 {
-	public class CreatePointTranHistoryModel
+	public class WalletPointViewModel
 	{
-		public int PointUserd { get; set; }
-		public int Remaining { get; set; }
 		public int Id_User { get; set; }
-		public int Id_Parents { get; set; }
+		public int Point { get; set; }
+		public DateTime CreatedDate { get; set; }
+		public int Status { get; set; }
+
+		public List<PointTranHistoryViewModel> PointTranHistorys { get; set; }
 	}
 }

@@ -2,6 +2,8 @@
 using BookShop.BLL.ConfigurationModel.OrderDetailModel;
 using BookShop.BLL.ConfigurationModel.OrderModel;
 using BookShop.BLL.ConfigurationModel.OrderPaymentModel;
+using BookShop.BLL.ConfigurationModel.OrderPromotionModel;
+using BookShop.BLL.ConfigurationModel.PointTranHistoryModel;
 using BookShop.BLL.ConfigurationModel.ProductModel;
 using BookShop.BLL.ConfigurationModel.PromotionModel;
 using BookShop.BLL.ConfigurationModel.UserModel;
@@ -31,6 +33,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 		private readonly IUserService _userService;
 		private readonly IStatusOrderService _statusService;
 		private readonly IPaymentFormService _paymentFormService;
+		private readonly IOrderPromotionService _orderPromotionService;
 		private readonly IOrderPaymentService _orderPaymentService;
 		private readonly IBookService _bookService;
 		private readonly IPromotionService _promotionService;
@@ -38,7 +41,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 		private readonly ProductPreviewService _productPreviewService;
 		private readonly PointNPromotionSerVice _pointNPromotionService;
 
-		public OfflineSaleController(IOrderService orderService, IOrderDetailService orderDetailService, IProductService productService, IProductBookService productBookService, IUserService userService, UserManager<Userr> userManager, IStatusOrderService statusOrderService, IPaymentFormService paymentFormService, IOrderPaymentService orderPaymentService, IBookService bookService, IPromotionService promotionService)
+		public OfflineSaleController(IOrderService orderService, IOrderDetailService orderDetailService, IProductService productService, IProductBookService productBookService, IUserService userService, UserManager<Userr> userManager, IStatusOrderService statusOrderService, IPaymentFormService paymentFormService, IOrderPaymentService orderPaymentService, IBookService bookService, IPromotionService promotionService, IOrderPromotionService orderPromotionService)
 		{
 			_orderService = orderService;
 			_orderDetailService = orderDetailService;
@@ -51,9 +54,11 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 			_orderPaymentService = orderPaymentService;
 			_bookService = bookService;
 			_promotionService = promotionService;
+			_orderPromotionService = orderPromotionService;
 
 			_productPreviewService = new ProductPreviewService();
 			_pointNPromotionService = new PointNPromotionSerVice();
+			_orderPromotionService = orderPromotionService;
 		}
 
 		// GET: OfflineSaleController
@@ -107,7 +112,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 			var list = (await _productService.GetAll()).Where(x => x.Status == 1 && x.Type == 1).OrderByDescending(x => x.CreatedDate).ToList();
 			if (!string.IsNullOrEmpty(keyWord))
 			{
-				list = list.Where(x=>x.Name.ToLower().Contains(keyWord.ToLower())).OrderByDescending(x => x.CreatedDate).ToList();
+				list = list.Where(x => x.Name.ToLower().Contains(keyWord.ToLower())).OrderByDescending(x => x.CreatedDate).ToList();
 			}
 			return Json(list.Take(10));
 		}
@@ -220,13 +225,12 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 			{
 				request.Receiver = request.NameUser;
 			}
-			if (request.Id != 0)
+			if (request.Id != 0) // đơn đã được lưu trước đó
 			{
 				var order = await _orderService.GetById(request.Id);
 				order.Id_Status = request.Id_Status;
 				order.Id_User = request.Id_User;
 				order.Id_Staff = request.Id_Staff;
-				order.Id_Promotion = request.Id_Promotion;
 				order.Receiver = request.Receiver;
 				order.Email = request.Email;
 				order.Phone = request.Phone;
@@ -244,47 +248,48 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 							{
 								if (detail.Id_Product == data[i].Id_Product)
 								{
-									await _productPreviewService.ChangeQuantity(data[i].Id_Product, detail.Quantity - data[i].Quantity);
 									if (detail.Quantity <= 0)
 									{
-										await _orderDetailService.Delete(detail.Id);
+										if (!await _orderDetailService.Delete(detail.Id)) goto skipAction1;
 									}
 									else if (detail.Quantity != data[i].Quantity)
 									{
 										detail.Quantity = data[i].Quantity;
 										detail.Price = data[i].Price;
-										await _orderDetailService.Update(detail.Id, detail);
+										if (!await _orderDetailService.Update(detail.Id, detail)) goto skipAction1;
 									}
+									if (!await _productPreviewService.ChangeQuantity(data[i].Id_Product, detail.Quantity - data[i].Quantity)) goto skipAction1;
 									data.RemoveAt(i);
-									goto skipsave;
+									goto skipSave;
 								}
 							}
 							await _orderDetailService.Delete(detail.Id);
-						skipsave:;
+						skipSave:;
 						}
 						foreach (var item in data) // them phan tu moi
 						{
-							await _productPreviewService.ChangeQuantity(item.Id_Product, -item.Quantity);
-							await _orderDetailService.Add(new OrderDetailViewModel()
+							if (!await _orderDetailService.Add(new OrderDetailViewModel()
 							{
 								Id_Order = request.Id,
 								Id_User = request.Id_User,
 								Id_Product = item.Id_Product,
 								Price = item.Price,
 								Quantity = item.Quantity,
-							});
+							})) goto skipAction1;
+							if (!await _productPreviewService.ChangeQuantity(item.Id_Product, -item.Quantity)) goto skipAction1;
 						}
 					}
 					return request;
 				}
+			skipAction1:;
 				request.Id = 0;
 				return request;
 			}
-			else
+			else // đơn chưa được lưu
 			{
-				request.Id_Status = request.Id_Status; // hóa đơn hoàn thành đơn
+				request.Id_Status = request.Id_Status; // trạng thái đơn
 				request.Code = "OF" + await GenerateCode(8);
-				var result = await _orderService.Add(request);
+				var result = await _orderService.Add(request); // thêm mới đơn
 				if (result.Id != 0)
 				{
 					var sessionDetails = HttpContext.Session.GetString("sessionOrder");
@@ -293,28 +298,30 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 						var data = JsonConvert.DeserializeObject<List<OrderDetailViewModel>>(sessionDetails);
 						foreach (var item in data)
 						{
-							await _productPreviewService.ChangeQuantity(item.Id_Product, -item.Quantity);
-							await _orderDetailService.Add(new OrderDetailViewModel()
+							if (!await _productPreviewService.ChangeQuantity(item.Id_Product, -item.Quantity)) goto skipAction2; // giam so luong san pham
+							var od = new OrderDetailViewModel()
 							{
 								Id_Order = result.Id,
 								Id_User = request.Id_User,
 								Id_Product = item.Id_Product,
 								Price = item.Price,
 								Quantity = item.Quantity,
-							});
-
+							};
+							if (!await _orderDetailService.Add(od)) goto skipAction2;
 						}
 					}
 					return result;
 				}
+			skipAction2:;
 				return request;
 			}
 		}
 
-		public async Task<IActionResult> SuccessOfflineOrder(int orderId)
+		public async Task<bool> SuccessOfflineOrder(OrderViewModel request)
 		{
-			var order = await _orderService.GetById(orderId);
-			var details = await _orderDetailService.GetByOrder(orderId);
+			var order = await _orderService.GetById(request.Id);
+			var user = await _userService.GetById(order.Id_User);
+			var details = await _orderDetailService.GetByOrder(request.Id);
 			foreach (var item in details)
 			{
 				var detailProducts = await _productBookService.GetByProduct(item.Id_Product);
@@ -325,32 +332,58 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 					{
 						await _bookService.ChangeQuantity(book.Id, -item.Quantity); // giam so luong sach trong kho
 					}
-					else return Json(new { success = false, errorMessage = "\nSố lượng sách trong kho không đủ!" });
+					else return false;
 				}
+				order.Total += item.Quantity * item.Price; // tinh tien
 			}
-			foreach (var item in details)
+
+			order.TotalPayment = order.Total;
+			if (request.Id_Promotions != null)
 			{
-				order.Total += item.Quantity * item.Price;
-			}
-			if (order.Id_Promotion != null)
-			{
-				var promotion = await _promotionService.GetById(Convert.ToInt32(order.Id_Promotion));
-				if (promotion.PercentReduct != null)
+				foreach (var item in request.Id_Promotions)
 				{
-					order.Total -= Convert.ToInt32(Math.Floor(Convert.ToDouble((order.Total / 100) * promotion.PercentReduct)));
+					var promotion = await _promotionService.GetById(Convert.ToInt32(item));
+					var opro = new OrderPromotionViewModel()
+					{
+						Id_Order = order.Id,
+						Id_Promotion = item,
+					};
+					var checkpromotion = await _orderPromotionService.Add(opro);
+					if (checkpromotion)
+					{
+						if (promotion.PercentReduct != null)
+						{
+							var amount = Convert.ToInt32(Math.Floor(Convert.ToDouble((order.Total / 100) * promotion.PercentReduct)));
+							if (amount > promotion.ReductMax) amount = promotion.ReductMax;
+							order.TotalPayment -= amount;
+						}
+						else order.TotalPayment -= Convert.ToInt32(promotion.AmountReduct);
+					}
+					else return false;
 				}
-				else order.Total -= Convert.ToInt32(promotion.AmountReduct);
 			}
-			var paymentId = (await _paymentFormService.GetAll()).Where(x => x.Name.Equals("Thanh toán tiền mặt tại quầy")).First().Id;
-			var op = new CreateOrderPaymentModel()
+			var paymentId = (await _paymentFormService.GetAll()).Where(x => x.Name.Equals("Thanh toán tại quầy")).First().Id;
+			var opay = new CreateOrderPaymentModel()
 			{
-				Id_Order = orderId,
+				Id_Order = order.Id,
 				Id_Payment = paymentId,
-				paymentAmount = order.Total,
+				paymentAmount = order.TotalPayment,
 				Status = 1,
 			};
-			await _orderPaymentService.Add(op);
-			return Json(new { success = true });
+			if (!await _orderPaymentService.Add(opay)) return false; // lưu phương thức thanh toán
+
+			int point = Convert.ToInt32(Math.Floor(Convert.ToDouble(order.Total / 20000))); // 20k = 1 điểm
+			if (point > 0)
+			{
+				var history = new PointTranHistoryViewModel()
+				{
+					PointUserd = point,
+					Id_User = user.Id,
+					Id_Order = order.Id,
+				};
+				if (!await _pointNPromotionService.Accumulate(order.Id_User, point, history)) return false; // lưu lịch sử tích điểm
+			}
+			return true;
 		}
 
 		// GET: OfflineSaleController/Create
@@ -381,15 +414,19 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 				var result = await SaveOrder(request);
 				if (result.Id != 0)
 				{
-					await SuccessOfflineOrder(result.Id);
-					await ClearTemporary();
-					return Json(new { success = true, message = "Tạo đơn thành công" });
+					var success = await SuccessOfflineOrder(result);
+					if (success)
+					{
+						await ClearTemporary();
+						return Json(new { success = true, message = "Tạo đơn thành công!" });
+					}
+					else return Json(new { success = false, errorMessage = "Tạo đơn thất bại\n Có lỗi trong quá trình hoàn thành đơn hàng!" });
 				}
-				return Json(new { success = false, errorMessage = "Tạo thất bại" });
+				return Json(new { success = false, errorMessage = "Tạo thất bại\n Có lỗi trong quá trình lưu đơn hàng!" });
 			}
 			catch
 			{
-				return Json(new { success = false, errorMessage = "Xuất hiện lỗi ở đâu đó" });
+				return Json(new { success = false, errorMessage = "Xuất hiện lỗi ở đâu đó!" });
 			}
 		}
 

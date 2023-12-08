@@ -1,13 +1,17 @@
 ﻿using BookShop.BLL.ConfigurationModel.CategoryModel;
 using BookShop.BLL.ConfigurationModel.GenreModel;
 using BookShop.BLL.IService;
+using BookShop.BLL.Service;
 using BookShop.DAL.Entities;
+using BookShop.Web.Client.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 {
     [Area("Admin")]
     [Route("admin/Gener")]
+    [Authorize(Roles = "Admin")]
     public class GenerController : Controller
     {
         private readonly IGenreService _genreService;
@@ -26,10 +30,34 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 
         [HttpGet]
         [Route("listgener")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages)
         {
-            var gener = await _genreService.GetAll();
-            return View(gener);
+            var author = await _genreService.GetAll();
+         
+            int pagesize = 10;
+            if (pagesize <= 0)
+            {
+                pagesize = 10;
+            }
+            int countPages = (int)Math.Ceiling((double)author.Count() / pagesize);
+            if (currentPages > countPages)
+            {
+                currentPages = countPages;
+            }
+            if (currentPages < 1)
+            {
+                currentPages = 1;
+            }
+
+            var pagingmodel = new PagingModel()
+            {
+                currentpage = currentPages,
+                countpages = countPages,
+                generateUrl = (int? p) => Url.Action("Index", "Gener", new { areas = "Admin", p = p, pagesize = pagesize })
+            };
+            ViewBag.pagingmodel = pagingmodel;
+            author = author.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
+            return View(author);
         }
 
         public async Task<List<CategoryModel>> LoadCategory(int status)

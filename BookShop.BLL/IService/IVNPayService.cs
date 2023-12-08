@@ -8,5 +8,5 @@ public interface IVNPayService
 {
 	ResponseUriModel CreatePayment(PaymentInfoModel model, HttpContext context);
 
-	PaymentResponseModel PaymentExecute(IQueryCollection collection);
+	//PaymentResponseModel PaymentExecute(IQueryCollection collection);
 }
