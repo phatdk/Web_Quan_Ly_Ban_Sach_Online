@@ -1,4 +1,5 @@
 ﻿using BookShop.BLL.ConfigurationModel.BookModel;
+using BookShop.BLL.ConfigurationModel.EvaluateModel;
 using BookShop.BLL.ConfigurationModel.ImageModel;
 using System;
 using System.Collections.Generic;
@@ -25,5 +26,6 @@ namespace BookShop.BLL.ConfigurationModel.ProductModel
 		public int BuyQuantity { get; set; }
 		public List<BookViewModel> bookViewModels { get; set; }
 		public List<ImageViewModel> imageViewModels { get; set; }
+		public List<EvaluateViewModel>? Comment { get; set; }
 	}
 }

@@ -78,12 +78,12 @@ namespace App.Areas.Identity.Controllers
         // bill đã giao
         public async Task<IActionResult> ViewBillSuccess()
         {
-            return View((await GetBill()).Where(x => x.Status == 4).ToList());
+            return View((await GetBill()).Where(x=>x.Status==4).ToList());
         } 
         // bill huỷ
         public async Task<IActionResult> ViewBillCancel()
         {
-            return View((await GetBill()).Where(x => x.Status == 8).ToList());
+            return View((await GetBill()).Where(x=>x.Status==8).ToList());
         }
 
         // vi diem và khuyen mai
