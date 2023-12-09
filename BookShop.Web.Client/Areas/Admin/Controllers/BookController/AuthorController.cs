@@ -2,11 +2,13 @@
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using BookShop.Web.Client.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 {
-    [Area("Admin")] // cấu hình cái này để nó biết đây là trang quan lí
+	[Authorize(Roles = "Admin")]
+	[Area("Admin")] // cấu hình cái này để nó biết đây là trang quan lí
     [Route("admin/Author")] // thêm đường dẫn ở đây để tránh bị trùng với với các from khác ( bắt buộc ) đặt tên giống Bảng code u
     public class AuthorController : Controller
     {

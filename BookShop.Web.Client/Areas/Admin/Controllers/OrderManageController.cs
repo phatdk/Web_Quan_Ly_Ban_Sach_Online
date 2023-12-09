@@ -3,7 +3,9 @@ using BookShop.BLL.ConfigurationModel.OrderPaymentModel;
 using BookShop.BLL.ConfigurationModel.PointTranHistoryModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
+using BookShop.Web.Client.Models;
 using BookShop.Web.Client.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +15,7 @@ using System;
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
 	[Area("Admin")]
+	[Authorize(Roles = "Admin")]
 	public class OrderManageController : Controller
 	{
 		private List<OrderViewModel> _orders;
@@ -56,7 +59,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			return _userManager.GetUserAsync(HttpContext.User);
 		}
 
-		public async Task<IActionResult> GetOrder(int? status, string? keyWord)
+		public async Task<IActionResult> GetOrder([FromQuery(Name = "p")] int currentPages, int? status, string? keyWord)
 		{
 
 			if (status != null)
@@ -80,6 +83,29 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					).ToList();
 			}
 			var orders = _orders.OrderByDescending(x => x.CreatedDate).ToList();
+
+			int pagesize = 10;
+			if (pagesize <= 0)
+			{
+				pagesize = 10;
+			}
+			int countPages = (int)Math.Ceiling((double)orders.Count() / pagesize);
+			if (currentPages > countPages)
+			{
+				currentPages = countPages;
+			}
+			if (currentPages < 1)
+			{
+				currentPages = 1;
+			}
+			var pagingmodel = new PagingModel()
+			{
+				currentpage = currentPages,
+				countpages = countPages,
+				generateUrl = (int? p) => Url.Action("Index", "OrderManage", new { p = p, status = status, pagesize = pagesize })
+			};
+			ViewBag.pagingmodel = pagingmodel;
+			orders = orders.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
 			return Json(orders);
 		}
 		public async Task<IActionResult> GetDetails(int id)
@@ -88,9 +114,33 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			return Json(result);
 		}
 		// GET: OrderManageController
-		public IActionResult Index()
+		public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages)
 		{
-			return View();
+			var orderList = new List<OrderViewModel>();
+			orderList = (await _orderService.GetAll()).ToList();
+			int pagesize = 10;
+			if (pagesize <= 0)
+			{
+				pagesize = 10;
+			}
+			int countPages = (int)Math.Ceiling((double)orderList.Count() / pagesize);
+			if (currentPages > countPages)
+			{
+				currentPages = countPages;
+			}
+			if (currentPages < 1)
+			{
+				currentPages = 1;
+			}
+			var pagingmodel = new PagingModel()
+			{
+				currentpage = currentPages,
+				countpages = countPages,
+				generateUrl = (int? p) => Url.Action("Index", "OrderManage", new { p = p, pagesize = pagesize })
+			};
+			ViewBag.pagingmodel = pagingmodel;
+			orderList = orderList.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
+			return View(orderList);
 		}
 
 		// GET: OrderManageController/Details/5

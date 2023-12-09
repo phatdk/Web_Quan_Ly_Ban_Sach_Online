@@ -110,6 +110,7 @@ builder.Services.AddTransient<IOrderPaymentService, OrderPaymentService>();
 builder.Services.AddTransient<IStatusOrderService, StatusOrderService>();
 builder.Services.AddTransient<IPromotionService, PromotionService>();
 builder.Services.AddTransient<IWalletpointService, WalletPointService>();
+builder.Services.AddTransient<IPointTranHistoryService, PointTranHistoryService>();
 builder.Services.AddTransient<IPromotionTypeService, PromotionTypeService>();
 builder.Services.AddTransient<IVNPayService, VNPayService>();
 builder.Services.AddTransient<IWishListService, WishListService>();
