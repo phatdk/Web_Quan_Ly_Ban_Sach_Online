@@ -219,13 +219,11 @@
 		}; *@
 
 		function getListPromotions(id) {
-			debugger;
 			$.ajax({
 				url: '/Order/GetPromotionByUser',
 				type: 'GET',
 				data: { id: id },
 				success: function (data) {
-					debugger;
 					var userPromotionList = $("#selectPromotion");
 					data.forEach(function (item) {
 						var promotionRow = '<option value="' + item.id + '">' + item.name + '</option>';
@@ -243,7 +241,6 @@
 	var totalReduct = 0;
 	var totalPromotion = 0;
 	function promotionSelected(id) {
-		debugger;
 		if (id != null && id != 0) {
 			$.ajax({
 				url: '/Order/GetPromotion',
