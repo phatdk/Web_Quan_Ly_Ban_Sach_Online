@@ -27,7 +27,7 @@
 	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 	<link rel="stylesheet" href="/css/Admin/Responsive.css">
 	<link rel="stylesheet" href="/css/Admin/style.css">
-	
+
 </head>
 <style>
 
@@ -153,6 +153,18 @@
 		}
 
 	.sidebar.close .nav-list li a .link-name {
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.sidebar .nav-list li .link-name {
+		color: #fff;
+		font-size: 13px;
+		font-weight: 400;
+		transition: all 0.4s ease;
+	}
+
+	.sidebar.close .nav-list li .link-name {
 		opacity: 0;
 		pointer-events: none;
 	}
@@ -393,6 +405,7 @@
 
 				</ul>
 			</li>
+
 			<li>
 				<a href="#">
 					<i class="fas fa-gear"></i>
@@ -402,6 +415,14 @@
 				<ul class="sub-menu blank">
 					<li><a href="#" class="link-name">Settings</a></li>
 				</ul>
+			</li>
+
+			<li>
+				<form asp-area="Identity" asp-controller="Account" asp-action="LogOff" style="height: 100%">
+					<button style=" background-color: inherit; border: none">
+						<i class="fa-solid fa-right-from-bracket"></i><span class="link-name">Đăng xuất</span>
+					</button>
+				</form>
 			</li>
 
 		</ul>
@@ -414,7 +435,7 @@
 		</div>
 		<div class="main-content">
 			<div class="container">
-		@RenderBody()
+				@RenderBody()
 			</div>
 		</div>
 	</div>
