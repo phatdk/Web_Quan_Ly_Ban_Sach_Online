@@ -160,7 +160,6 @@ namespace BookShop.Web.Client.Controllers
 					orderdetail = new OrderDetailViewModel()
 					{
 						NameProduct = product.Name,
-						Img = product.imageViewModels.FirstOrDefault().ImageUrl,
 						Id_Product = product.Id,
 						Price = product.Price,
 						Quantity = prod.Quantity,
@@ -183,7 +182,6 @@ namespace BookShop.Web.Client.Controllers
 				orderdetail = new OrderDetailViewModel()
 				{
 					NameProduct = product.Name,
-					Img = product.imageViewModels.FirstOrDefault().ImageUrl,
 					Id_Product = product.Id,
 					Price = product.Price,
 					Quantity = quantity,
