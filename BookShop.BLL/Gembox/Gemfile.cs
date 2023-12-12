@@ -93,9 +93,10 @@ namespace BookShop.BLL.Gembox
 				worksheet.Cells[$"U{rowIndex}"].Value = order.Commune;
 				worksheet.Cells[$"V{rowIndex}"].Value = order.Address;
 				worksheet.Cells[$"W{rowIndex}"].Value = order.Id_User;
-				worksheet.Cells[$"X{rowIndex}"].Value = order.Id_Staff;
+				//worksheet.Cells[$"X{rowIndex}"].Value = order.Id_Staff;
 				worksheet.Cells[$"Y{rowIndex}"].Value = order.Id_Promotion;
-				worksheet.Cells[$"Z{rowIndex}"].Value = order.Id_Status;
+				//worksheet.Cells[$"Z{rowIndex}"].Value = order.Id_Status;
+
 				rowIndex++;
 			}
             };

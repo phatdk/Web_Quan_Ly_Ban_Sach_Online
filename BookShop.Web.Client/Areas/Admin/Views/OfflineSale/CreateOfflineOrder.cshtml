@@ -9,63 +9,72 @@
 	Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
 	Userr staff = ViewBag.Staff;
 	List<UserModel> users = ViewBag.Users;
-	int total = 0;
 }
+
 <form>
 	<div class="row">
-		<div class="col-9 row bg-light" style="margin: 0px; padding	: 0px">
-			<div class="col-4">
-				<table class="table table-striped border border-2 border-secondary">
-					<thead>
-						<tr>
-							<th scope="col">Stt</th>
-							<th scope="col">Code</th>
-							<th scope="col">Tên KH</th>
-							<th scope="col">Action</th>
-						</tr>
-					</thead>
-					<tbody id="waitingOrderList">
-					</tbody>
-				</table>
-			</div>
-			<div class="col-8">
-				<div class="justify-content-center text-center m-2">
-					<input hidden asp-for="Id" value="0" id="orderId" />
-					<input asp-for="Code" id="orderCode" readonly class="text-center" />
+		<div class="col-9 bg-light">
+			<div class="row">
+				<div class="col-4">
+					<div class="table-container">
+						<table class="table table-striped border border-2 border-secondary">
+							<thead>
+								<tr>
+									<th scope="col">Stt</th>
+									<th scope="col">Code</th>
+									<th scope="col">Tên KH</th>
+									<th scope="col">Action</th>
+								</tr>
+							</thead>
+							<tbody id="waitingOrderList">
+							</tbody>
+						</table>
+					</div>
 				</div>
-				<table id="tableDetail" class="table table-striped border border-2 border-primary">
-					<thead>
-						<tr>
-							<th scope="col">Stt</th>
-							<th scope="col">Tên Sp</th>
-							<th scope="col">Giá bán</th>
-							<th scope="col">Số lượng</th>
-							<th scope="col">Action</th>
-						</tr>
-					</thead>
-					<tbody id="deatilOrder">
-					</tbody>
-				</table>
+				<div class="col-8">
+					<div class="justify-content-center text-center m-2">
+						<input hidden asp-for="Id" value="0" id="orderId" />
+						<input asp-for="Code" id="orderCode" readonly class="text-center" />
+					</div>
+					<table id="tableDetail" class="table table-striped border border-2 border-primary">
+						<thead>
+							<tr>
+								<th scope="col">Stt</th>
+								<th scope="col">Tên Sp</th>
+								<th scope="col">Giá bán</th>
+								<th scope="col">Số lượng</th>
+								<th scope="col">Action</th>
+							</tr>
+						</thead>
+						<tbody id="deatilOrder">
+						</tbody>
+					</table>
+				</div>
 			</div>
-			<div class="col-10">
-				<table class="table table-striped border border-2 border-success">
-					<thead>
-						<tr>
-							<th scope="col">Hình ảnh</th>
-							<th scope="col">Tên Sp</th>
-							<th scope="col">Giá bán</th>
-							<th scope="col">Số lượng tồn</th>
-							<th scope="col">Số lượng</th>
-							<th scope="col">Trạng thái</th>
-							<th scope="col">Action</th>
-						</tr>
-					</thead>
-					<tbody id="productList">
-					</tbody>
-				</table>
-			</div>
-			<div class="col-2">
-				<input type="button" onclick="getData()" value="GetData" />
+			<div class="row">
+				<div class="col-12">
+					<div class="w-75 d-block mb-2">
+						<div class="btn-group">
+							<input type="text" oninput="getProduct(this.value)" placeholder="Nhập tên sách" />
+							<i class="btn btn-outline-info fa-solid fa-magnifying-glass"></i>
+						</div>
+					</div>
+					<table class="table table-striped border border-2 border-success">
+						<thead>
+							<tr>
+								<th scope="col">Hình ảnh</th>
+								<th scope="col">Tên Sp</th>
+								<th scope="col">Giá bán</th>
+								<th scope="col">Số lượng tồn</th>
+								<th scope="col">Số lượng</th>
+								<th scope="col">Trạng thái</th>
+								<th scope="col">Action</th>
+							</tr>
+						</thead>
+						<tbody id="productList">
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 
@@ -130,7 +139,7 @@
 			</div>
 			<div class="form-group mt-2">
 				<span class="d-block w-100 m-2">Khuyến mại được kích hoạt tự động</span>
-				<input asp-for="Id_Promotion" hidden id="orderIdPromotion" />
+				<input asp-for="Id_Promotions" hidden id="orderIdPromotion" />
 				<span class="d-block w-100 m-2">Tên khuyễn mãi: <span id="orderNamePromotion"></span></span>
 				<span class="d-block w-100 m-2">Số tiền giảm: <span id="orderReduct"></span></span>
 
@@ -297,11 +306,11 @@
 		});
 	};
 
-	function getProduct() {
+	function getProduct(keyWord) {
 		$.ajax({
 			url: '/Admin/OfflineSale/GetProducts',
 			type: 'GET',
-			data: {},
+			data: { keyWord: keyWord },
 			success: function (data) {
 				var detailsList = $("#productList");
 				detailsList.empty();
@@ -412,7 +421,7 @@
 					alert('Có lỗi xảy ra: ' + error.responseText);
 				}
 			});
-		} 
+		}
 		else {
 			alert("Số lượng vượt quá số lượng sản phẩm trong đơn");
 		}

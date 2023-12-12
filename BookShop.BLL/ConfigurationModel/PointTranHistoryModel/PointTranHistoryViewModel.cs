@@ -14,6 +14,7 @@ namespace BookShop.BLL.ConfigurationModel.PointTranHistoryModel
 		public DateTime CreatedDate { get; set; }
 		public string Notif { get; set; }
 		public int Id_User { get; set; }
-		public int Id_Parents { get; set; }
+		public int? Id_Order { get; set; }
+		public int? Id_Promotion { get; set; }
 	}
 }

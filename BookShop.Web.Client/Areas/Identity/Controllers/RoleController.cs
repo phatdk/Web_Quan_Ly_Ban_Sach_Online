@@ -11,6 +11,7 @@ using BookShop.DAL.ApplicationDbContext;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Entities.Identity;
 using BookShop.Web.Client.ExtendMethods;
+using BookShop.Web.Client.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ using Microsoft.Extensions.Logging;
 namespace App.Areas.Identity.Controllers
 {
 
-  [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [Area("Identity")]
     [Route("/Role/[action]")]
     public class RoleController : Controller
@@ -35,7 +36,7 @@ namespace App.Areas.Identity.Controllers
         {
             _logger = logger;
             _roleManager = roleManager;
-          //  _context = context;
+            //  _context = context;
             _userManager = userManager;
         }
 
@@ -50,11 +51,11 @@ namespace App.Areas.Identity.Controllers
         }
         // GET: /Role/Index
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages)
         {
 
             var r = _roleManager.Roles.ToList();
-            var roles = new List<RoleModel>(); 
+            var roles = new List<RoleModel>();
             foreach (var _r in r)
             {
                 var claims = await _roleManager.GetClaimsAsync(_r);
@@ -68,7 +69,29 @@ namespace App.Areas.Identity.Controllers
                 };
                 roles.Add(rm);
             }
+            int pagesize = 10;
+            if (pagesize <= 0)
+            {
+                pagesize = 10;
+            }
+            int countPages = (int)Math.Ceiling((double)roles.Count() / pagesize);
+            if (currentPages > countPages)
+            {
+                currentPages = countPages;
+            }
+            if (currentPages < 1)
+            {
+                currentPages = 1;
+            }
 
+            var pagingmodel = new PagingModel()
+            {
+                currentpage = currentPages,
+                countpages = countPages,
+                generateUrl = (int? p) => Url.Action("Index", "Role", new { areas = "Identity", p = p, pagesize = pagesize })
+            };
+            ViewBag.pagingmodel = pagingmodel;
+            roles = roles.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
             return View(roles);
         }
 
@@ -140,112 +163,112 @@ namespace App.Areas.Identity.Controllers
         }
 
         //// GET: /Role/Edit/roleid
-        //[HttpGet("{roleid}")]
-        //public async Task<IActionResult> Edit(int roleid, EditRoleModel model)
-        //{
-        //    if (roleid == null) return NotFound("Không tìm thấy role");
-        //    var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == roleid);
-        //    if (role == null)
-        //    {
-        //        return NotFound("Không tìm thấy role");
-        //    }
-        //    model.Name = role.Name;
-        //    model.Claims = _context.RoleClaims.Where(x => x.RoleId == role.Id).ToList();
-
-           
-        //    ModelState.Clear();
-        //    return View(model);
-
-        //}
-
-        //// POST: /Role/Edit/1
-        //[HttpPost("{roleid}"), ActionName("Edit")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> EditConfirmAsync(int roleid, [Bind("Name")] EditRoleModel model)
-        //{
-        //    if (roleid == null) return NotFound("Không tìm thấy role");
-        //    var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == roleid);
-        //    if (role == null)
-        //    {
-        //        return NotFound("Không tìm thấy role");
-        //    }
-        //    model.Claims = _context.RoleClaims.Where(x => x.RoleId == role.Id).ToList();
-        //    model.role = role;
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(model);
-        //    }
-
-        //    role.Name = model.Name;
-   
-        //    var result = await _roleManager.UpdateAsync(role);
-
-        //    if (result.Succeeded)
-        //    {
-        //        StatusMessage = $"Bạn vừa đổi tên: {model.Name}";
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    else
-        //    {
-        //        ModelState.AddModelError("lỗi update");
-        //    }
-
-        //    return View(model);
-        //}
-
-        // GET: /Role/AddRoleClaim/roleid
         [HttpGet("{roleid}")]
-        public async Task<IActionResult> AddRoleClaimAsync(int roleid)
+        public async Task<IActionResult> Edit(int roleid, EditRoleModel model)
         {
             if (roleid == null) return NotFound("Không tìm thấy role");
-            var role = GetRoleIdentity(roleid);
+            var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == roleid);
             if (role == null)
             {
                 return NotFound("Không tìm thấy role");
             }
+            model.Name = role.Name;
+            //   model.Claims = _context.RoleClaims.Where(x => x.RoleId == role.Id).ToList();
 
-            var model = new EditClaimModel()
+
+            ModelState.Clear();
+            return View(model);
+
+        }
+
+        // POST: /Role/Edit/1
+        [HttpPost("{roleid}"), ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditConfirmAsync(int roleid, [Bind("Name")] EditRoleModel model)
+        {
+            if (roleid == null) return NotFound("Không tìm thấy role");
+            var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == roleid);
+            if (role == null)
             {
-                role = role
-            };
+                return NotFound("Không tìm thấy role");
+            }
+            //  model.Claims = _context.RoleClaims.Where(x => x.RoleId == role.Id).ToList();
+            //   model.role = role;
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            role.Name = model.Name;
+
+            var result = await _roleManager.UpdateAsync(role);
+
+            if (result.Succeeded)
+            {
+                StatusMessage = $"Bạn vừa đổi tên: {model.Name}";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                ModelState.AddModelError("lỗi update");
+            }
+
             return View(model);
         }
 
-        // POST: /Role/AddRoleClaim/roleid
-        [HttpPost("{roleid}")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddRoleClaimAsync(int roleid, [Bind("ClaimType", "ClaimValue")] EditClaimModel model)
-        {
-            if (roleid == null) return NotFound("Không tìm thấy role");
-            var role = GetRoleIdentity(roleid);
-            if (role == null)
-            {
-                return NotFound("Không tìm thấy role");
-            }
-            model.role = role;
-            if (!ModelState.IsValid) return View(model);
+        //// GET: /Role/AddRoleClaim/roleid
+        //[HttpGet("{roleid}")]
+        //public async Task<IActionResult> AddRoleClaimAsync(int roleid)
+        //{
+        //    if (roleid == null) return NotFound("Không tìm thấy role");
+        //    var role = GetRoleIdentity(roleid);
+        //    if (role == null)
+        //    {
+        //        return NotFound("Không tìm thấy role");
+        //    }
+
+        //    var model = new EditClaimModel()
+        //    {
+        //        role = role
+        //    };
+        //    return View(model);
+        //}
+
+        //// POST: /Role/AddRoleClaim/roleid
+        //[HttpPost("{roleid}")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> AddRoleClaimAsync(int roleid, [Bind("ClaimType", "ClaimValue")] EditClaimModel model)
+        //{
+        //    if (roleid == null) return NotFound("Không tìm thấy role");
+        //    var role = GetRoleIdentity(roleid);
+        //    if (role == null)
+        //    {
+        //        return NotFound("Không tìm thấy role");
+        //    }
+        //    model.role = role;
+        //    if (!ModelState.IsValid) return View(model);
 
 
-            if ((await _roleManager.GetClaimsAsync(role)).Any(c => c.Type == model.ClaimType && c.Value == model.ClaimValue))
-            {
-                ModelState.AddModelError(string.Empty, "Claim này đã có trong role");
-                return View(model);
-            }
+        //    if ((await _roleManager.GetClaimsAsync(role)).Any(c => c.Type == model.ClaimType && c.Value == model.ClaimValue))
+        //    {
+        //        ModelState.AddModelError(string.Empty, "Claim này đã có trong role");
+        //        return View(model);
+        //    }
 
-            var newClaim = new Claim(model.ClaimType, model.ClaimValue);
-            var result = await _roleManager.AddClaimAsync(role, newClaim);
+        //    var newClaim = new Claim(model.ClaimType, model.ClaimValue);
+        //    var result = await _roleManager.AddClaimAsync(role, newClaim);
 
-            if (!result.Succeeded)
-            {
-                ModelState.AddModelError(result);
-                return View(model);
-            }
+        //    if (!result.Succeeded)
+        //    {
+        //        ModelState.AddModelError(result);
+        //        return View(model);
+        //    }
 
-            StatusMessage = "Vừa thêm đặc tính (claim) mới";
+        //    StatusMessage = "Vừa thêm đặc tính (claim) mới";
 
-            return RedirectToAction("Edit", new { roleid = role.Id });
+        //    return RedirectToAction("Edit", new { roleid = role.Id });
 
-        }
+        //}
 
         //// GET: /Role/EditRoleClaim/claimid
         //[HttpGet("{claimid:Guid}")]

@@ -4,6 +4,9 @@ using BookShop.BLL.ConfigurationModel.CollectionBookModel;
 using BookShop.BLL.ConfigurationModel.GenreModel;
 using BookShop.BLL.ConfigurationModel.SupplierModel;
 using BookShop.BLL.IService;
+using BookShop.BLL.Service;
+using BookShop.Web.Client.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +14,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 {
     [Area("Admin")]
     [Route("admin/Book")]
+    [Authorize(Roles = "Admin")]
     public class BookController : Controller
     {
         List<BookViewModel> _listBook;
@@ -82,10 +86,34 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
         }
         // GET: BookController
         [HttpGet("listbook")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages)
         {
             _listBook.Clear();
             _listBook = await _bookService.GetAll();
+         
+            int pagesize = 10;
+            if (pagesize <= 0)
+            {
+                pagesize = 10;
+            }
+            int countPages = (int)Math.Ceiling((double)_listBook.Count() / pagesize);
+            if (currentPages > countPages)
+            {
+                currentPages = countPages;
+            }
+            if (currentPages < 1)
+            {
+                currentPages = 1;
+            }
+
+            var pagingmodel = new PagingModel()
+            {
+                currentpage = currentPages,
+                countpages = countPages,
+                generateUrl = (int? p) => Url.Action("Index", "Book", new { areas = "Admin", p = p, pagesize = pagesize })
+            };
+            ViewBag.pagingmodel = pagingmodel;
+            _listBook = _listBook.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
             return View(_listBook);
         }
 

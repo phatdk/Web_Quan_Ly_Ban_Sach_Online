@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using BookShop.BLL.IService;
+using BookShop.BLL.ConfigurationModel.OrderModel;
+using BookShop.BLL.Service;
 
 namespace App.Areas.Identity.Controllers
 {
@@ -20,25 +23,76 @@ namespace App.Areas.Identity.Controllers
     public class ManageController : Controller
     {
         private readonly UserManager<Userr> _userManager;
+        private readonly IUserService _userService;
+        private readonly IOrderService _Iorder;
         private readonly SignInManager<Userr> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ManageController> _logger;
         private readonly IWebHostEnvironment _hostingEnvironment;
         public ManageController(
         UserManager<Userr> userManager,
+        IUserService userService,
         SignInManager<Userr> signInManager,
         IEmailSender emailSender,
         ILogger<ManageController> logger,
-        IWebHostEnvironment hostingEnvironment)
+        IWebHostEnvironment hostingEnvironment,
+        IOrderService iorder)
         {
             _userManager = userManager;
+            _userService = userService;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
             _hostingEnvironment = hostingEnvironment;
+            _Iorder = iorder;
         }
         [TempData]
         public string StatusMessage { get; set; }
+
+        private async Task<Userr> GetUser()
+        {
+            return await _userManager.GetUserAsync(HttpContext.User);
+        }
+
+        private async Task<List<ViewOrder>> GetBill()
+        {
+            var user = await GetUser();
+            var billOfUser = await _Iorder.GetOrderByUser(user.Id);
+            return billOfUser;
+        }
+        // tất cả bill
+        public async Task<IActionResult> ViewAllBill()
+        {
+            return View(await GetBill());
+        }
+        // bill đã xác nhận
+        public async Task<IActionResult> ViewBillAwaitConfirm()
+        {
+            return View((await GetBill()).Where(x=>x.Status==1).ToList());
+        } 
+        // bill đang giao
+        public async Task<IActionResult> ViewBillShipping()
+        {
+            return View((await GetBill()).Where(x=>x.Status==3).ToList());
+        } 
+        // bill đã giao
+        public async Task<IActionResult> ViewBillSuccess()
+        {
+            return View((await GetBill()).Where(x=>x.Status==4).ToList());
+        } 
+        // bill huỷ
+        public async Task<IActionResult> ViewBillCancel()
+        {
+            return View((await GetBill()).Where(x=>x.Status==8).ToList());
+        }
+
+        // vi diem và khuyen mai
+        public async Task<IActionResult> ViewWalletNPromotion()
+        {
+            var user = await GetUser();
+            return View(user);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> UpLoadAvata(IndexViewModel indexViewModel)
@@ -77,11 +131,11 @@ namespace App.Areas.Identity.Controllers
                     await _userManager.UpdateAsync(user);
                     return RedirectToAction(nameof(Index));
                 }
-                
+
 
             }
             return View();
-           
+
         }
 
         // GET: /Manage/Index

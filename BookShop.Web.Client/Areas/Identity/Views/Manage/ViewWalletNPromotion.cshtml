@@ -1,0 +1,82 @@
+﻿@model BookShop.DAL.Entities.Userr;
+@using BookShop.BLL.IService;
+@inject IUserService userService;
+@inject IUserPromotionService userPromotionService;
+@inject IWalletpointService walletService;
+@inject IPointTranHistoryService historyService;
+@inject IPromotionService promotionService;
+@{
+	ViewData["Title"] = "Ví điểm và khuyến mãi";
+	Layout = "_LayoutUser";
+}
+
+<div>
+	<!--ví điểm-->
+	@if (Model.Id != 0)
+	{
+		var wallet = await walletService.GetById(Model.Id);
+
+		<div class="row">
+			<div class="col-8">
+				<label>Số điểm của bạn: <span>@wallet.Point</span> Point</label>
+			</div>
+			<div class="col-4">
+				<a href="" class="text-decoration-underline">Xem lịch sử tích điểm</a>
+			</div>
+		</div>
+		<hr />
+		<div class="row">
+			<div class="col-6">
+				<input type="text" placeholder="enter promotion code" />
+				<button>Nhận khuyến mãi</button>
+			</div>
+			@{
+				var userPromotion = (await userPromotionService.GetByUser(Model.Id)).OrderByDescending(x=>x.CreatedDate);
+				var index = 0;
+			}
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col">Stt</th>
+						<th scope="col">Tên khuyến mãi</th>
+						<th scope="col">Ngày nhận</th>
+						<th scope="col">Ngày hết hạn</th>
+						<th scope="col">Trạng thái</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in userPromotion)
+					{
+						index++;
+						DateTime endTime = Convert.ToDateTime(item.EndDate);
+						int result = endTime.CompareTo(DateTime.Now);
+						string status = "";
+						string statusColor = "";
+						if (result >= 0 && item.Status == 1)
+						{
+							status = "Còn hạn";
+							statusColor = "text-success";
+						}
+						else if (item.Status == 0)
+						{
+							status = "Đã dùng";
+							statusColor = "text-danger";
+						}
+						else
+						{
+							status = "Hết hạn";
+							statusColor = "text-danger";
+						}
+						<tr>
+							<th scope="row">@index</th>
+							<td>@item.Name</td>
+							<td>@item.CreatedDate</td>
+							<td>@item.EndDate</td>
+							<td class="@statusColor">@status</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	}
+</div>
