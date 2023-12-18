@@ -288,7 +288,7 @@ namespace BookShop.BLL.Service
 					Id_Product = x.Id_Product,
 					Id_User = x.Id_User,
 					Id_Parents = x.Id_Parents,
-
+					Id = x.Id
 				}).ToList(),
 			};
 		}
