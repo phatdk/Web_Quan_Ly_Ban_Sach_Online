@@ -59,29 +59,31 @@
 				<label for="Id_Type">Loại khuyến mãi: </label>
 				<select class="form-control" asp-for="Id_Type" asp-items="@ViewBag.LoaiKhuyenMai" id="Id_Type" name="Id_Type" required>
 					<option value="0" disabled selected>Chọn loại khuyến mãi</option>
-				</select>
+				</select>				
 			</div>
-			<div id="condition" class="form-group" style="display:none;">
+			@* theo loai khuyen mai *@
+			<div id="condition" class="form-group" style="display:block;">
 				<label asp-for="Condition" class="control-label">Số tiền tối thiểu: </label>
 				<input asp-for="Condition" type="text" class="form-control" id="Condition" name="Condition" />
 				<span asp-validation-for="Condition" class="text-danger"></span>
 			</div>
-			<div cid="storageTerm" class="form-group" style="display:none;">
+			<div cid="storageTerm" class="form-group" style="display:block;">
 				<label asp-for="StorageTerm" class="control-label">Thời hạn lưu trữ: </label>
 				<input asp-for="StorageTerm" type="text" class="form-control" id="StorageTerm" name="StorageTerm" />
 				<span asp-validation-for="StorageTerm" class="text-danger"></span>
 			</div>
-			<div id="quantityLimit" class="form-group" style="display:none;">
+			<div id="quantityLimit" class="form-group" style="display:block;">
 				<label asp-for="Quantity" class="control-label">Số lượng: </label>
 				<input asp-for="Quantity" type="text" class="form-control" id="Quantity" name="Quantity" />
 				<span asp-validation-for="Quantity" class="text-danger"></span>
 			</div>
-			<div id="conversionPoint" class="form-group" style="display:none;">
+			<div id="conversionPoint" class="form-group" style="display:block;">
 				<label asp-for="ConversionPoint">Điểm quy đổi:</label>
 				<input asp-for="ConversionPoint" type="text" class="form-control" id="ConversionPoint" name="ConversionPoint" />
 				<span asp-validation-for="ConversionPoint" class="text-danger"></span>
 			</div>
 
+			@* chung *@
 			<div class="form-group">
 				<label asp-for="StartDate" class="control-label">Ngày bắt đầu: </label>
 				<input asp-for="StartDate" class="form-control" />
@@ -145,7 +147,7 @@
 		});
 	});
 </script>
-<script>
+@* <script>
 	document.addEventListener('DOMContentLoaded', function () {
 		var selectBox = document.getElementById('Id_Type');
 		var quantityLimit = document.getElementById('quantityLimit');
@@ -158,20 +160,17 @@
 			var selectedValue = selectBox.value;
 
 			switch (selectedValue) {
-				case '4':
-					quantityLimit.style.display = 'block';
-					storageTerm.style.display = 'block';
-					break;
-				case '3':
-					storageTerm.style.display = 'block';
-					break;
-				case '2':
-					quantityLimit.style.display = 'block';
-					condition.style.display = 'block';
+				case '7':
 					conversionPoint.style.display = 'block';
 					storageTerm.style.display = 'block';
 					break;
-				// Add cases for other types if needed
+				case '8':
+					storageTerm.style.display = 'block';
+					break;
+				case '9':
+					quantityLimit.style.display = 'block';
+					storageTerm.style.display = 'block';
+					break;
 			}
 		});
 
@@ -182,5 +181,5 @@
 			conversionPoint.style.display = 'none';
 		}
 	});
-</script>
+</script> *@
 

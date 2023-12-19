@@ -21,57 +21,59 @@
 				<div class="radio-group">
 					<label asp-for="ReduceByAmount" class="control-label radio-label">
 						Giảm theo tiền:
-						<input asp-for="ReduceByAmount" type="radio" name="reductionType" value="amount" class="reduction-radio" data-target="amountFields" />
+						<input asp-for="ReduceByAmount" id="ReduceByAmount" type="radio" name="reductionType" value="amount" class="reduction-radio" />
 					</label>
 					<div id="amountFields" class="reduction-fields hidden">
 						<label asp-for="AmountReduct" class="control-label">Số tiền giảm:</label>
-						<input asp-for="AmountReduct" class="form-control" />
+						<input asp-for="AmountReduct" id="AmountReduct" class="form-control" />
 						<span asp-validation-for="AmountReduct" class="text-danger"></span>
 					</div>
 				</div>
 				<div class="radio-group">
 					<label asp-for="ReduceByPercentage" class="control-label radio-label">
 						Giảm theo phần trăm:
-						<input asp-for="ReduceByPercentage" type="radio" name="reductionType" value="percentage" class="reduction-radio" data-target="percentageFields" />
+						<input asp-for="ReduceByPercentage" id="ReduceByPercentage" type="radio" name="reductionType" value="percentage" class="reduction-radio" />
 					</label>
 					<div id="percentageFields" class="reduction-fields hidden">
 						<label asp-for="PercentReduct" class="control-label">Phần trăm giảm:</label>
-						<input asp-for="PercentReduct" class="form-control" />
+						<input asp-for="PercentReduct" id="PercentReduct" class="form-control" />
 						<span asp-validation-for="PercentReduct" class="text-danger"></span>
 
 						<label asp-for="ReductMax" class="control-label">Giảm tối đa:</label>
-						<input asp-for="ReductMax" class="form-control" />
+						<input asp-for="ReductMax" id="ReductMax" class="form-control" />
 						<span asp-validation-for="ReductMax" class="text-danger"></span>
 					</div>
 				</div>
 			</div>
+
 			<div class="form-group">
 				<label for="Id_Type">Loại khuyến mãi: </label>
-				<select class="form-control" asp-for="Id_Type" asp-items="@ViewBag.LoaiKhuyenMai" id="Id_Type" name="Id_Type" required>
-					<option value="0" disabled selected>Chọn loại khuyến mãi</option>
+				<select class="form-control" asp-for="Id_Type" asp-items="@ViewBag.PromotionTypeId" id="Id_Type" name="Id_Type" required>
+					<option value="" disabled selected>Chọn loại khuyến mãi</option>
 				</select>
 			</div>
-			<div id="condition" class="form-group" style="display:none;">
+			@* theo loai khuyem mai *@
+			<div id="condition" class="form-group" style="display:block;">
 				<label asp-for="Condition" class="control-label">Số tiền tối thiểu: </label>
 				<input asp-for="Condition" type="text" class="form-control" id="Condition" name="Condition" />
 				<span asp-validation-for="Condition" class="text-danger"></span>
 			</div>
-			<div cid="storageTerm" class="form-group" style="display:none;">
+			<div cid="storageTerm" class="form-group" style="display:block;">
 				<label asp-for="StorageTerm" class="control-label">Thời hạn lưu trữ: </label>
 				<input asp-for="StorageTerm" type="text" class="form-control" id="StorageTerm" name="StorageTerm" />
 				<span asp-validation-for="StorageTerm" class="text-danger"></span>
 			</div>
-			<div id="quantityLimit" class="form-group" style="display:none;">
+			<div id="quantityLimit" class="form-group" style="display:block;">
 				<label asp-for="Quantity" class="control-label">Số lượng: </label>
 				<input asp-for="Quantity" type="text" class="form-control" id="Quantity" name="Quantity" />
 				<span asp-validation-for="Quantity" class="text-danger"></span>
 			</div>
-			<div id="conversionPoint" class="form-group" style="display:none;">
+			<div id="conversionPoint" class="form-group" style="display:block;">
 				<label asp-for="ConversionPoint">Điểm quy đổi:</label>
 				<input asp-for="ConversionPoint" type="text" class="form-control" id="ConversionPoint" name="ConversionPoint" />
 				<span asp-validation-for="ConversionPoint" class="text-danger"></span>
 			</div>
-
+			@* chung *@
 			<div class="form-group">
 				<label asp-for="StartDate" class="control-label">Ngày bắt đầu: </label>
 				<input asp-for="StartDate" class="form-control" />
@@ -100,75 +102,65 @@
 	</div>
 </div>
 <script>
-	function updateStatus() {
-		var checkbox = document.getElementById('statusCheckbox');
-		var hiddenField = document.getElementById('statusHidden');
+	document.addEventListener("DOMContentLoaded", function () {
+		// Lấy giá trị của Status từ ô ẩn và kiểm tra nếu là 1 thì chọn checkbox
+		var statusValue = document.getElementById("statusHidden").value;
+		var statusCheckbox = document.getElementById("statusCheckbox");
 
-		if (checkbox.checked) {
-			hiddenField.value = 1;
-		} else {
-			hiddenField.value = 0;
+		if (statusValue === "1") {
+			statusCheckbox.checked = true;
 		}
+	});
+
+	// Hàm này sẽ được gọi khi trạng thái của checkbox thay đổi
+	function updateStatus() {
+		var statusCheckbox = document.getElementById("statusCheckbox");
+		var statusHidden = document.getElementById("statusHidden");
+
+		// Cập nhật giá trị của ô ẩn (Status) dựa trên trạng thái của checkbox
+		statusHidden.value = statusCheckbox.checked ? "1" : "0";
 	}
 </script>
 <script>
-	// Xử lý sự kiện khi radiobutton được chọn
-	var radioButtons = document.querySelectorAll('.reduction-radio');
-	radioButtons.forEach(function (radioButton) {
-		radioButton.addEventListener('change', function () {
-			// Lấy tất cả các radiobuttons trong cùng một nhóm
-			var radioGroup = document.getElementsByName('reductionType');
+	document.addEventListener("DOMContentLoaded", function () {
+		// Kiểm tra và cập nhật trạng thái khi trang được tải
+		checkReductionFields();
 
-			// Duyệt qua từng radiobutton và ẩn trường dựa trên trạng thái của radiobutton được chọn
-			radioGroup.forEach(function (radio) {
-				var targetId = radio.getAttribute('data-target');
-				var targetFields = document.getElementById(targetId);
+		// Lắng nghe sự kiện khi giá trị của các ô thay đổi
+		document.getElementById("AmountReduct").addEventListener("input", checkReductionFields);
+		document.getElementById("PercentReduct").addEventListener("input", checkReductionFields);
+		document.getElementById("ReductMax").addEventListener("input", checkReductionFields);
 
-				if (radio.checked) {
-					targetFields.classList.remove('hidden');
-				} else {
-					targetFields.classList.add('hidden');
-				}
-			});
+		// Lắng nghe sự kiện khi radiobuttons thay đổi
+		var reductionRadios = document.querySelectorAll(".reduction-radio");
+		reductionRadios.forEach(function (radio) {
+			radio.addEventListener("click", checkReductionFields);
 		});
 	});
-</script>
-<script>
-	document.addEventListener('DOMContentLoaded', function () {
-		var selectBox = document.getElementById('Id_Type');
-		var quantityLimit = document.getElementById('quantityLimit');
-		var storageTerm = document.getElementById('storageTerm');
-		var condition = document.getElementById('condition');
-		var conversionPoint = document.getElementById('conversionPoint');
 
-		selectBox.addEventListener('change', function () {
-			hideAllInputFields();
-			var selectedValue = selectBox.value;
+	// Hàm kiểm tra và cập nhật trạng thái dựa trên dữ liệu
+	function checkReductionFields() {
+		var amountReductValue = document.getElementById("AmountReduct").value;
+		var percentReductValue = document.getElementById("PercentReduct").value;
+		var reductMaxValue = document.getElementById("ReductMax").value;
 
-			switch (selectedValue) {
-				case '4':
-					quantityLimit.style.display = 'block';
-					storageTerm.style.display = 'block';
-					break;
-				case '3':
-					storageTerm.style.display = 'block';
-					break;
-				case '2':
-					quantityLimit.style.display = 'block';
-					condition.style.display = 'block';
-					conversionPoint.style.display = 'block';
-					storageTerm.style.display = 'block';
-					break;
-				// Add cases for other types if needed
-			}
-		});
+		// Kiểm tra và cập nhật trạng thái cho ReduceByAmount
+		var reduceByAmountRadio = document.getElementById("ReduceByAmount");
+		var amountFields = document.getElementById("amountFields");
+		reduceByAmountRadio.checked = amountReductValue !== null && amountReductValue !== '';
+		amountFields.classList.toggle("hidden", !reduceByAmountRadio.checked);
 
-		function hideAllInputFields() {
-			quantityLimit.style.display = 'none';
-			storageTerm.style.display = 'none';
-			condition.style.display = 'none';
-			conversionPoint.style.display = 'none';
+		// Kiểm tra và cập nhật trạng thái cho ReduceByPercentage
+		var reduceByPercentageRadio = document.getElementById("ReduceByPercentage");
+		var percentageFields = document.getElementById("percentageFields");
+		reduceByPercentageRadio.checked = (percentReductValue !== null && percentReductValue !== '') || (reductMaxValue !== null && reductMaxValue !== '');
+		percentageFields.classList.toggle("hidden", !reduceByPercentageRadio.checked);
+
+		// Ẩn các dòng dữ liệu không liên quan
+		if (reduceByAmountRadio.checked) {
+			percentageFields.classList.add("hidden");
+		} else if (reduceByPercentageRadio.checked) {
+			amountFields.classList.add("hidden");
 		}
-	});
+	}
 </script>
-

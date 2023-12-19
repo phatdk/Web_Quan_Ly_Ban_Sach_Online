@@ -22,6 +22,7 @@ namespace BookShop.DAL.Configuration
 			builder.Property(x=>x.ConversionPoint).IsRequired(false);
 			builder.Property(x=>x.AmountReduct).IsRequired(false);
 			builder.Property(x=>x.PercentReduct).IsRequired(false);
+			builder.Property(x=>x.ReductMax).IsRequired(false);
 
 			builder.HasOne(x=>x.PromotionType).WithMany(x=>x.Promotions).HasForeignKey(x=>x.Id_Type).OnDelete(DeleteBehavior.NoAction);
 		}

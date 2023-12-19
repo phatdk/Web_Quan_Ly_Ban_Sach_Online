@@ -20,10 +20,10 @@ namespace BookShop.DAL.Entities
 		public int? StorageTerm { get; set; } 
         public int? AmountReduct { get; set; }
 		public int? PercentReduct { get; set; }
-		public int ReductMax { get; set; }
+		public int? ReductMax { get; set; }
 		public int Quantity { get; set; }
 		public DateTime CreatedDate { get; set; }
-		public DateTime StartDate { get; set; }
+		public DateTime? StartDate { get; set; }
 		public DateTime? EndDate { get; set; }
 		public string? Description { get; set; }
 		public int Status { get; set; }

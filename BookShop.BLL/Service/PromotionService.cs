@@ -52,6 +52,7 @@ namespace BookShop.BLL.Service
                 {
                     Name = model.Name,
                     Code = model.Code,
+                    ConversionPoint = model.ConversionPoint,
                     Condition = model.Condition,
                     StorageTerm = model.StorageTerm,
                     AmountReduct = model.AmountReduct,
@@ -229,6 +230,7 @@ namespace BookShop.BLL.Service
                 obj.Name = model.Name;
                 obj.Code = model.Code;
                 obj.Condition = model.Condition;
+                obj.ConversionPoint = model.ConversionPoint;
                 obj.StorageTerm = model.StorageTerm;
                 obj.AmountReduct = model.AmountReduct;
                 obj.PercentReduct = model.PercentReduct;
