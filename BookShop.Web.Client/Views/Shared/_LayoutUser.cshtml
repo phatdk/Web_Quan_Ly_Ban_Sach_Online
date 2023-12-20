@@ -358,7 +358,17 @@
                 </div>
                 <div class="user-info">
                     <div class="user-avatar">
-                        <a class="edit-avatar" href="#"></a><img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="User">
+                        <a class="edit-avatar" asp-action="Index" asp-controller="Manage" asp-area="Identity"><i class="fa-solid fa-pen-to-square"></i></a>
+                        @if (string.IsNullOrEmpty(userlogin.Img))
+                        {
+
+
+                            <img src="https://as1.ftcdn.net/v2/jpg/04/34/72/82/1000_F_434728286_OWQQvAFoXZLdGHlObozsolNeuSxhpr84.jpg" alt="User">
+                        }
+                        else
+                        {
+                            <img src="~/uploads/users/@userlogin.Img" alt="User">
+                        }
                     </div>
                     <div class="user-data">
                         <h4>@(userlogin.UserName)</h4>
