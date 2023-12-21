@@ -5,6 +5,7 @@ using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using BookShop.Web.Client.Models;
 using BookShop.Web.Client.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ using System;
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
 	[Area("Admin")]
+	[Authorize(Roles = "Admin")]
 	public class OrderManageController : Controller
 	{
 		private List<OrderViewModel> _orders;
@@ -135,7 +137,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			{
 				currentpage = currentPages,
 				countpages = countPages,
-				generateUrl = (int? p) => Url.Action("Index", "OrderManage", new { areas = "Admin", p = p, pagesize = pagesize })
+				generateUrl = (int? p) => Url.Action("Index", "OrderManage", new { p = p, status = status, pagesize = pagesize })
 			};
 			ViewBag.pagingmodel = pagingmodel;
 			orders = orders.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();

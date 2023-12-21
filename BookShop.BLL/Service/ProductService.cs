@@ -8,11 +8,16 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Reflection.Metadata.BlobBuilder;
+using Image = BookShop.DAL.Entities.Image;
 
 namespace BookShop.BLL.Service
 {
+
 	public class ProductService : IProductService
 	{
 		private readonly IRepository<Product> _productRepository;
@@ -112,6 +117,7 @@ namespace BookShop.BLL.Service
 			return objlist;
 		}
 
+
 		public async Task<List<ProductViewModel>> GetByAuthor(int authorId)
 		{
 			var listAuthor = (await _bookAuthorRepository.GetAllAsync()).Where(x => x.Id_Author == authorId);
@@ -189,7 +195,7 @@ namespace BookShop.BLL.Service
 			}
 
 			var image = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == id);
-			var images = new List<ImageViewModel>();
+			var imgages = new List<ImageViewModel>();
 			foreach (var item in image)
 			{
 				var imagev = new ImageViewModel()
@@ -200,7 +206,7 @@ namespace BookShop.BLL.Service
 					CreatedDate = item.CreatedDate,
 					Status = item.Status,
 				};
-				images.Add(imagev);
+				imgages.Add(imagev);
 			}
 
 			string collecionName = string.Empty;
@@ -219,11 +225,12 @@ namespace BookShop.BLL.Service
 				Status = product.Status,
 				Type = product.Type,
 				bookViewModels = books,
-				imageViewModels = images,
+				imageViewModels = imgages,
 				CollectionId = product.Id_Collection,
 				CollectionName = collecionName,
 			};
 		}
+
 		public async Task<ProductViewModel> GetByIdAndCommnet(int id)
 		{
 			var product = await _productRepository.GetByIdAsync(id);
@@ -288,7 +295,7 @@ namespace BookShop.BLL.Service
 					Id_Product = x.Id_Product,
 					Id_User = x.Id_User,
 					Id_Parents = x.Id_Parents,
-
+					Id = x.Id
 				}).ToList(),
 			};
 		}
@@ -356,26 +363,26 @@ namespace BookShop.BLL.Service
 			}
 			catch (Exception ex) { return false; }
 		}
-
-		public async Task<bool> ChangeQuantity(int id, int changeAmount)
+	
+	public async Task<bool> ChangeQuantity(int id, int changeAmount)
+	{
+	getAgain:;
+		var product = await _productRepository.GetByIdAsync(id);
+		try
 		{
-		getAgain:;
-			var product = await _productRepository.GetByIdAsync(id);
-			try
+			if (product != null)
 			{
-				if (product != null)
+				product.Quantity += changeAmount;
+				if (product.Quantity <= 0)
 				{
-					product.Quantity += changeAmount;
-					if (product.Quantity <= 0)
-					{
-						product.Status = 2;
-					}
+					product.Status = 2;
 				}
-				else goto getAgain;
-				await _productRepository.UpdateAsync(id, product);
-				return true;
 			}
-			catch { return false; }
+			else goto getAgain;
+			await _productRepository.UpdateAsync(id, product);
+			return true;
 		}
+		catch { return false; }
 	}
+}
 }
