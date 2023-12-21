@@ -313,17 +313,20 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
                     var userComment = UserManager.Users.FirstOrDefault(x => x.Id == item.Id_User);
                     var ComentChild = await _Comment.GetNestedComments(item.Id);
                     <div class=" comment-container d-flex flex-start">
-                        @if (!string.IsNullOrEmpty(userLogin.Img))
+                        @if (userComment != null)
                         {
-                            <img class="rounded-circle shadow-1-strong me-3"
-                                 src="/uploads/users/@userLogin.Img" alt="avatar" width="65"
-                                 height="65" />
-                        }
-                        else
-                        {
-                            <img class="rounded-circle shadow-1-strong me-3"
-                                 src="https://as1.ftcdn.net/v2/jpg/04/34/72/82/1000_F_434728286_OWQQvAFoXZLdGHlObozsolNeuSxhpr84.jpg" alt="avatar" width="65"
-                                 height="65" />
+                            @if (!string.IsNullOrEmpty(userComment.Img))
+                            {
+                                <img class="rounded-circle shadow-1-strong me-3"
+                                     src="/uploads/users/@userComment.Img" alt="avatar" width="65"
+                                     height="65" />
+                            }
+                            else
+                            {
+                                <img class="rounded-circle shadow-1-strong me-3"
+                                     src="https://as1.ftcdn.net/v2/jpg/04/34/72/82/1000_F_434728286_OWQQvAFoXZLdGHlObozsolNeuSxhpr84.jpg" alt="avatar" width="65"
+                                     height="65" />
+                            }
                         }
 
                         <div class="flex-grow-1 flex-shrink-1">
@@ -379,18 +382,22 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
                                     @item.Content
                                 </p>
                             </div>
-                            <form class="replyForm" asp-action="ReplyComment" asp-controller="Evaluate" method="post" style="display: none;">
-                                <div class="form-group">
-                                    <input name="Id_User" hidden value="@userLogin.Id" class="form-control" />
-                                    <input name="Id_Parents" hidden value="@item.Id" class="form-control" />
-                                    <input name="Id_Product" hidden value="@Model.Id" class="form-control" />
-                                    <div class="mb-3">
-                                        <label for="comment">Trả lời user @userComment.UserName</label>
-                                        <textarea class="form-control" name="Content" id="comment" rows="3"></textarea>
+                            @if (userLogin!=null)
+                            {
+                                <form class="replyForm" asp-action="ReplyComment" asp-controller="Evaluate" method="post" style="display: none;">
+                                    <div class="form-group">
+                                        <input name="Id_User" hidden value="@userLogin.Id" class="form-control" />
+                                        <input name="Id_Parents" hidden value="@item.Id" class="form-control" />
+                                        <input name="Id_Product" hidden value="@Model.Id" class="form-control" />
+                                        <div class="mb-3">
+                                            <label for="comment">Trả lời user @userComment.UserName</label>
+                                            <textarea class="form-control" name="Content" id="comment" rows="3"></textarea>
+                                        </div>
                                     </div>
-                                </div>
-                                <button type="submit" id="confirmCancel" class="btn btn-primary">Gửi bình luận</button>
-                            </form>
+                                    <button type="submit" id="confirmCancel" class="btn btn-primary">Gửi bình luận</button>
+                                </form>
+                            }
+                            
                             @if (ComentChild.Count > 0)
                             {
                                 foreach (var chill in ComentChild)

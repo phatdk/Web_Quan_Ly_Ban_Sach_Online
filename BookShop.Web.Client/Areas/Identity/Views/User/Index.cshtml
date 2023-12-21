@@ -7,6 +7,16 @@
 <h2>@ViewData["Title"]</h2>
 <partial name="_StatusMessage"></partial>
 <p>Tổng số thành viên: @Model.totalUsers</p>
+<div class="col">
+    <div class="col-4">
+        <select class="form-select" id="exampleSelect" aria-label="Example select">
+            <option selected>Tất cả các thành viên</option>
+            <option value="option1"><a asp-action="Index" asp-controller="Home" asp-route-Idselect="1" >Danh sách khách hàng</a></option>
+            <option value="option2"><a asp-action="Index" asp-controller="Home" asp-route-Idselect="2">Danh sách nhân viên</a></option>
+        </select>
+    </div>
+    
+</div>
 
 <table class="table">
     <tr>

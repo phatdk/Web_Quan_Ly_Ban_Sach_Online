@@ -14,7 +14,6 @@ namespace BookShop.DAL.Entities
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 		public DateTime? EndDate { get; set; }
-		public int ReduceMax { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public int Status { get; set; }
 
