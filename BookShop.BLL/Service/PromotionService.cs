@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BookShop.BLL.Service
 {
-    public class PromotionService : IPromotionService
+	public class PromotionService : IPromotionService
     {
         private readonly IRepository<Promotion> _promotionRepository;
         private readonly IRepository<PromotionType> _typeRepository;
@@ -244,5 +244,21 @@ namespace BookShop.BLL.Service
             }
             catch (Exception ex) { return false; }
         }
-    }
+
+		public async Task<bool> ChangeQuantity(int id, int quantity)
+		{
+            var obj = await _promotionRepository.GetByIdAsync(id);
+            if(obj != null)
+            {
+                obj.Quantity += quantity;
+                var result = await _promotionRepository.UpdateAsync(id,obj);
+                if(result != null)
+                {
+                    return true;
+                }
+                return false;
+            }
+            return false;
+		}
+	}
 }

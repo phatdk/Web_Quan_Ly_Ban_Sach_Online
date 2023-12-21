@@ -17,5 +17,6 @@ namespace BookShop.BLL.IService
         public Task<bool> Add(CreatePromotionModel model);
         public Task<bool> Update(int id, UpdatePromotionModel model);
         public Task<bool> Delete(int id);
+        public Task<bool> ChangeQuantity(int id, int quantity);
     }
 }

@@ -23,8 +23,6 @@ namespace BookShop.DAL.Entities
 		// foreign key
 		public int? Id_Collection { get; set; }
 		public virtual CollectionBook? CollectionBook { get; set; }
-		//thêm 
-		public int TotalQuantity { get; set; }
 
         //refenrence
 
