@@ -10,16 +10,7 @@
 <html lang="en" dir="ltr">
     @{
     Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
-    }
-<head>
-    <meta charset="UTF-8">
-    <title> Responsiive Admin Dashboard | CodingLab </title>
-
-    <!-- Boxicons CDN Link -->
-
-    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
+}
 <style>
     /* Googlefont Poppins CDN Link */
     * {
@@ -237,6 +228,16 @@
             color: #333;
         }
 </style>
+<head>
+    <meta charset="UTF-8">
+    <title> Responsiive Admin Dashboard | CodingLab </title>
+
+    <!-- Boxicons CDN Link -->
+
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
 <body>
     <div class="home-content1">
         <div class="overview-boxes">
@@ -290,38 +291,74 @@
             <div class="recent-sales box">
                 <div class="title">Recent Sales</div>
                 <div class="sales-details">
-                    @*<ul class="details">
+                    <ul class="details">
                         <li class="topic">Date</li>
-                      
-                            @foreach (var item in Model.Take(5))
-                            {
-                            <li>  @Html.DisplayFor(modelItem => item.CreatedDate)  </li>
-                            }
-                      
+                        @if (ViewBag.Top5 != null && ViewBag.Top5.Any())
+                        {
+                            <div>
+                                <!-- Hiển thị dữ liệu từ ViewBag -->
+                                @foreach (var productInfo in ViewBag.Top5)
+                                {
+                                    <p>@productInfo.Product.Name - Quantity: @productInfo.TotalQuantity</p>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p>No data available.</p>
+                        }
                     </ul>
                     <ul class="details">
                         <li class="topic">Customer</li>
-                        
-                            @foreach (var item in Model.Take(5))
-                            {
-                            <li> @Html.DisplayFor(modelItem => item.NamePromotion)</li>
-                            }
-                       
+                        @if (ViewBag.Top5 != null && ViewBag.Top5.Any())
+                        {
+                            <div>
+                                <!-- Hiển thị dữ liệu từ ViewBag -->
+                                @foreach (var productInfo in ViewBag.Top5)
+                                {
+                                    <p>@productInfo.Product.Name - Quantity: @productInfo.TotalQuantity</p>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p>No data available.</p>
+                        }
                     </ul>
                     <ul class="details">
                         <li class="topic">Sales</li>
-                        @foreach (var item in Model.Take(5))
+                        @if (ViewBag.Top5 != null && ViewBag.Top5.Any())
                         {
-                            <li> @Html.DisplayFor(modelItem => item.NamePromotion)</li>
+                            <div>
+                                <!-- Hiển thị dữ liệu từ ViewBag -->
+                                @foreach (var productInfo in ViewBag.Top5)
+                                {
+                                    <p>@productInfo.Name - Quantity: @productInfo.TotalQuantity</p>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p>No data available.</p>
                         }
                     </ul>
                     <ul class="details">
                         <li class="topic">Total</li>
-                        @foreach (var item in Model.Take(5))
+                        @if (ViewBag.Top5 != null && ViewBag.Top5.Any())
                         {
-                            <li> @Html.DisplayFor(modelItem => item.Shipfee)</li>
+                            <div>
+                                <!-- Hiển thị dữ liệu từ ViewBag -->
+                                @foreach (var productInfo in ViewBag.Top5)
+                                {
+                                    <p>@productInfo.Product.Name - Quantity: @productInfo.TotalQuantity</p>
+                                }
+                            </div>
                         }
-                    </ul>*@
+                        else
+                        {
+                            <p>No data available.</p>
+                        }
+                    </ul>
                 </div>
                 <div class="button">
                     <a href="#">See All</a>
@@ -329,18 +366,25 @@
             </div>
             <div class="top-sales box">
                 <div class="title">Top Seling Product</div>
-                @*<ul class="top-sales-details">
-                    @foreach (var item in Model.Take(5))
-                    {
-                        <li> @Html.DisplayFor(modelItem => item.Shipfee)</li>
-                        <li> @Html.DisplayFor(modelItem => item.Shipfee)</li>
-                    }
-                </ul>*@
+                @if (ViewBag.Top5 != null && ViewBag.Top5.Any())
+                {
+                    <div>
+                        <!-- Hiển thị dữ liệu từ ViewBag -->
+                        @foreach (var productInfo in ViewBag.Top5)
+                        {
+                            <p>@productInfo.Orders.Email - Quantity: @productInfo.TotalQuantity</p>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p>No data available.</p>
+                }
             </div>
         </div>
     </div>
     @await Html.PartialAsync("_product");
-    <button asp-action="export" asp-controller="Gembox"  id="myButton">  <a href="D:\Study File\Book\BookShop.Web.Client\wwwroot\exel\Thongke.xlsx" download>Download File Thong ke</a></button>
+    <button asp-action="export" asp-controller="Gembox" id="myButton">Download File Thong ke<</button>
    
 </body>
 <script>
