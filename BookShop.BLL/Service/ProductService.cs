@@ -17,71 +17,66 @@ using Image = BookShop.DAL.Entities.Image;
 
 namespace BookShop.BLL.Service
 {
-    public class ProductService : IProductService
-    {
-        private readonly IRepository<Image> _imageRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductBook> _productBookRepository;
-        private readonly IRepository<Book> _bookRepository;
-        private readonly IRepository<BookAuthor> _bookAuthorRepository;
-        private readonly IRepository<BookGenre> _bookGenreRepository;
-        private readonly IRepository<CollectionBook> _collectionBookRepository;
-        private readonly IRepository<Genre> _genreRepository;
-        private readonly IRepository<Author> _authorRepository;
-        private readonly IRepository<Category> _categoryRepository;
-        private readonly IRepository<Supplier> _supplierRepository;
-        public ProductService()
-        {
-            _genreRepository = new Repository<Genre>();
-            _authorRepository = new Repository<Author>();
-            _categoryRepository = new Repository<Category>();
-            _supplierRepository = new Repository<Supplier>();
-            _productRepository = new Repository<Product>();
-            _imageRepository = new Repository<Image>();
-            _productBookRepository = new Repository<ProductBook>();
-            _bookRepository = new Repository<Book>();
-            _bookAuthorRepository = new Repository<BookAuthor>();
-            _bookGenreRepository = new Repository<BookGenre>();
-            _collectionBookRepository = new Repository<CollectionBook>();
-        }
-        public async Task<CreateProductModel> Add(CreateProductModel model)
-        {
-            try
-            {
-                var obj = new Product()
-                {
-                    Name = model.Name,
-                    Price = model.Price,
-                    Quantity = model.Quantity,
-                    Description = model.Description,
-                    CreatedDate = DateTime.Now,
-                    Status = model.Status,
-                    Type = model.Type,
-                    Id_Collection = model.CollectionId,
-                };
-                var product = await _productRepository.CreateAsync(obj);
-                if (product != null)
-                {
-                    foreach (var item in model.bookSelected)
-                    {
-                        ProductBook productBook = new ProductBook()
-                        {
-                            Id_Product = product.Id,
-                            Id_Book = item,
-                            Status = product.Status,
-                        };
-                        await _productBookRepository.CreateAsync(productBook);
-                    }
-                    return new CreateProductModel()
-                    {
-                        Id = product.Id,
-                        Name = model.Name,
-                    };
-                }
-                return model;
-            }
-            catch (Exception ex) { return model; }
-        }
+
+	public class ProductService : IProductService
+	{
+		private readonly IRepository<Product> _productRepository;
+		private readonly IRepository<Image> _imageRepository;
+		private readonly IRepository<ProductBook> _productBookRepository;
+		private readonly IRepository<Book> _bookRepository;
+		private readonly IRepository<BookAuthor> _bookAuthorRepository;
+		private readonly IRepository<BookGenre> _bookGenreRepository;
+		private readonly IRepository<CollectionBook> _collectionBookRepository;
+		private readonly IRepository<Evaluate> _CommentRepository;
+		public ProductService()
+		{
+			_productRepository = new Repository<Product>();
+			_imageRepository = new Repository<Image>();
+			_productBookRepository = new Repository<ProductBook>();
+			_bookRepository = new Repository<Book>();
+			_bookAuthorRepository = new Repository<BookAuthor>();
+			_bookGenreRepository = new Repository<BookGenre>();
+			_collectionBookRepository = new Repository<CollectionBook>();
+			_CommentRepository = new Repository<Evaluate>();
+		}
+		public async Task<CreateProductModel> Add(CreateProductModel model)
+		{
+			try
+			{
+				var obj = new Product()
+				{
+					Name = model.Name,
+					Price = model.Price,
+					Quantity = model.Quantity,
+					Description = model.Description,
+					CreatedDate = DateTime.Now,
+					Status = model.Status,
+					Type = model.Type,
+					Id_Collection = model.CollectionId,
+				};
+				var product = await _productRepository.CreateAsync(obj);
+				if (product != null)
+				{
+					foreach (var item in model.bookSelected)
+					{
+						ProductBook productBook = new ProductBook()
+						{
+							Id_Product = product.Id,
+							Id_Book = item,
+							Status = product.Status,
+						};
+						await _productBookRepository.CreateAsync(productBook);
+					}
+					return new CreateProductModel()
+					{
+						Id = product.Id,
+						Name = model.Name,
+					};
+				}
+				return model;
+			}
+			catch (Exception ex) { return model; }
+		}
 
         public async Task<bool> Delete(int id)
         {
@@ -93,29 +88,35 @@ namespace BookShop.BLL.Service
             catch (Exception ex) { return false; }
         }
 
-        public async Task<List<ProductViewModel>> GetAll()
-        {
-            var list = await _productRepository.GetAllAsync();
-            var objlist = new List<ProductViewModel>();
-            foreach (var item in list)
-            {
-                var img = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == item.Id).FirstOrDefault();
-                var obj = new ProductViewModel()
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                    Price = item.Price,
-                    Quantity = item.Quantity,
-                    Description = item.Description,
-                    CreatedDate = item.CreatedDate,
-                    Status = item.Status,
-                    Type = item.Type,
-                    ImgUrl = img.ImageUrl,
-                };
-                objlist.Add(obj);
-            }
-            return objlist;
-        }
+		public async Task<List<ProductViewModel>> GetAll()
+		{
+			var list = await _productRepository.GetAllAsync();
+			var objlist = new List<ProductViewModel>();
+			foreach (var item in list)
+			{
+				var obj = new ProductViewModel()
+				{
+					Id = item.Id,
+					Name = item.Name,
+					Price = item.Price,
+					Quantity = item.Quantity,
+					Description = item.Description,
+					CreatedDate = item.CreatedDate,
+					Status = item.Status,
+					Type = item.Type,
+
+				};
+				var img = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == item.Id).FirstOrDefault();
+				if (img != null)
+				{
+					obj.ImgUrl = img.ImageUrl;
+				}
+
+				objlist.Add(obj);
+			}
+			return objlist;
+		}
+
 
         public async Task<List<ProductViewModel>> GetByAuthor(int authorId)
         {
@@ -229,6 +230,110 @@ namespace BookShop.BLL.Service
                 CollectionName = collecionName,
             };
         }
+			var image = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == id);
+			var images = new List<ImageViewModel>();
+			foreach (var item in image)
+			{
+				var imagev = new ImageViewModel()
+				{
+					Id = item.Id,
+					ImageUrl = item.ImageUrl,
+					Index = item.Index,
+					CreatedDate = item.CreatedDate,
+					Status = item.Status,
+				};
+				images.Add(imagev);
+			}
+
+			string collecionName = string.Empty;
+			if (product.Id_Collection != null)
+			{
+				collecionName = (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == product.Id_Collection).FirstOrDefault().Name;
+			}
+			return new ProductViewModel()
+			{
+				Id = product.Id,
+				Name = product.Name,
+				Price = product.Price,
+				Quantity = product.Quantity,
+				Description = product.Description,
+				CreatedDate = product.CreatedDate,
+				Status = product.Status,
+				Type = product.Type,
+				bookViewModels = books,
+				imageViewModels = images,
+				CollectionId = product.Id_Collection,
+				CollectionName = collecionName,
+			};
+		}
+		public async Task<ProductViewModel> GetByIdAndCommnet(int id)
+		{
+			var product = await _productRepository.GetByIdAsync(id);
+			var pb = (await _productBookRepository.GetAllAsync()).Where(x => x.Id_Product == id);
+			var books = new List<BookViewModel>();
+			foreach (var item in pb)
+			{
+				var book = await _bookRepository.GetByIdAsync(item.Id_Book);
+				var bookvm = new BookViewModel()
+				{
+					Id = book.Id,
+					Title = book.Title,
+					ImportPrice = book.ImportPrice,
+					Status = book.Status,
+					Weight = book.Weight,
+					Widght = book.Widght,
+					Length = book.Length,
+					Height = book.Height,
+				};
+				books.Add(bookvm);
+			}
+
+			var image = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == id);
+			var images = new List<ImageViewModel>();
+			foreach (var item in image)
+			{
+				var imagev = new ImageViewModel()
+				{
+					Id = item.Id,
+					ImageUrl = item.ImageUrl,
+					Index = item.Index,
+					CreatedDate = item.CreatedDate,
+					Status = item.Status,
+				};
+				images.Add(imagev);
+			}
+
+			string collecionName = string.Empty;
+			if (product.Id_Collection != null)
+			{
+				collecionName = (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == product.Id_Collection).FirstOrDefault().Name;
+			}
+			return new ProductViewModel()
+			{
+				Id = product.Id,
+				Name = product.Name,
+				Price = product.Price,
+				Quantity = product.Quantity,
+				Description = product.Description,
+				CreatedDate = product.CreatedDate,
+				Status = product.Status,
+				Type = product.Type,
+				bookViewModels = books,
+				imageViewModels = images,
+				CollectionId = product.Id_Collection,
+				CollectionName = collecionName,
+				Comment = (await _CommentRepository.GetAllAsync()).Where(x => x.Id_Product == id).Select(x => new ConfigurationModel.EvaluateModel.EvaluateViewModel()
+				{
+					Point = x.Point,
+					Content = x.Content,
+					CreatedDate = DateTime.Now,
+					Id_Product = x.Id_Product,
+					Id_User = x.Id_User,
+					Id_Parents = x.Id_Parents,
+					Id = x.Id
+				}).ToList(),
+			};
+		}
 
         public async Task<List<ProductViewModel>> GetByCollection(int collectionId)
         {
@@ -294,22 +399,6 @@ namespace BookShop.BLL.Service
             catch (Exception ex) { return false; }
         }
 
-        public async Task<bool> ChangeQuantity(int id, int changeAmount)
-        {
-        getAgain:;
-            var product = await _productRepository.GetByIdAsync(id);
-            try
-            {
-                if (product != null)
-                {
-                    product.Quantity += changeAmount;
-                }
-                else goto getAgain;
-                await _productRepository.UpdateAsync(id, product);
-                return true;
-            }
-            catch { return false; }
-        }
 
        
 
@@ -358,4 +447,25 @@ namespace BookShop.BLL.Service
             return results;
         }
     }
+		public async Task<bool> ChangeQuantity(int id, int changeAmount)
+		{
+		getAgain:;
+			var product = await _productRepository.GetByIdAsync(id);
+			try
+			{
+				if (product != null)
+				{
+					product.Quantity += changeAmount;
+					if (product.Quantity <= 0)
+					{
+						product.Status = 2;
+					}
+				}
+				else goto getAgain;
+				await _productRepository.UpdateAsync(id, product);
+				return true;
+			}
+			catch { return false; }
+		}
+	}
 }

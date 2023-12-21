@@ -43,27 +43,31 @@ namespace BookShop.BLL.Service
             var userpromotions = (await _userPromotionRepository.GetAllAsync()).Where(c => c.Id_User == userId);
             var promotions = await _promotionRepository.GetAllAsync();
             var objlist = (from a in userpromotions
-                           join b in promotions on a.Id_Promotion equals b.Id
+                           join b in promotions on a.Id_Promotion equals b.Id into t
+                           from b1 in t.DefaultIfEmpty()
                            select new UserPromotionViewModel()
                            {
+                               Id = a.Id,
                                Id_User = a.Id_User,
                                Id_Promotion = a.Id_Promotion,
                                EndDate = a.EndDate,
                                ReduceMax = a.ReduceMax,
                                CreatedDate = a.CreatedDate,
                                Status = a.Status,
-                               Name = b.Name,
+                               StorageTerm = b1 == null? 0 : Convert.ToInt32(b1.StorageTerm),
+                               Name = b1.Name,
+                               Code = b1.Code,
                            }).ToList();
             return objlist;
         }
 
-        public async Task<bool> Update(int id)
+        public async Task<bool> Update(UserPromotionViewModel model)
         {
             try
             {
-                var obj = await _userPromotionRepository.GetByIdAsync(id);
-                obj.Status = 1;
-                await _userPromotionRepository.UpdateAsync(id, obj);
+                var obj = await _userPromotionRepository.GetByIdAsync(model.Id);
+                obj.Status = model.Status;
+                await _userPromotionRepository.UpdateAsync(model.Id, obj);
                 return true;
             }
             catch (Exception ex) { return false; }

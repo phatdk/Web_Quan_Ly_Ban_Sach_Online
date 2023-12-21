@@ -1,6 +1,6 @@
 @model List<RoleModel>
 @{
-    ViewData["Title"] = "Danh sách các role (vai trò)";
+    ViewData["Title"] = "Danh sách các role (vai trò)"; Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 <h2>@ViewData["Title"]</h2>
 
@@ -34,3 +34,4 @@
         </tr>
     }
 </table>
+<partial name="_Paging" model="@ViewBag.pagingmodel" />

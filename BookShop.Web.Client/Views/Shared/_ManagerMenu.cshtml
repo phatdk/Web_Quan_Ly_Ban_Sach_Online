@@ -1,20 +1,24 @@
-﻿
-@using Microsoft.AspNetCore.Authorization
+﻿@using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService _IAuthorizationService
 @{
-   // var isAdmin = (await _IAuthorizationService.AuthorizeAsync(User, "ManagerMenu")).Succeeded;
-   var isAdmin = true;
+    var isAdmin = (await _IAuthorizationService.AuthorizeAsync(User, "ManagerMenu")).Succeeded;
+    //  var isAdmin = true;
 
 }
-@if (isAdmin==true)
+@if (isAdmin == true)
 {
-    <li class="nav-item submenu dropdown active">
-        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-       aria-expanded="false">Manage</a>
-        <ul class="dropdown-menu">
-            <li class="nav-item"><a class="nav-link" asp-area="Identity" asp-controller="Role" asp-action="Index">Quản lý Role</a></li>
-            <li class="nav-item"><a class="nav-link" asp-area="Identity" asp-controller="User" asp-action="Index">Quản lý User</a></li>
-        </ul>
-    </li>
+    <ul>
+
+        <li class="nav-item submenu dropdown active">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+               aria-expanded="false">Manage</a>
+            <ul class="dropdown-menu">
+                <li class="nav-item"><a class="nav-link" asp-area="Identity" asp-controller="Role" asp-action="Index">Quản lý Role</a></li>
+                <li class="nav-item"><a class="nav-link" asp-area="Identity" asp-controller="User" asp-action="Index">Quản lý User</a></li>
+                <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-controller="Blog" asp-action="Index">Quản lý Bài viết</a></li>
+            </ul>
+        </li>
+
+    </ul>
 
 }

@@ -6,6 +6,7 @@ using BookShop.DAL.Repositopy;
 using BookShop.BLL.IService;
 using BookShop.BLL.ConfigurationModel.PaymentFormModel;
 using BookShop.BLL.ConfigurationModel.PromotionTypeModel;
+using BookShop.BLL.ConfigurationModel.CollectionBookModel;
 
 public static class SeedDataMD
 {
@@ -56,6 +57,44 @@ public static class SeedDataMD
 
 	}
 
+	public static async Task FaKerProduct(IProductService product,ICollectionService collectionService)
+	{
+
+		var collection = new CreateCollectionModel()
+		{
+			Name = "abc",
+			Status = 1,
+			CreatedDate = DateTime.Now
+		};
+		 await collectionService.Add(collection);
+		await product.Add(new BookShop.BLL.ConfigurationModel.ProductModel.CreateProductModel()
+		{
+			IsType = true,
+			Description = "no",
+			Name = "san pham 1",
+			Quantity = 100,
+			Price = 100,
+			Status = 1,
+			Type = 1
+			,
+			CollectionId = (await collectionService.GetAll())[0].Id
+
+		}) ;
+		await product.Add(new BookShop.BLL.ConfigurationModel.ProductModel.CreateProductModel() 
+		{
+			IsType = true,
+			Description = "no",
+			Name="san pham 2",
+			Quantity = 100,
+			Price = 100,
+			Status =1,
+			Type =1,
+            CollectionId = (await collectionService.GetAll())[0].Id
+
+        });
+
+
+	}
 	public static async Task SeedDataStatus(IStatusOrderService service)
 	{
 		var status = new StatusOrder()
@@ -127,29 +166,23 @@ public static class SeedDataMD
 	{
 		var form = new CreatePaymentFormModel()
 		{
-			Name = "Thanh toán tiền mặt tại quầy",
+			Name = "Thanh toán tại quầy",
 			Status = 2,
 		};
 		var form1 = new CreatePaymentFormModel()
 		{
-			Name = "Thanh toán banking tại quầy",
-			Status = 2,
-		};
-		var form2 = new CreatePaymentFormModel()
-		{
 			Name = "Thanh toán khi nhận hàng",
 			Status = 1,
 		};
-		var form3 = new CreatePaymentFormModel()
+		var form2 = new CreatePaymentFormModel()
 		{
-			Name = "Thanh toán qua banking",
+			Name = "Thanh toán qua VNPay",
 			Status = 1,
 		};
 
 		await service.Add(form);
 		await service.Add(form1);
 		await service.Add(form2);
-		await service.Add(form3);
 	}
 	public static async Task SeedPromotionType(IPromotionTypeService service)
 	{

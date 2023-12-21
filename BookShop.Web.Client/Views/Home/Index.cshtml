@@ -385,7 +385,8 @@
                         <div class="giagoc">
                             600
                         </div>
-                        <p onclick="location.href='@Url.Action("ChiTietSanPham", new{id = item.Id})'" class="progress-value">Mua</p>
+                        @* <p onclick="location.href='@Url.Action("ChiTietSanPham", new{id = item.Id})'" class="progress-value">Mua</p> *@
+                        <a asp-action="ChiTietSanPham" asp-route-id="@item.Id">Mua</a>
                     </div>
                 </div>
             }
@@ -576,7 +577,7 @@
         </div>
     </div>
 </div>
-<script>
+@* <script>
     var tabLinks = document.querySelectorAll(".tablinks");
     var tabContent = document.querySelectorAll(".tabcontent");
 
@@ -601,4 +602,4 @@
         btn.classList.add("active");
         // các button mà chúng ta click vào sẽ được add class active
     }
-</script>
+</script> *@
