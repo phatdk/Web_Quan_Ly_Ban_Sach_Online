@@ -9,6 +9,8 @@ using BookShop.Web.Client.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Drawing;
+using ZXing;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 {
@@ -138,7 +140,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
         // POST: BookController/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateBookModel book)
+        public async Task<IActionResult> Create(CreateBookModel book, IFormFile barcodeImg)
         {
             try
             {
@@ -151,6 +153,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
                     CoverPrice = book.CoverPrice,
                     ImportPrice = book.ImportPrice,
                     Quantity = book.Quantity,
+                    Barcode = book.Barcode,
                     PageSize = book.PageSize,
                     Pages = book.Pages,
                     Cover = book.Cover,
@@ -194,6 +197,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
                 Quantity = _book.Quantity ?? 0,
                 PageSize = _book.PageSize ?? string.Empty,
                 Pages = _book.Pages ?? 0,
+                Barcode = _book.Barcode ?? string.Empty,
                 Cover = _book.Cover ?? string.Empty,
                 PublicationDate = _book.PublicationDate ?? string.Empty,
                 Weight = _book.Weight,
