@@ -1,0 +1,183 @@
+﻿@model IEnumerable<BookShop.BLL.ConfigurationModel.ProductModel.ProductViewModel>
+<style>
+	.filter-content {
+		display: grid;
+		grid-template-columns: repeat(4,1fr);
+		gap: 10px
+	}
+
+
+	.filter_left {
+		grid-column: 1/2;
+		display: block;
+		gap:10px;
+		background-color: white;
+		font-family: "Poppins", sans-serif;
+	}
+
+	.filter_right {
+		background-color: white;
+		grid-column: 2/5;
+		display: grid;
+		padding: 0 10px;
+		grid-template-columns: 1fr 1fr 1fr 1fr;
+		gap: 10px;
+	}
+	.card-title-right{
+		grid-column:1/5;
+		grid-row: 1/1;
+	}
+	
+
+	.product-image {
+		width: 100%;
+	}
+
+	img {
+		width: 100%;
+	}
+
+	.product-box:hover {
+		box-shadow: 0px 0px 4px 2px rgba(0,0,0,0.1);
+		-webkit-box-shadow: 0px 0px 4px 2px rgba(0,0,0,0.1);
+	}
+
+	.card-title {
+		padding-left: 10px;
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.card-title-left p{
+		margin-top: inherit;
+		margin-bottom: inherit;
+		
+	}
+	.card-title-left  {
+		display: flex;
+		line-height: 60px;
+		font-size: 20px;
+		justify-content: center;
+		font-weight: 600;
+		text-align: center;
+		color: #C92127;
+		border-bottom: 2px solid #f6f6f6;
+		
+	}
+	.card-title {
+		color: black;
+		justify-content:start;
+		font-size : 16px;
+		font-weight: 600;
+		display:block;
+	}
+	li {
+		list-style:none;
+	}
+	ul{
+		font-weight:100;
+		font-size:13px;
+	}
+	.author,.genre,.category,.supplier{
+		border-bottom: 2px solid #f6f6f6;
+	}
+</style>
+<div class="filter">
+	<div class="container">
+		<div class="filter-content">
+			<div class="filter_left">
+				<div class="card-title-left">
+					<p>
+						LỌC THEO
+					</p>
+				</div>
+				<div class="author" >
+					<div class="card-title">
+						<p>
+							Tác giả
+						</p>
+						<ul>
+							<li>
+								<input type="checkbox"/> duy 
+							</li>
+							<li>
+								<input type="checkbox" /> duy
+							</li>
+							<li>
+								<input type="checkbox" /> duy
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="genre" >
+					<div class="card-title">
+						<p>
+							Danh mục
+						</p>
+					</div>
+				</div>
+				<div class="category">
+					<div class="card-title">
+						<p>
+							Thể loại
+						</p>
+					</div>
+				</div>
+				<div class="supplier" >
+					<div class="card-title">
+						<p>
+							Nhà cung cấp
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="filter_right">
+				<div class="card-title-right">
+					KẾT QUẢ TÌM KIẾM VỚI: (@Model.Where(c=>c.Status == 1).Count() KẾT QUẢ)
+				</div>
+				@foreach (var item in Model.Where(c=>c.Status == 1))
+				{
+					<div class="product-box">
+						<div class="product-image">
+							<img src="@item.ImgUrl" alt="ảnh" title="@item.Name">
+						</div>
+						<div class="product-content">
+							<p>
+								@item.Name
+							</p>
+							<p>
+								@item.Price
+							</p>
+						</div>
+					</div>
+				}
+			</div>
+
+
+		</div>
+	</div>
+</div>
+<script>
+	$(document).ready(function () {
+		$.ajax({
+			url: '/Genre/SearchAndFilter',
+			type: 'GET',
+			success: function (data) {
+				$('.card-title ul').empty();
+
+				$.each(data, function (index, author) {
+					var listItem = $('<li>').append(
+						$('<input>').attr({
+							type: 'checkbox',
+							value: author.name
+								console.log(author.name)
+						}),
+						console.log(author.name)
+						author.name 
+					);
+					$('.card-title ul').append(listItem);
+				});
+			}
+		});
+	});
+</script>

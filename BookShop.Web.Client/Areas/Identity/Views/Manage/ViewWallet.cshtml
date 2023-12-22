@@ -1,0 +1,79 @@
+﻿@model BookShop.DAL.Entities.Userr;
+@using BookShop.BLL.IService;
+@inject IUserService userService;
+@inject IUserPromotionService userPromotionService;
+@inject IWalletpointService walletService;
+@inject IPointTranHistoryService historyService;
+@inject IPromotionService promotionService;
+@{
+	ViewData["Title"] = "Ví điểm";
+	Layout = "_LayoutUser";
+}
+
+<!--ví điểm-->
+@if (Model.Id != 0)
+{
+	var wallet = await walletService.GetById(Model.Id);
+
+	<div class="row">
+		<div class="col-8">
+			<label>Số điểm của bạn: <span>@wallet.Point</span> Point</label>
+		</div>
+		<div class="col-4">
+			<div class="text-primary text-decoration-underline" onclick="viewHistory()">Xem lịch sử tích điểm</div>
+		</div>
+	</div>
+	<div>
+		<hr />
+		<strong>Lịch sử sử dụng điểm của bạn</strong>
+		<ul id="listHistory">
+			<li class="row">
+				<strong class="col-2">Ngày</strong>
+				<strong class="col-6">Ghi chú</strong>
+				<strong class="col-2">Điểm còn lại</strong>
+				<strong class="col-2">Liên kết</strong>
+				<hr />
+			</li>
+		</ul>
+		<span class="position-relative top-100 start-100 w-100" id="viewMore" onclick="viewHistory()"
+			  style="color: #0459EC; text-decoration: underline; cursor: pointer;">Xem thêm</span>
+	</div>
+}
+else
+{
+	<h1>Có lỗi sảy ra <i class="fa-solid fa-skull"></i></h1>
+}
+
+<script src="~/js/site.js"></script>
+<script type="text/javascript">
+
+	var page = 0;
+	function viewHistory() {
+		page += 1;
+		$.ajax({
+			url: '/Member/GetHistory',
+			type: 'GET',
+			data: { idUser: @Model.Id, page: page },
+			success: function (data) {
+				var dataList = $('#listHistory');
+				data.data.forEach(function (item) {
+					var rowData = '<li class="row border-1 border-bottom border-dark"' + '>' +
+						'<span class="col-2">' + formatDate(item.createdDate) + '</span>' +
+						'<span class="col-6">' + item.notif + '</span>' +
+						'<span class="col-2">' + item.remaining + ' điểm</span>' +
+						'<span class="col-2">' + item.code + '</span>' +
+						'</li>';
+					dataList.append(rowData);
+				});
+				if (data.next === 0) {
+					document.getElementById('viewMore').setAttribute("hidden", "hidden");
+				}
+			},
+		});
+	};
+
+	$(document).ready(function () {
+		viewHistory();
+	})
+</script>
+
