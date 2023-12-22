@@ -23,9 +23,9 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
         public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages)
         {
             var category = await _categoryService.GetAll();
-            
+               
             int pagesize = 10;
-            if (pagesize <= 0)
+            if (pagesize <= 0) 
             {
                 pagesize = 10;
             }

@@ -24,7 +24,7 @@ namespace BookShop.BLL.Service
         protected readonly IRepository<Genre> _genreRepository;
         protected readonly IRepository<BookAuthor> _bookAuthorRepository;
         protected readonly IRepository<BookGenre> _bookGenreRepository;
-        protected readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<Product> _productRepository;   
         protected readonly IRepository<ProductBook> _productBookRepository;
         public BookService()
         {

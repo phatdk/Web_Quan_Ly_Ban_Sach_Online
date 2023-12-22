@@ -25,7 +25,7 @@
 			@Html.Label("Status")
 			@Html.TextBoxFor(m => m.Status, new { @class = "form-control short" })
 		</div>
-
+		 
 		<div class="form-group">
 			@Html.Label("Danh mục")
 			@Html.DropDownListFor(m => m.Id_Category, new SelectList(categorys, "Id","Name"), "-- Select Collection --", new { @class = "form-control chosen-				select" })

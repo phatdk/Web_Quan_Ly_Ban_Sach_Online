@@ -18,15 +18,15 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 
         [HttpGet]
         [Route("listauthor")]
-        public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages)
+        public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages) 
         {
             var author = await _authorService.Getall();
             int pagesize = 10;
             if (pagesize <= 0)
             {
                 pagesize = 10;
-            }
-            int countPages = (int)Math.Ceiling((double)author.Count() / pagesize);
+            }    
+            int countPages = (int)Math.Ceiling((double)author.Count() / pagesize); 
             if (currentPages > countPages)
             {
                 currentPages = countPages;

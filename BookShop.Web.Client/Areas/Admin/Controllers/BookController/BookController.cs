@@ -46,7 +46,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             _authorService = authorService;
             _genreService = genreService;
             _supplierService = supplierService;
-            _collectionService = collectionService;
+            _collectionService = collectionService;    
         }
 
         public async Task<List<AuthorModel>> LoadAuthor(int status)

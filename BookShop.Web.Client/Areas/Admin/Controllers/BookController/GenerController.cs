@@ -25,7 +25,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             _genreService = genreService;
             _genre = new GenreModel();
             _listCategory = new List<CategoryModel>();
-            _categoryService = categoryService;
+            _categoryService = categoryService; 
         }
 
         [HttpGet]

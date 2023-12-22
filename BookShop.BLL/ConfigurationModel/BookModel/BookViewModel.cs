@@ -17,7 +17,7 @@ namespace BookShop.BLL.ConfigurationModel.BookModel
 		public string? Reader { get; set; }
 		public string? Barcode { get; set; }
 		public int? Price { get; set; }
-		public int? ImportPrice { get; set; }
+		public int? ImportPrice { get; set; }   
 		public int? Quantity { get; set; }
 		public string? PageSize { get; set; }
 		public int? Pages { get; set; }

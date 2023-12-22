@@ -26,7 +26,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             int pagesize = 10;
             if (pagesize <= 0)
             {
-                pagesize = 10;
+                pagesize = 10; 
             }
             int countPages = (int)Math.Ceiling((double)suppliers.Count() / pagesize);
             if (currentPages > countPages)
