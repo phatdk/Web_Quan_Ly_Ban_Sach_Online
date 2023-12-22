@@ -128,7 +128,7 @@
 <div class="row">
     <div class="col-8">
         <h3>Thông tin cá nhân</h3>
-        <div class="row">
+        <div class="row" style="background-color:white">
             <div class="col-4 mt-3">@Html.DisplayNameFor(m => Model.profile.Code):</div>
             <div class="col-8 mt-3"><input class="form-control" value="@Model.profile.Code" disabled /></div>
             <div class="col-4 mt-3">@Html.DisplayNameFor(m => Model.profile.Name):</div>
@@ -145,9 +145,17 @@
             <div class="col-8 mt-3"><input class="form-control" value="@Model.profile.UserEmail" disabled /></div>
 
 
-            @*  <a class=" text-center col-3 mt-3 btn btn-primary btn-sm" asp-action="EditProfile">Sửa</a> *@
-            <button type="button" class="mt-3  text-center col-3 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@Model.PhoneNumber">Sửa thông tin</button>
-            <a class=" mt-3 text-center col-3 btn btn-primary" asp-controller="Manage" asp-action="ChangePassword">Đổi mật khẩu</a>
+       @*     <style>
+                .chucnang{
+                    display:flex;
+                    justify-content:center;
+                    gap:10px;
+                }
+            </style>*@
+				<button style="margin-right:10px" type="button" class="mt-3  text-center col-3 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@Model.PhoneNumber">Sửa thông tin</button>
+				<a class=" mt-3 text-center col-3 btn btn-primary" asp-controller="Manage" asp-action="ChangePassword">Đổi mật khẩu</a>
+           
+          
         </div>
     </div>
 

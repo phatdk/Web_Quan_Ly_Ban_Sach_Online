@@ -79,7 +79,13 @@
 						<a asp-area="Admin" asp-controller="Book" asp-action="Index"> Sách</a>
 					</li>
 					<li>
-						<a asp-area="Admin" asp-controller="Author" asp-action="Index"> Thể loại</a>
+						<a asp-area="Admin" asp-controller="Author" asp-action="Index"> Tác giả</a>
+					</li>
+					<li>
+						<a asp-area="Admin" asp-controller="Suppliers" asp-action="Index">Nhà xuất bản</a>
+					</li>
+					<li>
+						<a asp-area="Admin" asp-controller="Gener" asp-action="Index"> Thể loại</a>
 					</li>
 					<li>
 						<a asp-area="Admin" asp-controller="Categories" asp-action="Index"> Danh mục</a>
@@ -136,7 +142,11 @@
 		</div>
 	</div>
 
-  
+	@await RenderSectionAsync("Scripts", required: false)
+	<script src="~/lib/chosen_v1.8.7/docsupport/jquery-3.2.1.min.js" type="text/javascript"></script>
+	<script src="~/lib/chosen_v1.8.7/chosen.jquery.js" type="text/javascript"></script>
+	<script src="~/lib/chosen_v1.8.7/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+	<script src="~/lib/chosen_v1.8.7/docsupport/init.js" type="text/javascript" charset="utf-8"></script>
 </body>
-
+<script src="~/js/app.js"></script>
 </html>

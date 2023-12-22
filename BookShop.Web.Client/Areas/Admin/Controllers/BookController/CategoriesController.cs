@@ -24,29 +24,29 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
         {
             var category = await _categoryService.GetAll();
             
-            int pagesize = 10;
-            if (pagesize <= 0)
-            {
-                pagesize = 10;
-            }
-            int countPages = (int)Math.Ceiling((double)category.Count() / pagesize);
-            if (currentPages > countPages)
-            {
-                currentPages = countPages;
-            }
-            if (currentPages < 1)
-            {
-                currentPages = 1;
-            }
+            //int pagesize = 10;
+            //if (pagesize <= 0)
+            //{
+            //    pagesize = 10;
+            //}
+            //int countPages = (int)Math.Ceiling((double)category.Count() / pagesize);
+            //if (currentPages > countPages)
+            //{
+            //    currentPages = countPages;
+            //}
+            //if (currentPages < 1)
+            //{
+            //    currentPages = 1;
+            //}
 
-            var pagingmodel = new PagingModel()
-            {
-                currentpage = currentPages,
-                countpages = countPages,
-                generateUrl = (int? p) => Url.Action("Index", "Category", new { areas = "Admin", p = p, pagesize = pagesize })
-            };
-            ViewBag.pagingmodel = pagingmodel;
-            category = category.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
+            //var pagingmodel = new PagingModel()
+            //{
+            //    currentpage = currentPages,
+            //    countpages = countPages,
+            //    generateUrl = (int? p) => Url.Action("Index", "Category", new { areas = "Admin", p = p, pagesize = pagesize })
+            //};
+            //ViewBag.pagingmodel = pagingmodel;
+            //category = category.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
             return View(category);
         }
 
@@ -63,7 +63,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
                 var createcategoryModel = new CreateCategoryModel
                 {
                     Name = category.Name,
-                    CreatedDate = category.CreatedDate,
+                    CreatedDate = DateTime.Now,
                     Status = category.Status
                 };
 

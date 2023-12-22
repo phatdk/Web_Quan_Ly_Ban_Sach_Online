@@ -17,7 +17,6 @@
 		margin-bottom: -1px;
 		padding-top: 90px;
 		padding-bottom: 30px;
-		border: 1px solid #e1e7ec;
 		border-top-left-radius: 7px;
 		border-top-right-radius: 7px;
 		overflow: hidden
@@ -354,6 +353,13 @@
 		margin: 0;
 	}
 
+	.drop-menu li a:hover{
+		background-color:antiquewhite;
+	}
+
+	.list-group-item:hover{
+		background-color:antiquewhite;
+	}
 	.dropdown-content {
 		color: #606975;
 		font-weight: 500;
@@ -361,7 +367,7 @@
 	}
 
 		.dropdown-content:hover {
-			text-decoration: underline;
+			text-decoration: none;
 		}
 
 	.dropdown-custom .drop-menu {
@@ -381,17 +387,18 @@
 	.dropdown li {
 		width: 340px;
 	}
+	
 
 </style>
 <div class="container padding-bottom-3x mb-2">
-    <div class="row">
+    <div class="row" >
         <div class="col-lg-4">
             <aside class="user-info-wrapper">
                 <div class="user-cover" style="background-image: url(https://bootdey.com/img/Content/bg1.jpg);">
-                    <div class="info-label" data-toggle="tooltip" title="" data-original-title="You currently have 290 Reward Points to spend"><i class="icon-medal"></i>290 points</div>
+                  @*  <div class="info-label" data-toggle="tooltip" title="" data-original-title="You currently have 290 Reward Points to spend"><i class="icon-medal"></i>290 points</div>*@
                 </div>
                 <div class="user-info">
-                    <div class="user-avatar">
+                   @* <div class="user-avatar">
                         <a class="edit-avatar" asp-action="Index" asp-controller="Manage" asp-area="Identity"><i class="fa-solid fa-pen-to-square"></i></a>
                         @if (string.IsNullOrEmpty(userlogin.Img))
                         {
@@ -403,9 +410,9 @@
                         {
                             <img src="~/uploads/users/@userlogin.Img" alt="User">
                         }
-                    </div>
+                    </div>*@
                     <div class="user-data">
-                        <h4>@(userlogin.UserName)</h4>
+                        <h4> Xin chào : @(userlogin.UserName)</h4>
                     </div>
                 </div>
             </aside>

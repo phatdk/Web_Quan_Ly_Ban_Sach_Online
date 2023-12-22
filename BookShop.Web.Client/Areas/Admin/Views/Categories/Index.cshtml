@@ -1,54 +1,127 @@
 ﻿@model IEnumerable<BookShop.BLL.ConfigurationModel.CategoryModel.CategoryModel>
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<style>
+	.content{
+		padding: 20px;
+	}
+	.header {
+		margin-bottom: 30px;
+		display: flex;
+		justify-content: space-between;
+		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+		box-shadow: 1px saddlebrown;
+		border-radius: 10px;
+		height: 100px;
+		padding:10px
+	}
+	
+	.search-container {
+		display: flex;
+		align-items: center;
+	}
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id=item.Id}) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
-<partial name="_Paging" model="@ViewBag.pagingmodel" />
+	.search-bar {
+		padding: 10px;
+		border: 1px solid #ccc;
+		border-radius: 5px 0 0 5px;
+		outline: none;
+	}
+
+	.search-button {
+		padding: 10px;
+		background-color: #4caf50;
+		color: #fff;
+		border: 1px solid #4caf50;
+		border-radius: 0 5px 5px 0;
+		cursor: pointer;
+		outline: none;
+	}
+
+		.search-button:hover {
+			background-color: #45a049;
+		}
+		.header p{
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+		text-align: center;
+		}
+		.ct-body {
+		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+		border-radius: 10px;
+		padding: 10px
+		}
+</style>
+<div class="content">
+	<h1>Danh sách danh mục</h1>
+	<div class="header">
+		<p>
+			<a class="btn btn-secondary" asp-action="Create">Thêm mới</a>
+
+		</p>
+		<div class="search-container">
+			<input type="text" class="search-bar" placeholder="Search...">
+			<button class="search-button">Search</button>
+		</div>
+	</div>
+<div class="ct-body">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>
+						@Html.DisplayNameFor(model => model.Name)
+					</th>
+					<th>
+						@Html.DisplayNameFor(model => model.CreatedDate)
+					</th>
+					<th>
+						@Html.DisplayNameFor(model => model.Status)
+					</th>
+					<th>
+						Option
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+
+						<td>
+							@Html.DisplayFor(modelItem => item.Name)
+						</td>
+
+						<td>
+							@Html.DisplayFor(modelItem => item.CreatedDate)
+						</td>
+						@if (item.Status == 1)
+						{
+							<td>
+								Hoạt động
+							</td>
+						}
+						else
+						{
+							<td>
+								Không hoạt động
+							</td>
+						}
+
+						<td>
+
+							@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" })
+							@Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
+
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+		@*<partial name="_Paging" model="@ViewBag.pagingmodel" />*@
+</div>
+	
+</div>
