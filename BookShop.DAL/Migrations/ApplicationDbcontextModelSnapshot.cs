@@ -646,6 +646,9 @@ namespace BookShop.DAL.Migrations
                     b.Property<int?>("Shipfee")
                         .HasColumnType("int");
 
+                    b.Property<int>("TotalQuantity")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Id_Staff");
