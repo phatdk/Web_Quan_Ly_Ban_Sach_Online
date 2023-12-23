@@ -99,21 +99,5 @@ namespace BookShop.Web.Client.Services
 				return false;
 			}
 		}
-
-		public async Task<bool> GetPromotion(int promotionId)
-		{
-			var promotion = await _promotionService.GetById(promotionId);
-			if (promotion != null)
-			{
-				var updatemodel = new UpdatePromotionModel()
-				{
-
-				};
-				promotion.Quantity -= 1;
-				//var result = await _promotionService.Update(promotion.Id, promotion);
-				return true;
-			}
-			return false;
-		}
 	}
 }

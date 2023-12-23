@@ -110,10 +110,12 @@ builder.Services.AddTransient<IOrderPaymentService, OrderPaymentService>();
 builder.Services.AddTransient<IStatusOrderService, StatusOrderService>();
 builder.Services.AddTransient<IPromotionService, PromotionService>();
 builder.Services.AddTransient<IWalletpointService, WalletPointService>();
+builder.Services.AddTransient<IPointTranHistoryService, PointTranHistoryService>();
 builder.Services.AddTransient<IPromotionTypeService, PromotionTypeService>();
 builder.Services.AddTransient<IVNPayService, VNPayService>();
 builder.Services.AddTransient<IWishListService, WishListService>();
 builder.Services.AddTransient<INewsService, NewsService>();
+builder.Services.AddTransient<IEvaluateService, EvaluateService>();
 
 builder.Services.AddTransient<IUserRoleService, UserRoleService>();
 
@@ -122,8 +124,8 @@ builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromMinu
 // Configure the HTTP request pipeline.
 var app = builder.Build();
 #region SeedData
-//using (var scope = app.Services.CreateScope())
-//{
+using (var scope = app.Services.CreateScope())
+{
 //    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Userr>>();
 //    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
 //    SeedDataMD.SeedAsync(userManager, roleManager).Wait();
@@ -146,7 +148,11 @@ var app = builder.Build();
 //var service2 = scope.ServiceProvider.GetRequiredService<IPromotionTypeService>();
 
 //SeedDataMD.SeedPromotionType(service2).Wait();
-//}
+//var service1 = scope.ServiceProvider.GetRequiredService<IProductService>();
+//var service2 = scope.ServiceProvider.GetRequiredService<ICollectionService>();
+
+//SeedDataMD.FaKerProduct(service1,service2).Wait();
+}
 #endregion
 if (!app.Environment.IsDevelopment())
 {

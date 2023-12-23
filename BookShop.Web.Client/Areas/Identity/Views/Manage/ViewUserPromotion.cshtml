@@ -1,0 +1,117 @@
+﻿@model BookShop.DAL.Entities.Userr;
+@using BookShop.BLL.IService;
+@inject IUserService userService;
+@inject IUserPromotionService userPromotionService;
+@inject IPointTranHistoryService historyService;
+@inject IPromotionService promotionService;
+@{
+	ViewData["Title"] = "Khuyến mãi của bạn";
+	Layout = "_LayoutUser";
+}
+
+@if (Model.Id != 0)
+{
+	<div class="row">
+		<div class="col-6 mb-3">
+			<input type="text" class="w-75 text-center" id="promotionCode" placeholder="enter promotion code" />
+			<button onclick="getPromotion()">Nhận</button>
+		</div>
+		<hr />
+		<strong>Khuyến mãi của bạn</strong>
+		<div class="row">
+			<select class="col-3 text-center m-2" id="statusFilter" onchange="getDataList()">
+				<option value="2" selected>Tất cả</option>
+				<option value="1">Chưa sử dụng</option>
+				<option value="0">Đã sử dụng</option>
+			</select>
+			<select class="col-3 text-center m-2" id="dateFilter" onchange="getDataList()">
+				<option value="2" selected>Tất cả</option>
+				<option value="1">Còn hạn</option>
+				<option value="0">Hết hạn</option>
+			</select>
+		</div>
+		<strong class="col-1">STT</strong>
+		<strong class="col-5">Tên khuyến mãi</strong>
+		<strong class="col-2">Ngày nhận</strong>
+		<strong class="col-2">Hạn dùng</strong>
+		<strong class="col-2">Trạng thái</strong>
+		<hr />
+		<ul id="dataList"></ul>
+	</div>
+}
+else
+{
+	<h1>Có lỗi sảy ra <i class="fa-solid fa-skull"></i></h1>
+}
+<script src="~/js/site.js"></script>
+<script type="text/javascript">
+	function getPromotion() {
+		var code = $('#promotionCode').val();
+		$.ajax({
+			url: '/Member/GetPromotion',
+			type: 'GET',
+			data: { id: @Model.Id, code: code },
+			success: function (data) {
+				if (data.success == true) {
+					alert(data.message);
+					getDataList();
+				} else {
+					alert(data.message)
+				}
+			}
+		});
+	};
+
+	var page = 1;
+	function getDataList() {
+		var filter1 = $('#statusFilter').val();
+		var filter2 = $('#dateFilter').val();
+		var index = (page - 1) * 10;
+		$.ajax({
+			url: '/Member/GetUserPromotion',
+			type: 'GET',
+			data: {
+				id: @Model.Id,
+				page: page,
+				statusFilter: filter1,
+				dateFilter: filter2
+			},
+			success: function (data) {
+				var dataList = $('#dataList');
+				dataList.empty();
+				var status = "";
+				var statusColor = "";
+				var now = new Date();
+				data.forEach(function (item) {
+					index++;
+					var endTime = new Date(item.endDate);
+					var result = endTime.getTime() - now.getTime();
+					if (result >= 0 && item.status == 1) {
+						status = "Còn hạn";
+						statusColor = "text-success";
+					}
+					else if (item.Status == 0) {
+						status = "Đã dùng";
+						statusColor = "text-danger";
+					}
+					else {
+						status = "Hết hạn";
+						statusColor = "text-danger";
+					}
+					var rowData = '<li class="row border-1 border-bottom border-dark">' +
+						'<span class="col-1">' + index + '</span>' +
+						'<span class="col-5" >' + item.name + '</span>' +
+						'<span class="col-2" >' + formatDate(item.createdDate) + '</span>' +
+						'<span class="col-2">' + formatDate(item.endDate) + '</span>' +
+						'<span class="col-2 ' + statusColor + '" >' + status + '</span>' +
+						'</li>';
+					dataList.append(rowData);
+				});
+			}
+		});
+	};
+
+	$(document).ready(function () {
+		getDataList();
+	})
+</script>

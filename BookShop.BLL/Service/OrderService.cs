@@ -30,9 +30,6 @@ namespace BookShop.BLL.Service
         public async Task<List<ViewOrder>> GetOrderByUser(int userId)
         {
             var orders = (await _orderRepository.GetAllAsync()).Where(c => c.Id_User == userId);
-
-			
-
             var users = (await _userRepository.GetAllAsync());
             var promotions = await _promotionRepository.GetAllAsync();
             var status = await _statusRepository.GetAllAsync();
