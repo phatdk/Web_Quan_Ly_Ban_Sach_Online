@@ -12,6 +12,7 @@ using BookShop.BLL.Service;
 using BookShop.DAL.Entities;
 using BookShop.Web.Client.Areas.Admin.Models;
 using BookShop.Web.Client.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,7 @@ using System.Text.RegularExpressions;
 namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 {
 	[Area("Admin")]
+	[Authorize(Roles ="Admin,Staff")]
 	public class OfflineSaleController : Controller
 	{
 		private readonly IOrderService _orderService;
