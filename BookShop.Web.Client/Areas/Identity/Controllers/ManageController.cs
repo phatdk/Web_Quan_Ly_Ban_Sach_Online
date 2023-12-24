@@ -180,8 +180,9 @@ namespace App.Areas.Identity.Controllers
 
 			dataList = dataList.OrderByDescending(x => x.CreatedDate).ToList();
 			int pagesize = 10;
+			double totalPage = (double)dataList.Count / pagesize;
 			dataList = dataList.Skip((page - 1) * pagesize).Take(pagesize).ToList();
-			return Json(dataList);
+			return Json(new {data = dataList, page = page, max = Math.Ceiling(totalPage)});
 		}
 
 		public async Task<IActionResult> GetPromotion(int id, string code)

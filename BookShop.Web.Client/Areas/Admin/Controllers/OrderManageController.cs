@@ -65,36 +65,12 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			return Json(result);
 		}
 		// GET: OrderManageController
-		public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages)
+		public async Task<IActionResult> Index()
 		{
-			var orderList = new List<OrderViewModel>();
-			orderList = (await _orderService.GetAll()).ToList();
-			int pagesize = 10;
-			if (pagesize <= 0)
-			{
-				pagesize = 10;
-			}
-			int countPages = (int)Math.Ceiling((double)orderList.Count() / pagesize);
-			if (currentPages > countPages)
-			{
-				currentPages = countPages;
-			}
-			if (currentPages < 1)
-			{
-				currentPages = 1;
-			}
-			var pagingmodel = new PagingModel()
-			{
-				currentpage = currentPages,
-				countpages = countPages,
-				generateUrl = (int? p) => Url.Action("Index", "OrderManage", new { areas = "Admin", p = p, pagesize = pagesize })
-			};
-			ViewBag.pagingmodel = pagingmodel;
-			orderList = orderList.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
-			return View(orderList);
+			return View();
 		}
 
-		public async Task<IActionResult> GetOrder([FromQuery(Name = "p")] int currentPages, int? status, string? keyWord)
+		public async Task<IActionResult> GetOrder(int page, int? status, string? keyWord)
 		{
 
 			if (status != null)
@@ -118,30 +94,10 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					).ToList();
 			}
 			var orders = _orders.OrderByDescending(x => x.CreatedDate).ToList();
-
-			int pagesize = 10;
-			if (pagesize <= 0)
-			{
-				pagesize = 10;
-			}
-			int countPages = (int)Math.Ceiling((double)orders.Count() / pagesize);
-			if (currentPages > countPages)
-			{
-				currentPages = countPages;
-			}
-			if (currentPages < 1)
-			{
-				currentPages = 1;
-			}
-			var pagingmodel = new PagingModel()
-			{
-				currentpage = currentPages,
-				countpages = countPages,
-				generateUrl = (int? p) => Url.Action("Index", "OrderManage", new { p = p, status = status, pagesize = pagesize })
-			};
-			ViewBag.pagingmodel = pagingmodel;
-			orders = orders.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
-			return Json(orders);
+			int pageSize = 15;
+			double totalPage = (double)orders.Count / pageSize;
+			orders = orders.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+			return Json(new {data = orders, page = page, max = Math.Ceiling(totalPage)});
 		}
 
 		// GET: OrderManageController/Details/5
@@ -149,8 +105,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		{
 			_order = await _orderService.GetById(id);
 			var details = await _orderDetailService.GetByOrder(id);
-			var promotions = await _orderPromotionService.GetByOrder(id);
 			_order.orderDetails = details;
+			var promotions = await _orderPromotionService.GetByOrder(id);
 			_order.orderPromotions = promotions;
 			foreach (var item in details)
 			{
