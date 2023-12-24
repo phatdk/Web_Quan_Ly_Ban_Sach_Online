@@ -4,12 +4,16 @@
 @{
     ViewData["Title"] = "Create";
 }
+<style>
+    .form-group.cus{
+        display:flex;
+        justify-content:space-between;
 
-<h1>Create</h1>
+    }
+</style>
+<h1 style="text-align:center;">Thêm mới danh mục</h1>
 
-<h4>CategoryModel</h4>
-<hr />
-<div class="row">
+<div class="row" style="justify-content: center;">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -20,7 +24,7 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
            
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom:20px">
                 <label asp-for="Status" class="control-label"></label>
                 <select asp-for="Status" class="form-control">
                     <option value="1">Hoạt động</option>
@@ -29,13 +33,10 @@
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group cus">
+				<a asp-action="Index">Xem danh sách danh mục</a>
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>

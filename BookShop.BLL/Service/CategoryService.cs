@@ -61,6 +61,7 @@ namespace BookShop.BLL.Service
 				Id = obj.Id,
 				Name = obj.Name,
 				Status = obj.Status,
+				CreatedDate =obj.CreatedDate,
 			};
 		}
 
