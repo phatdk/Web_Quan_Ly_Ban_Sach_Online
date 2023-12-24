@@ -1,127 +1,105 @@
-﻿@model IEnumerable<BookShop.BLL.ConfigurationModel.CategoryModel.CategoryModel>
+﻿
+@model IEnumerable<BookShop.BLL.ConfigurationModel.CategoryModel.CategoryModel>
 
 @{
 	ViewData["Title"] = "Index";
 }
 
-<style>
-	.content{
-		padding: 20px;
-	}
-	.header {
-		margin-bottom: 30px;
-		display: flex;
-		justify-content: space-between;
-		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-		box-shadow: 1px saddlebrown;
-		border-radius: 10px;
-		height: 100px;
-		padding:10px
-	}
-	
-	.search-container {
-		display: flex;
-		align-items: center;
-	}
+<div class="book">
+	<div class="content">
+		<h1>Danh sách danh mục</h1>
+		<div class="header">
+			<p>
+				<a class="btn btn-secondary" asp-action="Create">Thêm mới</a>
 
-	.search-bar {
-		padding: 10px;
-		border: 1px solid #ccc;
-		border-radius: 5px 0 0 5px;
-		outline: none;
-	}
-
-	.search-button {
-		padding: 10px;
-		background-color: #4caf50;
-		color: #fff;
-		border: 1px solid #4caf50;
-		border-radius: 0 5px 5px 0;
-		cursor: pointer;
-		outline: none;
-	}
-
-		.search-button:hover {
-			background-color: #45a049;
-		}
-		.header p{
-		display: flex;
-		justify-content: center;
-		flex-direction: column;
-		text-align: center;
-		}
-		.ct-body {
-		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-		border-radius: 10px;
-		padding: 10px
-		}
-</style>
-<div class="content">
-	<h1>Danh sách danh mục</h1>
-	<div class="header">
-		<p>
-			<a class="btn btn-secondary" asp-action="Create">Thêm mới</a>
-
-		</p>
-		<div class="search-container">
-			<input type="text" class="search-bar" placeholder="Search...">
-			<button class="search-button">Search</button>
+			</p>
+			<div class="search-container">
+				<div class="loc">
+					<select class="trangthai" style="text-align:center" id="filterSelect" onchange="filterChange()" aria-label="Default select example">
+						<option value="" selected>Tất cả trạng thái</option>
+						<option value="0">Không hoạt động</option>
+						<option value="1">Hoạt động</option>
+					</select>
+					<div class="search-bar">
+						<a><i class="fa fa-search" style="font-size:30px" onclick="findOrder()"></i></a>
+						<input id="keyWordFind" oninput="searchOnEnter(event)" type="text" placeholder="Tìm kiếm">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ct-body">
+			<table class="table table-bordered border-dark table-hover">
+				<thead class="thead-light">
+					<tr>
+						<th class="text-center">STT</th>
+						<th class="text-center">Name</th>
+						<th class="text-center">CreatedDate</th>
+						<th class="text-center">Status</th>
+						<th class="text-center">Option</th>
+					</tr>
+				</thead>
+				<tbody id="listcategory">
+				</tbody>
+			</table>
+			<div id="buttonContainer"></div>
 		</div>
 	</div>
-<div class="ct-body">
-		<table class="table">
-			<thead>
-				<tr>
-					<th>
-						@Html.DisplayNameFor(model => model.Name)
-					</th>
-					<th>
-						@Html.DisplayNameFor(model => model.CreatedDate)
-					</th>
-					<th>
-						@Html.DisplayNameFor(model => model.Status)
-					</th>
-					<th>
-						Option
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var item in Model)
-				{
-					<tr>
-
-						<td>
-							@Html.DisplayFor(modelItem => item.Name)
-						</td>
-
-						<td>
-							@Html.DisplayFor(modelItem => item.CreatedDate)
-						</td>
-						@if (item.Status == 1)
-						{
-							<td>
-								Hoạt động
-							</td>
-						}
-						else
-						{
-							<td>
-								Không hoạt động
-							</td>
-						}
-
-						<td>
-
-							@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" })
-							@Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
-
-						</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-		@*<partial name="_Paging" model="@ViewBag.pagingmodel" />*@
 </div>
+
+<script src="~/js/site.js"></script>
+<script>
+	function getDetail(id) {
+		var url = "@Url.Action("Details", "Categories")?id=" + id
+		window.location.href = url;
+	}
+	function update(id) {
+		var url = "@Url.Action("Edit", "Categories")?id=" + id
+		window.location.href = url;
+	}
+	function loadData(pageIndex) {
+		// Gửi yêu cầu Ajax đến máy chủ
+		var status = document.getElementById("filterSelect").value;
+		var keyWord = document.getElementById("keyWordFind").value;
+		var index = (pageIndex - 1) * 10;
+		$.ajax({
+			url: '@Url.Action("Getdata", "Categories")',
+			type: 'GET',
+			data: { page: pageIndex,status : status, keyWord: keyWord },
+			success: function (data) {
+				// Xóa danh sách cũ trước khi thêm danh sách mới
+				var listcategory = $("#listcategory");
+				listcategory.empty();
+				// Thêm danh sách đơn hàng vào HTML
+				data.data.forEach(function (item) {
+					index += 1;
+					var categoryRow = '<tr>'+
+						'<td class="text-center">' + index + '</td>' +
+						'<td class="text-center"><label>' + item.name + '</label></td>' +
+						'<td class="text-center"><label>' + formatDate(item.createdDate) + '</label></td>' +
+						'<td class="text-center"><label>' + (item.status === 1 ? 'Hoạt động' : 'Không hoạt động') + '</label></td>' +
+						'<td class="text-center"><button class="btn btn-warning" onclick="getDetail(' + item.id + ')">Xem</button> <button class="btn btn-primary" onclick="update(' + item.id + ')">Sửa</button></td>' +
+						'</tr>';
+
+					listcategory.append(categoryRow);
+				});
+				createPagingButtons(1, data.max, data.page);
+			},
+			error: function (error) {
+				console.log('Lỗi: ' + error.responseText);
+			}
+		});
+	}
+	function filterChange() {
+		loadData(1)
+	}
+	function findOrder() {
+		loadData(1)
+	}
+	function searchOnEnter(event) {
+		loadData(1);
+	}
+	$(document).ready(function () {
+		loadData(1);
+	});
 	
-</div>
+</script>

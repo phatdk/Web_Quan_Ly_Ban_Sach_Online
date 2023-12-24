@@ -1,4 +1,5 @@
 ﻿using BookShop.BLL.ConfigurationModel.CategoryModel;
+using BookShop.BLL.ConfigurationModel.OrderModel;
 using BookShop.BLL.IService;
 using BookShop.BLL.Service;
 using BookShop.DAL.Entities;
@@ -9,48 +10,42 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 {
     [Area("Admin")]
-    [Route("admin/Category")]
+   
     [Authorize(Roles = "Admin")]
     public class CategoriesController : Controller
     {
         private readonly ICategoryService _categoryService;
-        public CategoriesController(ICategoryService categoryService)
+		private List<CategoryModel> _categories;
+		public CategoriesController(ICategoryService categoryService)
         {
+            _categories = new List<CategoryModel>();
             _categoryService = categoryService;
         }
-        [HttpGet]
-        [Route("listcategory")]
-        public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages)
+       
+        public async Task<IActionResult> Index()
         {
-            var category = await _categoryService.GetAll();
-            
-            //int pagesize = 10;
-            //if (pagesize <= 0)
-            //{
-            //    pagesize = 10;
-            //}
-            //int countPages = (int)Math.Ceiling((double)category.Count() / pagesize);
-            //if (currentPages > countPages)
-            //{
-            //    currentPages = countPages;
-            //}
-            //if (currentPages < 1)
-            //{
-            //    currentPages = 1;
-            //}
-
-            //var pagingmodel = new PagingModel()
-            //{
-            //    currentpage = currentPages,
-            //    countpages = countPages,
-            //    generateUrl = (int? p) => Url.Action("Index", "Category", new { areas = "Admin", p = p, pagesize = pagesize })
-            //};
-            //ViewBag.pagingmodel = pagingmodel;
-            //category = category.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
-            return View(category);
+            return View();
         }
 
-        [HttpGet("Create/category")]
+		public async Task<IActionResult> Getdata(int page,int? status, string? keyWord)
+		{
+
+            _categories = await _categoryService.GetAll();
+			if (keyWord != null)
+			{
+				_categories =  _categories.Where(c=>c.Name.Contains(keyWord)).ToList();
+			}
+			if (status != null)
+			{
+				_categories = _categories.Where(c => c.Status == Convert.ToInt32(status)).ToList();
+			}
+			var category =  _categories.OrderByDescending(c=>c.CreatedDate).ToList();
+			int pageSize = 10;
+			double totalPage = (double)category.Count / pageSize;
+            category = category.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+			return Json(new { data = category, page = page, max = Math.Ceiling(totalPage) });
+		}
+		[HttpGet("Create/category")]
         public async Task<IActionResult> Create()
         {
             return View();
@@ -72,14 +67,15 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             }
             return View(category);
         }
-        [HttpGet("Edit/category/{id}")]
+       
         public async Task<IActionResult> Edit(int id)
         {
             var category = await _categoryService.GetById(id);
             return View(category);
         }
-        [HttpPost("Edit/category/{id}")]
-        public async Task<IActionResult> Edit(int id, Category category)
+        
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, Category ?category)
         {
             if (!ModelState.IsValid)
             {
@@ -96,7 +92,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 
         }
 
-        [HttpGet("Detail/category/{id}")]
+       
         public async Task<IActionResult> Details(int id)
         {
             var category = await _categoryService.GetById(id);
