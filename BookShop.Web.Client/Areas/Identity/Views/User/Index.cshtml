@@ -1,18 +1,21 @@
 @using BookShop.Web.Client.Models;
+@using Microsoft.AspNetCore.Authorization;
 @model UserListModel
+@inject IAuthorizationService _IAuthorizationService
 @{
     ViewData["Title"] = "Danh sách các thành viên";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var isAdmin = (await _IAuthorizationService.AuthorizeAsync(User, "ManagerMenu")).Succeeded;
 }
 <h2>@ViewData["Title"]</h2>
 <partial name="_StatusMessage"></partial>
 <p>Tổng số thành viên: @Model.totalUsers</p>
 <div class="col">
     <div class="col-4">
-        <select class="form-select" id="exampleSelect" aria-label="Example select">
-            <option selected>Tất cả các thành viên</option>
-            <option value="option1"><a asp-action="Index" asp-controller="Home" asp-route-Idselect="1" >Danh sách khách hàng</a></option>
-            <option value="option2"><a asp-action="Index" asp-controller="Home" asp-route-Idselect="2">Danh sách nhân viên</a></option>
+        <select class="form-select" id="sortop" name="sortop" >
+            <option value="0">Tất cả các thành viên</option>
+            <option value="1">Danh sách khách hàng</option>
+            <option value="2">Danh sách nhân viên</option>
         </select>
     </div>
     
@@ -39,20 +42,25 @@
                 }
             </td>
             <td>
-                <a class="btn btn-success btn-sm" asp-action="SetPassword" asp-route-id="@user.Id">Đặt mật khẩu</a>
+               
+                @if (isAdmin)
+                {
+                    <a class="btn btn-success btn-sm" asp-action="SetPassword" asp-route-id="@user.Id">Đặt mật khẩu</a>
+                    <a class="btn btn-success btn-sm" asp-action="Details" asp-route-id="@user.Id">Xem</a>
+                }              
             </td>
         </tr>
     }
 </table>
 
-@{
-    var pagingmodel = new PagingModel()
-    {
-        currentpage = Model.currentPage,
-        countpages = Model.countPages,
-        generateUrl = (int? p) => Url.Action("Index", new { p = p})
-    };
-}
+<partial name="_Paging" model="@ViewBag.pagingmodel" />
 
-<partial name="_Paging" model="@pagingmodel" />
-
+<script>
+    var urlParams = new URLSearchParams(window.location.search);
+    var sortopValue = urlParams.get('sortop');
+    document.getElementById('sortop').value = sortopValue;
+    document.getElementById('sortop').addEventListener('change', function () {
+        var selectedValue = this.value;
+        window.location.href = '/manageuser/index?p=1&sortop=' + selectedValue;
+    });
+</script>
