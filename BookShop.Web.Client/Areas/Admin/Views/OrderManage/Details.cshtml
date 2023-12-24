@@ -129,7 +129,7 @@
 	<button class="btn btn-outline-success" id="completeReturn" hidden onclick="SuccessReturn()">Xác nhận xử lý hoàn tất</button>
 	<button class="btn btn-outline-danger" id="cancelOrder" hidden onclick="CancelOrder()">Xác nhận hủy đơn</button>
 	<button class="btn btn-outline-success" id="closeOrder" hidden onclick="CloseOrder()">Xác nhận đóng đơn</button>
-	<a href="@Url.Action("Edit", "OrderManage", new { id = Model.Id })" id="modifyOrder" hidden class="btn btn-outline-warning"> Chỉnh sửa</a>
+	@* <a href="@Url.Action("Edit", "OrderManage", new { id = Model.Id })" id="modifyOrder" hidden class="btn btn-outline-warning"> Chỉnh sửa</a> *@
 
 </div>
 <script type="text/javascript">
@@ -137,7 +137,7 @@
 		switch (@Model.Status) {
 			case 1:
 				document.getElementById('acceptOrder').removeAttribute('hidden');
-				document.getElementById('modifyOrder').removeAttribute('hidden');
+				// document.getElementById('modifyOrder').removeAttribute('hidden');
 				break;
 			case 2:
 				document.getElementById('deliveryOrder').removeAttribute('hidden');
