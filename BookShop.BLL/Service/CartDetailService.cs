@@ -14,10 +14,12 @@ namespace BookShop.BLL.Service
     {
         private readonly IRepository<CartDetail> _cartRepository;
         private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<Image> _imageRepository;
         public CartDetailService()
         {
             _cartRepository = new Repository<CartDetail>();
             _productRepository = new Repository<Product>();
+            _imageRepository = new Repository<Image>();
         }
         public async Task<bool> Add(CreateCartDetailModel model)
         {
@@ -64,8 +66,10 @@ namespace BookShop.BLL.Service
         {
             var carts = (await _cartRepository.GetAllAsync()).Where(c => c.Id_User == userId);
             var products = await _productRepository.GetAllAsync();
+            var images = await _imageRepository.GetAllAsync();
             var objlist = (from a in carts
                            join b in products on a.Id_Product equals b.Id
+                           join c in images on b.Id equals c.Id_Product
                            select new CartDetailViewModel()
                            {
                                Id = a.Id,
@@ -76,6 +80,8 @@ namespace BookShop.BLL.Service
                                ProductName = b.Name,
                                ProductPrice = b.Price,
                                TotalPrice = a.Quantity * b.Price,
+                               ImgProductCartDetail = c.ImageUrl,
+                               SoLuongKho = b.Quantity,
                                Status = b.Quantity > 0 && b.Status == 1 ? 1 : 0,
                            }).ToList();
             return objlist;

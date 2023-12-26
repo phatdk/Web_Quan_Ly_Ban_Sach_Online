@@ -9,7 +9,7 @@
     .anh {
         background-color: white;
         border-radius: 7px;
-        padding: 7px 0px;
+        padding: 15px 0px;
     }
 
     .Gia {
@@ -38,6 +38,8 @@
             }
 
     .mua {
+        margin-top:20%;
+        justify-content:end;
         display: flex;
     }
 
@@ -48,7 +50,7 @@
             border-radius: 5px;
             font-weight: 600;
             font-size: 10px;
-            margin-left:10px
+            margin-left: 10px
         }
 
         .mua .m2 {
@@ -117,8 +119,8 @@
                 </div>
                 <div class="danhgia">
                     <a asp-area="" asp-controller="Home" asp-action="DanhGia">Đánh Giá</a>
+                    <h6>Sản phẩm bao gồm</h6>
                     <ul>
-                        <h6>Sản phẩm bao gồm</h6>
                         @foreach (var item in Model.bookViewModels)
                         {
                             <li>
@@ -142,8 +144,8 @@
                         <div class="row">
                             <div class="col-12">
                                 <div id="quantity" class="form-group">
-                                    <div style="display: flex"> 
-                                        Số lượng: 
+                                    <div style="display: flex">
+                                        Số lượng:
                                         <input id="quantityInput" class="form-control" min="1" max="@Model.Quantity" value="1" type="number"
                                                style="width: 75px; height: 25px; border-bottom: 1px solid black;
 border-left: none; border-right: none;border-top:none; border-radius: 0px; text-align: center" />
@@ -164,77 +166,21 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
             </div>
         </div>
     </div>
-    <div class="thongtinvesach row">
-        <h5>Thông Tin Sản Phẩm</h5>
-        <div class="row">
-            <div class="col-4">
-                <p>Mã hàng</p>
-                <p>Dộ tuổi</p>
-                <p>Tên nhà hàng cup cấp</p>
-                <p>Tác Giả</p>
-                <p>Nhà Xuất Bản</p>
-                <p>Năm BX</p>
-                <p>Ngôn Ngữ</p>
-                <p>Số trang</p>
-                <p>Hình thức</p>
-                <p>Mã hàng</p>
-                <p>Mã hàng</p>
-                <p>Mã hàng</p>
-
-            </div>
-            <div class="col-8">
-                <p>Mã hàng</p>
-                <p>Dộ tuổi</p>
-                <p>Tên nhà hàng cup cấp</p>
-                <p>Tác Giả</p>
-                <p>Nhà Xuất Bản</p>
-                <p>Năm BX</p>
-                <p>Ngôn Ngữ</p>
-                <p>Số trang</p>
-                <p>Hình thức</p>
-                <p>Mã hàng</p>
-                <p>Mã hàng</p>
-                <p>Mã hàng</p>
-            </div>
-        </div>
-    </div>
-    <div class="row danhgia">
-        <div>
-            <p>Đánh Giá Sản Phẩm</p>
-            <div>
-                <div>
-                    0<span>/5</span>
-                </div>
-                <div>
-                    <div class="rating-box">
-                        <div class="rating" style="width:0%"></div>
-                    </div>
-                    <div class="clear"></div>
-                </div>
-                <div>
-                    (0&nbsp;đánh giá)
-                </div>
-            </div>
-        </div>
-        <div>
-        </div>
-    </div>
 </div>
-
 <div class="modal" id="spModal">
     <div class="modal-dialog r">
         <div class="modal-content group-tabs">
 
             <!-- Modal Header -->
             <div class="modal-header nav nav-tabs" role="tablist">
-				<img class="a1" src="@imgUrl" alt="ảnh sản phẩm" style="max-width: 100%" />
-				Sản Phẩm đã được thêm vào giỏ hàng của bạn
+                <img class="a1" src="@imgUrl" alt="ảnh sản phẩm" style="max-width: 100%" />
+                Sản Phẩm đã được thêm vào giỏ hàng của bạn
             </div>
 
             <!-- Modal body -->
             <!-- Modal footer -->
             <div class="modal-footer group-tabs">
-                <a class="btn btn-primary">Đến giỏ hàng <i class="fa-solid fa-arrow-right"></i></a>
+                <a class="btn btn-primary" asp-controller="Cart" asp-action="CartDetails">Đến giỏ hàng <i class="fa-solid fa-arrow-right"></i></a>
             </div>
 
         </div>
@@ -267,51 +213,4 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
         var url = "@Url.Action("CreateOnlineOrder", "Order")?id=@Model.Id&quantity=" + quantity
         window.location.href = url;
     });
-    const plus = document.querySelector(".plus"),
-        minus = document.querySelector(".minus"),
-        num = document.querySelector(".num");
-
-    let a = 1;
-    plus.addEventListener("click", () => {
-        a++;
-        a = (a < 10) ? "0" + a : a;
-        num.innerHTML = a;
-        console.log(a);
-    });
-    minus.addEventListener("click", () => {
-        if (a > 1) {
-            a--;
-            a = (a < 10) ? "0" + a : a;
-            num.innerHTML = a;
-        }
-    });
 </script>
-
-@* <script type="text/javascript">
-    document.getElementById('addToCart').addEventListener('click', function () {
-        var quantity = document.getElementById('quantityInput').value;
-        $.ajax({
-            url: '/Cart/AddToCart?id=@Model.Id',
-            type: 'POST',
-            data: { quantity: quantity },
-            success: function (result) {
-                if (result.success) {
-                    // Xóa thành công, thực hiện các hành động bạn muốn
-                    alert('Đã thêm vào giỏ hàng.');
-                    // Ví dụ: cập nhật giao diện hoặc làm mới danh sách sản phẩm
-                } else {
-                    alert('Xóa thất bại: ' + result.errorMessage);
-                }
-            },
-            error: function (error) {
-                alert('Có lỗi xảy ra: ' + error.responseText);
-            }
-        });
-    });
-    document.getElementById('buyNow').addEventListener('click', function () {
-        var quantity = document.getElementById('quantityInput').value;
-        // var result = "@Url.Action("AddToCart", "Cart")?id=@Model.Id&quantity=" + quantity;
-        var url = "@Url.Action("CreateOnlineOrder", "Order")?id=@Model.Id&quantity=" + quantity
-        window.location.href = url;
-    });
-</script> *@
