@@ -16,5 +16,6 @@ namespace BookShop.BLL.ConfigurationModel.OrderPromotionModel
 		public int? AmountReduct { get; set; }
 		public int? PercentReduct { get; set; }
 		public int ReductMax { get; set; }
+		public int TotalReduct {  get; set; }
 	}
 }
