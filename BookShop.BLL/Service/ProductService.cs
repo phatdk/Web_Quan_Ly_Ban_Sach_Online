@@ -363,26 +363,26 @@ namespace BookShop.BLL.Service
 			}
 			catch (Exception ex) { return false; }
 		}
-	
-	public async Task<bool> ChangeQuantity(int id, int changeAmount)
-	{
-	getAgain:;
-		var product = await _productRepository.GetByIdAsync(id);
-		try
+
+		public async Task<bool> ChangeQuantity(int id, int changeAmount)
 		{
-			if (product != null)
+		getAgain:;
+			var product = await _productRepository.GetByIdAsync(id);
+			try
 			{
-				product.Quantity += changeAmount;
-				if (product.Quantity <= 0)
+				if (product != null)
 				{
-					product.Status = 2;
+					product.Quantity += changeAmount;
+					if (product.Quantity <= 0)
+					{
+						product.Status = 2;
+					}
 				}
+				else goto getAgain;
+				await _productRepository.UpdateAsync(id, product);
+				return true;
 			}
-			else goto getAgain;
-			await _productRepository.UpdateAsync(id, product);
-			return true;
+			catch { return false; }
 		}
-		catch { return false; }
 	}
-}
 }

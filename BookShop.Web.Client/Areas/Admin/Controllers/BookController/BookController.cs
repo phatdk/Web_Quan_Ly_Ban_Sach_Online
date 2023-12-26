@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing;
-using ZXing;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 {

@@ -153,8 +153,8 @@ namespace BookShop.Web.Client.Controllers
 					foreach (var item in product.bookViewModels)
 					{
 						createModel.Weight += (item.Weight * prod.Quantity);
-						createModel.Width += (item.Widght * prod.Quantity);
-						createModel.Length += (item.Length * prod.Quantity);
+						createModel.Width = createModel.Width > item.Widght ? createModel.Width : item.Widght;
+						createModel.Length = createModel.Length > item.Length ? createModel.Length : item.Length;
 						createModel.Height += (item.Height * prod.Quantity);
 					}
 					orderdetail = new OrderDetailViewModel()
