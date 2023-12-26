@@ -46,6 +46,7 @@ namespace BookShop.BLL.Service
 						 {
 							 Id = c.Id,
 							 Name = c.Name,
+							 CreatedDate = c.CreatedDate,
 							 Status = c.Status,
 						 }).ToList();
 			return query;
@@ -60,6 +61,7 @@ namespace BookShop.BLL.Service
 				Id = obj.Id,
 				Name = obj.Name,
 				Status = obj.Status,
+				CreatedDate =obj.CreatedDate,
 			};
 		}
 

@@ -8,104 +8,108 @@
     };
 }
 
-<h1>Danh sách tác giả</h1>
-
-<p>
-    <a asp-action="Create">Thêm mới</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-           @* <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>*@
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Img)
-            </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.Index)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>*@
-            <th> Thao Tác</th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-           @* <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-               @* @Html.DisplayFor(modelItem => item.Img)*@
-               @{
-                        var a = System.IO.Path.GetExtension(item.Img);
-                        @if (@imageExtensions.Contains(a.Trim())) // .Trim để cut hết dấu cách
-                        {
-                         <img src="/img/@item.Img" height="100px">  
-                        }else
-                        {
-                            <img src="/img/bug2.png" height="100px"> 
-                            <p>Ảnh lỗi</p>
-                        }
-                    }
-            </td>
-           @* <td>
-                @Html.DisplayFor(modelItem => item.Index)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>*@
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new {  id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
-<partial name="_Paging" model="@ViewBag.pagingmodel" />
 <style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    th, td {
-        padding: 30px;
-        text-align: center;
-    }
-
-    th {
-        background-color: #f2f2f2;
-    }
-
-    td {
-        border-bottom: 1px solid #ddd;
-    }
-
-    /* Điều chỉnh chiều rộng của cột tại đây */
-    th:nth-child(1), td:nth-child(1) {
-        width: 70px;
-    }
-
-    th:nth-child(2), td:nth-child(2) {
-        width: 150px;
-    }
-
-    /* Tùy chỉnh các cột khác tại đây */
+	.text-center.anh img {
+		width:100px;
+	}
 </style>
+<div class="book">
+	<div class="content">
+		<h1>Danh sách tác giả</h1>
+		<div class="header">
+			<p>
+				<a class="btn btn-secondary" asp-action="Create">Thêm mới</a>
+
+			</p>
+			<div class="search-container">
+				<div class="loc">
+					<select class="trangthai" style="text-align:center" id="filterSelect" onchange="filterChange()" aria-label="Default select example">
+						<option value="" selected>Tất cả trạng thái</option>
+						<option value="0">Không hoạt động</option>
+						<option value="1">Hoạt động</option>
+					</select>
+					<div class="search-bar">
+						<a><i class="fa fa-search" style="font-size:30px" onclick="findOrder()"></i></a>
+						<input id="keyWordFind" oninput="searchOnEnter(event)" type="text" placeholder="Tìm kiếm">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ct-body">
+			<table class="table table-bordered border-dark table-hover">
+				<thead class="thead-light">
+					<tr>
+						<th class="text-center">STT</th>
+						<th class="text-center">Img</th>
+						<th class="text-center">Name</th>
+						<th class="text-center">CreatedDate</th>
+						<th class="text-center">Status</th>
+						<th class="text-center">Option</th>
+					</tr>
+				</thead>
+				<tbody id="listcategory">
+				</tbody>
+			</table>
+			<div id="buttonContainer"></div>
+		</div>
+	</div>
+</div>
+
+<script src="~/js/site.js"></script>
+<script>
+	function getDetail(id) {
+		var url = "@Url.Action("Details", "Author")?id=" + id
+		window.location.href = url;
+	}
+	function update(id) {
+		var url = "@Url.Action("Edit", "Author")?id=" + id
+		window.location.href = url;
+	}
+	function loadData(pageIndex) {
+		// Gửi yêu cầu Ajax đến máy chủ
+		var status = document.getElementById("filterSelect").value;
+		var keyWord = document.getElementById("keyWordFind").value;
+		var index = (pageIndex - 1) * 10;
+		$.ajax({
+			url: '@Url.Action("Getdata", "Author")',
+			type: 'GET',
+			data: { page: pageIndex, status: status, keyWord: keyWord },
+			success: function (data) {
+				// Xóa danh sách cũ trước khi thêm danh sách mới
+				var listcategory = $("#listcategory");
+				listcategory.empty();
+				// Thêm danh sách đơn hàng vào HTML
+				data.data.forEach(function (item) {
+					index += 1;
+					var categoryRow = '<tr>' +
+						'<td class="text-center">' + index + '</td>' +
+						'<td class="text-center anh"><img src=/img/author/'+ item.img +' alt='+ item.name +' title='+item.name+' / > </td>' +
+						'<td class="text-center"><label>' + item.name + '</label></td>' +
+						'<td class="text-center"><label>' + formatDate(item.createdDate) + '</label></td>' +
+						'<td class="text-center"><label>' + item.status + '</label></td>' +
+						'<td class="text-center"><button class="btn btn-warning" onclick="getDetail(' + item.id + ')">Xem</button> <button class="btn btn-primary" onclick="update(' + item.id + ')">Sửa</button></td>' +
+						'</tr>';
+
+					listcategory.append(categoryRow);
+				});
+				createPagingButtons(1, data.max, data.page);
+			},
+			error: function (error) {
+				console.log('Lỗi: ' + error.responseText);
+			}
+		});
+	}
+	function filterChange() {
+		loadData(1)
+	}
+	function findOrder() {
+		loadData(1)
+	}
+	function searchOnEnter(event) {
+		loadData(1);
+	}
+	$(document).ready(function () {
+		loadData(1);
+	});
+
+</script>

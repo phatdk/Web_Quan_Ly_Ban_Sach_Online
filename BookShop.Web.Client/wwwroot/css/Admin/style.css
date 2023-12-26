@@ -638,3 +638,100 @@
 a:hover{
     text-decoration:none !important;
 }
+
+
+
+
+
+.book .content {
+    padding: 20px;
+}
+
+.book .header {
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: 100px auto;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 10px;
+    height: 100px;
+    padding: 10px
+}
+
+.book .search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.book .search-bar {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+    outline: none;
+}
+
+.book .search-button {
+    padding: 10px;
+    background-color: #4caf50;
+    color: #fff;
+    border: 1px solid #4caf50;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    outline: none;
+}
+
+    .book .search-button:hover {
+        background-color: #45a049;
+    }
+
+.book .header p {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.book .ct-body {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 10px;
+    padding: 10px
+}
+
+.book .search-bar {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    border: none;
+}
+
+    .book .search-bar input[type="text"] {
+        padding-right: 30px;
+        width: 270px;
+        border-radius: 5px;
+        height: 50px;
+        padding-left: 10px;
+    }
+
+    .book .search-bar a {
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translateY(-50%);
+        cursor: pointer;
+        font-size: 18px !important;
+        color: #333 !important;
+        text-decoration: none !important;
+        border-bottom: 0 !important;
+    }
+
+.book .loc {
+    display: flex;
+    gap: 10px;
+}
+
+.book .search-bar a i:hover {
+    color: red;
+}
+
