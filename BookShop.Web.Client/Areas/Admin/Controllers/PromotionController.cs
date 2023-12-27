@@ -15,7 +15,7 @@ using System.Security.Principal;
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Staff")]
     public class PromotionController : Controller
     {
         IPromotionService _promotionService;
@@ -114,6 +114,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
             return RedirectToAction("Index");
 
         }
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> Edit(int id)
         {
             var promotion = await _promotionService.GetById(id);

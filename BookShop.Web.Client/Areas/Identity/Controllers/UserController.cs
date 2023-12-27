@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ using BookShop.DAL.ApplicationDbContext;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Entities.Identity;
 using BookShop.Web.Client.ExtendMethods;
+using BookShop.Web.Client.Models;
 using MessagePack;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -26,12 +28,8 @@ using Microsoft.Extensions.Logging;
 
 namespace ShopWheyProject.MVC.Areas.Identity.Controllers
 {
-
-    /// <summary>
-    /// [Authorize(Roles = RoleName.Administrator)]
-    /// </summary>
     [Area("Identity")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Staff")]
     [Route("/ManageUser/[action]")]
     public class UserController : Controller
     {
@@ -52,29 +50,25 @@ namespace ShopWheyProject.MVC.Areas.Identity.Controllers
 
         //
         // GET: /ManageUser/Index
-        public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPage = 1)
+        public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages, [FromQuery] int sortop = 0)
         {
-            if (currentPage < 1)
-                currentPage = 1;
-
             var model = new UserListModel();
-            model.currentPage = currentPage;
+            var Listuser = await _userManager.Users.ToListAsync();
+            int pagesize = 10;
+            if (pagesize <= 0)
+            {
+                pagesize = 10;
+            }
 
-            var qr = _userManager.Users.OrderBy(u => u.UserName);
 
-            model.totalUsers = await qr.CountAsync();
-            model.countPages = (int)Math.Ceiling((double)model.totalUsers / model.ITEMS_PER_PAGE);
 
-            if (model.currentPage > model.countPages)
-                model.currentPage = model.countPages;
+            var qr1 = Listuser.Select(u => new UserAndRole()
+            {
+                Id = u.Id,
+                UserName = u.UserName,
 
-            var qr1 = qr.Skip((model.currentPage - 1) * model.ITEMS_PER_PAGE)
-                        .Take(model.ITEMS_PER_PAGE)
-                        .Select(u => new UserAndRole()
-                        {
-                            Id = u.Id,
-                            UserName = u.UserName,
-                        });
+            });
+
             if (qr1.Count() > 0)
             {
                 model.users = qr1.ToList();
@@ -83,18 +77,55 @@ namespace ShopWheyProject.MVC.Areas.Identity.Controllers
                 {
                     var roles = await _userManager.GetRolesAsync(user);
                     user.RoleNames = string.Join(",", roles);
+                }
+
+                if (sortop == 1)
+                {
+                    model.users = model.users.Where(x => x.RoleNames.Contains("Customer")).ToList();
+
+                }
+                if (sortop == 2)
+                {
+                    model.users = model.users.Where(x => x.RoleNames.Contains("Staff")).ToList();
 
                 }
 
-                return View(model);
+
+
             }
-            else
+
+            int countPages = (int)Math.Ceiling((double)model.users.Count() / pagesize);
+            if (currentPages > countPages)
             {
-                return View();
+                currentPages = countPages;
             }
+            if (currentPages < 1)
+            {
+                currentPages = 1;
+            }
+
+            var pagingmodel = new PagingModel()
+            {
+                currentpage = currentPages,
+                countpages = countPages,
+                generateUrl = (int? p) => Url.Action("Index", "User", new { areas = "Identity", p = p, pagesize = pagesize, sortop = sortop })
+            };
+            ViewBag.pagingmodel = pagingmodel;
+            // Listuser = Listuser.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
+            model.users = model.users.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
+            return View(model);
 
         }
-
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Details(int id)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (user != null)
+            {
+                return View(user);
+            }
+            return NotFound();
+        }
         public async Task<IActionResult> ViewPromotionUser(int IdUser)
         {
             return View(await _userManager.Users.Include(x => x.UserPromotions).FirstOrDefaultAsync(x => x.Id == IdUser));
