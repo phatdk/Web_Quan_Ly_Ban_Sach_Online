@@ -2,13 +2,22 @@
 @{
     ViewData["Title"] = "Hồ sơ cá nhân";
 }
-
-<h4>@ViewData["Title"]</h4>
-
-<partial name="_StatusMessage" />
-
-<div class="row">
-    <div class="col-md-6">
+<style>
+    .ttcn{
+        background-color:white;
+        padding:10px;
+        border-radius:10px
+    }
+    .ddd{
+        text-align:center;
+    }
+    .ddd button{
+        width:200px;
+    }
+</style>
+<div class="row ttcn">
+    <div class="col-md-6 container">
+        <h4>@ViewData["Title"]</h4>
         <form asp-action="EditProfile" id="profile-form" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -24,7 +33,9 @@
                 <label asp-for="PhoneNumber"></label>
                 <input asp-for="PhoneNumber" class="form-control" />
             </div>
+            <div class="ddd">
             <button id="update-profile-button" type="submit" class="btn btn-primary">Lưu dữ liệu</button>
+            </div>
         </form>
     </div>
 </div>

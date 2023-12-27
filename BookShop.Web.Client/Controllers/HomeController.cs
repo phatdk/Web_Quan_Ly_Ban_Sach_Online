@@ -34,12 +34,7 @@ namespace BookShop.Web.Client.Controllers
 			ViewBag.Products = await _productService.GetAll();
 			return View();
 		}
-
-		public IActionResult GioHang()
-		{
-			return View();
-		}
-        public async Task<IActionResult> DanhGia()
+        public async Task<IActionResult> DanhSachSanPham()
         {
             ViewBag.Products = await _productService.GetAll();
             return View();

@@ -3,16 +3,26 @@
 @{
 	ViewData["Title"] = "Danhsachyeuthich";
 }
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+    .dsyeuthich{
+        background-color:white;
+        border-radius:10px;
+        padding:10px;
+    }
 
+        .dsyeuthich .container .table-responsive {
+        margin-top:10px;
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<div class="dsyeuthich">
 <h1>Danh sách yêu thích của bạn</h1>
 <div class="container">
     <input type="text" id="searchInput" placeholder="Nhập từ khóa tìm kiếm...">
     <button class="btn btn-primary" id="searchBtn">Tìm kiếm</button>
-
     <div class="table-responsive">
-        <table class="table table-striped" id="wishlistTable">
-            <thead>
+        <table class="table" id="wishlistTable">
+            <tbody>
                 <tr>
                     <th>Tên</th>
                     <th>Giá</th>
@@ -22,8 +32,6 @@
                     <th>Ảnh</th>
                     <th></th>
                 </tr>
-            </thead>
-            <tbody>
                 @foreach (var item in Model)
                 {
                     <tr class="wishlist-item" data-id="@item.Id_Product">
@@ -42,7 +50,7 @@
         </table>
     </div>
 </div>
-
+</div>
 <script type="text/javascript">
 	$(document).ready(function () {
 		$(".delete-btn").click(function () {
