@@ -1,15 +1,9 @@
-﻿using BookShop.BLL.IService;
+﻿using BookShop.BLL.ConfigurationModel.AuthorModel;
 using BookShop.BLL.ConfigurationModel.BookModel;
+using BookShop.BLL.ConfigurationModel.GenreModel;
+using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using BookShop.BLL.ConfigurationModel.AuthorModel;
-using BookShop.BLL.ConfigurationModel.GenreModel;
 
 namespace BookShop.BLL.Service
 {
@@ -55,6 +49,7 @@ namespace BookShop.BLL.Service
                     Height = requet.Height,
                     Length = requet.Length,
                     Widght = requet.Widght,
+                    Barcode = requet.Barcode,
                     CreatedDate = DateTime.Now,
                     Status = requet.Status,
                     Id_Supplier = requet.Id_Supplier,
@@ -91,18 +86,19 @@ namespace BookShop.BLL.Service
             }
         }
 
-		public async Task<bool> Delete(int id)
-		{
-			try
-			{
-				await _bookRepository.RemoveAsync(id);
-				return true;
-			}
-			catch (Exception)
-			{
-				return false;
-			}
-		}
+
+        public async Task<bool> Delete(int id)
+        {
+            try
+            {
+                await _bookRepository.RemoveAsync(id);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
 
         public async Task<bool> Update(UpdateBookModel requet)
         {
@@ -111,8 +107,10 @@ namespace BookShop.BLL.Service
                 var obj = await _bookRepository.GetByIdAsync(requet.Id);
                 obj.ISBN = requet.ISBN;
                 obj.Title = requet.Title;
+                obj.Barcode = requet.Barcode;
                 obj.Description = requet.Description;
                 obj.Reader = requet.Reader;
+                obj.Barcode = requet.Barcode;
                 obj.CoverPrice = requet.Price;
                 obj.ImportPrice = requet.ImportPrice;
                 obj.Quantity = requet.Quantity;
@@ -128,7 +126,7 @@ namespace BookShop.BLL.Service
                 obj.Id_Supplier = requet.Id_Supplier;
                 await _bookRepository.UpdateAsync(obj.Id, obj);
 
-                var bookauthors = (await _bookAuthorRepository.GetAllAsync()).Where(x=>x.Id_Book == obj.Id);
+                var bookauthors = (await _bookAuthorRepository.GetAllAsync()).Where(x => x.Id_Book == obj.Id);
                 // Loại bỏ phần tử không có và skip các phần tử đã có
                 foreach (var item in bookauthors)
                 {
@@ -234,6 +232,7 @@ namespace BookShop.BLL.Service
                     PageSize = item.PageSize,
                     Pages = item.Pages,
                     Reader = item.Reader,
+                    Barcode = item.Barcode,
                     Cover = item.Cover,
                     PublicationDate = item.PublicationDate,
                     Weight = item.Weight,
@@ -286,7 +285,7 @@ namespace BookShop.BLL.Service
                 };
                 genres.Add(genremd);
             }
-       
+
             return new BookViewModel()
             {
                 Id = books.Id,
@@ -298,6 +297,7 @@ namespace BookShop.BLL.Service
                 Quantity = books.Quantity,
                 PageSize = books.PageSize,
                 Pages = books.Pages,
+                Barcode = books.Barcode,
                 Cover = books.Cover,
                 PublicationDate = books.PublicationDate,
                 Description = books.Description,
@@ -314,15 +314,15 @@ namespace BookShop.BLL.Service
 
         }
 
-		public async Task<List<BookViewModel>> GetByAuthor(int authorId)
-		{
-			var listAuthor = (await _bookAuthorRepository.GetAllAsync()).Where(x => x.Id_Author == authorId);
-			var books = new List<Book>();
-			foreach (BookAuthor item in listAuthor)
-			{
-				var book = await _bookRepository.GetByIdAsync(item.Id_Book);
-				books.Add(book);
-			}
+        public async Task<List<BookViewModel>> GetByAuthor(int authorId)
+        {
+            var listAuthor = (await _bookAuthorRepository.GetAllAsync()).Where(x => x.Id_Author == authorId);
+            var books = new List<Book>();
+            foreach (BookAuthor item in listAuthor)
+            {
+                var book = await _bookRepository.GetByIdAsync(item.Id_Book);
+                books.Add(book);
+            }
 
             var suppliers = await _supplierRepository.GetAllAsync();
             var objlist = (from a in books
@@ -339,15 +339,15 @@ namespace BookShop.BLL.Service
             return objlist;
         }
 
-		public async Task<List<BookViewModel>> GetByGenre(int genrerId)
-		{
-			var listGenre = (await _bookGenreRepository.GetAllAsync()).Where(x => x.Id_Genre == genrerId);
-			var books = new List<Book>();
-			foreach (BookGenre item in listGenre)
-			{
-				var book = await _bookRepository.GetByIdAsync(item.Id_Book);
-				books.Add(book);
-			}
+        public async Task<List<BookViewModel>> GetByGenre(int genrerId)
+        {
+            var listGenre = (await _bookGenreRepository.GetAllAsync()).Where(x => x.Id_Genre == genrerId);
+            var books = new List<Book>();
+            foreach (BookGenre item in listGenre)
+            {
+                var book = await _bookRepository.GetByIdAsync(item.Id_Book);
+                books.Add(book);
+            }
 
             var suppliers = await _supplierRepository.GetAllAsync();
             var objlist = (from a in books
@@ -364,21 +364,21 @@ namespace BookShop.BLL.Service
             return objlist;
         }
 
-		public async Task<bool> ChangeQuantity(int id, int quantity)
-		{
-		getAgain:;
-			var book = await _bookRepository.GetByIdAsync(id);
-			try
-			{
-				if (book != null)
-				{
-					book.Quantity += quantity;
-				}
-				else goto getAgain;
-				await _bookRepository.UpdateAsync(id, book);
-				return true;
-			}
-			catch { return false; }
-		}
-	}
+        public async Task<bool> ChangeQuantity(int id, int quantity)
+        {
+        getAgain:;
+            var book = await _bookRepository.GetByIdAsync(id);
+            try
+            {
+                if (book != null)
+                {
+                    book.Quantity += quantity;
+                }
+                else goto getAgain;
+                await _bookRepository.UpdateAsync(id, book);
+                return true;
+            }
+            catch { return false; }
+        }
+    }
 }

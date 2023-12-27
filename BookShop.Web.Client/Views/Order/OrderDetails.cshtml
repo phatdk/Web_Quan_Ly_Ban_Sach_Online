@@ -177,6 +177,8 @@
     }
     checkStatus();
     function deleteOrder() {
+    function deleteOrder() {
+		if (confirm("Nếu bạn hủy đơn thì số điểm bạn đã sử dụng sẽ không được hoàn lại \n Bạn có chắc chắn muốn tiếp tục")) {
         var url = "@Url.Action("Index", "Home")";
         $.ajax({
             url: '/Order/DeleteOrder',
@@ -194,5 +196,6 @@
                 alert('Có lỗi xảy ra: ' + error.responseText);
             }
         });
+    }
     }
 </script>

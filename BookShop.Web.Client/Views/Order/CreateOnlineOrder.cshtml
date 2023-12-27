@@ -9,10 +9,8 @@
 	ViewData["Title"] = "Thanh Toán";
 	List<PaymentFormViewModel> payments = ViewBag.Payments;
 	List<UserPromotionViewModel> userPromotions = ViewBag.UserPromotions;
-	List<PromotionViewModel> promotions = ViewBag.Promotions;
 	UserModel user = ViewBag.User;
 	int cartUse = ViewBag.Cart;
-	int total = 0;
 }
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <style>
@@ -29,6 +27,7 @@
 		text-align: right;
 	}
 
+
 	.dathang {
 		font-weight: 700;
 		background-color: #FFFBF5;
@@ -36,6 +35,7 @@
 		width: 200px;
 		height: 35px;
 	}
+
 
 		.dathang:hover {
 			background-color: wheat;
@@ -119,7 +119,6 @@
 			<ul class="ps-0" style="list-style: none">
 				@for (var i = 0; i < Model.orderDetails.Count; i++)
 				{
-					total += (Model.orderDetails[i].Price * Model.orderDetails[i].Quantity);
 					<li class="row">
 						<div class="col-3 position-relativelative">
 							<img class="bg-light" src="@Model.orderDetails[i].Img" style="width: 100%; z-index: 0" />
@@ -136,9 +135,10 @@
 			</ul>
 
 			<div class="payment">
+				<hr />
 				<div class="form-group">
-					<label for="tongGia">Tạm tính: <span>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", total)</span></label>
-					<input asp-for="Total" id="tongGia" value="@total" hidden>
+					<label for="tongGia">Tạm tính: <span>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Total)</span></label>
+					<input asp-for="Total" id="tongGia" value="@Model.Total" hidden>
 				</div>
 
 				<div class="form-group" hidden>
@@ -152,29 +152,32 @@
 					<label for="phiShip">Phí vận chuyển: <span id="phiShipSpan">0đ</span></label>
 					<input asp-for="Shipfee" id="phiShip" hidden />
 				</div>
+
 				@if (Model.Id_User != 0)
 				{
 					<div class="form-group" id="khuyenMaiSuDung">
-						<label>Sử dụng diểm</label>
-						<input asp-for="PointUsed" type="number" onchange="usePoint(this.value)" id="pointUsed" min="0" max="@user.Point" value="0" style="width: 70px" />
-						<span>Số điểm hiện có @user.Point</span>
+						<label class="w-100 fw-bold">Sử dụng điểm tích lũy: <span class="text-secondary text-decoration-underline">1 điểm = 1.000đ</span></label>
+						<label>Số điểm sử dụng: </label>
+						<input asp-for="PointUsed" type="number" oninput="usePoint(this.value)" id="pointUsed" min="0" value="0" style="width: 70px" />
+						<span>Số điểm hiện có <span id="totalUserPoint"></span></span>
 					</div>
-					<label>Chọn khuyến mãi</label>
-					<select asp-for="Id_Promotion" class="form-control" id="selectPromotion" onchange="promotionSelected()">
-						<option value="" selected>--Select promotion--</option>
-					</select>
-					<label class="w-100">Số tiền giảm: <span id="totalReduct"></span></label>
 				}
+				<label class="w-100 fw-bold">Chọn khuyến mãi: </label>
+				<select asp-for="Id_Promotions" class="form-control" id="selectPromotion" onchange="promotionSelected(this.value)">
+					<option value="">---Select promotion---</option>
+				</select>
+				<label class="w-100">Số tiền giảm: <span id="totalReduct">0đ</span></label>
 
 				<div class="form-group">
+					<hr />
 					<label for="totalShip">Thanh toán: <span id="totalShip">0đ</span></label>
-					<input asp-for="TotalPayment" id="totalPayment" hidden/>
+					<input asp-for="TotalPayment" id="totalPayment" hidden />
 				</div>
 
 				<div class="form-group">
 					<label>Chọn hình thức thanh toán</label>
 					<select asp-for="paymentId" required class="form-control" id="paymentMethod">
-						<option value="" selected disabled >--Select paymentmethod--</option>
+						<option value="" selected disabled>--Select paymentmethod--</option>
 						@foreach (var item in payments)
 						{
 							<option name="Payment" value="@item.Id">@item.Name</option>
@@ -198,82 +201,115 @@
 	};
 
 	@* // Thêm sự kiện "change" cho các input radio
-	document.getElementById('selectPromotion').addEventListener('change', handleRadioChange);
-	document.getElementById('useCodePromotion').addEventListener('change', handleRadioChange);
+		document.getElementById('selectPromotion').addEventListener('change', handleRadioChange);
+		document.getElementById('useCodePromotion').addEventListener('change', handleRadioChange);
 
-	// Hàm xử lý khi input radio thay đổi
-	function handleRadioChange(event) {
+		// Hàm xử lý khi input radio thay đổi
+		function handleRadioChange(event) {
 		const chonma = document.getElementById('chonma');
 		const nhapma = document.getElementById('nhapma');
 		const selectedValue = event.target.value;
 		if (selectedValue == 1) {
-			chonma.setAttribute('hidden', 'hidden');
-			nhapma.removeAttribute('hidden');
+		chonma.setAttribute('hidden', 'hidden');
+		nhapma.removeAttribute('hidden');
 		}
 		else {
-			var reduct = document.getElementById('totalReduct');
-			totalReduct = 0;
-			reduct.innerHTML = formatCurrency(0);
-			calculateShipping();
+		var reduct = document.getElementById('totalReduct');
+		totalReduct = 0;
+		reduct.innerHTML = formatCurrency(0);
+		calculateShipping();
 		}
-	} *@
+		}; *@
 
-	function getPromotions(id) {
-		$.ajax({
-			url: '/Order/GetPromotionByUser',
-			type: 'GET',
-			data: { id: id },
-			success: function (data) {
-				var userPromotionList = $("#selectPromotion");
-				data.forEach(function (item) {
-					var promotionRow = '<option value="' + item.id_Promotion + '">' + item.name + '</option>';
-					userPromotionList.append(promotionRow);
-				});
-			},
-			error: function (error) {
-				alert('Có lỗi xảy ra: ' + error.responseText);
-			}
-		});
-	};
+		function getListPromotions(id) {
+			$.ajax({
+				url: '/Order/GetPromotionByUser',
+				type: 'GET',
+				data: { id: id },
+				success: function (data) {
+					var userPromotionList = $("#selectPromotion");
+					data.forEach(function (item) {
+						var promotionRow = '<option value="' + item.id + '">' + item.name + '</option>';
+						userPromotionList.append(promotionRow);
+						userPromotionList.trigger('chosen:updated');
+					});
+				},
+				error: function (error) {
+					alert('Có lỗi xảy ra: ' + error.responseText);
+				}
+			});
+		};
 
 	var total = 0;
 	var totalReduct = 0;
-	function promotionSelected() {
-		var promotionId = $('#selectPromotion').val();
-		if (promotionId != null && promotionId != 0) {
+	var totalPromotion = 0;
+	function promotionSelected(id) {
+		if (id != null && id != 0) {
 			$.ajax({
 				url: '/Order/GetPromotion',
 				type: 'GET',
-				data: { id: promotionId, total: @Model.Total },
+				data: { listId: id, total: @Model.Total },
 				success: function (data) {
-					totalReduct = data.totalReduct;
-					document.getElementById('totalReduct').innerHTML = formatCurrency(data.totalReduct);
+					totalPromotion = data.totalReduct;
+					totalReduct = totalPromotion + totalPoint;
+					document.getElementById('totalReduct').innerHTML = formatCurrency(totalReduct);
 					calculateShipping();
 				},
 			});
 		}
 		else {
-			totalReduct = 0;
-			document.getElementById('totalReduct').innerHTML = formatCurrency(0);
+			totalPromotion = 0;
+			totalReduct = totalPromotion + totalPoint;
+			document.getElementById('totalReduct').innerHTML = formatCurrency(totalReduct);
 			calculateShipping();
 		}
 	}
 
+	var totalUserPoint = 0;
+	function getUser(id) {
+		$.ajax({
+			url: '/Order/GetUser',
+			type: 'GET',
+			data: { id: id },
+			success: function (data) {
+				totalUserPoint = data.point;
+				document.getElementById('pointUsed').setAttribute('max', totalUserPoint);
+				document.getElementById('totalUserPoint').innerHTML = totalUserPoint;
+			}
+		});
+	};
+
 	var totalPoint = 0;
 	function usePoint(total) {
-		if (total <= @user.Point) {
-			totalPoint = total * 1000;
-		}
-		else {
-			alert("Số điểm của bạn không đủ");
-			$('#pointUsed').val('0');
+		var intParse = parseInt(total);
+		if (@Model.Id_User != null && @Model.Id_User != 0) {
+			if (intParse >= 0 && intParse <= totalUserPoint) {
+				totalPoint = intParse * 1000;
+				totalReduct = totalPromotion + totalPoint;
+				document.getElementById('totalReduct').innerHTML = formatCurrency(totalReduct);
+			}
+			else if (intParse > totalUserPoint) {
+				$('#pointUsed').val(totalUserPoint);
+				totalPoint = totalUserPoint * 1000;
+				totalReduct = totalPromotion + totalPoint;
+				document.getElementById('totalReduct').innerHTML = formatCurrency(totalReduct);
+			}
+			else {
+				$('#pointUsed').val(0);
+				totalPoint = 0;
+				totalReduct = totalPromotion + totalPoint;
+				document.getElementById('totalReduct').innerHTML = formatCurrency(totalReduct);
+			}
 		}
 	}
 
 	$(document).ready(function () {
+		var element = document.getElementById('selectPromotion');
+		element.removeAttribute("multiple");
 		if (@Model.Id_User !== 0) {
-			getPromotions(@Model.Id_User);
+			getUser(@Model.Id_User);
 		}
+		getListPromotions(@Model.Id_User);
 	});
 </script>
 
@@ -432,7 +468,7 @@
 					var parsedTongGia = parseFloat(tongGiaInput.value);
 
 					if (!isNaN(parsedPhiShip) && !isNaN(parsedTongGia)) {
-						var total = parsedPhiShip + parsedTongGia - totalReduct - totalPoint;
+						var total = parsedPhiShip + parsedTongGia - totalPromotion - totalPoint;
 						$('#totalPayment').val(total);
 						totalShip.innerHTML = total.toLocaleString("vi-VN", {
 							style: "currency",

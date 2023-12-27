@@ -11,6 +11,6 @@ namespace BookShop.BLL.IService
     public interface IPointTranHistoryService
     {
         public Task<List<PointTranHistoryViewModel>> GetByUser(int userId);
-        public Task<bool> Add(CreatePointTranHistoryModel model);
+        public Task<bool> Add(PointTranHistoryViewModel model);
     }
 }

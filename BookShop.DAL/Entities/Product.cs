@@ -23,8 +23,10 @@ namespace BookShop.DAL.Entities
 		// foreign key
 		public int? Id_Collection { get; set; }
 		public virtual CollectionBook? CollectionBook { get; set; }
-		//refenrence
-		public virtual List<Image> Images { get; set; }
+
+        //refenrence
+
+        public virtual List<Image> Images { get; set; }
 		public virtual List<ProductBook> ProductBooks { get; set; }
 		public virtual List<ProductPromotion> ProductPromotions { get; set; }
 		public virtual List<WishList> WishLists { get; set; }

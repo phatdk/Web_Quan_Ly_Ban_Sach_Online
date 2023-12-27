@@ -1,11 +1,85 @@
-﻿﻿@using System.Globalization;
+@using System.Globalization;
 @model BookShop.BLL.ConfigurationModel.ProductModel.ProductViewModel
-
+@inject UserManager<Userr> UserManager
+@inject SignInManager<Userr> SignInManager
+@inject IEvaluateService _Comment;
+@inject IAuthorizationService _IAuthorizationService
+@{
+    var isAdmin = (await _IAuthorizationService.AuthorizeAsync(User, "ManagerMenu")).Succeeded;
+}
 @{
     ViewData["Title"] = "Chi tiết sản phẩm";
-    string imgUrl;
+    string imgUrl = null;
+    var userLogin = await UserManager.GetUserAsync(User);
 }
+
 <style>
+    .rating {
+        display: inline-block;
+        position: relative;
+        height: 50px;
+        line-height: 50px;
+        font-size: 50px;
+    }
+
+        .rating label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            cursor: pointer;
+        }
+
+            .rating label:last-child {
+                position: static;
+            }
+
+            .rating label:nth-child(1) {
+                z-index: 5;
+            }
+
+            .rating label:nth-child(2) {
+                z-index: 4;
+            }
+
+            .rating label:nth-child(3) {
+                z-index: 3;
+            }
+
+            .rating label:nth-child(4) {
+                z-index: 2;
+            }
+
+            .rating label:nth-child(5) {
+                z-index: 1;
+            }
+
+            .rating label input {
+                position: absolute;
+                top: 0;
+                left: 0;
+                opacity: 0;
+            }
+
+            .rating label .icon {
+                float: left;
+                color: transparent;
+            }
+
+            .rating label:last-child .icon {
+                color: #000;
+            }
+
+        .rating:not(:hover) label input:checked ~ .icon,
+        .rating:hover label:hover input ~ .icon {
+            color: #09f;
+        }
+
+        .rating label input:focus:not(:checked) ~ .icon:last-child {
+            color: #000;
+            text-shadow: 0 0 5px #09f;
+        }
+
     .anh {
         background-color: white;
         border-radius: 7px;
@@ -98,7 +172,7 @@
     <div class="anh row">
         <div class="col-4">
             @{
-                imgUrl = Model.imageViewModels.FirstOrDefault().ImageUrl;
+                //imgUrl = Model.imageViewModels.FirstOrDefault().ImageUrl;
             }
             <img class="a1" src="@imgUrl" alt="ảnh sản phẩm" style="max-width: 100%" />
         </div>
@@ -186,7 +260,255 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
         </div>
     </div>
 </div>
+
+
+
+<div class="card">
+    <div class="card-body p-4">
+        <h4 class="text-center mb-4 pb-2">Được đánh giá @(Math.Round(await _Comment.GetSta(Model.Id), 1)) / 5</h4>
+        <h4 class="text-center mb-4 pb-2">Bình luận</h4>
+
+        <div class="row">
+            <div class="col">
+                @foreach (var item in Model.Comment.Where(x => x.Id_Parents == null))
+                {
+                    var userComment = UserManager.Users.FirstOrDefault(x => x.Id == item.Id_User);
+                    var ComentChild = await _Comment.GetNestedComments(item.Id);
+                    <div class=" comment-container d-flex flex-start">
+                        @if (!string.IsNullOrEmpty(userLogin.Img))
+                        {
+                            <img class="rounded-circle shadow-1-strong me-3"
+                                 src="/uploads/users/@userLogin.Img" alt="avatar" width="65"
+                                 height="65" />
+                        }
+                        else
+                        {
+                            <img class="rounded-circle shadow-1-strong me-3"
+                                 src="https://as1.ftcdn.net/v2/jpg/04/34/72/82/1000_F_434728286_OWQQvAFoXZLdGHlObozsolNeuSxhpr84.jpg" alt="avatar" width="65"
+                                 height="65" />
+                        }
+
+                        <div class="flex-grow-1 flex-shrink-1">
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="mb-1">
+                                        @userComment.UserName<span class="small">- @item.CreatedDate.ToShortDateString()</span>
+                                    </p>
+                                    @if (isAdmin)
+                                    {
+                                        <a>
+                                            <button type="button" class="btn-sm btn-primary replyButton">Trả lời</button>
+                                        </a>
+                                    }
+
+
+                                </div>
+                                <div class="d-flex ">
+                                    @{
+                                        switch (item.Point)
+                                        {
+                                            case 1:
+                                                <i class="fa fa-star rating-color"></i>
+                                                break;
+                                            case 2:
+                                                <i class="fa fa-star rating-color"></i>
+                                                <i class="fa fa-star rating-color"></i>
+                                                break;
+                                            case 3:
+                                                <i class="fa fa-star rating-color"></i>
+                                                <i class="fa fa-star rating-color"></i>
+                                                <i class="fa fa-star rating-color"></i>
+                                                break;
+                                            case 4:
+                                                <i class="fa fa-star rating-color"></i>
+                                                <i class="fa fa-star rating-color"></i>
+                                                <i class="fa fa-star rating-color"></i>
+                                                <i class="fa fa-star rating-color"></i>
+                                                break;
+                                            case 5:
+                                                <i class="fa fa-star rating-color"></i>
+                                                <i class="fa fa-star rating-color"></i>
+                                                <i class="fa fa-star rating-color"></i>
+                                                <i class="fa fa-star rating-color"></i>
+                                                <i class="fa fa-star rating-color"></i>
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                </div>
+                                <p class="small mb-0">
+                                    @item.Content
+                                </p>
+                            </div>
+                            <form class="replyForm" asp-action="ReplyComment" asp-controller="Evaluate" method="post" style="display: none;">
+                                <div class="form-group">
+                                    <input name="Id_User" hidden value="@userLogin.Id" class="form-control" />
+                                    <input name="Id_Parents" hidden value="@item.Id" class="form-control" />
+                                    <input name="Id_Product" hidden value="@Model.Id" class="form-control" />
+                                    <div class="mb-3">
+                                        <label for="comment">Trả lời user @userComment.UserName</label>
+                                        <textarea class="form-control" name="Content" id="comment" rows="3"></textarea>
+                                    </div>
+                                </div>
+                                <button type="submit" id="confirmCancel" class="btn btn-primary">Gửi bình luận</button>
+                            </form>
+                            @if (ComentChild.Count > 0)
+                            {
+                                foreach (var chill in ComentChild)
+                                {
+                                    var userchill = UserManager.Users.FirstOrDefault(x => x.Id == chill.Id_User);
+                                    <div class="d-flex flex-start mt-4">
+                                        <a class="me-3" href="#">
+                                            @if (!string.IsNullOrEmpty(userchill.Img))
+                                            {
+                                                <img class="rounded-circle shadow-1-strong me-3"
+                                                     src="/uploads/users/@userchill.Img" alt="avatar" width="65"
+                                                     height="65" />
+                                            }
+                                            else
+                                            {
+                                                <img class="rounded-circle shadow-1-strong me-3"
+                                                     src="https://as1.ftcdn.net/v2/jpg/04/34/72/82/1000_F_434728286_OWQQvAFoXZLdGHlObozsolNeuSxhpr84.jpg" alt="avatar" width="65"
+                                                     height="65" />
+                                            }
+                                        </a>
+
+                                        <div class="flex-grow-1 flex-shrink-1">
+                                            <div>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <p class="mb-1">
+                                                        @(userchill.UserName)<span class="small">- @chill.CreatedDate.ToShortDateString()</span>
+
+                                                    </p>
+                                                </div>
+
+                                                <p class="small mb-0">
+                                                    @chill.Content
+                                                </p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                }
+
+                            }
+
+
+                        </div>
+                    </div>
+
+                }
+
+
+
+            </div>
+        </div>
+
+        @if (userLogin != null)
+        {
+            if (await _Comment.CheckUserExitsBill(userLogin.Id, Model.Id))
+            {
+
+                <form class="rating">
+                    <label>
+                        <input type="radio" name="stars" value="1" />
+                        <span class="icon">★</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="stars" value="2" />
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="stars" value="3" />
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="stars" value="4" />
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="stars" value="5" />
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                    </label>
+                </form>
+
+                <form asp-action="CreateComment" asp-controller="Evaluate" method="post">
+                    <input name="Id_User" hidden value="@userLogin.Id" class="form-control" />
+                    <input name="Id_Product" hidden value="@Model.Id" class="form-control" />
+                    <input type="hidden" name="Point" id="ratingInput" value="5" />
+                    <div class="mb-3">
+                        <label for="comment">Bình luận của bạn:</label>
+                        <textarea class="form-control" name="Content" id="comment" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Gửi bình luận</button>
+                </form>
+                // }
+            }
+        }
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script type="text/javascript">
+    $(':radio').change(function () {
+        var ratingValue = this.value;
+
+        // Cập nhật giá trị của thẻ input ẩn
+        $('#ratingInput').val(ratingValue);
+        console.log('New star rating: ' + this.value);
+    });
+    $(document).ready(function () {
+        // Bắt sự kiện khi nút "Trả lời" được nhấn
+        $('.replyButton').click(function () {
+            // Ẩn tất cả các form trả lời trước
+            $('.replyForm').hide();
+
+            // Tìm form trả lời tương ứng
+            var replyForm = $(this).closest('.comment-container').find('.replyForm');
+
+            // Hiển thị form trả lời
+            replyForm.show();
+        });
+    });
+    $(document).ready(function () {
+        $('.cancelBillBtn').click(function () {
+            $('#cancelForm').show();
+        });
+
+
+        $('#confirmCancel').click(function () {
+            // Sau khi xác nhận huỷ đơn hàng, ẩn form huỷ đơn hàng
+            $('#cancelForm').hide();
+            // Xóa nội dung lý do huỷ
+            $('#cancelReason').val('');
+        });
+    });
     document.getElementById('addToCart').addEventListener('click', function () {
         var quantity = document.getElementById('quantityInput').value;
         $.ajax({

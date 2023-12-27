@@ -13,9 +13,9 @@ namespace App.Areas.Identity.Models.RoleViewModels
         [StringLength(256, MinimumLength = 3, ErrorMessage = "{0} phải dài {2} đến {1} ký tự")]
         public string Name { get; set; }
        
-        public List<RoleClaims> Claims { get; set; }
+     //   public List<RoleClaims> Claims { get; set; }
 
-        public Role role { get; set; }
+      //  public Role role { get; set; }
 
 
 

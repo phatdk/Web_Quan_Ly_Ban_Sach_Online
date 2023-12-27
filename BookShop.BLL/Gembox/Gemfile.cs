@@ -19,6 +19,7 @@ namespace BookShop.BLL.Gembox
 		public IOrderDetailService _OrderDetailService;
 		public IOrderService _OrderService;
 
+
 		public Gen()
 		{
 			_OrderService = new OrderService();
@@ -62,15 +63,18 @@ namespace BookShop.BLL.Gembox
 			worksheet.Cells["Y1"].Value = "ld Promotion";
 			worksheet.Cells["Z1"].Value = "ld_Status";
 
-			int rowIndex = 2; // Bắt đầu từ dòng thứ hai sau tiêu đề
+            int rowIndex = 2; // Bắt đầu từ dòng thứ hai sau tiêu đề
 
+			
 			foreach (var order in await _OrderService.GetAll())
 			{
-				worksheet.Cells[$"A{rowIndex}"].Value = order.Code;
+                foreach (var orderdelta in await _OrderDetailService.GetByOrder(order.Id))
+                {
+                worksheet.Cells[$"A{rowIndex}"].Value = order.Code;
 				worksheet.Cells[$"B{rowIndex}"].Value = order.Receiver;
 				worksheet.Cells[$"C{rowIndex}"].Value = order.Phone;
-				//worksheet.Cells[$"D{rowIndex}"].Value = order.E;
-				//worksheet.Cells[$"E{rowIndex}"].Value = order.Shipfee;
+				worksheet.Cells[$"D{rowIndex}"].Value = order.Email;
+				worksheet.Cells[$"E{rowIndex}"].Value = order.Shipfee;
 				worksheet.Cells[$"F{rowIndex}"].Value = order.CreatedDate;
 				worksheet.Cells[$"G{rowIndex}"].Value = order.AcceptDate;
 				worksheet.Cells[$"H{rowIndex}"].Value = order.DeliveryDate;
@@ -80,30 +84,26 @@ namespace BookShop.BLL.Gembox
 				worksheet.Cells[$"L{rowIndex}"].Value = order.ModifiDate;
 				worksheet.Cells[$"M{rowIndex}"].Value = order.ModifiNotes;
 				worksheet.Cells[$"N{rowIndex}"].Value = order.Description;
-				//worksheet.Cells[$"O{rowIndex}"].Value = order.IsOnlineOrder;
-				//worksheet.Cells[$"P{rowIndex}"].Value = order.IsUsePoint;
-				//worksheet.Cells[$"Q{rowIndex}"].Value = order.PointUsed;
-				//worksheet.Cells[$"R{rowIndex}"].Value = order.PointAmount;
+				worksheet.Cells[$"O{rowIndex}"].Value = order.IsOnlineOrder;
+				worksheet.Cells[$"P{rowIndex}"].Value = order.IsUsePoint;
+				worksheet.Cells[$"Q{rowIndex}"].Value = order.PointUsed;
+				worksheet.Cells[$"R{rowIndex}"].Value = order.PointAmount;
 				worksheet.Cells[$"S{rowIndex}"].Value = order.City;
 				worksheet.Cells[$"T{rowIndex}"].Value = order.District;
 				worksheet.Cells[$"U{rowIndex}"].Value = order.Commune;
-				//worksheet.Cells[$"V{rowIndex}"].Value = order.;
+				worksheet.Cells[$"V{rowIndex}"].Value = order.Address;
 				worksheet.Cells[$"W{rowIndex}"].Value = order.Id_User;
 				//worksheet.Cells[$"X{rowIndex}"].Value = order.Id_Staff;
-				worksheet.Cells[$"Y{rowIndex}"].Value = order.Id_Promotion;
+				//worksheet.Cells[$"Y{rowIndex}"].Value = order.Id_Promotion;
 				//worksheet.Cells[$"Z{rowIndex}"].Value = order.Id_Status;
 
 				rowIndex++;
-
-
-			};
-
-			// Save the document as a PDF
-			//var pdfFilePath = @"wwwroot\PDF\XinheMau.pdf";
-			//workbook.Save(pdfFilePath);
+			}
+            };
 
 			// Return the PDF file as a response
-			workbook.Save(@"wwwroot\exel\Spreadsheet.xlsx");
+			
+			workbook.Save(@"wwwroot\exel\Thongke.xlsx");
 
 		}
 	}

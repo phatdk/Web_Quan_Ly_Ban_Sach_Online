@@ -31,8 +31,8 @@ namespace BookShop.DAL.Entities
 		public string? Commune { get; set; }
 		public string? Address { get; set; }
 		public int? Shipfee { get; set; }
-        //Thêm
-		public bool IsOnlineOrder { get; set; }
+
+        public bool IsOnlineOrder { get; set; }
         public bool IsUsePoint { get; set; }
         public int? PointUsed { get; set; }
         public int? PointAmount { get; set; }
@@ -40,14 +40,13 @@ namespace BookShop.DAL.Entities
         //foreign key
 		public int? Id_Staff { get; set; }
         public int Id_User { get; set; }
-		public int? Id_Promotion { get; set; }
 		public int Id_StatusOrder { get; set; }
 		public virtual Userr? Staff { get; set; }
 		public virtual Userr User { get; set; }
-		public virtual Promotion? Promotion { get; set; }
 		public virtual StatusOrder StatusOrder { get; set; }
 
 		//reference
+		public virtual List<OrderPromotion> OrderPromotions { get; set; }
 		public virtual List<OrderDetail> OrderDetails { get; set; }
 		public virtual List<OrderPayment> OrderPayments { get; set; }
 		public virtual List<ReturnOrder> ReturnOrders { get; set; }

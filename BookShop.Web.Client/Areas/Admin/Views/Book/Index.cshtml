@@ -33,6 +33,7 @@
             <th>
                 Số lượng
             </th>
+            <th>Mã vạch</th>
             <th>
                Ngày xuất bản
             </th>
@@ -75,6 +76,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Quantity)
             </td>
+             <td>
+                @Html.DisplayFor(modelItem => item.Barcode)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PublicationDate)
             </td>
@@ -105,3 +109,4 @@
 }
     </tbody>
 </table>
+<partial name="_Paging" model="@ViewBag.pagingmodel" />

@@ -4,13 +4,15 @@ using BookShop.BLL.ConfigurationModel.CollectionBookModel;
 using BookShop.BLL.ConfigurationModel.GenreModel;
 using BookShop.BLL.ConfigurationModel.SupplierModel;
 using BookShop.BLL.IService;
-using Microsoft.AspNetCore.Http;
+using BookShop.Web.Client.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 {
-    [Area("Admin")]
+	[Area("Admin")]
     [Route("admin/Book")]
+    [Authorize(Roles = "Admin")]
     public class BookController : Controller
     {
         List<BookViewModel> _listBook;
@@ -82,10 +84,34 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
         }
         // GET: BookController
         [HttpGet("listbook")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages)
         {
             _listBook.Clear();
             _listBook = await _bookService.GetAll();
+         
+            int pagesize = 10;
+            if (pagesize <= 0)
+            {
+                pagesize = 10;
+            }
+            int countPages = (int)Math.Ceiling((double)_listBook.Count() / pagesize);
+            if (currentPages > countPages)
+            {
+                currentPages = countPages;
+            }
+            if (currentPages < 1)
+            {
+                currentPages = 1;
+            }
+
+            var pagingmodel = new PagingModel()
+            {
+                currentpage = currentPages,
+                countpages = countPages,
+                generateUrl = (int? p) => Url.Action("Index", "Book", new { areas = "Admin", p = p, pagesize = pagesize })
+            };
+            ViewBag.pagingmodel = pagingmodel;
+            _listBook = _listBook.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
             return View(_listBook);
         }
 
@@ -110,7 +136,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
         // POST: BookController/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateBookModel book)
+        public async Task<IActionResult> Create(CreateBookModel book, IFormFile barcodeImg)
         {
             try
             {
@@ -123,6 +149,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
                     CoverPrice = book.CoverPrice,
                     ImportPrice = book.ImportPrice,
                     Quantity = book.Quantity,
+                    Barcode = book.Barcode,
                     PageSize = book.PageSize,
                     Pages = book.Pages,
                     Cover = book.Cover,
@@ -166,6 +193,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
                 Quantity = _book.Quantity ?? 0,
                 PageSize = _book.PageSize ?? string.Empty,
                 Pages = _book.Pages ?? 0,
+                Barcode = _book.Barcode ?? string.Empty,
                 Cover = _book.Cover ?? string.Empty,
                 PublicationDate = _book.PublicationDate ?? string.Empty,
                 Weight = _book.Weight,

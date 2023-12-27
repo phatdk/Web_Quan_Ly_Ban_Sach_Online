@@ -5,90 +5,76 @@
 @{
 	ViewData["Title"] = "Chi tiết đơn hàng";
 	Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
-	List<OrderDetailViewModel> details = ViewBag.Details;
 	int total = 0;
 }
 
-<h1>OrderDetails</h1>
-
 <div>
-	<h4>OrderViewModel</h4>
+	<h4>Chi tiết đơn hàng</h4>
 	<hr />
 	<div class="row">
-		<dl class="col-6">
-			<dd class="col-sm-10" hidden>
-				@Html.DisplayFor(model => model.Id)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.Code)
-			</dt>
-			<dd class="col-sm-10">
-				@Html.DisplayFor(model => model.Code)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.Receiver)
-			</dt>
-			<dd class="col-sm-10">
-				@Html.DisplayFor(model => model.Receiver)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.Phone)
-			</dt>
-			<dd class="col-sm-10">
-				@Html.DisplayFor(model => model.Phone)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.Email)
-			</dt>
-			<dd class="col-sm-10">
-				@Html.DisplayFor(model => model.Email)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.CreatedDate)
-			</dt>
-			<dd class="col-sm-10">
-				@Html.DisplayFor(model => model.CreatedDate)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.Description)
-			</dt>
-			<dd class="col-sm-10">
-				@Html.DisplayFor(model => model.Description)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.Address)
-			</dt>
-			<dd class="col-sm-10">
-				@Html.DisplayFor(model => model.Address)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.Shipfee)
-			</dt>
-			<dd class="col-sm-10">
-				@Html.DisplayFor(model => model.Shipfee)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.Total)
-			</dt>
-			<dd class="col-sm-10">
-				@Html.DisplayFor(model => model.Total)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.NamePromotion)
-			</dt>
-			<dd class="col-sm-10">
-				@Html.DisplayFor(model => model.NamePromotion)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.Status)
-			</dt>
-			<dd class="col-sm-10">
-				@Html.DisplayFor(model => model.Status)
-			</dd>
-		</dl>
-		<div class="col-6">
+		<h4 class="d-flex text-center justify-content-center col-12">---Thông Tin Đơn Hàng---</h4> <hr />
+		<div class="col-7 border-end mb-5">
+			<div class="form-group">
+				<label class="form-label">Mã đơn hàng: <strong>@Model.Code</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Khách hàng: <strong>@Model.NameUser</strong></label><span>&ensp; | &ensp;</span>
+				<label class="form-label">Mã: <strong>@Model.UserCode</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Người nhận: <strong>@Model.Receiver</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Email: <strong>@Model.Email</strong></label><span>&ensp; | &ensp;</span>
+				<label class="form-label">Điện thoại: <strong>@Model.Phone</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Địa chỉ nhận hàng: <strong>@Model.Address</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Ghi chú của khách hàng: <strong>@Model.Description</strong></label>
+			</div>
+			<div class="form-group">
+				@{
+					var orderType = Model.IsOnlineOrder == true ? "Đơn hàng Online" : "Đơn hàng Offline";
+				}
+				<label class="form-label">loại đơn: <strong>@orderType</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Kích thước (L*W*H): <strong>@Model.Length * @Model.Width * @Model.Height (cm)</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Cân nặng: <strong>@Model.Weight (g)</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Giá trị đơn hàng: <strong class="text-danger">@Model.Total đ</strong></label>
+			</div>
+			<div class="form-group ms-3">
+				<label class="form-label">Điểm sử dụng: <strong>@Model.PointUsed</strong> Point</label><span>&ensp; | &ensp;</span>
+				<label class="form-label">Số tiền giảm: <strong>@Model.PointAmount</strong> đ</label>
+			</div>
+			<div class="form-group ms-3">
+				<label class="form-label">
+					Khuyến mãi sử dụng:
+					@foreach (var item in Model.orderPromotions)
+					{
+						<br />
+						<label class="form-label ms-3">Tên: <strong>@item.NamePromotion</strong> Point</label>
+						<span>&ensp; | &ensp;</span>
+						<label class="form-label">Số tiền giảm: <strong>@Model.PointAmount</strong> đ</label>
+					}
+				</label>
+			</div>
+			<div class="form-group ms-3">
+				<label class="form-label">Phí giao hàng: <strong>@Model.Shipfee đ</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Số tiền thanh toán: <strong class="text-danger">@Model.TotalPayment đ</strong></label>
+			</div>
+		</div>
+		<div class="col-5 mb-5">
 			<ul class="ps-0" style="list-style: none" id="menuDetail">
-				@foreach (var item in details)
+				@foreach (var item in Model.orderDetails)
 				{
 					total += (item.Price * item.Quantity);
 					<li class="row">
@@ -112,8 +98,56 @@
 				<tbody id="listDetail">
 				</tbody>
 			</table>
+		</div>
+		<hr />
+		<h4 class="d-flex text-center justify-content-center col-12">---Thông Tin Quản Lý---</h4> <hr />
+		<div class="col-7 border-end">
+			<div class="form-group">
+				<label class="form-label">Nhân viên tiếp nhận: <strong>@Model.NameStaff</strong></label><span>&ensp; | &ensp;</span>
+				<label class="form-label">Mã: <strong>@Model.StaffCode</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Trạng thái đơn hàng: <strong>@Model.StatusName</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">
+					Trạng thái thanh toán:
+					@foreach (var item in Model.orderPayments)
+					{
+						var statusPayment = item.Status == 1 ? "Đã thanh toán" : "Chưa thanh toán";
+						<br />
+						<label class="form-label ms-3">Phương thức: <strong>@item.NamePaymentForm</strong></label>
+						<span>&ensp; | &ensp;</span>
+						<label class="form-label">Trạng thái: <strong>@statusPayment</strong></label>
+					}
+				</label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Ngày tạo: <strong>@Model.CreatedDate</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Ngày xác nhận: <strong>@Model.AcceptDate</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Ngày giao: <strong>@Model.DeliveryDate</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Ngày nhận: <strong>@Model.ReceiveDate</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Ngày thanh toán: <strong>@Model.PaymentDate</strong></label>
+			</div>
+		</div>
+		<div class="col-5">
+			<div class="form-group">
+				<label class="form-label">Lần thay đổi gần nhất: <strong>@Model.ModifiDate</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Ghi chú đơn hàng: </label><br />
+				<div id="modifiNote" style="background-color: #E0E0E0; max-height: 250px; overflow-y: auto; padding: 3px; border: 1px solid black;"></div>
+			</div>
 			<div id="textModify">
-				<label>Ghi chú đơn hàng</label>
+				<label>Ghi chú thay đổi</label>
 				<textarea id="modifyChange" class="form-control" rows="5"></textarea>
 				<label class="text-danger" id="valid" hidden></label>
 			</div>
@@ -130,15 +164,31 @@
 	<button class="btn btn-outline-success" id="completeReturn" hidden onclick="SuccessReturn()">Xác nhận xử lý hoàn tất</button>
 	<button class="btn btn-outline-danger" id="cancelOrder" hidden onclick="CancelOrder()">Xác nhận hủy đơn</button>
 	<button class="btn btn-outline-success" id="closeOrder" hidden onclick="CloseOrder()">Xác nhận đóng đơn</button>
-	<a href="@Url.Action("Edit", "OrderManage", new { id = Model.Id })" id="modifyOrder" hidden class="btn btn-outline-warning"> Chỉnh sửa</a>
+	@* <a href="@Url.Action("Edit", "OrderManage", new { id = Model.Id })" id="modifyOrder" hidden class="btn btn-outline-warning"> Chỉnh sửa</a> *@
 
 </div>
+<script type="text/javascript">
+	document.addEventListener('DOMContentLoaded', function () {
+		// Giải mã Unicode và thêm xuống dòng
+		var decodedText = decodeUnicode("@Model.ModifiNotes");
+		// Thêm ký tự xuống dòng vào đúng vị trí
+		decodedText = decodedText.replace(/&#xA;/g, '\n<br>');
+		// Hiển thị kết quả
+		document.getElementById('modifiNote').innerHTML = decodedText;
+	});
+	// Hàm giải mã Unicode
+	function decodeUnicode(text) {
+		return text.replace(/&#x(\w{4});/g, function (match, hex) {
+			return String.fromCharCode(parseInt(hex, 16));
+		});
+	}
+</script>
 <script type="text/javascript">
 	function checkStatus() {
 		switch (@Model.Status) {
 			case 1:
 				document.getElementById('acceptOrder').removeAttribute('hidden');
-				document.getElementById('modifyOrder').removeAttribute('hidden');
+				// document.getElementById('modifyOrder').removeAttribute('hidden');
 				break;
 			case 2:
 				document.getElementById('deliveryOrder').removeAttribute('hidden');

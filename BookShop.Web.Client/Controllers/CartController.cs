@@ -159,24 +159,24 @@ namespace BookShop.Web.Client.Controllers
 			}
 		}
 
-		// GET: CartController/Edit/5
-		public ActionResult Edit(int id)
-		{
-			return View();
-		}
-
 		// POST: CartController/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Edit(int id, IFormCollection collection)
+		public async Task<IActionResult> EditCart(int id, int quantity) // truyền id cart detail (không phải idUser) và số lượng trên thẻ input
 		{
 			try
 			{
-				return RedirectToAction(nameof(Index));
+				var itemCart = await _cartDetailService.GetById(id);
+				if(itemCart != null) {
+					itemCart.Quantity = quantity;
+					var result = await _cartDetailService.Update(id, new UpdateCartDetailModel { Quantity = quantity });
+					return Json(new { success = result });
+				}
+				return Json(new { success = false, message = "không tìm thấy item" });
 			}
-			catch
+			catch (Exception ex)
 			{
-				return View();
+				return Json(new { success = false, errorMessage = ex });
 			}
 		}
 

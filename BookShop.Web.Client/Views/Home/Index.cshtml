@@ -230,6 +230,7 @@
     }
 
     .testsp {
+        font-size:12px;
         cursor: pointer;
     }
 
@@ -239,6 +240,9 @@
 
     .flashsale-header {
         background-color: #FCDAB0;
+    }
+    .flashsale-image-container{
+        max-height:190px;
     }
 </Style>
 <div class="row">
@@ -369,11 +373,6 @@
                         <div class="flashsale-image-container">
                             <img src="@item.ImgUrl" class="card-img-top" alt="..." style="height:280px">
                         </div>
-                        <!--
-                        <div class="outstock-container">
-                            <img class="flashsale-item-chay-hang" src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/flashsale/Chay-hang-icon.svg">
-                        </div>
-                        <div class="new-label-pro-sale"><span class="new-p-sale-label discount-l-fs">99%</span></div>-->
                     </div>
                     <div class="ttsp">
                         <h4>
@@ -387,7 +386,8 @@
                         <div class="giagoc">
                             600
                         </div>
-                        <p onclick="location.href='@Url.Action("ChiTietSanPham", new{id = item.Id})'" class="progress-value">Mua</p>
+                        @* <p onclick="location.href='@Url.Action("ChiTietSanPham", new{id = item.Id})'" class="progress-value">Mua</p> *@
+                        <a asp-action="ChiTietSanPham" asp-route-id="@item.Id">Mua</a>
                     </div>
                 </div>
             }
@@ -578,7 +578,7 @@
         </div>
     </div>
 </div>
-<script>
+@* <script>
     var tabLinks = document.querySelectorAll(".tablinks");
     var tabContent = document.querySelectorAll(".tabcontent");
 
@@ -603,4 +603,4 @@
         btn.classList.add("active");
         // các button mà chúng ta click vào sẽ được add class active
     }
-</script>
+</script> *@

@@ -41,9 +41,16 @@ namespace BookShop.Web.Client.Controllers
         }
         public async Task<IActionResult> ChiTietSanPham(int id)
         {
-			_product = await _productService.GetById(id);
-			ViewBag.Product = _product;
-            return View(_product);
+			var product = await _productService.GetByIdAndCommnet(id);
+            //ViewBag.Product = _product;
+            if (product!=null)
+            {
+                return View(product);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
         private Task<Userr> GetCurrentUserAsync()
         {

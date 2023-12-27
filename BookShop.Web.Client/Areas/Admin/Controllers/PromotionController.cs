@@ -4,6 +4,8 @@ using BookShop.BLL.IService;
 using BookShop.BLL.Service;
 using BookShop.DAL.ApplicationDbContext;
 using BookShop.DAL.Entities;
+using BookShop.Web.Client.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +15,7 @@ using System.Security.Principal;
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class PromotionController : Controller
     {
         IPromotionService _promotionService;
@@ -24,9 +27,33 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
             _promotionService = promotionService;
             _dbcontext = dbcontext;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages)
         {
             var lstPromotion = await _promotionService.GetAll();
+          
+            int pagesize = 10;
+            if (pagesize <= 0)
+            {
+                pagesize = 10;
+            }
+            int countPages = (int)Math.Ceiling((double)lstPromotion.Count() / pagesize);
+            if (currentPages > countPages)
+            {
+                currentPages = countPages;
+            }
+            if (currentPages < 1)
+            {
+                currentPages = 1;
+            }
+
+            var pagingmodel = new PagingModel()
+            {
+                currentpage = currentPages,
+                countpages = countPages,
+                generateUrl = (int? p) => Url.Action("Index", "Promotion", new { areas = "Admin", p = p, pagesize = pagesize })
+            };
+            ViewBag.pagingmodel = pagingmodel;
+            lstPromotion = lstPromotion.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
             return View(lstPromotion);
         }
         [HttpGet("Details")]

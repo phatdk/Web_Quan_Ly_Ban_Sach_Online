@@ -1,24 +1,32 @@
-﻿using BookShop.BLL.ConfigurationModel.OrderModel;
+﻿using BookShop.BLL.ConfigurationModel.OrderDetailModel;
+using BookShop.BLL.ConfigurationModel.OrderModel;
 using BookShop.BLL.ConfigurationModel.OrderPaymentModel;
+using BookShop.BLL.ConfigurationModel.PointTranHistoryModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
+using BookShop.Web.Client.Models;
 using BookShop.Web.Client.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
 	[Area("Admin")]
+	[Authorize(Roles = "Admin")]
 	public class OrderManageController : Controller
 	{
 		private List<OrderViewModel> _orders;
 		private OrderViewModel _order;
 		private readonly UserManager<Userr> _userManager;
+		private readonly IUserService _userService;
 		private readonly IOrderService _orderService;
 		private readonly IOrderDetailService _orderDetailService;
 		private readonly IOrderPaymentService _orderPaymentService;
+		private readonly IOrderPromotionService _orderPromotionService;
 		private readonly IStatusOrderService _statusOrderService;
 		private readonly IPromotionService _promotionService;
 		private readonly IProductService _productService;
@@ -27,13 +35,15 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		private readonly ProductPreviewService _productPreviewService;
 		private readonly PointNPromotionSerVice _pointNPromotionService;
 
-		public OrderManageController(UserManager<Userr> userManager, IOrderService orderService, IOrderDetailService orderDetailService, IOrderPaymentService orderPaymentService, IStatusOrderService statusOrderService, IPromotionService promotionService, IProductService productService, IProductBookService productBookService, IBookService bookService)
+		public OrderManageController(UserManager<Userr> userManager, IUserService userService, IOrderService orderService, IOrderDetailService orderDetailService, IOrderPaymentService orderPaymentService, IStatusOrderService statusOrderService, IPromotionService promotionService, IProductService productService, IProductBookService productBookService, IBookService bookService, IOrderPromotionService orderPromotionService)
 		{
 			_orders = new List<OrderViewModel>();
 			_order = new OrderViewModel();
 			_userManager = userManager;
+			_userService = userService;
 			_orderService = orderService;
 			_orderDetailService = orderDetailService;
+			_orderPromotionService = orderPromotionService;
 			_orderPaymentService = orderPaymentService;
 			_statusOrderService = statusOrderService;
 			_promotionService = promotionService;
@@ -50,7 +60,18 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			return _userManager.GetUserAsync(HttpContext.User);
 		}
 
-		public async Task<IActionResult> GetOrder(int? status, string? keyWord)
+		public async Task<IActionResult> GetDetails(int id)
+		{
+			var result = await _orderDetailService.GetByOrder(id);
+			return Json(result);
+		}
+		// GET: OrderManageController
+		public async Task<IActionResult> Index()
+		{
+			return View();
+		}
+
+		public async Task<IActionResult> GetOrder(int page, int? status, string? keyWord)
 		{
 
 			if (status != null)
@@ -74,17 +95,10 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					).ToList();
 			}
 			var orders = _orders.OrderByDescending(x => x.CreatedDate).ToList();
-			return Json(orders);
-		}
-		public async Task<IActionResult> GetDetails(int id)
-		{
-			var result = await _orderDetailService.GetByOrder(id);
-			return Json(result);
-		}
-		// GET: OrderManageController
-		public IActionResult Index()
-		{
-			return View();
+			int pageSize = 15;
+			double totalPage = (double)orders.Count / pageSize;
+			orders = orders.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+			return Json(new { data = orders, page = page, max = Math.Ceiling(totalPage) });
 		}
 
 		// GET: OrderManageController/Details/5
@@ -92,24 +106,49 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		{
 			_order = await _orderService.GetById(id);
 			var details = await _orderDetailService.GetByOrder(id);
-			ViewBag.Details = details;
-			foreach (var item in details)
+			_order.orderDetails = details;
+			foreach (var item in details) // chi tiet don hang
 			{
+				var product = await _productService.GetById(item.Id_Product);
+				foreach (var itemProd in product.bookViewModels)
+				{
+					_order.Weight += (itemProd.Weight * item.Quantity);
+					_order.Width = _order.Width > itemProd.Widght ? _order.Width : itemProd.Widght;
+					_order.Length = _order.Length > itemProd.Length ? _order.Length : itemProd.Length;
+					_order.Height += (itemProd.Height * item.Quantity);
+				}
 				_order.Total += item.Quantity * item.Price;
 			}
-			if (_order.Id_Promotion != null)
+			_order.Weight = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Weight / 1000)));
+			_order.Width = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Width / 100)));
+			_order.Length = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Length / 100)));
+			_order.Height = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Height / 100)));
+			_order.TotalPayment = _order.Total + Convert.ToInt32(_order.Shipfee);
+			var promotions = await _orderPromotionService.GetByOrder(id);
+			_order.orderPromotions = promotions;
+			if (promotions != null) // thong tin khuyen mai
 			{
-				var promotion = await _promotionService.GetById(Convert.ToInt32(_order.Id_Promotion));
-				if (promotion.PercentReduct != null)
+				foreach (var promotion in promotions)
 				{
-					_order.Total -= Convert.ToInt32(Math.Floor(Convert.ToDouble((_order.Total / 100) * promotion.PercentReduct)));
+					if (promotion.PercentReduct != null)
+					{
+						promotion.TotalReduct = Convert.ToInt32(Math.Floor(Convert.ToDouble((_order.Total / 100) * promotion.PercentReduct)));
+
+						if (promotion.TotalReduct > promotion.ReductMax) promotion.TotalReduct = promotion.ReductMax;
+						_order.TotalPayment -= promotion.TotalReduct;
+					}
+					else
+					{
+						promotion.TotalReduct = Convert.ToInt32(promotion.AmountReduct);
+						_order.TotalPayment -= promotion.TotalReduct;
+					}
 				}
-				else _order.Total -= Convert.ToInt32(promotion.AmountReduct);
 			}
-			if (_order.IsUsePoint)
+			if (_order.IsUsePoint) // su dung diem
 			{
-				_order.Total -= Convert.ToInt32(_order.PointAmount);
+				_order.TotalPayment -= Convert.ToInt32(_order.PointAmount);
 			}
+			_order.orderPayments = await _orderPaymentService.GetByOrder(id);
 			return View(_order);
 		}
 
@@ -163,7 +202,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					order.Id_Status = statusId;
 					order.AcceptDate = DateTime.Now;
 					order.ModifiDate = DateTime.Now;
-					order.ModifiNotes = order.ModifiNotes + DateTime.Now + " : Đơn được xác nhận bởi " + staff.Name + " Mã code [" + staff.Code + "]\n";
+					order.ModifiNotes += "\n" + DateTime.Now + " : Đơn được xác nhận bởi " + staff.Name + " - Mã code [" + staff.Code + "]\n";
 					order.Id_Staff = staff.Id;
 					var result = await _orderService.Update(order);
 					return Json(new { success = result });
@@ -186,7 +225,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					order.Id_Status = statusId;
 					order.DeliveryDate = DateTime.Now;
 					order.ModifiDate = DateTime.Now;
-					order.ModifiNotes = order.ModifiNotes + "\n" + DateTime.Now + " : Đơn được xác nhận giao bởi " + staff.Name + " Mã code [" + staff.Code + "]\n";
+					order.ModifiNotes += "\n" + DateTime.Now + " : Đơn được xác nhận giao bởi " + staff.Name + " - Mã code [" + staff.Code + "]\n";
 					var result = await _orderService.Update(order);
 					return Json(new { success = result });
 				}
@@ -199,6 +238,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		public async Task<IActionResult> SuccessOrder(int id)
 		{
 			var order = await _orderService.GetById(id);
+			var user = await _userService.GetById(order.Id_User);
 			var staff = await GetCurrentUserAsync();
 			if (staff != null)
 			{
@@ -209,7 +249,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					order.CompleteDate = DateTime.Now;
 					order.ReceiveDate = DateTime.Now;
 					order.ModifiDate = DateTime.Now;
-					order.ModifiNotes = order.ModifiNotes + "\n" + DateTime.Now + " : Đơn được xác nhận hoàn thành bởi " + staff.Name + " Mã code [" + staff.Code + "]\n";
+					order.ModifiNotes += "\n" + DateTime.Now + " : Đơn được xác nhận hoàn thành bởi " + staff.Name + " - Mã code [" + staff.Code + "]\n";
 					if (order.PaymentDate == null)
 					{
 						order.PaymentDate = DateTime.Now;
@@ -234,7 +274,13 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					int point = Convert.ToInt32(Math.Floor(Convert.ToDouble(order.Total / 20000))); // 20k = 1 điểm
 					if (point > 0)
 					{
-						await _pointNPromotionService.Accumulate(order.Id_User, point);
+						var history = new PointTranHistoryViewModel()
+						{
+							PointUserd = point,
+							Id_User = user.Id,
+							Id_Order = id,
+						};
+						await _pointNPromotionService.Accumulate(order.Id_User, point, history);
 					}
 					var result = await _orderService.Update(order);
 					return Json(new { success = result });
@@ -256,7 +302,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 5).First().Id;
 					order.Id_Status = statusId;
 					order.ModifiDate = DateTime.Now;
-					order.ModifiNotes = order.ModifiNotes + "\n" + DateTime.Now + " : Đơn được xác nhận yêu cầu trả hàng bởi" + staff.Name + " Mã code [" + staff.Code + "\n Ghi chú: " + modifyChange + "\n";
+					order.ModifiNotes += "\n" + DateTime.Now + " : Đơn được xác nhận yêu cầu trả hàng bởi" + staff.Name + " - Mã code [" + staff.Code + "]\n Ghi chú: " + modifyChange + "\n";
 					var result = await _orderService.Update(order);
 					return Json(new { success = result });
 				}
@@ -277,7 +323,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 6).First().Id;
 					order.Id_Status = statusId;
 					order.ModifiDate = DateTime.Now;
-					order.ModifiNotes = order.ModifiNotes + "\n" + DateTime.Now + " : Đơn được xác nhận đã hoàn trả và chờ xử lý hoàn trả bởi " + staff.Name + " Mã code [" + staff.Code + "\n";
+					order.ModifiNotes += "\n" + DateTime.Now + " : Đơn được xác nhận đã hoàn trả và chờ xử lý hoàn trả bởi " + staff.Name + " - Mã code [" + staff.Code + "]\n";
 					var result = await _orderService.Update(order);
 					return Json(new { success = result });
 				}
@@ -316,7 +362,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 7).First().Id;
 					order.Id_Status = statusId;
 					order.ModifiDate = DateTime.Now;
-					order.ModifiNotes = order.ModifiNotes + "\n" + DateTime.Now + " : Đơn được xác nhận hoàn thành xử lý hàng hoàn trả bởi " + staff.Name + " Mã code [" + staff.Code + "\n Ghi chú: " + modifyChange + "\n";
+					order.ModifiNotes += "\n" + DateTime.Now + " : Đơn được xác nhận hoàn thành xử lý hàng hoàn trả bởi " + staff.Name + " - Mã code [" + staff.Code + "]\n Ghi chú: " + modifyChange + "\n";
 					var result = await _orderService.Update(order);
 					if (result && order.Status == 6)
 					{
@@ -345,7 +391,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 				var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 6).First().Id;
 				order.Id_Status = statusId;
 				order.ModifiDate = DateTime.Now;
-				order.ModifiNotes = order.ModifiNotes + "\n" + DateTime.Now + " : Đơn được xác nhận yêu cầu hủy bởi" + staff.Name + " Mã code [" + staff.Code + "\n Ghi chú: " + modifyChange + "\n";
+				order.ModifiNotes += "\n" + DateTime.Now + " : Đơn được xác nhận yêu cầu hủy bởi" + staff.Name + " - Mã code [" + staff.Code + "]\n Ghi chú: " + modifyChange + "\n";
 				var result = await _orderService.Update(order);
 				if (result)
 				{
@@ -360,7 +406,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 								var book = await _bookService.GetById(item1.Id_Book);
 								await _bookService.ChangeQuantity(book.Id, item.Quantity); // tang so luong sach trong kho
 							}
-							await _productPreviewService.ChangeQuantity(item.Id_Product, item.Quantity);	// tang lai sp
+							await _productPreviewService.ChangeQuantity(item.Id_Product, item.Quantity);    // tang lai sp
 						}
 					}
 				}
@@ -376,12 +422,12 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			var staff = await GetCurrentUserAsync();
 			if (staff != null)
 			{
-				if (order.Id_Status == 5)
+				if (order.Status == 4)
 				{
-					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 6).First().Id;
+					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 9).First().Id;
 					order.Id_Status = statusId;
 					order.ModifiDate = DateTime.Now;
-					order.ModifiNotes = order.ModifiNotes + "\n" + DateTime.Now + " : Đơn được xác nhận đóng bởi" + staff.Name + " Mã code [" + staff.Code + "]\n Ngày đóng đơn : " + Convert.ToDateTime(order.CompleteDate).AddDays(3);
+					order.ModifiNotes += "\n" + DateTime.Now + " : Đơn được xác nhận đóng bởi " + staff.Name + " - Mã code [" + staff.Code + "]\n Ngày đóng đơn : " + Convert.ToDateTime(order.CompleteDate).AddDays(3);
 					var result = await _orderService.Update(order);
 					return Json(new { success = result });
 				}

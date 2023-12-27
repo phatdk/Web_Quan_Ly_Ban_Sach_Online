@@ -2,23 +2,49 @@
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Entities.Identity;
+using BookShop.Web.Client.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	public class PromotionTypeController : Controller
+    [Authorize(Roles = "Admin")]
+    public class PromotionTypeController : Controller
 	{
 		IPromotionTypeService _promotionTypeService;
 		public PromotionTypeController(IPromotionTypeService promotionTypeService)
 		{
 			_promotionTypeService = promotionTypeService;
 		}
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages)
 		{
 			var lstPromotionType = await _promotionTypeService.GetAll();
-			return View(lstPromotionType);
+            int pagesize = 10;
+            if (pagesize <= 0)
+            {
+                pagesize = 10;
+            }
+            int countPages = (int)Math.Ceiling((double)lstPromotionType.Count() / pagesize);
+            if (currentPages > countPages)
+            {
+                currentPages = countPages;
+            }
+            if (currentPages < 1)
+            {
+                currentPages = 1;
+            }
+
+            var pagingmodel = new PagingModel()
+            {
+                currentpage = currentPages,
+                countpages = countPages,
+                generateUrl = (int? p) => Url.Action("Index", "Promotion", new { areas = "Admin", p = p, pagesize = pagesize })
+            };
+            ViewBag.pagingmodel = pagingmodel;
+            lstPromotionType = lstPromotionType.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
+            return View(lstPromotionType);
 		}
 		public async Task<IActionResult> Details(int id)
 		{

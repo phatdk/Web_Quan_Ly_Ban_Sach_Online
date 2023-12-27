@@ -59,6 +59,10 @@ namespace BookShop.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Barcode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(13)");
+
                     b.Property<string>("Cover")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
@@ -303,10 +307,10 @@ namespace BookShop.DAL.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Id_Book")
+                    b.Property<int?>("Id_Parents")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Id_Parents")
+                    b.Property<int>("Id_Product")
                         .HasColumnType("int");
 
                     b.Property<int>("Id_User")
@@ -317,9 +321,9 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id_Book");
-
                     b.HasIndex("Id_Parents");
+
+                    b.HasIndex("Id_Product");
 
                     b.HasIndex("Id_User");
 
@@ -600,9 +604,6 @@ namespace BookShop.DAL.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("varchar(256)");
 
-                    b.Property<int?>("Id_Promotion")
-                        .HasColumnType("int");
-
                     b.Property<int?>("Id_Staff")
                         .HasColumnType("int");
 
@@ -647,9 +648,9 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id_Promotion");
-
                     b.HasIndex("Id_Staff");
+
+                    b.HasIndex("Id_StatusOrder");
 
                     b.HasIndex("Id_User");
 
@@ -720,6 +721,29 @@ namespace BookShop.DAL.Migrations
                     b.ToTable("OrderPayments");
                 });
 
+            modelBuilder.Entity("BookShop.DAL.Entities.OrderPromotion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Id_Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_Promotion")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id_Order");
+
+                    b.HasIndex("Id_Promotion");
+
+                    b.ToTable("OrderPromotions");
+                });
+
             modelBuilder.Entity("BookShop.DAL.Entities.PaymentForm", b =>
                 {
                     b.Property<int>("Id")
@@ -755,7 +779,10 @@ namespace BookShop.DAL.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Id_Parents")
+                    b.Property<int?>("Id_Order")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Id_Promotion")
                         .HasColumnType("int");
 
                     b.Property<int>("Id_User")
@@ -769,7 +796,9 @@ namespace BookShop.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id_Parents");
+                    b.HasIndex("Id_Order");
+
+                    b.HasIndex("Id_Promotion");
 
                     b.HasIndex("Id_User");
 
@@ -1192,9 +1221,6 @@ namespace BookShop.DAL.Migrations
                     b.Property<int>("Id_User")
                         .HasColumnType("int");
 
-                    b.Property<int>("ReduceMax")
-                        .HasColumnType("int");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -1482,16 +1508,16 @@ namespace BookShop.DAL.Migrations
 
             modelBuilder.Entity("BookShop.DAL.Entities.Evaluate", b =>
                 {
-                    b.HasOne("BookShop.DAL.Entities.OrderDetail", "OrderDetail")
-                        .WithMany("Evaluates")
-                        .HasForeignKey("Id_Book")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BookShop.DAL.Entities.Evaluate", "Parents")
                         .WithMany("Evaluates")
                         .HasForeignKey("Id_Parents")
                         .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("BookShop.DAL.Entities.OrderDetail", "OrderDetail")
+                        .WithMany("Evaluates")
+                        .HasForeignKey("Id_Product")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BookShop.DAL.Entities.Userr", "User")
                         .WithMany("Evaluates")
@@ -1573,28 +1599,22 @@ namespace BookShop.DAL.Migrations
 
             modelBuilder.Entity("BookShop.DAL.Entities.Order", b =>
                 {
-                    b.HasOne("BookShop.DAL.Entities.Promotion", "Promotion")
-                        .WithMany("Orders")
-                        .HasForeignKey("Id_Promotion")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("BookShop.DAL.Entities.StatusOrder", "StatusOrder")
-                        .WithMany("Orders")
-                        .HasForeignKey("Id_Promotion")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.HasOne("BookShop.DAL.Entities.Userr", "Staff")
                         .WithMany("StaffOrders")
                         .HasForeignKey("Id_Staff")
                         .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("BookShop.DAL.Entities.StatusOrder", "StatusOrder")
+                        .WithMany("Orders")
+                        .HasForeignKey("Id_StatusOrder")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("BookShop.DAL.Entities.Userr", "User")
                         .WithMany("Orders")
                         .HasForeignKey("Id_User")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.Navigation("Promotion");
 
                     b.Navigation("Staff");
 
@@ -1641,19 +1661,36 @@ namespace BookShop.DAL.Migrations
                     b.Navigation("PaymentForm");
                 });
 
+            modelBuilder.Entity("BookShop.DAL.Entities.OrderPromotion", b =>
+                {
+                    b.HasOne("BookShop.DAL.Entities.Order", "Order")
+                        .WithMany("OrderPromotions")
+                        .HasForeignKey("Id_Order")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookShop.DAL.Entities.Promotion", "Promotion")
+                        .WithMany("OrderPromotions")
+                        .HasForeignKey("Id_Promotion")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Promotion");
+                });
+
             modelBuilder.Entity("BookShop.DAL.Entities.PointTransactionsHistory", b =>
                 {
                     b.HasOne("BookShop.DAL.Entities.Order", "Order")
                         .WithMany("PointTransactionsHistories")
-                        .HasForeignKey("Id_Parents")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("Id_Order")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("BookShop.DAL.Entities.Promotion", "Promotion")
                         .WithMany("PointTransactionsHistories")
-                        .HasForeignKey("Id_Parents")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("Id_Promotion")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("BookShop.DAL.Entities.WalletPoint", "WalletPoint")
                         .WithMany("PointTransactionsHistories")
@@ -1913,6 +1950,8 @@ namespace BookShop.DAL.Migrations
 
                     b.Navigation("OrderPayments");
 
+                    b.Navigation("OrderPromotions");
+
                     b.Navigation("PointTransactionsHistories");
 
                     b.Navigation("ReturnOrders");
@@ -1947,7 +1986,7 @@ namespace BookShop.DAL.Migrations
 
             modelBuilder.Entity("BookShop.DAL.Entities.Promotion", b =>
                 {
-                    b.Navigation("Orders");
+                    b.Navigation("OrderPromotions");
 
                     b.Navigation("PointTransactionsHistories");
 

@@ -10,6 +10,7 @@ namespace BookShop.BLL.IService
     public interface IUserPromotionService
     {
         public Task<List<UserPromotionViewModel>> GetByUser(int userId);
+        public Task<UserPromotionViewModel> GetById(int userId, int promotionId);
         public Task<bool> Add(CreateUserPromotionModel model);
         public Task<bool> Update(UserPromotionViewModel model);
     }
