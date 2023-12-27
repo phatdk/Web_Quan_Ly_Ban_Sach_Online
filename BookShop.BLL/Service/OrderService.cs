@@ -27,52 +27,52 @@ namespace BookShop.BLL.Service
 			_orderDetailRepository = new Repository<OrderDetail>();
 			_statusRepository = new Repository<StatusOrder>();
 		}
-        public async Task<List<ViewOrder>> GetOrderByUser(int userId)
-        {
-            var orders = (await _orderRepository.GetAllAsync()).Where(c => c.Id_User == userId);
-            var users = (await _userRepository.GetAllAsync());
-            var promotions = await _promotionRepository.GetAllAsync();
-            var status = await _statusRepository.GetAllAsync();
-            var OrderDetails = await _orderDetailRepository.GetAllAsync();
-         //   var Products = await _ProductRepository.GetAllAsync();
+		public async Task<List<ViewOrder>> GetOrderByUser(int userId)
+		{
+			var orders = (await _orderRepository.GetAllAsync()).Where(c => c.Id_User == userId);
+			var users = (await _userRepository.GetAllAsync());
+			var promotions = await _promotionRepository.GetAllAsync();
+			var status = await _statusRepository.GetAllAsync();
+			var OrderDetails = await _orderDetailRepository.GetAllAsync();
+			//   var Products = await _ProductRepository.GetAllAsync();
 
-            var objlist = (from a in orders
+			var objlist = (from a in orders
 						   join od in OrderDetails on a.Id equals od.Id_Order
-                           join b in users on a.Id_User equals b.Id into t
-                           from b1 in t.DefaultIfEmpty()
-                           join d in status on a.Id_StatusOrder equals d.Id
-                           join e in users on a.Id_Staff equals e.Id into j
-                           from e1 in j.DefaultIfEmpty()
-                           select new ViewOrder()
-                           {
-                               Id = a.Id,
-                               Code = a.Code,
-                               Phone = a.Phone,
-                               Email = a.Email,
-                               Receiver = a.Receiver,
-                               Address = a.Address,
-                               Description = a.Description,
-                               CreatedDate = a.CreatedDate,
-                               AcceptDate = a.AcceptDate,
-                               DeliveryDate = a.DeliveryDate,
-                               PaymentDate = a.PaymentDate,
-                               ModifiDate = a.ModifiDate,
-                               ReceiveDate = a.ReceiveDate,
-                               CompleteDate = a.CompleteDate,
-                               Shipfee = a.Shipfee,
-                               Id_Status = a.Id_StatusOrder,
-                               Status = d.Status,
-                               StatusName = d.StatusName,
-                               Id_User = a.Id_User,
-                               UserCode = b1.Code,
-                               NameUser = b1.Name,
-                               Id_Staff = a.Id_Staff,
-                               StaffCode = e1 == null ? "Trống" : e1.Code,
-                               NameStaff = e1 == null ? "Trống" : e1.Name,
-                           }).ToList();
-            return objlist;
-        }
-        public async Task<string> GenerateCode(int length)
+						   join b in users on a.Id_User equals b.Id into t
+						   from b1 in t.DefaultIfEmpty()
+						   join d in status on a.Id_StatusOrder equals d.Id
+						   join e in users on a.Id_Staff equals e.Id into j
+						   from e1 in j.DefaultIfEmpty()
+						   select new ViewOrder()
+						   {
+							   Id = a.Id,
+							   Code = a.Code,
+							   Phone = a.Phone,
+							   Email = a.Email,
+							   Receiver = a.Receiver,
+							   Address = a.Address,
+							   Description = a.Description,
+							   CreatedDate = a.CreatedDate,
+							   AcceptDate = a.AcceptDate,
+							   DeliveryDate = a.DeliveryDate,
+							   PaymentDate = a.PaymentDate,
+							   ModifiDate = a.ModifiDate,
+							   ReceiveDate = a.ReceiveDate,
+							   CompleteDate = a.CompleteDate,
+							   Shipfee = a.Shipfee,
+							   Id_Status = a.Id_StatusOrder,
+							   Status = d.Status,
+							   StatusName = d.StatusName,
+							   Id_User = a.Id_User,
+							   UserCode = b1.Code,
+							   NameUser = b1.Name,
+							   Id_Staff = a.Id_Staff,
+							   StaffCode = e1 == null ? "Trống" : e1.Code,
+							   NameStaff = e1 == null ? "Trống" : e1.Name,
+						   }).ToList();
+			return objlist;
+		}
+		public async Task<string> GenerateCode(int length)
 		{
 			// Khởi tạo đối tượng Random
 			Random random = new Random();
@@ -101,13 +101,11 @@ namespace BookShop.BLL.Service
 				{
 					// nếu sử dụng dụng điểm thì sẽ tiến hành đổi điểm VD: 1 điểm = 1.000đ
 					int pointToAmount = Convert.ToInt32(model.PointUsed * 1000);
-					//
 					model.PointAmount = pointToAmount;
 				}
 				else
 				{
 					model.PointUsed = 0;
-					model.ModifiNotes = String.Empty;
 				}
 				if (string.IsNullOrEmpty(model.Code))
 				{
@@ -125,7 +123,7 @@ namespace BookShop.BLL.Service
 					PaymentDate = model.PaymentDate,
 					CompleteDate = model.CompleteDate,
 					ModifiDate = model.ModifiDate,
-					ModifiNotes = model.ModifiNotes,
+					ModifiNotes = model.ModifiNotes == null ? "" : model.ModifiNotes,
 					CreatedDate = DateTime.Now,
 					Description = model.Description,
 					City = model.City,
@@ -221,9 +219,9 @@ namespace BookShop.BLL.Service
 			}
 			return objlist;
 		}
-     
 
-        public async Task<List<OrderViewModel>> GetByUser(int userId)
+
+		public async Task<List<OrderViewModel>> GetByUser(int userId)
 		{
 			var orders = (await _orderRepository.GetAllAsync()).Where(c => c.Id_User == userId);
 			var users = await _userRepository.GetAllAsync();
@@ -283,7 +281,7 @@ namespace BookShop.BLL.Service
 							   Email = a.Email,
 							   Receiver = a.Receiver,
 							   Address = a.Address,
-							   Description = a.Description,
+							   Description = a.Description == null ? "Trống" : a.Description,
 							   CreatedDate = a.CreatedDate,
 							   AcceptDate = a.AcceptDate,
 							   DeliveryDate = a.DeliveryDate,
@@ -291,7 +289,7 @@ namespace BookShop.BLL.Service
 							   ModifiDate = a.ModifiDate,
 							   ReceiveDate = a.ReceiveDate,
 							   CompleteDate = a.CompleteDate,
-							   ModifiNotes = a.ModifiNotes,
+							   ModifiNotes = a.ModifiNotes == null ? "" : a.ModifiNotes,
 							   Shipfee = a.Shipfee,
 							   City = a.City,
 							   District = a.District,
@@ -321,13 +319,11 @@ namespace BookShop.BLL.Service
 				{
 					// nếu sử dụng dụng điểm thì sẽ tiến hành đổi điểm VD: 1 điểm = 1.000đ
 					int pointToAmount = Convert.ToInt32(model.PointUsed * 1000);
-					//
 					model.PointAmount = pointToAmount;
 				}
 				else
 				{
 					model.PointUsed = 0;
-					model.ModifiNotes = String.Empty;
 				}
 				var obj = await _orderRepository.GetByIdAsync(model.Id);
 				obj.Receiver = model.Receiver;

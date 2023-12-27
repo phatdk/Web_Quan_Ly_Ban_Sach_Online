@@ -1,21 +1,13 @@
-﻿using BookShop.BLL.IService;
+﻿using BookShop.BLL.ConfigurationModel.AuthorModel;
 using BookShop.BLL.ConfigurationModel.BookModel;
+using BookShop.BLL.ConfigurationModel.GenreModel;
+using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using BookShop.BLL.ConfigurationModel.AuthorModel;
-using BookShop.BLL.ConfigurationModel.GenreModel;
-using Microsoft.AspNetCore.Http;
-using System.Drawing;
 
 namespace BookShop.BLL.Service
 {
-    public class BookService : IBookService
+	public class BookService : IBookService
     {
         protected readonly IRepository<Book> _bookRepository;
         protected readonly IRepository<Supplier> _supplierRepository;
@@ -372,26 +364,21 @@ namespace BookShop.BLL.Service
             return objlist;
         }
 
-        public Task<bool> ChangeQuantity(int id, int quantity)
+        public async Task<bool> ChangeQuantity(int id, int quantity)
         {
-            throw new NotImplementedException();
+        getAgain:;
+            var book = await _bookRepository.GetByIdAsync(id);
+            try
+            {
+                if (book != null)
+                {
+                    book.Quantity += quantity;
+                }
+                else goto getAgain;
+                await _bookRepository.UpdateAsync(id, book);
+                return true;
+            }
+            catch { return false; }
         }
-
-        //public async Task<bool> ChangeQuantity(int id, int quantity)
-        //{
-        //getAgain:;
-        //    var book = await _bookRepository.GetByIdAsync(id);
-        //    try
-        //    {
-        //        if (book != null)
-        //        {
-        //            book.Quantity += quantity;
-        //        }
-        //        else goto getAgain;
-        //        await _bookRepository.UpdateAsync(id, book);
-        //        return true;
-        //    }
-        //    catch { return false; }
-        //}
     }
 }

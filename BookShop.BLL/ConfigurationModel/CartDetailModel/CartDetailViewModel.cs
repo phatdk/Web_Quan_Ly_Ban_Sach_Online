@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookShop.BLL.ConfigurationModel.ImageModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,10 +18,12 @@ namespace BookShop.BLL.ConfigurationModel.CartDetailModel
 		public int ProductPrice { get; set; }
 		public int TotalPrice { get; set; }
 		public int Status { get; set; }
+		public string ImgProductCartDetail { get; set; }
         public bool IsSelected { get; set; }
         public bool IsCanceled { get; set; }
+		public int SoLuongKho { get; set; }
         //foreign key
         public int Id_User { get; set; }
 		public int Id_Product { get; set; }
-	}
+    }
 }

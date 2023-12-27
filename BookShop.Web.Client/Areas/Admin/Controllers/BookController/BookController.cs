@@ -4,16 +4,15 @@ using BookShop.BLL.ConfigurationModel.CollectionBookModel;
 using BookShop.BLL.ConfigurationModel.GenreModel;
 using BookShop.BLL.ConfigurationModel.SupplierModel;
 using BookShop.BLL.IService;
-using BookShop.BLL.Service;
 using BookShop.Web.Client.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing;
+using ZXing;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 {
-    [Area("Admin")]
+	[Area("Admin")]
     [Route("admin/Book")]
     [Authorize(Roles = "Admin,Staff")]
     public class BookController : Controller

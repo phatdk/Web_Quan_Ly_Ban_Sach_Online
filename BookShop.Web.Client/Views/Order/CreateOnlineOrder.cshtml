@@ -153,12 +153,15 @@
 					<input asp-for="Shipfee" id="phiShip" hidden />
 				</div>
 
-				<div class="form-group" id="khuyenMaiSuDung">
-					<label class="w-100 fw-bold">Sử dụng điểm tích lũy: <span class="text-secondary text-decoration-underline">1 điểm = 1.000đ</span></label>
-					<label>Số điểm sử dụng: </label>
-					<input asp-for="PointUsed" type="number" oninput="usePoint(this.value)" id="pointUsed" min="0" value="0" style="width: 70px" />
-					<span>Số điểm hiện có <span id="totalUserPoint"></span></span>
-				</div>
+				@if (Model.Id_User != 0)
+				{
+					<div class="form-group" id="khuyenMaiSuDung">
+						<label class="w-100 fw-bold">Sử dụng điểm tích lũy: <span class="text-secondary text-decoration-underline">1 điểm = 1.000đ</span></label>
+						<label>Số điểm sử dụng: </label>
+						<input asp-for="PointUsed" type="number" oninput="usePoint(this.value)" id="pointUsed" min="0" value="0" style="width: 70px" />
+						<span>Số điểm hiện có <span id="totalUserPoint"></span></span>
+					</div>
+				}
 				<label class="w-100 fw-bold">Chọn khuyến mãi: </label>
 				<select asp-for="Id_Promotions" class="form-control" id="selectPromotion" onchange="promotionSelected(this.value)">
 					<option value="">---Select promotion---</option>

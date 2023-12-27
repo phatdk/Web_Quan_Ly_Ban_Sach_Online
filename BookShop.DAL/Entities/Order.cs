@@ -31,8 +31,7 @@ namespace BookShop.DAL.Entities
 		public string? Commune { get; set; }
 		public string? Address { get; set; }
 		public int? Shipfee { get; set; }
-        //Thêm
-        public int TotalQuantity { get; set; }
+
         public bool IsOnlineOrder { get; set; }
         public bool IsUsePoint { get; set; }
         public int? PointUsed { get; set; }
