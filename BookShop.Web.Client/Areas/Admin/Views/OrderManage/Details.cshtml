@@ -146,7 +146,7 @@
 				<label class="form-label">Ghi chú đơn hàng: </label><br />
 				<div id="modifiNote" style="background-color: #E0E0E0; max-height: 250px; overflow-y: auto; padding: 3px; border: 1px solid black;"></div>
 			</div>
-			<div id="textModify">
+			<div id="textModify" hidden>
 				<label>Ghi chú thay đổi</label>
 				<textarea id="modifyChange" class="form-control" rows="5"></textarea>
 				<label class="text-danger" id="valid" hidden></label>
@@ -192,12 +192,13 @@
 				break;
 			case 2:
 				document.getElementById('deliveryOrder').removeAttribute('hidden');
-				document.getElementById('modifyOrder').removeAttribute('hidden');
+				// document.getElementById('modifyOrder').removeAttribute('hidden');
 				document.getElementById('cancelOrder').removeAttribute('hidden');
 				break;
 			case 3:
 				document.getElementById('completeOrder').removeAttribute('hidden');
 				document.getElementById('returnOrder').removeAttribute('hidden');
+				document.getElementById('textModify').removeAttribute('hidden');
 				break;
 			case 4:
 				document.getElementById('closeOrder').removeAttribute('hidden');
@@ -211,9 +212,9 @@
 				document.getElementById('menuDetail').setAttribute('hidden', 'hidden');
 				document.getElementById('tableDetail').removeAttribute('hidden');
 				LoadDetailToTable();
+				document.getElementById('textModify').removeAttribute('hidden');
 				break;
 			case 7:
-				document.getElementById('acceptOrder').removeAttribute('hidden');
 				break;
 			case 8:
 				break;
