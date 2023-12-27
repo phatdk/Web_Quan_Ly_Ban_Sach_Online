@@ -167,50 +167,24 @@
                             </li>
                             <li class="nav-item">
                                 <div class="class=" nav-link text-dark"">
-                                    @{
-                                        var user = await UserManager.GetUserAsync(User);
-                                        if (user != null)
-                                        {
-                                            <div class="nav-link text-dark">
-                                                <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm">
-                                                    <div class="nav-link text-dark">
-                                                        <div class="dropdown">
-                                                            <div class="text-dark dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                                                Xin chào @((await UserManager.GetUserAsync(User)).UserName)!
-                                                            </div>
-                                                            <div class="dropdown-menu">
-
-                                                                <a class="dropdown-item" asp-area="Identity" asp-controller="Manage" asp-action="EditProfile" title="">
-                                                                    Thông tin tài khoản
-                                                                </a>
-                                                                <a class="dropdown-item" asp-controller="Home" asp-action="Danhsachyeuthich" title="">
-                                                                    Danh sách yêu thích
-                                                                </a>
-                                                                <div role="separator" class="dropdown-divider"></div>
-                                                                <a class="dropdown-item" href="#">
-                                                                    Trạng thái đơn hàng
-                                                                </a>
-                                                                <div role="separator" class="dropdown-divider"></div>
-                                                                <button type="submit" class="dropdown-item">
-                                                                    Đăng xuất
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                                
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="nav-link text-dark">
-                                                <div class="dropdown">
-                                                    <a class="dropdown-toggle nav-link text-dark" data-toggle="dropdown" style="cursor:pointer">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                                                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
-                                                        </svg>
-                                                        Tài khoản
+                                @{
+                                    var user = await UserManager.GetUserAsync(User);
+                                    if (user != null)
+                                    {
+                                        <div class="nav-link text-dark">
+                                            <partial name="_LoginPartial" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="nav-link text-dark">
+                                            <div class="dropdown">
+                                                <a class="dropdown-toggle nav-link text-dark" data-toggle="dropdown" style="cursor:pointer">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                                                    </svg>
+                                                    Tài khoản
 
                                                     </a>
                                                     <div class="dropdown-menu">
@@ -228,37 +202,6 @@
                 </div>
             </nav>
         </div>
-        @*<div>
-        <!-- The Modal -->
-        <div class="modal" id="myModal">
-        <div class="modal-dialog">
-        <div class="modal-content">
-
-        <!-- Modal Header -->
-        <div class="modal-header">
-        <h5 class="modal-title">Chào mừng bạn đến với website của chúng tôi!</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-
-        <!-- Modal body -->
-        <div class="modal-body">
-        <div class="row">
-        <div class="col-md-6"> <h5 class="dndk">Đăng Nhập</h5></div>
-        <div class="col-md-6 "><h5 class="dndk">Đăng Ký</h5></div>
-        </div>
-        </div>
-        <partial name="_LoginPartial" />
-
-        <!-- Modal footer -->
-        <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
-
-        </div>
-
-        </div>
-        </div>
-        </div>*@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -326,5 +269,3 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
-   
