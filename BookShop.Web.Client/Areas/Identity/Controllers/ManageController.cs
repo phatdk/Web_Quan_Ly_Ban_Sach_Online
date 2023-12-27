@@ -174,8 +174,8 @@ namespace App.Areas.Identity.Controllers
 					}
 				}
 			}
-			else if (statusFilter != 2 && dateFilter == 2) dataList = userPromotions.Where(x => x.Status == statusFilter).ToList(); // tất cả
-			else if (statusFilter == 2 && dateFilter == 2) dataList = userPromotions.Where(x => x.Status == 1).ToList(); // tất cả - tất cả
+			else if (statusFilter != 2 && dateFilter == 2) dataList = userPromotions.Where(x => x.Status == statusFilter).ToList(); // đã sử dụng - tất cả
+			else if (statusFilter == 2 && dateFilter == 2) dataList = userPromotions; // tất cả - tất cả
 			else dataList = userPromotions; // tất cả - tất cả
 
 			dataList = dataList.OrderByDescending(x => x.CreatedDate).ToList();

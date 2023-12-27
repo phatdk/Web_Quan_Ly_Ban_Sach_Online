@@ -1,4 +1,8 @@
 @using System.Globalization;
+@using BookShop.BLL.IService;
+@using BookShop.DAL.Entities;
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Identity;
 @model BookShop.BLL.ConfigurationModel.ProductModel.ProductViewModel
 @inject UserManager<Userr> UserManager
 @inject SignInManager<Userr> SignInManager
@@ -149,7 +153,6 @@
 
     .col-4 .a1 {
         width: 95%;
-        height: 95%;
     }
 
     .danhgia {
@@ -172,9 +175,9 @@
     <div class="anh row">
         <div class="col-4">
             @{
-                //imgUrl = Model.imageViewModels.FirstOrDefault().ImageUrl;
+                imgUrl = Model.imageViewModels.FirstOrDefault().ImageUrl;
             }
-            <img class="a1" src="@imgUrl" alt="ảnh sản phẩm" style="max-width: 100%" />
+            <img class="a1" src="@imgUrl" alt="ảnh sản phẩm" style="max-width: 100%; " />
         </div>
         <div class="col-8">
             <div class="tensach">
