@@ -1,87 +1,117 @@
-﻿@using BookShop.BLL.ConfigurationModel.ProductModel;
-@{
-    ViewData["Title"] = "Home Page";
-    List<ProductViewModel> products = ViewBag.Products;
-}
+﻿﻿@using BookShop.BLL.ConfigurationModel.CartDetailModel;
+@model List<CartDetailViewModel>
 <style>
-    .giaban {
-        font-weight: 700;
-        color: #C92127;
-        font-size: 30px;
-    }
-
-    .giagoc {
-        color: rgb(189, 189, 189);
-        text-decoration-line: line-through;
-    }
-
-    .dssanphammua{
-        background-color: white;
-        padding: 20px;
-    }
-    .testsp {
-        display: flex;
-    }
-
-    .marginxx {
-        margin: 0px 5px 0px 5px;
-        border: 1px solid #EBE3D5;
-        width: 180px;
-        padding: 10px;
-    }
-
-    .progress-value {
+    table {
+        width: 100%;
+        border-collapse: collapse;
         margin-top: 20px;
-        right: 0;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        color: #ffffff;
-        background-color: rgb(191, 0, 45);
-        font-size: 1em;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    input[type="number"] {
+        width: 50px;
         text-align: center;
-        font-weight: 700;
-        border-radius: 20px
+    }
+
+    input[type="checkbox"] {
+        transform: scale(1.5);
     }
 </style>
-<div class="dssanphammua">
-    <h3>Danh Sách Sản Phẩm</h3>
-    <div class="testsp">
-        @if (products != null)
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Product Price</th>
+            <th>Total Price</th>
+            <th>Select</th>
+            <th>Option</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
         {
-            @foreach (var item in products)
-            {
-                <div class="marginxx">
-                    <div class="product-image">
-                        <div class="flashsale-image-container">
-                            <img src="@item.ImgUrl" class="card-img-top" alt="...">
-                        </div>
-                        <!--
-                        <div class="outstock-container">
-                            <img class="flashsale-item-chay-hang" src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/flashsale/Chay-hang-icon.svg">
-                        </div>
-                        <div class="new-label-pro-sale"><span class="new-p-sale-label discount-l-fs">99%</span></div>-->
-                    </div>
-                    <div class="ttsp">
-                        <p>
-                            @item.Name
-                        </p>
-                        <div>
-                        </div>
-                        <div class="giaban">
-                            @item.Price
-                        </div>
-                        <div class="giagoc">
-                            600
-                        </div>
-                        <p onclick="location.href='@Url.Action("ChiTietSanPham", new{id = item.Id})'" class="progress-value">Mua</p>
-                    </div>
-                </div>
+            <tr>
+                <td>@item.ProductName</td>
+                <td>
+                    <input type="number" value="@item.Quantity" min="1" />
+                </td>
+                <td>@item.ProductPrice</td>
+                <td>@item.TotalPrice</td>
+                <td>
+                    <input type="checkbox" @(item.IsSelected ? "checked" : "") />
+                </td>
+                <td>
+                    <button onclick="removeProduct('@item.Id_Product')">Xóa</button>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>Total Cost: <span id="totalCost">@Model.Sum(x => x.IsSelected ? x.TotalPrice : 0)</span></p>
+
+@section scripts {
+    <script>
+
+        $(document).ready(function () {
+            updateTotalCost();
+
+            $('input[type="checkbox"]').change(function () {
+                updateTotalCost();
+            });
+
+            $('input[type="number"]').change(function () {
+                updateTotalCost();
+            });
+
+            function updateTotalCost() {
+                var totalCost = 0;
+
+                $('tbody tr').each(function () {
+                    var checkbox = $(this).find('input[type="checkbox"]');
+                    var quantityInput = $(this).find('input[type="number"]');
+                    var productPrice = parseInt($(this).find('td:eq(2)').text());
+                    var isSelected = checkbox.is(":checked");
+                    var quantity = parseInt(quantityInput.val());
+
+                    var individualCost = quantity * productPrice;
+
+                    $(this).find('td:eq(3)').text(individualCost);
+
+                    if (isSelected) {
+                        totalCost += individualCost;
+                    }
+                });
+
+                $('#totalCost').text(totalCost);
             }
+        });
+    </script>
+    <script>
+        function removeProduct(productId) {
+            $.ajax({
+                type: "POST",
+                url: "/Cart/RemoveProduct",
+                data: { id: productId },
+                success: function (result) {
+                },
+                error: function (error) {
+                    console.error("Error removing product:", error);
+                }
+            });
         }
-        else
-        {
-            <p>khong có sản phảm</p>
-        }
-    </div>
-</div>
+    </script>
+
+
+}

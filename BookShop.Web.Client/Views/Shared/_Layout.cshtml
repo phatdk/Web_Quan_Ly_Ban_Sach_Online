@@ -80,8 +80,27 @@
                 text-decoration:none !important;
             }
 
-        h6 {
-            margin-bottom: 0 !important;
+        .dn1 {
+        }
+
+        .form .btn {
+            justify-content: center;
+        }
+
+        .t {
+            cursor: pointer;
+        }
+
+        .cuoitrang {
+            background-color: white;
+            margin-top: 30px;
+            border-radius: 10px;
+            padding-bottom: 40px;
+        }
+
+        .cuoicc {
+            margin-top: 15px;
+            padding-top: 30px;
         }
         </style>
 </head>
@@ -90,7 +109,7 @@
         <a style="btn" asp-action="Genre" asp-controller="SearchAndFilter" value="2" name="2"> click</a>
         <div class="gi">
             <div style="justify-content:center">
-                <img style="text-align:center;width:100%;height:55px" src="https://cdn0.fahasa.com/media/wysiwyg/Thang-11-2023/FahasaSaleThu3T1123_W1_Header_1263x60.jpg" />
+                <img style="text-align:center;width:100%;height:61px" src="https://cdn0.fahasa.com/media/wysiwyg/Thang-11-2023/FahasaSaleThu3T1123_W1_Header_1263x60.jpg" />
             </div>
         </div>
         <div>
@@ -167,15 +186,15 @@
                                                     </svg>
                                                     Tài khoản
 
-                                                </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item aidn1" asp-area="Identity" asp-controller="Account" asp-action="Login">Đăng Nhập</a>
-                                                    <a class="dropdown-item aidn2" asp-area="Identity" asp-controller="Account" asp-action="Register">Đăng Ký</a>
+                                                    </a>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item aidn1" asp-area="Identity" asp-controller="Account" asp-action="Login">Đăng Nhập</a>
+                                                        <a class="dropdown-item aidn2" asp-area="Identity" asp-controller="Account" asp-action="Register">Đăng Ký</a>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        }
                                     }
-                                }
                                 </div>
                             </li>
                         </ul>
@@ -192,64 +211,58 @@
 
     <footer class="">
         <div class="container cuoitrang">
-        <div class="row cuoicc">
-            <div class="col-4">
-                <img src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/logo.png" />
-                <hr />
-                <p>Lầu 5, 387-389 Hai Bà Trưng Quận 3 TP HCMCông Ty Cổ Phần Phát Hành Sách TP HCM - FAHASA60 - 62 Lê Lợi, Quận 1, TP. HCM, Việt Nam</p>
-                <p>Fahasa.com nhận đặt hàng trực tuyến và giao hàng tận nơi. KHÔNG hỗ trợ đặt mua và nhận hàng trực tiếp tại văn phòng cũng như tất cả Hệ Thống Fahasa trên toàn quốc.</p>
-                <img src="https://cdn0.fahasa.com/media/wysiwyg/Logo-NCC/logo-bo-cong-thuong-da-thong-bao1.png" style="width: 100px;" height="40px">
-            </div>
-            <div class="col-8">
-                <div class="row">
-                    <div class="col-4">
-                        <h6>Dịch Vụ</h6>
-                        <p>Điều khoản sử dụng</p>
-                        <p>Chính sách bảo mật thông tin cá nhân</p>
-                        <p>Chính sách bảo mật thanh toán</p>
-                        <p>Giới thiệu Fahasa</p>
-                        <p>Hệ thống trung tâm - nhà sách</p>
-                    </div>
-                    <div class="col-4">
-                        <h6>Hỗ Trợ</h6>
-                        <p>Chính sách đổi - trả - hoàn tiền</p>
-                        <p>Chính sách bảo hành - bồi hoàn</p>
-                        <p>Chính sách vận chuyển</p>
-                        <p>Chính sách khách sỉ</p>
-                        <p>Phương thức thanh toán và xuất HĐ</p>
-                    </div>
-                    <div class="col-4">
-                        <h6>Tài Khoản Của Tôi</h6>
-                        <p>Đăng Nhâp/Tạo mới tài khoản</p>
-                        <p>Thay đổi địa chỉ </p>
-                        <p>Chi tiết tài khoản</p>
-                        <p>Lịch sử mua hàng</p>
-                    </div>
+            <div class="row cuoicc">
+                <div class="col-4">
+                    <img src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/logo.png" />
+                    <hr />
+                    <p>Lầu 5, 387-389 Hai Bà Trưng Quận 3 TP HCMCông Ty Cổ Phần Phát Hành Sách TP HCM - FAHASA60 - 62 Lê Lợi, Quận 1, TP. HCM, Việt Nam</p>
+                    <p>Fahasa.com nhận đặt hàng trực tuyến và giao hàng tận nơi. KHÔNG hỗ trợ đặt mua và nhận hàng trực tiếp tại văn phòng cũng như tất cả Hệ Thống Fahasa trên toàn quốc.</p>
+                    <img src="https://cdn0.fahasa.com/media/wysiwyg/Logo-NCC/logo-bo-cong-thuong-da-thong-bao1.png" style="width: 100px;" height="40px">
                 </div>
-                <div class="row">
-                    <div class="col-4">
-                        <h6>Liên Hệ</h6>
-                        <p>60-62 Lê Lợi, Q.1, TP. HCM</p>
+                <div class="col-8">
+                    <div class="row">
+                        <div class="col-4">
+                            <h6>Dịch Vụ</h6>
+                            <p>Điều khoản sử dụng</p>
+                            <p>Chính sách bảo mật thông tin cá nhân</p>
+                            <p>Chính sách bảo mật thanh toán</p>
+                            <p>Giới thiệu Fahasa</p>
+                            <p>Hệ thống trung tâm - nhà sách</p>
+                        </div>
+                        <div class="col-4">
+                            <h6>Hỗ Trợ</h6>
+                            <p>Chính sách đổi - trả - hoàn tiền</p>
+                            <p>Chính sách bảo hành - bồi hoàn</p>
+                            <p>Chính sách vận chuyển</p>
+                            <p>Chính sách khách sỉ</p>
+                            <p>Phương thức thanh toán và xuất HĐ</p>
+                        </div>
+                        <div class="col-4">
+                            <h6>Tài Khoản Của Tôi</h6>
+                            <p>Đăng Nhâp/Tạo mới tài khoản</p>
+                            <p>Thay đổi địa chỉ </p>
+                            <p>Chi tiết tài khoản</p>
+                            <p>Lịch sử mua hàng</p>
+                        </div>
                     </div>
-                    <div class="col-4">
-                        <h6>Email</h6>
-                        <p>lequangkhanh150103@gmail.com</p>
-                    </div>
-                    <div class="col-4">
-                        <h6>Số điện thoại</h6>
-                        <p>0987117521</p>
+                    <div class="row">
+                        <div class="col-4">
+                            <h6>Liên Hệ</h6>
+                            <p>60-62 Lê Lợi, Q.1, TP. HCM</p>
+                        </div>
+                        <div class="col-4">
+                            <h6>Email</h6>
+                            <p>lequangkhanh150103@gmail.com</p>
+                        </div>
+                        <div class="col-4">
+                            <h6>Số điện thoại</h6>
+                            <p>0987117521</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        </div>
-    </footer> 
-
-	<script src="~/lib/chosen_v1.8.7/docsupport/jquery-3.2.1.min.js" type="text/javascript"></script>
-	<script src="~/lib/chosen_v1.8.7/chosen.jquery.js" type="text/javascript"></script>
-	<script src="~/lib/chosen_v1.8.7/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
-	<script src="~/lib/chosen_v1.8.7/docsupport/init.js" type="text/javascript" charset="utf-8"></script>
-
+    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
