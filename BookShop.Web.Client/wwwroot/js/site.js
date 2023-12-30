@@ -13,21 +13,27 @@
     return formattedDate;
 }
 
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+}
+
 function createPagingButtons(min, max, index) {
     var buttonContainer = document.getElementById("buttonContainer");
     buttonContainer.innerHTML = "";
     intIndex = parseInt(index);
-    if (intIndex < 3) {
+    if (intIndex <= min) {
         limitStart = min;
         limitEnd = intIndex + 3;
-        if(limitEnd > max) limitEnd = max
-    } else if (intIndex > max - 2) {
+        if (limitEnd > max) limitEnd = max;
+    } else if (intIndex >= max) {
         limitStart = intIndex - 3;
         limitEnd = max;
-        if(limitStart < min) limitStart = min
+        if (limitStart < min) limitStart = min;
     } else {
         limitStart = intIndex - 2;
+        if (limitStart < min) limitStart = min;
         limitEnd = intIndex + 2;
+        if (limitEnd > max) limitEnd = max;
     }
 
     for (var i = limitStart; i <= limitEnd; i++) {

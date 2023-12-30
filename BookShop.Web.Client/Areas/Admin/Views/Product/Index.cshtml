@@ -17,65 +17,127 @@
 	<p>
 		<button class="btn btn-primary" onclick="location.href='@Url.Action("Create")'"><i class="fa-solid fa-circle-plus"></i> Create</button>
 	</p>
+	<div>
+		<select id="type-filter" class="border-info h-100" onchange="loadData(1)" style="max-width: 250px; min-width: 100px;">
+			<option value="0" selected>Tất cả</option>
+			<option value="1">Sản phẩm lẻ</option>
+			<option value="2">Sản phẩm combo</option>
+		</select>
+		<div class="btn-group">
+			<input id="keyWord-find" class="btn btn-outline-info" placeholder="enter name or collection name" oninput="loadData(1)">
+			<button onclick="loadData(1)" class="btn btn-info"><i class="fa-solid fa-magnifying-glass"></i></button>
+		</div>
+	</div>
 	<table class="table">
 		<thead>
 			<tr>
-				<th>
-					@Html.DisplayName("Tên")
-				</th>
-				<th>
-					@Html.DisplayName("Số lượng")
-				</th>
-				<th>
-					@Html.DisplayName("Giá bán")
-				</th>
-				<th>
-					@Html.DisplayName("Ngày tạo")
-				</th>
-				<th>
-					@Html.DisplayName("Trạng thái")
-				</th>
-				<th>
-					@Html.DisplayName("Loại")
-				</th>
-				<th></th>
+				<th class="text-center">Stt</th>
+				<th class="text-center">Tên sản phẩm</th>
+				<th class="text-center">Số lượng</th>
+				<th class="text-center">Giá bán</th>
+				<th class="text-center">Loại</th>
+				<th class="text-center">Trạng thái</th>
+				<th class="text-center"></th>
 			</tr>
 
 		</thead>
 		<tbody id="prod-list">
-			@foreach (var item in Model)
+			@* @foreach (var item in Model)
 			{
-				<tr id="prod-@item.Id">
-					<td>
-						@Html.DisplayFor(modelItem => item.Name)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Quantity)
-					</td>
-					<td>
-						@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)
-					</td>
-					<td>
-						@Html.DisplayFor(modelTtem => item.CreatedDate)
-					</td>
-					<td>
-						@(item.Status == 1 ? "Đang bán" : "Chịu")
-					</td>
-					<td>
-						@(item.Type == 1 ? "Lẻ" : "Combo")
-					</td>
-					<td>
-						<button class="btn btn-outline-warning" onclick="location.href='@Url.Action("Edit", new { id = item.Id })' ">Sửa</button>
-						<button class="btn btn-outline-success" onclick="location.href='@Url.Action("Details", new { id = item.Id })'">Chi tiết</button>
-						<button class="btn btn-outline-danger" onclick="deleteSanPham('@item.Id')" value="Xóa">Xóa</button>
-					</td>
-				</tr>
-			}
+			<tr id="prod-@item.Id">
+			<td>
+			@Html.DisplayFor(modelItem => item.Name)
+			</td>
+			<td>
+			@Html.DisplayFor(modelItem => item.Quantity)
+			</td>
+			<td>
+			@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)
+			</td>
+			<td>
+			@Html.DisplayFor(modelTtem => item.CreatedDate)
+			</td>
+			<td>
+			@(item.Status == 1 ? "Đang bán" : "Chịu")
+			</td>
+			<td>
+			@(item.Type == 1 ? "Lẻ" : "Combo")
+			</td>
+			<td>
+			<button class="btn btn-outline-warning" onclick="location.href='@Url.Action("Edit", new { id = item.Id })' ">Sửa</button>
+			<button class="btn btn-outline-success" onclick="location.href='@Url.Action("Details", new { id = item.Id })'">Chi tiết</button>
+			<button class="btn btn-outline-danger" onclick="deleteSanPham('@item.Id')" value="Xóa">Xóa</button>
+			</td>
+			</tr>
+			} *@
 		</tbody>
 	</table>
-	<partial name="_Paging" model="@ViewBag.pagingmodel" />
+	<div id="buttonContainer"></div>
 </body>
+
+<script src="~/js/site.js"></script>
 <script type="text/javascript">
+	$(document).ready(function () {
+		loadData(1);
+	});
+
+	function getDetail(id) {
+		var url = "@Url.Action("Details", "Product")?id=" + id
+		window.location.href = url;
+	}
+
+	function loadData(pageIndex) {
+		// Gửi yêu cầu Ajax đến máy chủ
+		var type = document.getElementById("type-filter").value;
+		var keyWord = document.getElementById("keyWord-find").value;
+		var index = (pageIndex - 1) * 15;
+		index
+		$.ajax({
+			url: '@Url.Action("GetProduct", "Product")',
+			type: 'GET',
+			data: { page: pageIndex, type: type, keyWord: keyWord },
+			success: function (data) {
+				// Xóa danh sách cũ trước khi thêm danh sách mới
+				var dataList = $("#prod-list");
+				dataList.empty();
+				let statusName = "";
+				let statusColor = "";
+				let typeName = "";
+				// Thêm danh sách đơn hàng vào HTML
+				data.data.forEach(function (item) {
+					index += 1;
+					if (item.status === 0) {
+						statusName = "Không bán";
+						statusColor = "text-danger";
+					} else if (item.status === 1 && item.quantity < 1) {
+						statusName = "Hết hàng";
+						statusColor = "text-warning";
+					} else if (item.status === 1 && item.quantity > 0) {
+						statusName = "Đang bán";
+						statusColor = "text-success";
+					}
+					if (item.type === 1) typeName = "Bán lẻ";
+					else typeName = "Bán combo"
+					var dataRow =
+						'<tr class="table table-bordered border-dark">' +
+						'<td class="text-center">' + index + '</td>' +
+						'<td class="text-center"><label>' + item.name + '</label></td>' +
+						'<td class="text-center"><label>' + item.quantity + '</label></td>' +
+						'<td class="text-center"><label>' + formatCurrency(item.price) + '</label></td>' +
+						'<td class="text-center"><label>' + typeName + '</label></td>' +
+						'<td class="text-center ' + statusColor + '"><strong>' + statusName + '</strong></td>' +
+						'<td class="text-center"><button class="btn btn-warning" onclick="getDetail(' + item.id + ')">Xem</button></td>' +
+						'</tr>';
+
+					dataList.append(dataRow);
+				});
+				createPagingButtons(1, data.max, data.page);
+			},
+			error: function (error) {
+				console.log('Lỗi: ' + error.responseText);
+			}
+		});
+	}
 	function deleteSanPham(id) {
 		console.log(id);
 		$.ajax({
