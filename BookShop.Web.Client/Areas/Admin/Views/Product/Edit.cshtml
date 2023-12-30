@@ -21,75 +21,89 @@
 	}
 </style>
 <body>
-@{
-	string imgUrl = Model.imageViewModels.FirstOrDefault().ImageUrl;
-	List<BookViewModel> listBook = ViewBag.listBook;
-	List<CollectionModel> listCollection = ViewBag.listCollection;
-}
-<h4>Update Product</h4>
+	@{
+		List<BookViewModel> listBook = ViewBag.listBook;
+		List<CollectionModel> listCollection = ViewBag.listCollection;
+	}
+	<h4>Update Product</h4>
 
-@using (Html.BeginForm("Edit", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-	@Html.AntiForgeryToken()
+	@using (Html.BeginForm("Edit", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+	{
+		@Html.AntiForgeryToken()
 
-	<div class="form-group">
-		<input asp-for="Id" hidden />
-	</div>
+		<div class="form-group">
+			<input asp-for="Id" hidden />
+		</div>
 
-	<div class="form-group">
-		@Html.Label("Tên sản phẩm")
-		@Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
-	</div>
+		<div class="form-group">
+			@Html.Label("Tên sản phẩm")
+			@Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+		</div>
 
-	<div class="form-group">
-		@Html.Label("Số lượng")
-		@Html.TextBoxFor(m => m.Quantity, new { @class = "form-control" })
-	</div>
+		<div class="form-group">
+			@Html.Label("Số lượng")
+			@Html.TextBoxFor(m => m.Quantity, new { @class = "form-control" })
+		</div>
 
-	<div class="form-group">
-		@Html.Label("Giá bán")
-		@Html.TextBoxFor(m => m.Price, new { @class = "form-control" })
-	</div>
+		<div class="form-group">
+			@Html.Label("Giá bán")
+			@Html.TextBoxFor(m => m.Price, new { @class = "form-control" })
+		</div>
 
-	<div class="form-group">
-		@Html.Label("Mô tả sản phẩm")
-		@Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
-	</div>
+		<div class="form-group">
+			@Html.Label("Mô tả sản phẩm")
+			@Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+		</div>
 
-	<div class="form-group">
-		@Html.LabelFor(m => m.CollectionId)
-		@Html.DropDownListFor(m => m.CollectionId, new SelectList(listCollection, "Id", "Name"), "-- Select Collection --", new { @class = "form-control chosen-select", id = "collectionSelect" })
-		<input type="hidden" name="CollectionId" value="@Model.CollectionId" />
-	</div>
+		<div class="form-group">
+			@Html.LabelFor(m => m.CollectionId)
+			@Html.DropDownListFor(m => m.CollectionId, new SelectList(listCollection, "Id", "Name"), "-- Select Collection --", new { @class = "form-control chosen-select", id = "collectionSelect" })
+			<input type="hidden" name="CollectionId" value="@Model.CollectionId" />
+		</div>
 
-	<div class="form-group">
-		@Html.Label("List sách")
-		@Html.ListBoxFor(m => m.bookSelected, new MultiSelectList(listBook, "Id", "Title", Model.bookSelected), new { @class = "form-control chosen-select", id = "bookSelect" })
-		<input type="hidden" name="bookSelected" value="@Model.bookSelected" />
-	</div>
+		<div class="form-group">
+			@Html.Label("List sách")
+			@Html.ListBoxFor(m => m.bookSelected, new MultiSelectList(listBook, "Id", "Title", Model.bookSelected), new { @class = "form-control chosen-select", id = "bookSelect" })
+			<input type="hidden" name="bookSelected" value="@Model.bookSelected" />
+		</div>
 
-	<div class="form-group">
-		<input asp-for="Status" hidden />
-	</div>
+		<div class="form-group">
+			<input asp-for="Status" hidden />
+		</div>
 
-	<div class="form-group">
-		@Html.Label("Hình ảnh")<br />
-		<img id="img-selected" src="@imgUrl" alt="Hình ảnh sản phẩm" style="max-width: 300px" />
-		<input type="file" name="image" id="img-input" class="form-control" accept=".png" />
-	</div>
+		<div class="form-group">
+			@Html.Label("Hình ảnh")<br />
+			<div id="img-selected">
+				@foreach (var img in Model.imageViewModels.OrderBy(x => x.Index))
+				{
+					<img id="img-selected" src="@img.ImageUrl" alt="Hình ảnh sản phẩm" style="max-width: 200px" />
+				}
+			</div>
+			<input type="file" id="img-input" asp-for="fileCollection" multiple class="form-control m-3" accept=".png" />
+		</div>
 
-	<button type="submit" class="btn btn-primary">Save</button>
-}
+		<button type="submit" class="btn btn-primary">Save</button>
+	}
 </body>
 <script>
 	const uploadInput = document.getElementById('img-input');
 	const uploadedImage = document.getElementById('img-selected');
-	uploadInput.addEventListener('change', function (event) {
 
-		const file = event.target.files[0];
-		if (file) {
-			const imageURL = URL.createObjectURL(file);
-			uploadedImage.src = imageURL;
+	uploadInput.addEventListener('change', function (event) {
+		const files = event.target.files;
+		uploadedImage.innerHTML = "";
+		if (files) {
+			for (const file of files) {
+				if (file) {
+					const imageURL = URL.createObjectURL(file);
+					var imgItem = document.createElement("img");
+					imgItem.src = imageURL;
+					imgItem.alt = "Ảnh sản phẩm"
+					imgItem.style.maxWidth = "200px";
+					imgItem.style.margin = "10px";
+					uploadedImage.appendChild(imgItem);
+				}
+			}
 		}
 	});
 	$(document).ready(function () {

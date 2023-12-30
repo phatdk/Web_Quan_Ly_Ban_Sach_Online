@@ -9,12 +9,13 @@ using BookShop.Web.Client.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static NuGet.Packaging.PackagingConstants;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-    [Authorize(Roles = "Admin")]
-    public class ProductController : Controller
+	[Authorize(Roles = "Admin")]
+	public class ProductController : Controller
 	{
 		List<ProductViewModel> _listProduct;
 		ProductViewModel _product;
@@ -65,12 +66,12 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			}
 		}
 
-		public async Task<string> UpLoadImage(IFormFile file, int productId)
+		public async Task<string> UpLoadImage(IFormFile file, int productId, int index)
 		{
 			if (file != null)
 			{
 				var extension = Path.GetExtension(file.FileName);
-				var filename = "Product_" + productId + "_0_" + extension;
+				var filename = "Product_" + productId + "_" + index + "_" + extension;
 				var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\product", filename);
 				using (var stream = new FileStream(filePath, FileMode.Create))
 				{
@@ -82,34 +83,33 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		}
 
 		// GET: ProductController
-		public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages)
+		public async Task<IActionResult> Index()
 		{
-			_listProduct.Clear();
-			_listProduct = await _productService.GetAll();
-            int pagesize = 10;
-            if (pagesize <= 0)
-            {
-                pagesize = 10;
-            }
-            int countPages = (int)Math.Ceiling((double)_listProduct.Count() / pagesize);
-            if (currentPages > countPages)
-            {
-                currentPages = countPages;
-            }
-            if (currentPages < 1)
-            {
-                currentPages = 1;
-            }
+			return View();
+		}
 
-            var pagingmodel = new PagingModel()
-            {
-                currentpage = currentPages,
-                countpages = countPages,
-                generateUrl = (int? p) => Url.Action("Index", "Product", new { areas = "Admin", p = p, pagesize = pagesize })
-            };
-            ViewBag.pagingmodel = pagingmodel;
-            _listProduct = _listProduct.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
-            return View(_listProduct);
+		public async Task<IActionResult> GetProduct(int page, int? type, string? keyWord)
+		{
+			var dataList = await _productService.GetAll();
+			if (type != null)
+			{
+				if (type >= 1)
+				{
+					dataList = dataList.Where(x => x.Type == Convert.ToInt32(type)).ToList();
+				}
+			}
+			if (!string.IsNullOrEmpty(keyWord))
+			{
+				dataList = dataList.Where(
+					x => x.Name.ToLower().Contains(keyWord.ToLower())
+					|| x.CollectionName.ToLower().Contains(keyWord.ToLower())
+					).ToList();
+			}
+			dataList = dataList.OrderByDescending(x => x.CreatedDate).ToList();
+			int pageSize = 10;
+			double totalPage = (double)dataList.Count / pageSize;
+			dataList = dataList.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+			return Json(new { data = dataList, page = page, max = Math.Ceiling(totalPage) });
 		}
 
 		// GET: ProductController/Details/5
@@ -131,7 +131,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		// POST: ProductController/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(CreateProductModel request, IFormFile image)
+		public async Task<IActionResult> Create(CreateProductModel request)
 		{
 			try
 			{
@@ -147,17 +147,22 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					bookSelected = request.bookSelected,
 				};
 				var result = await _productService.Add(product);
-				if (image != null && result.Id != 0)
+				if (request.fileCollection != null && result.Id != 0)
 				{
-					var img = (await UpLoadImage(image, result.Id));
-					var imageProduct = new CreateImageModel()
+					var index = 0;
+					foreach (var file in request.fileCollection)
 					{
-						ImageUrl = "/img/product/" + img,
-						Index = 0,
-						Status = 1,
-						Id_Product = result.Id,
-					};
-					await _imageService.Add(imageProduct);
+						var img = (await UpLoadImage(file, result.Id, index));
+						var imageProduct = new CreateImageModel()
+						{
+							ImageUrl = "/img/product/" + img,
+							Index = 0,
+							Status = 1,
+							Id_Product = result.Id,
+						};
+						await _imageService.Add(imageProduct);
+						index++;
+					}
 				}
 				return RedirectToAction(nameof(Index));
 			}
@@ -194,22 +199,26 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		// POST: ProductController/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(UpdateProductModel request, IFormFile image)
+		public async Task<IActionResult> Edit(UpdateProductModel request)
 		{
 			try
 			{
-				if (image != null)
+				if (request.fileCollection != null)
 				{
-					var imgvm = (await _imageService.GetByProduct(request.Id)).FirstOrDefault();
-					var imgUrl = "/img/product/" + await UpLoadImage(image, request.Id);
-					if (imgvm.ImageUrl != imgUrl)
+					var imgvms = await _imageService.GetByProduct(request.Id);
+					for (var i = 0; i < imgvms.Count; i++)
 					{
-						var img = new UpdateImageModel()
+						var file = request.fileCollection[i];
+						var imgUrl = "/img/product/" + await UpLoadImage(file, request.Id, i);
+						if (imgvms[i].ImageUrl != imgUrl)
 						{
-							Id = imgvm.Id,
-							ImageUrl = imgUrl,
-						};
-						await _imageService.Update(img);
+							var img = new UpdateImageModel()
+							{
+								Id = imgvms[i].Id,
+								ImageUrl = imgUrl,
+							};
+							await _imageService.Update(img);
+						}
 					}
 				}
 				if (request.bookSelected.Count() > 1)

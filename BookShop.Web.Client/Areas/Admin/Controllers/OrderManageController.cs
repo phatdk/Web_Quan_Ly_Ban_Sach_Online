@@ -393,7 +393,11 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 								actionNote += "Sản phẩm " + product.Name + " | trả về kho\n";
 							}
 						}
-						else actionNote += "Sản phẩm " + product.Name + " | lỗi không được trả về kho\n";
+						else
+						{
+							condition = true;
+							actionNote += "Sản phẩm " + product.Name + " | lỗi không được trả về kho\n";
+						}
 					}
 					if (condition)
 					{
