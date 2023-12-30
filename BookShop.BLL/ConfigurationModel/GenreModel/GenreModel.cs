@@ -18,5 +18,6 @@ namespace BookShop.BLL.ConfigurationModel.GenreModel
 		public int? Status { get; set; }
 		//foreign key
 		public int? Id_Category { get; set; }
+		public string NameCategory { get;set; }
 	}
 }

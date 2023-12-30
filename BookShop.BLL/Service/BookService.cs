@@ -53,6 +53,7 @@ namespace BookShop.BLL.Service
                     CreatedDate = DateTime.Now,
                     Status = requet.Status,
                     Id_Supplier = requet.Id_Supplier,
+                    Img = requet.Img,
                 };
                 var book = await _bookRepository.CreateAsync(obj);
                 // var book = (await _bookRepository.GetAllAsync()).MaxBy(x => x.CreatedDate);
@@ -244,6 +245,7 @@ namespace BookShop.BLL.Service
                     SupplierName = supplier.Name,
                     authors = bookAuthors,
                     genres = bookGenres,
+                    Img = item.Img,
                 };
                 objlist.Add(obj);
             }
@@ -309,7 +311,9 @@ namespace BookShop.BLL.Service
                 Status = books.Status,
                 Id_Supplier = books.Id_Supplier,
                 authorModels = authors,
-                genreModels = genres
+                genreModels = genres,
+               Img = books.Img,
+          
             };
 
         }

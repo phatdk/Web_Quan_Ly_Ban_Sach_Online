@@ -1,10 +1,8 @@
-﻿@using Microsoft.AspNetCore.Authorization;
-@model IEnumerable<BookShop.BLL.ConfigurationModel.PromotionModel.PromotionViewModel>
-@inject IAuthorizationService _IAuthorizationService
+﻿@model IEnumerable<BookShop.BLL.ConfigurationModel.PromotionModel.PromotionViewModel>
+
 @{
 	ViewData["Title"] = "Danh sách khuyến mãi";
 	Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
-	var isAdmin = (await _IAuthorizationService.AuthorizeAsync(User, "ManagerMenu")).Succeeded;
 }
 
 @if (TempData["SuccessMessage"] != null)
@@ -108,11 +106,7 @@
 								</td>
 								<td>
 									<a class="btn btn-primary btn-tone m-r-5" asp-area="Admin" asp-controller="Promotion" asp-action="Details" asp-route-id="@item.Id">Chi tiết</a>
-									@if (isAdmin)
-									{
-										<a class="btn btn-secondary btn-tone m-r-5" asp-area="Admin" asp-controller="Promotion" asp-action="Edit" asp-route-id="@item.Id">Sửa</a>
-									}
-							
+									<a class="btn btn-secondary btn-tone m-r-5" asp-area="Admin" asp-controller="Promotion" asp-action="Edit" asp-route-id="@item.Id">Sửa</a>
 								</td>
 							</tr>
 						}
