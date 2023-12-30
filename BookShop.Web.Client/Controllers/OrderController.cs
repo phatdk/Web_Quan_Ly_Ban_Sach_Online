@@ -163,7 +163,6 @@ namespace BookShop.Web.Client.Controllers
 						Id_Product = product.Id,
 						Price = product.Price,
 						Quantity = prod.Quantity,
-						Img = product.imageViewModels.FirstOrDefault().ImageUrl,
 					};
 					createModel.orderDetails.Add(orderdetail);
 					createModel.Total += prod.Quantity * product.Price;
