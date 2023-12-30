@@ -132,6 +132,7 @@ builder.Services.AddTransient<IVNPayService, VNPayService>();
 builder.Services.AddTransient<IWishListService, WishListService>();
 builder.Services.AddTransient<INewsService, NewsService>();
 builder.Services.AddTransient<IEvaluateService, EvaluateService>();
+builder.Services.AddTransient<IReturnOrderService, ReturnOrderService>();
 
 builder.Services.AddTransient<IUserRoleService, UserRoleService>();
 

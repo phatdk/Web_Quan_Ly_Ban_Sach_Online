@@ -14,5 +14,6 @@ namespace BookShop.BLL.ConfigurationModel.ReturnOrderModel
 		public int Status { get; set; }
 
 		public int Id_Order { get; set; }
+		public int? Id_OrderDetail { get; set; }
 	}
 }
