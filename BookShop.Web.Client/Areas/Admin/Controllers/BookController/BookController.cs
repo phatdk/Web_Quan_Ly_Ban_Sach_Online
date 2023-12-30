@@ -7,13 +7,11 @@ using BookShop.BLL.IService;
 using BookShop.Web.Client.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing;
-using ZXing;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 {
-	[Area("Admin")]
-    [Route("admin/Book")]
+    [Area("Admin")]
+    
     [Authorize(Roles = "Admin,Staff")]
     public class BookController : Controller
     {
@@ -85,47 +83,39 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             }
         }
         // GET: BookController
-        [HttpGet("listbook")]
-        public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages)
-        {
-            _listBook.Clear();
-            _listBook = await _bookService.GetAll();
-         
-            int pagesize = 10;
-            if (pagesize <= 0)
-            {
-                pagesize = 10;
-            }
-            int countPages = (int)Math.Ceiling((double)_listBook.Count() / pagesize);
-            if (currentPages > countPages)
-            {
-                currentPages = countPages;
-            }
-            if (currentPages < 1)
-            {
-                currentPages = 1;
-            }
-
-            var pagingmodel = new PagingModel()
-            {
-                currentpage = currentPages,
-                countpages = countPages,
-                generateUrl = (int? p) => Url.Action("Index", "Book", new { areas = "Admin", p = p, pagesize = pagesize })
-            };
-            ViewBag.pagingmodel = pagingmodel;
-            _listBook = _listBook.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
-            return View(_listBook);
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        { 
+            return View();
         }
+      
+		public async Task<IActionResult> Getdata(int page, int? status, string? keyWord)
+		{
+			_listBook = await _bookService.GetAll();
+			if (keyWord != null)
+			{
+				_listBook = _listBook.Where(c => c.Title.Contains(keyWord)).ToList();
+			}
+			
+			var listBook = _listBook.OrderByDescending(c => c.CreatedDate).ToList();
+			int pageSize = 10;
+			double totalPage = (double)listBook.Count / pageSize;
+			listBook = listBook.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+			return Json(new { data = listBook, page = page, max = Math.Ceiling(totalPage) });
+		}
 
-        // GET: BookController/Details/5
-        [HttpGet("Details")]
+
+
+
+		// GET: BookController/Details/5
+		[HttpGet("Book/Details")]
         public async Task<IActionResult> Details(int id)
         {
             _book = await _bookService.GetById(id);
             return View(_book);
         }
 
-        [HttpGet("Create")]
+        [HttpGet("Book/Create")]
         // GET: BookController/Create
         public async Task<IActionResult> Create()
         {
@@ -136,7 +126,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
         }
 
         // POST: BookController/Create
-        [HttpPost("Create")]
+        [HttpPost("Book/Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateBookModel book, IFormFile barcodeImg)
         {
@@ -176,7 +166,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
         }
 
         // GET: BookController/Edit/5
-        [HttpGet("Edit")]
+        [HttpGet("Book/Edit")]
         public async Task<IActionResult> Edit(int id)
         {
             ViewBag.Authors = await LoadAuthor(1);
@@ -222,13 +212,16 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
         }
 
         // POST: BookController/Edit/5
-        [HttpPost("Edit")]
+        [HttpPost("Book/Edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(UpdateBookModel book)
         {
             try
             {
-                book.Status = book.Quantity == 0 ? 0 : 1;
+                if (book.Quantity == 0)
+                {
+                    book.Status = 0;
+                }
                 var result = await _bookService.Update(book);
                 return RedirectToAction(nameof(Index));
             }
@@ -238,24 +231,5 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             }
         }
 
-        // GET: BookController/Delete/5
-        [HttpGet]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var book = await _bookService.GetById(id);
-            if (book == null)
-            {
-                return NotFound();
-            }
-            try
-            {
-                await _bookService.Delete(id);
-                return RedirectToAction("Index");
-            }
-            catch (Exception)
-            {
-                return RedirectToAction("Index");
-            }
-        }
     }
 }
