@@ -1,168 +1,221 @@
 ﻿@model BookShop.BLL.ConfigurationModel.BookModel.BookViewModel
 
 @{
-    ViewData["Title"] = "Details";
+	ViewData["Title"] = "Details";
 }
+<style>
+	.chitiet {
+		gap:10px 20px;
+		padding: 20px;
+		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr 1fr 1fr ;
+	}
+	.chitiet-item label{
+		font-size:18px;
+		font-weight:500;
+	}
+	.chitiet-item p{
+		margin-bottom:0;
+		font-style:italic;
+	}
+	.ct:hover{
+		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	}
+	.chitiet-item:nth-child(1){
+		grid-column:1/3;
+		grid-row:1/8;
+	}
+	.chitiet-item:nth-last-child(1){
+		grid-column:3/6;
+	}
+</style>
+<a style="display: flex;
+    justify-content: center;
+    align-items: center;" asp-action="Index">Xem danh sách Book</a>
+	<h1 style="text-align:center">Chi tiết : @Model.Title</h1>
 
-<h1>Details</h1>
+<div class="chitiet">
+	<div class="chitiet-item">
+		<img style="width:100%" src="~/img/book/@Model.Img"/>
+	</div>
+	<div class="chitiet-item">
+		<label>
+			@Html.DisplayNameFor(model => model.ISBN):
+		</label>
+		<p>
+			+ @Html.DisplayFor(model => model.ISBN)
+		</p>
+	</div>
 
-<div>
-    <h4>BookViewModel</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ISBN)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ISBN)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Reader)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Reader)
-        </dd>
-       @* <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.authorModels)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.authorModels)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.genreModels)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.genreModels)
-        </dd>*@
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImportPrice)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImportPrice)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Quantity)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Quantity)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Barcode)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Barcode)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PageSize)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PageSize)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Pages)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Pages)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Cover)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Cover)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PublicationDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PublicationDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Weight)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Weight)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Widght)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Widght)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Length)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Length)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Height)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Height)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CollectionName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CollectionName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SupplierName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SupplierName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id_Collection)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id_Collection)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id_Supplier)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id_Supplier)
-        </dd>
-    </dl>
+	<div class="chitiet-item">
+		<label>
+			@Html.DisplayNameFor(model => model.Title)
+		</label>
+		<p>
+			+ @Html.DisplayFor(model => model.Title)
+		</p>
+	</div>
+	
+	
+	<div class="chitiet-item">
+		<label>
+			Tác giả:
+		</label>@foreach (var item in Model.authorModels)
+		{
+			<p style="margin-bottom:0;line-height:2">
+
+				+ @item.Name;
+
+			</p>
+		}
+	</div>
+	<div class="chitiet-item">
+		<label>
+			Thể loại:
+		</label>@foreach (var item in Model.genreModels)
+		{
+			<p>
+
+				+ @item.Name;
+
+			</p>
+		}
+	</div>
+	<div class="chitiet-item">
+		<label>
+			Người đọc
+		</label>
+		<p>
+			+ @Html.DisplayFor(model => model.Reader)
+		</p>
+	</div>
+	<div class="chitiet-item">
+		<label>
+			Nhà xuất bản:
+		</label>
+		<p>
+			+ @Html.DisplayFor(model => model.SupplierName)
+		</p>
+	</div>
+	<div class="chitiet-item">
+		<label>
+			Giá bìa sách:
+		</label>
+		<p>
+			+ @Html.DisplayFor(model => model.Price)
+		</p>
+	</div>
+	<div class="chitiet-item">
+		<label>
+			Giá nhập :
+		</label>
+		<p>
+			+ @Html.DisplayFor(model => model.ImportPrice)
+		</p>
+	</div>
+	<div class="chitiet-item">
+		<label>
+			@Html.DisplayNameFor(model => model.Quantity):
+		</label>
+		<p>
+			+ @Html.DisplayFor(model => model.Quantity)
+		</p>
+	</div>
+	<div class="chitiet-item">
+		<label>
+			@Html.DisplayNameFor(model => model.Barcode):
+		</label>
+		<p>
+			+ @Html.DisplayFor(model => model.Barcode)
+		</p>
+	</div>
+	<div class="chitiet-item">
+		<label>
+			Kích thước trang:
+		</label>
+		<p>
+			+ @Html.DisplayFor(model => model.PageSize)
+		</p>
+	</div>
+	<div class="chitiet-item">
+		<label>
+			Số trang:
+		</label>
+		<p>
+			+ @Html.DisplayFor(model => model.Pages)
+		</p>
+	</div>
+	<div class="chitiet-item">
+		<label>
+			Bìa sách:
+		</label>
+		<p>
+			+ @Html.DisplayFor(model => model.Cover)
+		</p>
+	</div>
+	<div class="chitiet-item">
+		<label>
+			Ngày xuất bản:
+		</label>
+		<p>
+			+ @Html.DisplayFor(model => model.PublicationDate)
+		</p>
+	</div>
+	<div class="chitiet-item">
+		<label>
+			Trọng lượng (gr):
+		</label>
+		<p>
+			+ @Html.DisplayFor(model => model.Weight) 
+		</p>
+	</div>
+	<div class="chitiet-item">
+		<label>
+			kích thước
+		</label>
+		<p>
+			+ @Html.DisplayFor(model => model.Length) x @Html.DisplayFor(model => model.Widght) x @Html.DisplayFor(model => model.Height) x 1mm
+		</p>
+	</div>
+	<div class="chitiet-item">
+		<label>
+			@Html.DisplayNameFor(model => model.CreatedDate):
+		</label>
+		<p>
+			+ @Html.DisplayFor(model => model.CreatedDate)
+		</p>
+	</div>
+	<div class="chitiet-item">
+		<label>
+			Trạng thái:
+		</label>
+		@if (Model.Status ==1)
+		{
+			<p>
+			Còn hàng
+		</p>
+		}
+		else
+		{
+			<p>
+				Không còn hàng
+			</p>
+		}
+		
+	</div>
+
+	
+	<div class="chitiet-item">
+		<label>
+			Mô tả:
+		</label>
+		<p>
+			+ @Html.DisplayFor(model => model.Description)
+		</p>
+	</div>
+
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { id =Model.Id }) |
-    <a asp-action="Index">Back to List</a>
+	
 </div>

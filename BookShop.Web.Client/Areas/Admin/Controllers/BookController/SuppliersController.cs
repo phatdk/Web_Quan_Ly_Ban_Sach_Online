@@ -73,7 +73,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             return View(supplier);
         }
         
-        [HttpPost("Edit/supplier/{id}")]
+        [HttpPost]
         public async Task<IActionResult> Edit(int id, Author supplier)
         {
             if (!ModelState.IsValid)
@@ -91,7 +91,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             return View(supplier);
         }
 
-        [HttpGet("Detail/supplier/{id}")]
+        
         public async Task<IActionResult> Details(int id)
         {
             var supplier = await _supplierService.GetById(id);

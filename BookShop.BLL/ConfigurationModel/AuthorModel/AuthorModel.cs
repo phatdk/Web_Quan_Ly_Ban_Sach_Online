@@ -11,8 +11,8 @@ namespace BookShop.BLL.ConfigurationModel.AuthorModel
 		public int Id { get; set; }
 		public string? Name { get; set; }
 		public string? Img { get; set; }
-		public int? Index { get; set; }
+		public int Index { get; set; }
 		public DateTime? CreatedDate { get; set; }
-		public int? Status { get; set; }
+		public int Status { get; set; }
 	}
 }

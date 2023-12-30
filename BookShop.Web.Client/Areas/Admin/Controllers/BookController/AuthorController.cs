@@ -5,26 +5,29 @@ using BookShop.DAL.Entities;
 using BookShop.Web.Client.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
+using System.Globalization;
+using System.Text;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 {
 	[Authorize(Roles = "Admin")]
 	[Area("Admin")] // cấu hình cái này để nó biết đây là trang quan lí
-    public class AuthorController : Controller
-    {
-        private readonly IAuthorService _authorService;
-        List<AuthorModel> _authorView;
-        public AuthorController(IAuthorService authorService)
-        {
-            _authorView = new List<AuthorModel>();
-            _authorService = authorService;
-        }
+	public class AuthorController : Controller
+	{
+		private readonly IAuthorService _authorService;
+		List<AuthorModel> _authorView;
+		public AuthorController(IAuthorService authorService)
+		{
+			_authorView = new List<AuthorModel>();
+			_authorService = authorService;
+		}
 
-        [HttpGet]
-        public async Task<IActionResult> Index()
-        {
-            return View();
-        }
+		[HttpGet]
+		public async Task<IActionResult> Index()
+		{
+			return View();
+		}
 		public async Task<IActionResult> Getdata(int page, int? status, string? keyWord)
 		{
 			_authorView = await _authorService.Getall();
@@ -43,77 +46,112 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 			return Json(new { data = authorView, page = page, max = Math.Ceiling(totalPage) });
 		}
 		[HttpGet("Create/author")]
-        public async Task<IActionResult> Create()
-        {
-            return View();
-        }
-        [HttpPost("Create/author")]
-        public async Task<IActionResult> Create(Author author, IFormFile imageFile)
-        {
-            if (imageFile != null && imageFile.Length > 0)
-            {
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\author", imageFile.FileName);
-                var stream = new FileStream(path, FileMode.Create);
-                imageFile.CopyTo(stream);
-                author.Img = imageFile.FileName;
-            }
-            if (!ModelState.IsValid)
-            {
-                var createAuthorModel = new CreateAuthorModel
-                {
-                    Name = author.Name,
-                    Img = author.Img,
-                    Index = author.Index,
-                    CreatedDate = author.CreatedDate,
-                    Status = author.Status
-                };
+		public async Task<IActionResult> Create()
+		{
+			return View();
+		}
+		[HttpPost("Create/author")]
+		public async Task<IActionResult> Create(Author author, IFormFile imageFile)
+		{
 
-                await _authorService.Add(createAuthorModel);
-                return RedirectToAction("Index");
-            }
-            return View(author);
-        }
-        [HttpGet("Edit/author/{id}")]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var author = await _authorService.GetById(id);
-            return View(author);
-        }
-        [HttpPost("Edit/author/{id}")]
-        public async Task<IActionResult> Edit(int id, Author author)
-        {         
-            if (!ModelState.IsValid)
-            {
-                var updateAuthorModel = new UpdateAuthorModel
-                {
-                    Name = author.Name,
-                    Img = author.Img,
-                    Index = author.Index,
-                    Status = author.Status
-                };
+			var convert = ConvertToValidString(author.Name);
+			if (imageFile != null && imageFile.Length > 0)
+			{
+				var extension = Path.GetExtension(imageFile.FileName);
+				var filename = "Author_" + convert + extension;
+				var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "author", filename);
 
-                await _authorService.Update(id, updateAuthorModel);
-                return RedirectToAction("Index");
-            }
-            return View(author);
+				var stream = new FileStream(path, FileMode.Create);
+				imageFile.CopyTo(stream);
+				author.Img = filename;
 
-        }
+			}
 
-        [HttpGet("Detail/author/{id}")]
-        public async Task<IActionResult> Details(int id)
-        {
-            var author = await _authorService.GetById(id);
-            return View(author);
-        }
+			if (!ModelState.IsValid)
+			{
+				var createAuthorModel = new CreateAuthorModel
+				{
+					Name = author.Name,
+					Img = author.Img,
+					Index = author.Index,
+					CreatedDate = author.CreatedDate,
+					Status = author.Status
+				};
 
-        //[HttpDelete("Delete/author/{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            if (await _authorService.Delete(id))
-            {
-                return RedirectToAction("Index");
-            }
-            else return BadRequest();
-        }
-    }
+
+
+				await _authorService.Add(createAuthorModel);
+				return RedirectToAction("Index");
+			}
+			return View(author);
+		}
+		static string ConvertToValidString(string input)
+		{
+			// Loại bỏ dấu tiếng Việt
+			string removedDiacritics = RemoveDiacritics(input);
+
+			// Chuyển thành chữ thường và loại bỏ khoảng trắng
+			string result = removedDiacritics.ToLower().Replace(" ", "");
+
+			return result;
+		}
+
+		static string RemoveDiacritics(string text)
+		{
+			string normalizedString = text.Normalize(NormalizationForm.FormD);
+			StringBuilder stringBuilder = new StringBuilder();
+
+			foreach (char c in normalizedString)
+			{
+				UnicodeCategory category = CharUnicodeInfo.GetUnicodeCategory(c);
+				if (category != UnicodeCategory.NonSpacingMark)
+				{
+					stringBuilder.Append(c);
+				}
+			}
+
+			return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+		}
+		public async Task<IActionResult> Edit(int id)
+		{
+			var author = await _authorService.GetById(id);
+			return View(author);
+		}
+		[HttpPost]
+		public async Task<IActionResult> Edit(int id, AuthorModel author)
+		{
+			if (!ModelState.IsValid)
+			{
+				var authorud = new AuthorModel
+				{
+					Name = author.Name,
+					Img = author.Img,
+					Index = author.Index,
+					Status = author.Status
+				};
+
+				await _authorService.Update(id, authorud);
+				return RedirectToAction("Index");
+			}
+			return View(author);
+
+		}
+
+
+		public async Task<IActionResult> Details(int id)
+		{
+			var author = await _authorService.GetById(id);
+			return View(author);
+		}
+
+		//[HttpDelete("Delete/author/{id}")]
+		public async Task<IActionResult> Delete(int id)
+		{
+			if (await _authorService.Delete(id))
+			{
+				return RedirectToAction("Index");
+			}
+			else return BadRequest();
+		}
+	}
 }
