@@ -6,34 +6,51 @@
 	List<CategoryModel> categorys =  ViewBag.Categorys;
 }
 
-<h1>Update Genre</h1>
+<style>
+	.form-group.cus {
+		display: flex;
+		justify-content: space-between;
+	}
+</style>
 
+<h1 style="text-align:center;">Sửa thể loại </h1>
 @using (Html.BeginForm(FormMethod.Post))
 {
-	<div style="width: 500px">
-		<div class="form-group">
-			<input asp-for="Id" hidden />
-		</div>
-        <div class="form-group">
-		@Html.Label("Tên thể loại")
-		@Html.TextBoxFor(m => m.Name, new { @class = "form-control short" })
-		</div>
+	<div class="row" style="justify-content: center;">
+		<div style="width: 500px">
+			<div class="form-group">
+				<input asp-for="Id" hidden />
+			</div>
+			<div class="form-group">
+				@Html.Label("Tên thể loại")
+				@Html.TextBoxFor(m => m.Name, new { @class = "form-control short" })
+			</div>
 
-		@*<div class="form-group">
-			@Html.Label("Index")
-			@Html.TextBoxFor(m => m.Index, new { @class = "form-control short" })
+			@*<div class="form-group">
+		@Html.Label("Index")
+		@Html.TextBoxFor(m => m.Index, new { @class = "form-control short" })
 		</div>*@
-		<div class="form-group">
-			@Html.Label("Status")
-			@Html.TextBoxFor(m => m.Status, new { @class = "form-control short" })
-		</div>
+			<div class="form-group" >
+				<label asp-for="Status" class="control-label"></label>
+				<select asp-for="Status" class="form-control">
+					<option value="1">Hoạt động</option>
+					<option value="0">Không hoạt động</option>
+				</select>
+				<span asp-validation-for="Status" class="text-danger"></span>
+			</div>
 
-		<div class="form-group">
-			@Html.Label("Danh mục")
-			@Html.DropDownListFor(m => m.Id_Category, new SelectList(categorys, "Id","Name"), "-- Select Collection --", new { @class = "form-control chosen-				select" })
+			<div class="form-group">
+				@Html.Label("Danh mục")
+				@Html.DropDownListFor(m => m.Id_Category, new SelectList(categorys, "Id","Name"), "-- Select Collection --", new { @class = "form-control chosen-				select" })
 
+			</div>
+			<div class="form-group cus">
+				<a asp-action="Index">Xem danh sách danh mục</a>
+				<input type="submit" value="Save" class="btn btn-primary" />
+			</div>
 		</div>
-    </div>
-	<br></br>
-	<button type="submit" class="btn btn-primary">Save</button>
+		<br>
+		
+	</div>
+	
 }
