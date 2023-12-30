@@ -52,8 +52,9 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
         {
             if (imageFile != null && imageFile.Length > 0)
             {
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\author", imageFile.FileName);
-                var stream = new FileStream(path, FileMode.Create);
+				var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "author", imageFile.FileName);
+
+				var stream = new FileStream(path, FileMode.Create);
                 imageFile.CopyTo(stream);
                 author.Img = imageFile.FileName;
             }
@@ -73,18 +74,18 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             }
             return View(author);
         }
-        [HttpGet("Edit/author/{id}")]
+      
         public async Task<IActionResult> Edit(int id)
         {
             var author = await _authorService.GetById(id);
             return View(author);
         }
-        [HttpPost("Edit/author/{id}")]
-        public async Task<IActionResult> Edit(int id, Author author)
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, AuthorModel author)
         {         
             if (!ModelState.IsValid)
             {
-                var updateAuthorModel = new UpdateAuthorModel
+                var authorud = new AuthorModel
                 {
                     Name = author.Name,
                     Img = author.Img,
@@ -92,14 +93,14 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
                     Status = author.Status
                 };
 
-                await _authorService.Update(id, updateAuthorModel);
+                await _authorService.Update(id, authorud);
                 return RedirectToAction("Index");
             }
             return View(author);
 
         }
 
-        [HttpGet("Detail/author/{id}")]
+       
         public async Task<IActionResult> Details(int id)
         {
             var author = await _authorService.GetById(id);

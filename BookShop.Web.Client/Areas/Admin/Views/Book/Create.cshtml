@@ -1,4 +1,4 @@
-﻿@using BookShop.BLL.ConfigurationModel.AuthorModel
+﻿﻿@using BookShop.BLL.ConfigurationModel.AuthorModel
 @using BookShop.BLL.ConfigurationModel.SupplierModel
 @using BookShop.BLL.ConfigurationModel.GenreModel
 @model BookShop.BLL.ConfigurationModel.BookModel.CreateBookModel
@@ -19,7 +19,7 @@
 		clear: both;
 	}
 
-	.btn btn-primary {
+	.btn.btn-primary {
 		width: 50px;
 	}
 
@@ -33,10 +33,11 @@
 		margin-right: 5%; /* Khoảng cách giữa hai cột */
 	}
 </style>
-
-@using (Html.BeginForm("Create", "Book", FormMethod.Post,new { enctype = "multipart/form-data" }))
+@*
+@using (Html.BeginForm("Create", "Book", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-	@Html.AntiForgeryToken()
+	@Html.AntiForgeryToken()*@
+	   <form asp-action="Create" enctype="multipart/form-data">
 	<div class="form-column">
 		<div class="form-group">
 			@Html.Label("Mã định danh")
@@ -56,13 +57,11 @@
 			@Html.Label("Barcode")
 			@Html.TextBoxFor(m => m.Barcode, new { @class = "form-control" })
 		</div>
-	@*	 <div class="form-group">
-    @Html.Label("Hình ảnh Barcode")
-    <input type="file" name="barcodeImg" id="barcodeImg" accept="image/*" class="form-control" />
-    <img id="previewBarcodeImg" style="max-width: 200px; max-height: 200px; margin-top: 10px;" />
-</div>*@
 
-
+		<div class="form-group">
+			<label>Chọn ảnh: </label>
+			<input type="file" name="imageFile" accept="img/*" />
+		</div>
 		<div class="form-group">
 			@Html.Label("Độc giả")
 			@Html.TextBoxFor(m => m.Reader, new { @class = "form-control" })
@@ -82,7 +81,7 @@
 			@Html.Label("Mô tả sản phẩm")
 			@Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
 		</div>
-	
+
 		<div class="form-group">
 			@Html.Label("Giá bìa")
 			@Html.TextBoxFor(m => m.CoverPrice, new { @class = "form-control" })
@@ -143,6 +142,5 @@
 		<br />
 		<button type="submit" class="btn btn-primary">Create</button>
 	</div>
-	<br />
+	</form>
 }
-
