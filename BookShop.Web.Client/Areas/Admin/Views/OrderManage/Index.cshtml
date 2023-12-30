@@ -50,9 +50,6 @@
 
 <script src="~/js/site.js"></script>
 <script>
-	function formatCurrency(amount) {
-		return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
-	}
 	function getDetail(id) {
 		var url = "@Url.Action("Details", "OrderManage")?id=" + id
 		window.location.href = url;

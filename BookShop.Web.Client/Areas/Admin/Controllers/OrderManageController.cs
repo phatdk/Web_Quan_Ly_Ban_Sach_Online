@@ -362,19 +362,42 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 7).First().Id;
 					order.Id_Status = statusId;
 					order.ModifiDate = DateTime.Now;
-					order.ModifiNotes += "\n" + DateTime.Now + " : Đơn được xác nhận hoàn thành xử lý hàng hoàn trả bởi " + staff.Name + " - Mã code [" + staff.Code + "]\n Ghi chú: " + modifyChange + "\n";
-					var result = await _orderService.Update(order);
-					if (result && order.Status == 6)
+					var actionNote = "";
+					var condition = false;
+					foreach (var action in myAction)
 					{
-						foreach (var action in myAction)
+						var product = await _productService.GetById(action.Key);
+						if (action.Value == 1)
 						{
-							if (action.Value == 1)
+							if (!await HandleReturn(action.Key))
 							{
-								await HandleReturn(action.Key);
+								condition = false;
+								break;
+							}
+							else
+							{
+								condition = true;
+								actionNote += "Sản phẩm " + product.Name + " | trả về kho\n";
 							}
 						}
+						else
+						{
+							condition = true;
+							actionNote += "Sản phẩm " + product.Name + " | lỗi không được trả về kho\n";
+						}
 					}
-					return Json(new { success = result });
+					if (condition)
+					{
+						order.ModifiNotes += "\n" + DateTime.Now + " : Đơn được xác nhận hoàn thành xử lý hàng hoàn trả bởi " + staff.Name + " - Mã code [" + staff.Code + "]\n" + actionNote + " Ghi chú: " + modifyChange + "\n";
+						var result = await _orderService.Update(order);
+						var returnOrderList = await _returnOrderService.GetByOrder(order.Id);
+						foreach (var item in returnOrderList)
+						{
+							await _returnOrderService.Update(item.Id, new UpdateReturnOrderModel { Notes = item.Notes, Status = 0 });
+						}
+						return Json(new { success = result });
+					}
+					return Json(new { success = false, errorMessage = "\nLỗi khi sử lí hàng trả lại vui lòng kiểm tra lại hệ thống!" });
 				}
 				return Json(new { success = false, errorMessage = "\nTrạng thái đơn hàng không hợp lệ!" });
 			}
