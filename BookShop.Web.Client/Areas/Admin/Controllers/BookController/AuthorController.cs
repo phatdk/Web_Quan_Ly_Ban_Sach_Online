@@ -52,8 +52,9 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
         {
             if (imageFile != null && imageFile.Length > 0)
             {
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\author", imageFile.FileName);
-                var stream = new FileStream(path, FileMode.Create);
+				var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "author", imageFile.FileName);
+
+				var stream = new FileStream(path, FileMode.Create);
                 imageFile.CopyTo(stream);
                 author.Img = imageFile.FileName;
             }
