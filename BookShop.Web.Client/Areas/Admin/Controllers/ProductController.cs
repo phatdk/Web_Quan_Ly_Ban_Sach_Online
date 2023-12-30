@@ -205,7 +205,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			{
 				if (request.fileCollection != null)
 				{
-					var imgvms = await _imageService.GetByProduct(request.Id);
+					var imgvms = await _imageService.GetByProduct(request.Id);	// đếm số ảnh đầu vào
 					for (var i = 0; i < imgvms.Count; i++)
 					{
 						var file = request.fileCollection[i];

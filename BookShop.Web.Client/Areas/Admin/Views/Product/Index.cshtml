@@ -85,6 +85,10 @@
 		var url = "@Url.Action("Details", "Product")?id=" + id
 		window.location.href = url;
 	}
+	function editProduct(id) {
+		var url = "@Url.Action("Edit", "Product")?id=" + id
+		window.location.href = url;
+	}
 
 	function loadData(pageIndex) {
 		// Gửi yêu cầu Ajax đến máy chủ
@@ -126,7 +130,10 @@
 						'<td class="text-center"><label>' + formatCurrency(item.price) + '</label></td>' +
 						'<td class="text-center"><label>' + typeName + '</label></td>' +
 						'<td class="text-center ' + statusColor + '"><strong>' + statusName + '</strong></td>' +
-						'<td class="text-center"><button class="btn btn-warning" onclick="getDetail(' + item.id + ')">Xem</button></td>' +
+						'<td class="text-center">'+
+						'<button class="btn btn-warning" onclick="getDetail(' + item.id + ')">Xem</button>'+
+						'<button class="btn btn-warning ms-2" onclick = "editProduct(' + item.id + ')">Sửa</button>' +
+						'</td>' +
 						'</tr>';
 
 					dataList.append(dataRow);
