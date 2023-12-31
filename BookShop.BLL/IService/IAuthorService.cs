@@ -15,6 +15,6 @@ namespace BookShop.BLL.IService
         public Task<AuthorModel> GetById(int id);
         public Task<bool> Update(int id, AuthorModel requet);
         public Task<bool> Delete(int id);
-        public Task<bool> Add(CreateAuthorModel requet);
+        public Task<CreateAuthorModel> Add(CreateAuthorModel requet);
     }
 }

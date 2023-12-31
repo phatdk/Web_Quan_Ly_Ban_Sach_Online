@@ -8,6 +8,8 @@ using BookShop.DAL.Entities;
 using BookShop.Web.Client.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
+using System.Text;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 {
@@ -128,17 +130,21 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 
 		// POST: BookController/Create
 		[HttpPost("Book/Create")]
-		
 		public async Task<IActionResult> Create(CreateBookModel book, IFormFile imageFile)
 		{
 			try
 			{
+
+				var convert = ConvertToValidString(book.Title);
 				if (imageFile != null && imageFile.Length > 0)
 				{
-					var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "book", imageFile.FileName);
+					var extension = Path.GetExtension(imageFile.FileName);
+					var filename = "Book_" + convert + extension;
+					var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "book", filename);
+
 					var stream = new FileStream(path, FileMode.Create);
 					imageFile.CopyTo(stream);
-					book.Img = imageFile.FileName;
+					book.Img = filename;
 				}
 				var createBookModel = new CreateBookModel()
 				{
@@ -178,6 +184,35 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 				return View();
 			}
 		}
+
+		static string ConvertToValidString(string input)
+		{
+			// Loại bỏ dấu tiếng Việt
+			string removedDiacritics = RemoveDiacritics(input);
+
+			// Chuyển thành chữ thường và loại bỏ khoảng trắng
+			string result = removedDiacritics.ToLower().Replace(" ", "");
+
+			return result;
+		}
+
+		static string RemoveDiacritics(string text)
+		{
+			string normalizedString = text.Normalize(NormalizationForm.FormD);
+			StringBuilder stringBuilder = new StringBuilder();
+
+			foreach (char c in normalizedString)
+			{
+				UnicodeCategory category = CharUnicodeInfo.GetUnicodeCategory(c);
+				if (category != UnicodeCategory.NonSpacingMark)
+				{
+					stringBuilder.Append(c);
+				}
+			}
+
+			return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+		}
+
 
 		// GET: BookController/Edit/5
 		[HttpGet("Book/Edit")]

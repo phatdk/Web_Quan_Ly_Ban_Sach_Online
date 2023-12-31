@@ -66,14 +66,14 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             }
         }
 
-        [HttpGet("Create")]
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             var categorys = await LoadCategory(1);
             ViewBag.Categorys = categorys;
             return View();
         }
-        [HttpPost("Create")]
+        [HttpPost]
         public async Task<IActionResult> Create(CreateGenreModel genre)
         {
             try
