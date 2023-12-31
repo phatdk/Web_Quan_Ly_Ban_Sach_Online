@@ -35,6 +35,7 @@
 				<th class="text-center">Tên sản phẩm</th>
 				<th class="text-center">Số lượng</th>
 				<th class="text-center">Giá bán</th>
+				<th class="text-center">Bộ sưu tập</th>
 				<th class="text-center">Loại</th>
 				<th class="text-center">Trạng thái</th>
 				<th class="text-center"></th>
@@ -128,10 +129,11 @@
 						'<td class="text-center"><label>' + item.name + '</label></td>' +
 						'<td class="text-center"><label>' + item.quantity + '</label></td>' +
 						'<td class="text-center"><label>' + formatCurrency(item.price) + '</label></td>' +
+						'<td class="text-center"><label>' + item.collectionName + '</label></td>' +
 						'<td class="text-center"><label>' + typeName + '</label></td>' +
 						'<td class="text-center ' + statusColor + '"><strong>' + statusName + '</strong></td>' +
 						'<td class="text-center">'+
-						'<button class="btn btn-warning" onclick="getDetail(' + item.id + ')">Xem</button>'+
+						'<button class="btn btn-success" onclick="getDetail(' + item.id + ')">Xem</button>'+
 						'<button class="btn btn-warning ms-2" onclick = "editProduct(' + item.id + ')">Sửa</button>' +
 						'</td>' +
 						'</tr>';

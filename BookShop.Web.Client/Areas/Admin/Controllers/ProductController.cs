@@ -2,6 +2,7 @@
 using BookShop.BLL.ConfigurationModel.CollectionBookModel;
 using BookShop.BLL.ConfigurationModel.ImageModel;
 using BookShop.BLL.ConfigurationModel.ProductModel;
+using BookShop.BLL.ConfigurationModel.PromotionModel;
 using BookShop.BLL.IService;
 using BookShop.BLL.Service;
 using BookShop.DAL.Entities;
@@ -19,7 +20,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 	{
 		List<ProductViewModel> _listProduct;
 		ProductViewModel _product;
-
 		List<BookViewModel> _listBook;
 		List<ImageViewModel> _listImage;
 		List<CollectionModel> _listCollections;
@@ -28,8 +28,10 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		IBookService _bookService;
 		ICollectionService _collectionService;
 		IImageService _imageService;
+		IPromotionService _promotionService;
+		IProductPromotionService _productPromotionService;
 
-		public ProductController(IProductService productService, IBookService bookService, ICollectionService collectionService, IImageService imageService)
+		public ProductController(IProductService productService, IBookService bookService, ICollectionService collectionService, IImageService imageService, IPromotionService promotionService, IProductPromotionService productPromotionService)
 		{
 			_listProduct = new List<ProductViewModel>();
 			_product = new ProductViewModel();
@@ -40,6 +42,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			_bookService = bookService;
 			_collectionService = collectionService;
 			_imageService = imageService;
+			_promotionService = promotionService;
+			_productPromotionService = productPromotionService;
 		}
 		public async Task<List<BookViewModel>> LoadBook(int status)
 		{
@@ -116,6 +120,13 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		public async Task<IActionResult> Details(int id)
 		{
 			_product = await _productService.GetById(id);
+			_product.promotionViewModels = new List<PromotionViewModel>();
+			var pp = await _productPromotionService.GetByProduct(_product.Id);
+			foreach(var item in pp)
+			{
+				var promotion = await _promotionService.GetById(item.Id_Promotion);
+				if(promotion != null) _product.promotionViewModels.Add(promotion);
+			}
 			return View(_product);
 		}
 
