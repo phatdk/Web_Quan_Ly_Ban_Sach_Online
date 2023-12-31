@@ -130,11 +130,11 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 
 		// POST: BookController/Create
 		[HttpPost("Book/Create")]
-
 		public async Task<IActionResult> Create(CreateBookModel book, IFormFile imageFile)
 		{
 			try
 			{
+
 				var convert = ConvertToValidString(book.Title);
 				if (imageFile != null && imageFile.Length > 0)
 				{
@@ -145,7 +145,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 					var stream = new FileStream(path, FileMode.Create);
 					imageFile.CopyTo(stream);
 					book.Img = filename;
-
 				}
 				var createBookModel = new CreateBookModel()
 				{
@@ -185,6 +184,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 				return View();
 			}
 		}
+
 		static string ConvertToValidString(string input)
 		{
 			// Loại bỏ dấu tiếng Việt
@@ -212,6 +212,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 
 			return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
 		}
+
 
 		// GET: BookController/Edit/5
 		[HttpGet("Book/Edit")]

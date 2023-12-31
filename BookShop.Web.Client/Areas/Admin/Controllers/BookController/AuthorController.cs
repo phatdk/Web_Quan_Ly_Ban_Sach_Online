@@ -154,4 +154,5 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 			else return BadRequest();
 		}
 	}
+
 }
