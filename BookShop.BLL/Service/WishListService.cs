@@ -100,15 +100,14 @@ namespace BookShop.BLL.Service
             return objlist;
         }
 
-        public async Task<WishListViewModel> GetByUserId(int userId, int productId)
+        public async Task<bool> GetByUserId(int userId, int productId)
 		{
 			var obj = (await _repository.GetAllAsync()).Where(c => c.Id_Product == productId && c.Id_User == userId).FirstOrDefault();
-			return new WishListViewModel()
+			if (obj != null)
 			{
-				Id_Product = obj.Id_Product,
-				Id_User = obj.Id_User,
-				CreatedDate = obj.CreatedDate,
-			};
+				return true;
+			}
+			return false;
 		}
 
      

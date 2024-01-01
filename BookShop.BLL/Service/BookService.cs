@@ -125,6 +125,7 @@ namespace BookShop.BLL.Service
                 obj.Length = requet.Length;
                 obj.Status = requet.Status;
                 obj.Id_Supplier = requet.Id_Supplier;
+                obj.Img = requet.Img;
                 await _bookRepository.UpdateAsync(obj.Id, obj);
 
                 var bookauthors = (await _bookAuthorRepository.GetAllAsync()).Where(x => x.Id_Book == obj.Id);

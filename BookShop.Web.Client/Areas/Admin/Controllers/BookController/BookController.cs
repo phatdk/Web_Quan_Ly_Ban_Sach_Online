@@ -244,7 +244,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 				Status = _book.Status ?? 0,
 				Id_Supplier = _book.Id_Supplier ?? 0,
 				authorModels = _book.authorModels,
-				genreModels = _book.genreModels
+				genreModels = _book.genreModels,
+				Img = _book.Img,
 			};
 			updateBookModel.authorSelected = new List<int>();
 			updateBookModel.genreSelected = new List<int>();
@@ -262,10 +263,37 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 		// POST: BookController/Edit/5
 		[HttpPost("Book/Edit")]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(UpdateBookModel book)
+		public async Task<IActionResult> Edit(UpdateBookModel book, IFormFile imageFile)
 		{
 			try
 			{
+				var convert = ConvertToValidString(book.Title);
+				//...
+
+				if (imageFile != null && imageFile.Length > 0)
+				{
+					// Kiểm tra nếu có ảnh cũ
+					if (!string.IsNullOrEmpty(book.Img))
+					{
+						// Xóa ảnh cũ
+						var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "book", book.Img);
+						if (System.IO.File.Exists(oldImagePath))
+						{
+							System.IO.File.Delete(oldImagePath);
+						}
+					}
+
+					var extension = Path.GetExtension(imageFile.FileName);
+					var filename = "Book_" + convert + "_" + Guid.NewGuid().ToString() + extension;
+					var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "book", filename);
+
+					var stream = new FileStream(path, FileMode.Create);
+					imageFile.CopyTo(stream);
+					book.Img = filename;
+				}
+
+				//...
+
 				if (book.Quantity == 0)
 				{
 					book.Status = 0;
