@@ -45,8 +45,10 @@ namespace BookShop.Web.Client.Controllers
 		}
 		public async Task<IActionResult> DanhSachSanPham()
 		{
-			ViewBag.Products = await _productService.GetAll();
-			return View();
+			var Products = await _productService.GetAll();
+			var top10Products = Products.Take(10).ToList();
+
+			return Json(new { data = top10Products });
 		}
 		public async Task<IActionResult> ChiTietSanPham(int id)
 		{

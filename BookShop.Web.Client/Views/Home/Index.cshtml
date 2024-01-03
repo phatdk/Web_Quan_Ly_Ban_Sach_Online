@@ -263,7 +263,6 @@
 
 	.fa-solid.fa-eye {
 		margin-left: 20px;
-	
 	}
 </Style>
 <div class="row">
@@ -384,7 +383,7 @@
 			<p style="justify-content:center; display:flex; align-items: center;font-size:25px; font-weight: 700; color: black; height:50px">Sản phẩm bày bán</p>
 		</div>
 	</div>
-	<div class="danhmuc-codien" id="listcategory">
+	<div class="danhmuc-codien" id="listproduct">
 	</div>
 
 	<div class="xemthem">
@@ -395,143 +394,11 @@
 <!-- Danh Muc San Pham-->
 <div class="danhmucsanpham">
 	<div class="dm" style="display:flex;">
-		<svg xmlns="http://www.w3.org/2000/svg" color="red" width="30" height="30" fill="currentColor" class="bi bi-grid" viewBox="0 0 16 16">
-			<path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
-		</svg><h2>Danh mục sản phẩm</h2>
+		<h2>Danh mục sản phẩm</h2>
 	</div>
-	<hr />
+
 	<div class="listsanpham">
-		<div class="menu_category_block_content_list" style="display: grid;grid-template-columns: repeat(10, 1fr);">
-			<a asp-area="" asp-controller="Home" asp-action="ThongTinSanPham" class="fhs_column_center">
-				<img class=" lazyloaded" src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/balos1.jpg" data-src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/balos1.jpg">
-				<div class="fhs_nowrap_two fhs_center_center" style="margin-top: 16px; font-size: 1.23em;">Balo<br>Bóp Viết</div>
-			</a>
-			<a href="/van-phong-pham/but.html?order=num_orders&amp;limit=24&amp;p=1&amp;fhs_campaign=categoryicon" class="fhs_column_center">
-				<img class=" lazyloaded" src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/butviets1.jpg" data-src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/butviets1.jpg">
-				<div class="fhs_nowrap_two fhs_center_center" style="margin-top: 16px; font-size: 1.23em;">Bút - Viết</div>
-			</a>
-			<a href="/tap?fhs_campaign=categoryicon" class="fhs_column_center">
-				<img class=" lazyloaded" src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/tapvos1.jpg" data-src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/tapvos1.jpg">
-				<div class="fhs_nowrap_two fhs_center_center" style="margin-top: 16px; font-size: 1.23em;">Tập - Vở</div>
-			</a>
-			<a href="/tam-linh-luan-hoi-2023?category=all&amp;sort=num_orders&amp;fhs_campaign=categoryicon" class="fhs_column_center">
-				<img class=" lazyloaded" src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/Danh-muc-san-pham/T_m_linh.jpg" data-src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/Danh-muc-san-pham/T_m_linh.jpg">
-				<div class="fhs_nowrap_two fhs_center_center" style="margin-top: 16px; font-size: 1.23em;">Tâm Linh<br>Luân Hồi</div>
-			</a>
-			<a href="/sach-trong-nuoc/dam-y.html?order=created_at&amp;limit=24&amp;p=1&amp;fhs_campaign=categoryicon" class="fhs_column_center">
-				<img class=" lazyloaded" src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/Danh-muc-san-pham/_am_m_.jpg" data-src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/Danh-muc-san-pham/_am_m_.jpg">
-				<div class="fhs_nowrap_two fhs_center_center" style="margin-top: 16px; font-size: 1.23em;">Ngôn Tình<br>Đam Mỹ</div>
-			</a>
-			<a href="/sach-kinh-te-mua-manh-giam-bao?fhs_campaign=categoryicon" class="fhs_column_center">
-				<img class=" lazyloaded" src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/9786043654370.jpg" data-src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/9786043654370.jpg">
-				<div class="fhs_nowrap_two fhs_center_center" style="margin-top: 16px; font-size: 1.23em;">Xu Hướng<br>Kinh Tế</div>
-			</a>
-			<a href="/trang-tam-ly?fhs_campaign=categoryicon" class="fhs_column_center">
-				<img class=" lazyloaded" src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/Danh-muc-san-pham/Thao_t_ng.jpg" data-src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/Danh-muc-san-pham/Thao_t_ng.jpg">
-				<div class="fhs_nowrap_two fhs_center_center" style="margin-top: 16px; font-size: 1.23em;">Tâm Lý<br>Thao Túng</div>
-			</a>
-			<a href="/trang-thieu-nhi?fhs_campaign=categoryicon" class="fhs_column_center">
-				<img class=" lazyloaded" src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/thieunhis2.jpg" data-src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/thieunhis2.jpg">
-				<div class="fhs_nowrap_two fhs_center_center" style="margin-top: 16px; font-size: 1.23em;">Thiếu Nhi</div>
-			</a>
-			<a href="/sach-trong-nuoc/van-hoc-trong-nuoc/tac-pham-kinh-dien.html?order=num_orders&amp;limit=24&amp;p=1&amp;fhs_campaign=categoryicon" class="fhs_column_center">
-				<img class=" lazyloaded" src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/tpkds1.jpg" data-src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/tpkds1.jpg">
-				<div class="fhs_nowrap_two fhs_center_center" style="margin-top: 16px; font-size: 1.23em;">Văn Học<br>Kinh Điển</div>
-			</a>
-			<a href="/sach-trong-nuoc/van-hoc-trong-nuoc/tieu-thuyet.html?order=num_orders_month&amp;limit=48&amp;p=1&amp;fhs_campaign=categoryicon" class="fhs_column_center">
-				<img class=" lazyloaded" src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/Danh-muc-san-pham/Ti_u_Thuy_t.jpg" data-src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/Danh-muc-san-pham/Ti_u_Thuy_t.jpg">
-				<div class="fhs_nowrap_two fhs_center_center" style="margin-top: 16px; font-size: 1.23em;">Tiểu Thuyết</div>
-			</a>
-		</div>
-	</div>
-</div>
-
-<!-- Xu Huong Mua Sam -->
-<div data-bs-spy="scroll" data-bs-target=".navbar" data-bs-offset="50" class="xuhuong">
-	<!-- Tab links -->
-	<div class="tabs">
-		<button class="tablinks active col-sm-2" data-electronic="allproducts">Xu hướng theo ngày</button>
-		<button class="tablinks col-sm-2" data-electronic="Microcontrollers">Sách HOT - Giảm Sốc</button>
-		<button class="tablinks col-sm-3" data-electronic="module">Bestseller Ngoại Ngữ</button>
-	</div>
-
-	<!-- Tab content -->
-	<div class="wrapper_tabcontent" style="background-color:white">
-		<div id="allproducts" class="tabcontent active">
-			<div class="row" style="padding-inline: 10px">
-				@if (products != null)
-				{
-					@foreach (var item in products)
-					{
-						<div class="col-sm-3 testsp" onclick="location.href='@Url.Action("ChiTietSanPham", new{id = item.Id})'">
-							<div class="product-image">
-								<div class="flashsale-image-container">
-									<img src="@item.imageViewModels.FirstOrDefault().ImageUrl" class="card-img-top" alt="...">
-								</div>
-								<!--
-								<div class="outstock-container">
-									<img class="flashsale-item-chay-hang" src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/flashsale/Chay-hang-icon.svg">
-								</div>
-								<div class="new-label-pro-sale"><span class="new-p-sale-label discount-l-fs">99%</span></div>-->
-							</div>
-							<div class="ttsp">
-								<h4>
-									@item.Name
-								</h4>
-								<div>
-								</div>
-								<div class="giaban">
-									@item.Price
-								</div>
-								<div class="giagoc">
-									600
-								</div>
-							</div>
-						</div>
-					}
-				}
-			</div>
-		</div>
-
-		<div id="Microcontrollers" class="tabcontent">
-			<div class="row" style="padding-inline: 10px">
-				@if (products != null)
-				{
-					@foreach (var item in products)
-					{
-						<div class="col-sm-3 testsp" onclick="location.href='@Url.Action("ChiTietSanPham", new{id = item.Id})'">
-							<div class="product-image">
-								<div class="flashsale-image-container">
-									<img src="@item.imageViewModels.FirstOrDefault().ImageUrl" class="card-img-top" alt="...">
-								</div>
-								<!--
-								<div class="outstock-container">
-									<img class="flashsale-item-chay-hang" src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/flashsale/Chay-hang-icon.svg">
-								</div>
-								<div class="new-label-pro-sale"><span class="new-p-sale-label discount-l-fs">99%</span></div>-->
-							</div>
-							<div class="ttsp">
-								<h4>
-									@item.Name
-								</h4>
-								<div>
-								</div>
-								<div class="giaban">
-									@item.Price
-								</div>
-								<div class="giagoc">
-									600
-								</div>
-							</div>
-						</div>
-					}
-				}
-			</div>
-		</div>
-
-		<div id="module" class="tabcontent">
-			<div class="row" style="padding-inline: 10px" id="listcategory">
-			</div>
+		<div class="danhmuc-codien" id="listcategory">
 		</div>
 	</div>
 </div>
@@ -539,16 +406,8 @@
 
 
 <script src="~/js/site.js"></script>
-<script>
 
-@*	function ThemVaoDanhSachYeuThich(id) {
-		var url = "@Url.Action("ThemVaoYeuThich", "Home")?id=" + id
-		if (success === false) {
-			alert("Yêu cầu đăng nhập để thực hiện hành động này");
-		} else {
-			window.location.href = url;
-		}
-	}*@
+<script>
 	function ThemVaoDanhSachYeuThich(id) {
 		var url = "@Url.Action("ThemVaoYeuThich", "Home")?id=" + id;
 		$.ajax({
@@ -556,7 +415,7 @@
 			success: function (data) {
 				if (data.success === true) {
 					console.log(data.success);
-						alert("Đã thêm sản phẩm vào yêu thích");
+					alert("Đã thêm sản phẩm vào yêu thích");
 				} else {
 					alert("Sản phẩm này đã có trong mục yêu thích");
 					console.log("Failed to add item to wishlist");
@@ -567,17 +426,15 @@
 			}
 		});
 	}
-
+	/*danh mục */
 	$(document).ready(function () {
 		$.ajax({
 			url: '@Url.Action("SachMoi", "Home")',
 			type: 'GET',
 			success: function (data) {
-				// Xử lý dữ liệu trả về
 				console.log(data);
 				var listcategory = $("#listcategory");
 				listcategory.empty();
-				// Thêm danh sách đơn hàng vào HTML
 				data.data.forEach(function (item) {
 					var categoryRow =
 						'<div class="testsp">' +
@@ -594,8 +451,6 @@
 						'</div>' +
 						'<div class="giaban">'
 						+ formatPrice(item.price) +
-
-
 						'</div>' +
 						'</div>';
 
@@ -603,7 +458,6 @@
 				});
 			},
 			error: function (error) {
-				// Xử lý lỗi (nếu có)
 				console.log(error);
 			}
 		});
@@ -612,4 +466,49 @@
 		const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 		return formattedPrice + ' đ';
 	}
+
+
+	function ChiTietSanPham(id) {
+		var url = "@Url.Action("ChiTietSanPham", "Home")?id=" + id;
+		window.location.href = url;
+	}
+
+	/*product all*/
+	$(document).ready(function () {
+		$.ajax({
+			url: '@Url.Action("DanhSachSanPham", "Home")',
+			type: 'GET',
+			success: function (data) {
+				console.log(data);
+				var listcategory = $("#listproduct");
+				listcategory.empty();
+				data.data.forEach(function (item) {
+					var categoryRow =
+						'<div class="testsp"  onclick="ChiTietSanPham(' + item.id + ')">' +
+						'<div class="product-image">' +
+						'<div class="flashsale-image-container">' +
+						'<img src="' + item.imgUrl + '">' +
+						'</div>' +
+						'</div>' +
+						'<div class="ttsp">' +
+						'<h4>' + item.name + '</h4>' +
+						'<a  onclick="ThemVaoDanhSachYeuThich(' + item.id + ')">' +
+						'<i class="fa-solid fa-eye"></i>' +
+						'</a>' +
+						'</div>' +
+						'<div class="giaban">'
+						+ formatPrice(item.price) +
+						'</div>' +
+						'</div>';
+						listcategory.append(categoryRow);
+				});
+			},
+			error: function (error) {
+				console.log(error);
+			}
+		});
+	});
+
+
+
 </script>
