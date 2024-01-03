@@ -17,13 +17,19 @@
 	<p>
 		<button class="btn btn-primary" onclick="location.href='@Url.Action("Create")'"><i class="fa-solid fa-circle-plus"></i> Create</button>
 	</p>
-	<div>
-		<select id="type-filter" class="border-info h-100" onchange="loadData(1)" style="max-width: 250px; min-width: 100px;">
-			<option value="0" selected>Tất cả</option>
+	<div class="m-1 row">
+		<select id="type-filter" class="col-2 border-info" onchange="loadData(1)" style="max-width: 250px; min-width: 100px; margin-left: 16px">
+			<option value="" selected>Tất cả</option>
 			<option value="1">Sản phẩm lẻ</option>
 			<option value="2">Sản phẩm combo</option>
 		</select>
-		<div class="btn-group">
+		<select id="status-filter" class="col-2 border-info" onchange="loadData(1)" style="max-width: 250px; min-width: 100px; margin-left: 16px">
+			<option value="" selected>Tất cả</option>
+			<option value="1">Đang bán</option>
+			<option value="0">Không bán</option>
+			<option value="2">Hết hàng</option>
+		</select>
+		<div class="col-2 btn-group">
 			<input id="keyWord-find" class="btn btn-outline-info" placeholder="enter name or collection name" oninput="loadData(1)">
 			<button onclick="loadData(1)" class="btn btn-info"><i class="fa-solid fa-magnifying-glass"></i></button>
 		</div>
@@ -43,34 +49,6 @@
 
 		</thead>
 		<tbody id="prod-list">
-			@* @foreach (var item in Model)
-			{
-			<tr id="prod-@item.Id">
-			<td>
-			@Html.DisplayFor(modelItem => item.Name)
-			</td>
-			<td>
-			@Html.DisplayFor(modelItem => item.Quantity)
-			</td>
-			<td>
-			@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)
-			</td>
-			<td>
-			@Html.DisplayFor(modelTtem => item.CreatedDate)
-			</td>
-			<td>
-			@(item.Status == 1 ? "Đang bán" : "Chịu")
-			</td>
-			<td>
-			@(item.Type == 1 ? "Lẻ" : "Combo")
-			</td>
-			<td>
-			<button class="btn btn-outline-warning" onclick="location.href='@Url.Action("Edit", new { id = item.Id })' ">Sửa</button>
-			<button class="btn btn-outline-success" onclick="location.href='@Url.Action("Details", new { id = item.Id })'">Chi tiết</button>
-			<button class="btn btn-outline-danger" onclick="deleteSanPham('@item.Id')" value="Xóa">Xóa</button>
-			</td>
-			</tr>
-			} *@
 		</tbody>
 	</table>
 	<div id="buttonContainer"></div>
@@ -94,13 +72,14 @@
 	function loadData(pageIndex) {
 		// Gửi yêu cầu Ajax đến máy chủ
 		var type = document.getElementById("type-filter").value;
+		var status = document.getElementById("status-filter").value;
 		var keyWord = document.getElementById("keyWord-find").value;
-		var index = (pageIndex - 1) * 15;
+		var index = (pageIndex - 1) * 10;
 		index
 		$.ajax({
 			url: '@Url.Action("GetProduct", "Product")',
 			type: 'GET',
-			data: { page: pageIndex, type: type, keyWord: keyWord },
+			data: { page: pageIndex, type: type, status: status, keyWord: keyWord },
 			success: function (data) {
 				// Xóa danh sách cũ trước khi thêm danh sách mới
 				var dataList = $("#prod-list");
@@ -144,27 +123,6 @@
 			},
 			error: function (error) {
 				console.log('Lỗi: ' + error.responseText);
-			}
-		});
-	}
-	function deleteSanPham(id) {
-		console.log(id);
-		$.ajax({
-			url: '/Admin/Product/Delete',
-			type: 'POST',
-			data: { id: id },
-			success: function (result) {
-				if (result.success) {
-					// Xóa thành công, thực hiện các hành động bạn muốn
-					alert('Xóa thành công.');
-					$('#prod-' + id).remove();
-					// Ví dụ: cập nhật giao diện hoặc làm mới danh sách sản phẩm
-				} else {
-					alert('Xóa thất bại: ' + result.errorMessage);
-				}
-			},
-			error: function (error) {
-				alert('Có lỗi xảy ra: ' + error.responseText);
 			}
 		});
 	}

@@ -54,36 +54,40 @@
 							DateTime endTime = Convert.ToDateTime(item.EndDate);
 							int result = DateTime.Now.CompareTo(startTime);
 							<br />
-							<label class="form-label ms-3">Tên: <strong>@item.Name</strong></label>
-							<span>&ensp; | &ensp;</span>
-							if (item.AmountReduct != 0)
-							{
-								<label class="form-label">Số tiền giảm: <strong>@item.AmountReduct</strong></label>
-							}
-							else
-							{
-								<label class="form-label">Số tiền giảm: <strong>@item.PercentReduct</strong></label>
-							}
-							<span>&ensp; | &ensp;</span>
-							<label>
-								Trạng thái:
-								@if (item.Status == 0)
+							<i class="fa-solid fa-caret-right"></i>
+							<a href="#">
+								<label class="form-label">Tên: <strong>@item.Name</strong></label>
+
+								<br />
+								@if (item.AmountReduct != 0)
 								{
-									<strong class="text-danger">Không áp dụng</strong>
+									<label class="form-label">Số tiền giảm: <strong>@item.AmountReduct</strong></label>
 								}
-								else if (item.Status == 1 && result < 0)
+								else
 								{
-									<strong class="text-warning">Chưa đến ngày áp dụng</strong>
+									<label class="form-label">Số tiền giảm: <strong>@item.PercentReduct</strong></label>
 								}
-								else if (item.Status == 1 && result >= 0 && endTime.CompareTo(DateTime.Now) >= 0)
-								{
-									<strong class="text-success">Đang Áp dụng</strong>
-								}
-								else if (item.Status == 1 && endTime.CompareTo(DateTime.Now) < 0)
-								{
-									<strong class="text-danger">Hết hạn</strong>
-								}
-							</label>
+								<span>&ensp; | &ensp;</span>
+								<label>
+									Trạng thái:
+									@if (item.Status == 0)
+									{
+										<strong class="text-danger">Không áp dụng</strong>
+									}
+									else if (item.Status == 1 && result < 0)
+									{
+										<strong class="text-warning">Chưa đến ngày áp dụng</strong>
+									}
+									else if (item.Status == 1 && result >= 0 && endTime.CompareTo(DateTime.Now) >= 0)
+									{
+										<strong class="text-success">Đang Áp dụng</strong>
+									}
+									else if (item.Status == 1 && endTime.CompareTo(DateTime.Now) < 0)
+									{
+										<strong class="text-danger">Hết hạn</strong>
+									}
+								</label>
+							</a>
 						}
 					</label>
 				</div>
@@ -99,9 +103,15 @@
 				<div class="form-group">
 					<label class="form-label">Ngày tạo: <strong>@Model.CreatedDate</strong></label>
 				</div>
+				<div class="form-group">
+					@{
+						var status = Model.Status == 1 ? "Đăng bán" : "Không đăng bán";
+					}
+					<label class="form-label">Trạng thái: <strong>@status</strong></label>
+				</div>
 			</div>
 			<div class="col-lg-4 col-md-4 col-ms-4">
-				@Html.Label("Hình ảnh")<br />
+				<strong>Hình ảnh sản phẩm</strong><br />
 				<img id="img-view" src="@Model.imageViewModels.FirstOrDefault().ImageUrl" alt="Hình ảnh sản phẩm"
 					 style="max-width: 100%; border: 3px solid #E0E0E0" />
 				<div style="border: 3px double black">
@@ -114,12 +124,13 @@
 				</div>
 			</div>
 			<div class="col-4 ps-5" style="max-width: 100%; overflow-x: auto">
-				Sản phẩm chi tiết: 
+				<strong>Sản phẩm chi tiết: </strong><br />
 				@foreach (var item in Model.bookViewModels)
 				{
 					<span>
-						@item.Title - @string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.ImportPrice) &ensp;
+						+ @item.Title - @string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.ImportPrice)
 					</span>
+					<br />
 				}
 			</div>
 		</div>
