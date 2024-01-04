@@ -1,6 +1,7 @@
 ﻿using BookShop.BLL.ConfigurationModel.BookModel;
 using BookShop.BLL.ConfigurationModel.ImageModel;
 using BookShop.BLL.ConfigurationModel.ProductModel;
+using BookShop.BLL.Gembox;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;
@@ -9,11 +10,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Reflection.Metadata.BlobBuilder;
 using Image = BookShop.DAL.Entities.Image;
+
 
 namespace BookShop.BLL.Service
 {
@@ -28,6 +31,8 @@ namespace BookShop.BLL.Service
 		private readonly IRepository<BookGenre> _bookGenreRepository;
 		private readonly IRepository<CollectionBook> _collectionBookRepository;
 		private readonly IRepository<Evaluate> _CommentRepository;
+		private readonly IRepository<Genre> _genretRepository;
+		private readonly IRepository<Category> _categorytRepository;
 		public ProductService()
 		{
 			_productRepository = new Repository<Product>();
@@ -38,6 +43,9 @@ namespace BookShop.BLL.Service
 			_bookGenreRepository = new Repository<BookGenre>();
 			_collectionBookRepository = new Repository<CollectionBook>();
 			_CommentRepository = new Repository<Evaluate>();
+			_genretRepository = new Repository<Genre>();
+			_categorytRepository = new Repository<Category>();
+
 		}
 		public async Task<CreateProductModel> Add(CreateProductModel model)
 		{
@@ -423,5 +431,36 @@ namespace BookShop.BLL.Service
 			}
 			catch { return false; }
 		}
+
+		public async Task<List<ProductViewModel>> GetDanhMuc(string danhmuc)
+		{
+
+			var productsInCategory =  (
+				from category in (await _categorytRepository.GetAllAsync()).DefaultIfEmpty()
+				join genre in (await _genretRepository.GetAllAsync()).DefaultIfEmpty() on category.Id equals genre.Id_Category
+				join bookGenre in (await _bookGenreRepository.GetAllAsync()).DefaultIfEmpty() on genre.Id equals bookGenre.Id_Genre
+				join book in (await _bookRepository.GetAllAsync()).DefaultIfEmpty() on bookGenre.Id_Book equals book.Id
+				join productBook in (await _productBookRepository.GetAllAsync()).DefaultIfEmpty() on book.Id equals productBook.Id_Book
+				join product in (await _productRepository.GetAllAsync()).DefaultIfEmpty() on productBook.Id_Product equals product.Id
+				join image in (await _imageRepository.GetAllAsync()).DefaultIfEmpty() on product.Id equals image.Id_Product
+				where category.Name == danhmuc
+                select new ProductViewModel
+				{
+					Id = product.Id,
+					Name = product.Name,
+					Price = product.Price,
+					Quantity = product.Quantity,
+					Description = product.Description,
+					CreatedDate = product.CreatedDate,
+					Status = product.Status,
+					ImgUrl = image.ImageUrl,
+					
+                }
+			).Distinct().ToList();
+            var distinctProducts = productsInCategory.GroupBy(p => p.Id).Select(g => g.First()).ToList();
+            return distinctProducts;
+			
+		}
+
 	}
 }
