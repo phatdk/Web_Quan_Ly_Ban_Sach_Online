@@ -159,6 +159,16 @@
 </form>
 
 <script>
+	function checkInput(id, quantity) {
+		var quantityInput = document.getElementById('quantity-' + id);
+		var intParse = parseInt(quantity);
+
+		var minValue = parseInt(quantityInput.min);
+		var maxValue = parseInt(quantityInput.max);
+		if (quantity < minValue) quantityInput.value = minValue;
+		else if (quantity > maxValue) quantityInput.value = maxValue;
+	}
+
 	function getWaitingOrders() {
 		$.ajax({
 			url: '/Admin/OfflineSale/GetWaitingOrder',
@@ -318,11 +328,11 @@
 				let status = "";
 				data.forEach(function (item, index) {
 					index += 1;
-					if (item.status === 1) {
-						status = "Đang bán";
+					if (item.quantity >= 1) {
+						status = "Còn hàng";
 						statusColor = "text-success";
-					} else if (item.status === 0) {
-						status = "Không bán";
+					} else if (item.quantity < 1) {
+						status = "Hết hàng";
 						statusColor = "text-danger";
 					} else {
 						status = "Không xác định";
@@ -334,7 +344,8 @@
 						'<td>' + item.name + '</td>' +
 						'<td>' + item.price + '</td>' +
 						'<td id="prodq-' + item.id + '">' + item.quantity + '</td>' +
-						'<td> <input id="quantity-' + item.id + '" class="text-center" style = "max-width: 70px" type = "number" min = "1" max = "' + item.quantity + '" value = "1" /> </td>' +
+						'<td>' +
+						'<input type="number" id="quantity-' + item.id + '" class="text-center w-75" min="1" max="' + item.quantity + '" value="1" oninput="checkInput(' + item.id + ',this.value)" /> </td>' +
 						'<th class="' + statusColor + '">' + status + '</th>' +
 						'<td> <input type="button" class="btn btn-success" onclick = "addProduct(' + item.id + ')" value="Thêm"/></td >' +
 						'</tr>';
@@ -390,6 +401,7 @@
 				data: { id: id, orderId: orderId, quantity: quantity },
 				success: function (result) {
 					document.getElementById('prodq-' + id).innerHTML = productQuantity - quantity;
+					document.getElementById('quantity-' + id).value = 1;
 					getDetailOrders(orderId);
 				},
 				error: function (error) {

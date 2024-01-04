@@ -31,54 +31,74 @@
 	List<CollectionModel> listCollection = ViewBag.listCollection;
 }
 <body>
-	<h4>Create Product</h4>
+	<h4 class="d-flex text-center justify-content-center col-12">---Tạo mới sản phẩm---</h4>
+	<hr />
 
-	@using (Html.BeginForm("Create", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+	@using (Html.BeginForm("Create", "Product", FormMethod.Post, new { enctype = "multipart/form-data", @class = "row w-100" }))
 	{
 		@Html.AntiForgeryToken()
+		<div class="col-6">
+			<div class="form-group">
+				<label class="form-label">Danh sách sách</label>
+				<select asp-for="bookSelected" id="bookSelect" class="form-control chosen-select w-100" onchange="selectItem()" required>
+					@foreach (var item in listBook)
+					{
+						<option value="@item.Id">@item.Title</option>
+					}
+				</select>
+			</div>
 
-		<div class="form-group">
-			@Html.Label("Tên sản phẩm")
-			@Html.TextBoxFor(m => m.Name, new { @class = "form-control", @required = "required" })
+			<div class="form-group">
+				<label class="form-label">Tên sản phẩm</label>
+				<input asp-for="Name" class="form-control w-100" placeholder="Sách..." required />
+			</div>
+
+			<div class="form-group">
+				<label class="form-label">Giá bán</label>
+				<input asp-for="Price" type="number" class="form-control w-100" min="1000" step="100" placeholder="1000đ" required />
+			</div>
+
+			<div class="form-group">
+				<label class="form-label">Số lượng</label>
+				<input asp-for="Quantity" type="number" id="quantity" class="form-control w-100" min="0" required />
+			</div>
+
+			<div class="form-group">
+				<label class="form-label">Mô tả sản phẩm</label>
+				<textarea asp-for="Description" class="form-control w-100" row="3"></textarea>
+			</div>
+
+
+			<div class="form-group">
+				<label class="form-label">Bộ sưu tập</label>
+				<select asp-for="CollectionId" class="form-control chosen-select w-100">
+					<option value="" selected>--Select collection--</option>
+					@foreach (var item in listCollection)
+					{
+						<option value="@item.Id">@item.Name</option>
+					}
+				</select>
+			</div>
+
+			<div class="form-group">
+				@Html.Label("Trạng thái")<br />
+				<select asp-for="Status" class="form-control">
+					<option value="1" selected>Đăng bán</option>
+					<option value="0">Không đăng bán</option>
+				</select>
+			</div>
 		</div>
 
-		<div class="form-group">
-			@Html.Label("Số lượng")
-			@Html.TextBoxFor(m => m.Quantity, new { @class = "form-control", @required = "required" })
-		</div>
-
-		<div class="form-group">
-			@Html.Label("Giá bán")
-			@Html.TextBoxFor(m => m.Price, new { @class = "form-control", @required = "required" })
-		</div>
-
-		<div class="form-group">
-			@Html.Label("Mô tả sản phẩm")
-			@Html.TextBoxFor(m => m.Description, new { @class = "form-control"})
-		</div>
-
-
-		<div class="form-group" style="width: 200px;">
-			@Html.Label("Bộ sưu tập")
-			@Html.DropDownListFor(m => m.CollectionId, new SelectList(listCollection, "Id", "Name"),"-- Select Collection --", new { @class = "form-control chosen-select" })
-		</div>
-
-		<div class="form-group" style="width: 200px;">
-			@Html.Label("List Sách")
-			@Html.ListBoxFor(m => m.bookSelected, new MultiSelectList(listBook, "Id", "Title"), new { @class = "form-control chosen-select", @required = "required"})
-		</div>
-
-		<div class="form-group">
-			@Html.Label("Hình ảnh")<br />
+		<div class="col-6">
+			<label class="form-label">Hình ảnh sản phẩm</label>
 			<div id="img-selected"></div>
-			<input type="file" id="img-input" asp-for="fileCollection" multiple required class="form-control m-3" accept=".png" />
+			<input type="file" id="img-input" asp-for="fileCollection" multiple required class="form-control" accept=".png" />
 		</div>
-
-		<button type="submit" class="btn btn-primary">Create</button>
+		<button type="submit" class="btn btn-primary m-3">Create</button>
 	}
 </body>
-<script type="text/javascript">
 
+<script type="text/javascript">
 	const uploadInput = document.getElementById('img-input');
 	const uploadedImage = document.getElementById('img-selected');
 
@@ -92,13 +112,35 @@
 					var imgItem = document.createElement("img");
 					imgItem.src = imageURL;
 					imgItem.alt = "Ảnh sản phẩm"
-					imgItem.style.maxWidth = "200px";
-					imgItem.style.margin = "10px";
+					imgItem.style.maxWidth = "24%";
+					imgItem.style.margin = "2px";
+					imgItem.style.border = "1px solid black";
 					uploadedImage.appendChild(imgItem);
 				}
 			}
 		}
 	});
-</script>
 
-<script src="/js/Area/Admin/Product.js"></script>
+	function selectItem() {
+		const select = document.querySelector("select[id='bookSelect']");
+		const options = select.querySelectorAll("option:checked");
+		const bookList = [];
+		options.forEach(function (item) {
+			var intItem = parseInt(item.value);
+			bookList.push(intItem);
+		})
+		const bookListArray = Array.from(bookList);
+		$.ajax({
+			url: '@Url.Action("LimitQuantity", "Product")',
+			type: 'POST',
+			data: { list: bookListArray },
+			success: function (data) {
+				var intMax = parseInt(data);
+				$('#quantity').val('');
+				$('#quantity').attr('max', intMax);
+				$('#quantity').attr('placeholder', 'Số lượng tối đa ' + data);
+			}
+		})
+	}
+
+</script>

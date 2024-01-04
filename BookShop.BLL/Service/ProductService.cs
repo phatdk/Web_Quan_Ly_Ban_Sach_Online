@@ -112,7 +112,6 @@ namespace BookShop.BLL.Service
 					CreatedDate = item.CreatedDate,
 					Status = item.Status,
 					Type = item.Type,
-
 				};
 				obj.CollectionName = item.Id_Collection != null ? (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == item.Id_Collection).FirstOrDefault().Name : "Trống";
 				var images = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == item.Id).OrderBy(x => x.Index);
@@ -131,7 +130,7 @@ namespace BookShop.BLL.Service
 					imagevms.Add(imagevm);
 				}
 				obj.imageViewModels = imagevms;
-				obj.ImgUrl = images.First().ImageUrl;
+				obj.ImgUrl = images != null ? images.FirstOrDefault().ImageUrl : "image null";
 				objlist.Add(obj);
 			}
 			return objlist;
@@ -176,7 +175,7 @@ namespace BookShop.BLL.Service
 						imagevms.Add(imagevm);
 					}
 					obj.imageViewModels = imagevms;
-					obj.ImgUrl = images.First().ImageUrl;
+					obj.ImgUrl = images != null ? images.FirstOrDefault().ImageUrl : "image null";
 					products.Add(obj);
 				}
 			}
@@ -221,7 +220,7 @@ namespace BookShop.BLL.Service
 						imagevms.Add(imagevm);
 					}
 					obj.imageViewModels = imagevms;
-					obj.ImgUrl = images.First().ImageUrl;
+					obj.ImgUrl = images != null ? images.FirstOrDefault().ImageUrl : "image null";
 					products.Add(obj);
 				}
 			}
@@ -277,7 +276,7 @@ namespace BookShop.BLL.Service
 				Type = product.Type,
 				bookViewModels = books,
 				imageViewModels = imagevms,
-				ImgUrl = imagevms.First().ImageUrl,
+				ImgUrl = imagevms != null ? imagevms.FirstOrDefault().ImageUrl : "image null",
 				CollectionId = product.Id_Collection,
 				CollectionName = product.Id_Collection != null ? (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == product.Id_Collection).FirstOrDefault().Name : "Trống",
 			};
@@ -332,6 +331,7 @@ namespace BookShop.BLL.Service
 				Type = product.Type,
 				bookViewModels = books,
 				imageViewModels = images,
+				ImgUrl = images != null ? images.FirstOrDefault().ImageUrl : "image null",
 				CollectionId = product.Id_Collection,
 				CollectionName = product.Id_Collection != null ? (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == product.Id_Collection).FirstOrDefault().Name : "Trống",
 				Comment = (await _CommentRepository.GetAllAsync()).Where(x => x.Id_Product == id).Select(x => new ConfigurationModel.EvaluateModel.EvaluateViewModel()

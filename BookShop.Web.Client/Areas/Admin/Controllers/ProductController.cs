@@ -2,6 +2,7 @@
 using BookShop.BLL.ConfigurationModel.CollectionBookModel;
 using BookShop.BLL.ConfigurationModel.ImageModel;
 using BookShop.BLL.ConfigurationModel.ProductModel;
+using BookShop.BLL.ConfigurationModel.PromotionModel;
 using BookShop.BLL.IService;
 using BookShop.BLL.Service;
 using BookShop.DAL.Entities;
@@ -19,17 +20,19 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 	{
 		List<ProductViewModel> _listProduct;
 		ProductViewModel _product;
-
 		List<BookViewModel> _listBook;
 		List<ImageViewModel> _listImage;
 		List<CollectionModel> _listCollections;
 
 		IProductService _productService;
+		IProductBookService _productBookService;
 		IBookService _bookService;
 		ICollectionService _collectionService;
 		IImageService _imageService;
+		IPromotionService _promotionService;
+		IProductPromotionService _productPromotionService;
 
-		public ProductController(IProductService productService, IBookService bookService, ICollectionService collectionService, IImageService imageService)
+		public ProductController(IProductService productService, IProductBookService productBookService, IBookService bookService, ICollectionService collectionService, IImageService imageService, IPromotionService promotionService, IProductPromotionService productPromotionService)
 		{
 			_listProduct = new List<ProductViewModel>();
 			_product = new ProductViewModel();
@@ -37,33 +40,43 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			_listImage = new List<ImageViewModel>();
 			_listCollections = new List<CollectionModel>();
 			_productService = productService;
+			_productBookService = productBookService;
 			_bookService = bookService;
 			_collectionService = collectionService;
 			_imageService = imageService;
+			_promotionService = promotionService;
+			_productPromotionService = productPromotionService;
 		}
-		public async Task<List<BookViewModel>> LoadBook(int status)
+		public async Task<List<BookViewModel>> LoadBook()
 		{
-			var list = await _bookService.GetAll();
-			if (status == 1)
-			{
-				return list.Where(x => x.Status == 1).ToList();
-			}
-			else
-			{
-				return list;
-			}
+			var list = (await _bookService.GetAll()).Where(x => x.Status == 1).ToList();
+			return list;
 		}
-		public async Task<List<CollectionModel>> LoadCollection(int status)
+		public async Task<List<CollectionModel>> LoadCollection()
 		{
-			var list = await _collectionService.GetAll();
-			if (status == 1)
+			var list = (await _collectionService.GetAll()).Where(x => x.Status == 1).ToList();
+			return list;
+		}
+
+		public async Task<IActionResult> LimitQuantity(List<int> list)
+		{
+			int limit = int.MaxValue;
+			if (list != null)
 			{
-				return list.Where(x => x.Status == 1).ToList();
+				foreach (var item in list)
+				{
+					var bookQuantity = (await _bookService.GetById(item)).Quantity ?? int.MaxValue;
+					var publicProduct = (await _productBookService.GetByBook(item)).Select(x => x.Id_Product);
+					foreach (var idProduct in publicProduct)
+					{
+						var publicQuantity = (await _productService.GetById(idProduct)).Quantity;
+						bookQuantity -= publicQuantity;
+						if (limit < 0) limit = 0;
+					}
+					if (limit > bookQuantity) limit = bookQuantity;
+				}
 			}
-			else
-			{
-				return list;
-			}
+			return Json(limit);
 		}
 
 		public async Task<string> UpLoadImage(IFormFile file, int productId, int index)
@@ -88,15 +101,17 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			return View();
 		}
 
-		public async Task<IActionResult> GetProduct(int page, int? type, string? keyWord)
+		public async Task<IActionResult> GetProduct(int page, int? type, int? status, string? keyWord)
 		{
 			var dataList = await _productService.GetAll();
 			if (type != null)
 			{
-				if (type >= 1)
-				{
-					dataList = dataList.Where(x => x.Type == Convert.ToInt32(type)).ToList();
-				}
+				if (type >= 1) dataList = dataList.Where(x => x.Type == Convert.ToInt32(type)).ToList();
+			}
+			if (status != null)
+			{
+				if (status <= 1) dataList = dataList.Where(x => x.Status == Convert.ToInt32(status)).ToList();
+				else if (status == 2) dataList = dataList.Where(x => x.Status == 1 && x.Quantity < 1).ToList();
 			}
 			if (!string.IsNullOrEmpty(keyWord))
 			{
@@ -116,6 +131,13 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		public async Task<IActionResult> Details(int id)
 		{
 			_product = await _productService.GetById(id);
+			_product.promotionViewModels = new List<PromotionViewModel>();
+			var pp = await _productPromotionService.GetByProduct(_product.Id);
+			foreach (var item in pp)
+			{
+				var promotion = await _promotionService.GetById(item.Id_Promotion);
+				if (promotion != null) _product.promotionViewModels.Add(promotion);
+			}
 			return View(_product);
 		}
 
@@ -123,8 +145,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Create()
 		{
-			ViewBag.listBook = await LoadBook(1);
-			ViewBag.listCollection = await LoadCollection(1);
+			ViewBag.listBook = await LoadBook();
+			ViewBag.listCollection = await LoadCollection();
 			return View();
 		}
 
@@ -141,7 +163,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					Quantity = request.Quantity,
 					Price = request.Price,
 					Description = request.Description,
-					Status = request.Quantity == 0 ? 0 : 1,
+					Status = request.Status,
 					Type = request.bookSelected.Count() > 1 ? 2 : 1,
 					CollectionId = request.CollectionId == 0 ? null : request.CollectionId,
 					bookSelected = request.bookSelected,
@@ -156,7 +178,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 						var imageProduct = new CreateImageModel()
 						{
 							ImageUrl = "/img/product/" + img,
-							Index = 0,
+							Index = index,
 							Status = 1,
 							Id_Product = result.Id,
 						};
@@ -191,8 +213,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			{
 				updatemodel.bookSelected.Add(item.Id);
 			}
-			ViewBag.listBook = await LoadBook(1);
-			ViewBag.listCollection = await LoadCollection(1);
+			ViewBag.listBook = await LoadBook();
+			ViewBag.listCollection = await LoadCollection();
 			return View(updatemodel);
 		}
 
@@ -205,28 +227,31 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			{
 				if (request.fileCollection != null)
 				{
-					var imgvms = await _imageService.GetByProduct(request.Id);
-					for (var i = 0; i < imgvms.Count; i++)
+					var imgvms = (await _imageService.GetByProduct(request.Id)).OrderBy(x => x.Index).ToList();
+					int index = 0;
+					while (true)
 					{
-						var file = request.fileCollection[i];
-						var imgUrl = "/img/product/" + await UpLoadImage(file, request.Id, i);
-						if (imgvms[i].ImageUrl != imgUrl)
-						{
-							var img = new UpdateImageModel()
+						if (index < imgvms.Count && index < request.fileCollection.Count) // == cap nhat anh moi
+							await UpLoadImage(request.fileCollection[index], request.Id, index);
+						else if (index < imgvms.Count && index >= request.fileCollection.Count) // cũ > mới => xóa cũ
+							await _imageService.Delete(imgvms.Where(x => x.Index == index).FirstOrDefault().Id);
+						else if (index >= imgvms.Count && index < request.fileCollection.Count) // cũ < mới => thêm mới
+							await _imageService.Add(new CreateImageModel
 							{
-								Id = imgvms[i].Id,
-								ImageUrl = imgUrl,
-							};
-							await _imageService.Update(img);
-						}
-					}
+								ImageUrl = "/img/product/" + await UpLoadImage(request.fileCollection[index], request.Id, index),
+								Index = index,
+								Status = 1,
+								Id_Product = request.Id,
+							});
+						else if (index >= imgvms.Count && index >= request.fileCollection.Count) break; // duyệt qua hết các phần tử => loop break
+						index++;
+					};
 				}
 				if (request.bookSelected.Count() > 1)
 				{
 					request.Type = 2;
 				}
 				else request.Type = 1;
-				request.Status = request.Quantity == 0 ? 0 : 1;
 				var result = await _productService.Update(request);
 				return RedirectToAction(nameof(Index));
 			}
