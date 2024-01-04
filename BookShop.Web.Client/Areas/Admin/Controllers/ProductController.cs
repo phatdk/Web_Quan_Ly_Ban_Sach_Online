@@ -58,7 +58,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			return list;
 		}
 
-		public async Task<IActionResult> LimitQuantity(List<int> list)
+		public async Task<IActionResult> LimitQuantity(int id, List<int> list)
 		{
 			int limit = int.MaxValue;
 			if (list != null)
@@ -66,7 +66,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 				foreach (var item in list)
 				{
 					var bookQuantity = (await _bookService.GetById(item)).Quantity ?? int.MaxValue;
-					var publicProduct = (await _productBookService.GetByBook(item)).Select(x => x.Id_Product);
+					var publicProduct = (await _productBookService.GetByBook(item)).Select(x => x.Id_Product).ToList();
+					publicProduct.Remove(id);
 					foreach (var idProduct in publicProduct)
 					{
 						var publicQuantity = (await _productService.GetById(idProduct)).Quantity;
