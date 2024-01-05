@@ -3,9 +3,11 @@
 @model UserListModel
 @inject IAuthorizationService _IAuthorizationService
 @{
+    var isAdmin = (await _IAuthorizationService.AuthorizeAsync(User, "ManagerMenu")).Succeeded;
+    
     ViewData["Title"] = "Danh sách các thành viên";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
-    var isAdmin = (await _IAuthorizationService.AuthorizeAsync(User, "ManagerMenu")).Succeeded;
+   
 }
 <h2>@ViewData["Title"]</h2>
 <partial name="_StatusMessage"></partial>

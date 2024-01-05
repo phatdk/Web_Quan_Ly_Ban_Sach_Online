@@ -56,9 +56,10 @@ namespace App.Areas.Identity.Controllers
         // GET: /Account/Login
         [HttpGet("/login/")]
         [AllowAnonymous]
-        public IActionResult Login()
+        public  IActionResult Login()
         {
 
+          // var roleuser=await _userManager.GetRolesAsync(await GetCurrentUserAsync());
             return View();
         }
 
