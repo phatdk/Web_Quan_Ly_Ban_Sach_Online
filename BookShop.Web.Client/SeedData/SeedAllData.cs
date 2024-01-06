@@ -188,22 +188,22 @@ public static class SeedDataMD
 	{
 		var form = new CreatePromotionTypeModel()
 		{
-			Name = "Tự động",
+			Name = "Phiếu khuyến mãi áp dụng tự động",
 			Status = 1,
 		};
 		var form1 = new CreatePromotionTypeModel()
 		{
-			Name = "Điểm quy đổi",
+			Name = "Phiếu khuyến mãi điểm đổi",
 			Status = 1,
 		};
 		var form2 = new CreatePromotionTypeModel()
 		{
-			Name = "Sản phẩm",
+			Name = "Phiếu khuyến mãi phát hành mã",
 			Status = 1,
 		};
 		var form3 = new CreatePromotionTypeModel()
 		{
-			Name = "Đơn hàng",
+			Name = "Phiếu giảm giá sản phẩm",
 			Status = 1,
 		};
 

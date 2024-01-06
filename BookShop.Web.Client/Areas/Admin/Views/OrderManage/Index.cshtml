@@ -65,7 +65,6 @@
 		var type = document.getElementById("typeSelect").value;
 		var keyWord = document.getElementById("keyWordFind").value;
 		var index = (pageIndex - 1) * 15;
-		index
 		$.ajax({
 			url: '@Url.Action("GetOrder", "OrderManage")',
 			type: 'GET',
