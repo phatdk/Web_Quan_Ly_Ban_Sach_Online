@@ -27,7 +27,7 @@
 		width: 50px;
 	}
 
-	
+
 
 	.form-group.cus {
 		display: flex;
@@ -37,7 +37,7 @@
 @*@using (Html.BeginForm("Edit", "Book", FormMethod.Post))
 {
 	@Html.AntiForgeryToken()*@
-	   <form asp-action="Edit" enctype="multipart/form-data">
+<form asp-action="Edit" enctype="multipart/form-data">
 	<div class="form-column">
 		<input asp-for="Id" hidden />
 		<div class="form-group">
@@ -47,14 +47,18 @@
 		</div>
 
 		<div class="form-group">
+			<label class="form-label">Barcode</label>
+			<input asp-for="Barcode" class="form-control" required />
+		</div>
+
+		<div class="form-group">
 			@Html.Label("Tiêu đề sách")
 			@Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
 		</div>
 
 		<div class="form-group">
 			<label class="control-label"> Số lượng </label>
-			<input asp-for="Quantity" class="form-control" type="number" min="0" />
-			<span asp-validation-for="Quantity" class="text-danger"></span>
+			<input asp-for="Quantity" class="form-control" type="number" min="0" required />
 		</div>
 		<div class="form-group">
 			<label>Chọn ảnh: </label>
@@ -62,18 +66,18 @@
 		</div>
 		<div class="form-group">
 			@Html.Label("Độc giả")
-			@Html.TextBoxFor(m => m.Reader, new { @class = "form-control" })
+			@Html.TextBoxFor(m => m.Reader, new { @class = "form-control", @required = "required"})
 		</div>
 
 		<div class="form-group">
 			@Html.Label("Tác giả")
-			@Html.ListBoxFor(m => m.authorSelected, new MultiSelectList(authors, "Id", "Name", Model.authorSelected), new { @class = "form-control chosen-select", id = "authorSelect" })
+			@Html.ListBoxFor(m => m.authorSelected, new MultiSelectList(authors, "Id", "Name", Model.authorSelected), new { @class = "form-control chosen-select", id = "authorSelect", @required = "required" })
 			<input type="hidden" value="@Model.authorSelected" name="authorSelected" />
 		</div>
 
 		<div class="form-group">
 			@Html.Label("Thể loại")
-			@Html.ListBoxFor(m => m.genreSelected, new MultiSelectList(genres, "Id", "Name", Model.genreSelected), new { @class = "form-control chosen-select", id = "genreSelect"})
+			@Html.ListBoxFor(m => m.genreSelected, new MultiSelectList(genres, "Id", "Name", Model.genreSelected), new { @class = "form-control chosen-select", id = "genreSelect", @required = "required"})
 			<input type="hidden" value="@Model.genreSelected" name="authorSelected" />
 		</div>
 		<div class="form-group">
@@ -81,18 +85,16 @@
 			@Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
 		</div>
 		<div class="form-group">
-				@Html.Label("Phân loại bìa")
-				@Html.TextBoxFor(m => m.Barcode, new { @class = "form-control" })
-			</div>
+			@Html.Label("Phân loại bìa")
+			@Html.TextBoxFor(m => m.Barcode, new { @class = "form-control", @required = "required"})
+		</div>
 		<div class="form-group">
 			<label class="control-label"> Giá bìa </label>
-			<input asp-for="Price" class="form-control" type="number" min="0" />
-			<span asp-validation-for="Price" class="text-danger"></span>
+			<input asp-for="Price" class="form-control" type="number" min="0" required/>
 		</div>
 		<div class="form-group">
 			<label class="control-label"> Giá nhập </label>
-			<input asp-for="ImportPrice" class="form-control" type="number" min="0" />
-			<span asp-validation-for="ImportPrice" class="text-danger"></span>
+			<input asp-for="ImportPrice" class="form-control" type="number" min="0" required/>
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -120,7 +122,7 @@
 			</div>
 			<div class="form-group">
 				<label class="control-label"> Kích thước trang </label>
-				<input asp-for="PageSize" class="form-control"   required />
+				<input asp-for="PageSize" class="form-control" required />
 				<span asp-validation-for="PageSize" class="text-danger"></span>
 			</div>
 			<div class="form-group">
@@ -159,21 +161,21 @@
 			</div>
 		</div>
 	</div>
-	</form>
+</form>
 @*}*@
 
 <script>
-	$(document).ready(function() {
-		$('#authorSelect').change(function() {
+	$(document).ready(function () {
+		$('#authorSelect').change(function () {
 			var selectedValues = $('#authorSelected').val();
 			// Cập nhật bookSelected khi người dùng thay đổi lựa chọn
 			$('input[name="authorSelected"]').val(selectedValues);
 		});
-		$('#genreSelect').change(function() {
+		$('#genreSelect').change(function () {
 			var selectedValue = $('#genreSelect').val();
 			$('input[name="genreSelected"]').val(selectedValue);
 		});
-		$('#supplierSelected').change(function() {
+		$('#supplierSelected').change(function () {
 			var selectedValue = $('#supplierSelected').val();
 			$('input[name="supplierSelect"]').val(selectedValue);
 		});

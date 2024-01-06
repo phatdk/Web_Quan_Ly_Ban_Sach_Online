@@ -41,14 +41,15 @@ namespace BookShop.BLL.Service
 			catch (Exception ex) { return false; }
 		}
 
-		public async Task<bool> Delete(int id)
+		public async Task<bool> Delete(int id_user,int id_prodcut)
 		{
-			try
+			var check  = (await _repository.GetAllAsync()).FirstOrDefault(c=>c.Id_User == id_user && c.Id_Product == id_prodcut);
+			if (check != null)
 			{
-				await _repository.RemoveAsync(id);
+				await _repository.RemoveAsync(check.Id);
 				return true;
 			}
-			catch (Exception ex) { return false; }
+			return false;
 		}
 
         public async Task<List<WishListViewModel>> GetByUser(int userId)
@@ -65,7 +66,6 @@ namespace BookShop.BLL.Service
 					Id_User = item.Id_User,
 					CreatedDate = item.CreatedDate,
 					Name = product.Name,
-					CollectionName = (await _collectionRepository.GetAllAsync()).FirstOrDefault(c => c.Id == product.Id_Collection).Name,
 					ImgUrl = (await _imageRepository.GetAllAsync()).FirstOrDefault(c=>c.Id_Product == product.Id).ImageUrl
 
 				};
