@@ -223,11 +223,20 @@
 	}
 
 	.testsp {
+		position:relative;
 		padding: 5px;
 		font-size: 12px;
 		cursor: pointer;
 	}
-
+	.giaban p{
+		font-size: 14px;
+		color: #c4c3be;
+		text-decoration: line-through;
+	}
+	.giaban {
+		display:flex;
+		justify-content:space-between;
+	}
 	.listdsds {
 		overflow-y: auto;
 	}
@@ -240,7 +249,7 @@
 	.danhmuc-codien {
 		padding: 0 10px;
 		display: grid;
-		grid-template-columns: repeat(7,1fr);
+		grid-template-columns: repeat(5,1fr);
 	}
 
 		.danhmuc-codien .ttsp h4 {
@@ -263,6 +272,20 @@
 
 	.fa-solid.fa-eye {
 		margin-left: 20px;
+	}
+	.km-sp{
+		justify-content:center;
+		flex-direction: column;
+		text-align: center;
+		display: flex;
+		height: 30px;
+		width: 50px;
+		color: white;
+		border-radius: 25px;
+		right: 10px;
+		position: absolute;
+		top: 1px;
+		background-color: #C92127;
 	}
 </Style>
 <div class="row">
@@ -445,12 +468,12 @@
 						'</div>' +
 						'<div class="ttsp">' +
 						'<h4>' + item.name + '</h4>' +
-						'<a  onclick="ThemVaoDanhSachYeuThich(' + item.id + ')">' +
-						'<i class="fa-solid fa-eye"></i>' +
-						'</a>' +
+						
 						'</div>' +
-						'<div class="giaban">'
-						+ formatPrice(item.price) +
+						'<div class="giaban">'+
+						formatPrice(item.price) +
+						'<p>'+"200.000 đ" +'</p>'+
+						'<div class="km-sp">' + "10 %" +'</div>'+
 						'</div>' +
 						'</div>';
 
@@ -492,13 +515,10 @@
 						'</div>' +
 						'<div class="ttsp">' +
 						'<h4>' + item.name + '</h4>' +
-						'<a  onclick="ThemVaoDanhSachYeuThich(' + item.id + ')">' +
-						'<i class="fa-solid fa-eye"></i>' +
-						'</a>' +
-						'</div>' +
-						'<div class="giaban">'
-						+ formatPrice(item.price) +
-						'</div>' +
+						'<div class="giaban">' +
+						formatPrice(item.price) +
+						'<p>' + "200.000 đ" + '</p>' +
+						'<div class="km-sp">' + "10 %" + '</div>' +
 						'</div>';
 						listcategory.append(categoryRow);
 				});

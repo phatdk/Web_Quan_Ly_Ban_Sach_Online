@@ -93,7 +93,7 @@ namespace BookShop.BLL.Service
 
 		}
 
-		public async Task<bool> Update(int id, AuthorModel requet)
+		public async Task<bool> Update(int id, Author requet)
 		{
 			try
 			{
