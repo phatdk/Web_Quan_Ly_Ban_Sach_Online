@@ -1,0 +1,17 @@
+﻿<script>
+    $.ajax({
+        url: "/Admin/Gembox/GetTotalRevenueByMonth", // Thay URL phù hợp với controller của bạn
+        type: "GET",
+        success: function (data) {
+            // Xử lý dữ liệu JSON nhận được (tổng doanh thu)
+            // Ví dụ: Hiển thị tổng doanh thu trong một phần tử HTML
+            $("#TotalRevenueByMonth").text(data); // Giả sử có phần tử với id là "totalRevenue" để hiển thị
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error("Lỗi AJAX:", textStatus, errorThrown);
+        }
+    })
+</script>
+
+
+<p><span id="TotalRevenueByMonth">0</span> đ</p>
