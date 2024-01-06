@@ -118,17 +118,6 @@
 			}
 		}
 	});
-	@*$(document).ready(function () {
-		$('#bookSelect').change(function () {
-			var selectedValues = $('#bookSelect').val();
-			// Cập nhật bookSelected khi người dùng thay đổi lựa chọn
-			$('input[name="bookSelected"]').val(selectedValues);
-		});
-		$('#collectionSelect').change(function () {
-			var selectedValue = $('#collectionSelect').val();
-			$('input[name="CollectionId"]').val(selectedValue);
-		});
-	});*@
 
 	function selectItem() {
 		const select = document.querySelector("select[id='bookSelect']");
@@ -142,7 +131,7 @@
 		$.ajax({
 			url: '@Url.Action("LimitQuantity", "Product")',
 			type: 'POST',
-			data: { list: bookListArray },
+			data: { id: @Model.Id, list: bookListArray },
 			success: function (data) {
 				var intMax = parseInt(data);
 				$('#quantity').attr('max', intMax);
