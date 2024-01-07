@@ -229,59 +229,6 @@
 										Số lượng:
 										<input id="quantityInput" class="form-control" min="1" max="@Model.Quantity" value="1" type="number"
 											   style="width: 75px; height: 25px; border-bottom: 1px solid black;
-    <div class="anh row">
-        <div class="col-4">
-            @{
-               // imgUrl = Model.imageViewModels.FirstOrDefault().ImageUrl;
-            }
-            <img class="a1" src="@imgUrl" alt="ảnh sản phẩm" style="max-width: 100%; " />
-        </div>
-        <div class="col-8">
-            <div class="tensach">
-                <h3>
-                    @Html.DisplayFor(model => model.Name)
-                </h3>
-                <div class="row">
-                    <div class="col-6">
-                        <p>Nhà cung cấp: @Html.DisplayFor(model => model.Description)</p>
-                        <p>Nhà xuất bản: Kim Đồng</p>
-                    </div>
-                    <div class="col-6">
-                        <p>Tác giả: Lê Quang Khánh</p>
-                        <p>Hình thức bìa: Bìa Mềm</p>
-                    </div>
-                </div>
-                <div class="danhgia">
-                    <a asp-area="" asp-controller="Home" asp-action="DanhGia">Đánh Giá</a>
-                    <h6>Sản phẩm bao gồm</h6>
-                    <ul>
-                        @foreach (var item in Model.bookViewModels)
-                        {
-                            <li>
-                                @item.Title - @string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.ImportPrice)
-                            </li>
-                        }
-                    </ul>
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                        <div class="Gia">
-                            <div class="Giaban">
-                                <h3>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Price)</h3>
-                            </div>
-                            <div class="Giagoc">
-                                <p>30000 đ</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="row">
-                            <div class="col-12">
-                                <div id="quantity" class="form-group">
-                                    <div style="display: flex">
-                                        Số lượng:
-                                        <input id="quantityInput" class="form-control" min="1" max="@Model.Quantity" value="1" type="number"
-                                               style="width: 75px; height: 25px; border-bottom: 1px solid black;
 border-left: none; border-right: none;border-top:none; border-radius: 0px; text-align: center" />
 										@Html.DisplayFor(model => model.Quantity) sản phẩm còn lại
 									</div>
