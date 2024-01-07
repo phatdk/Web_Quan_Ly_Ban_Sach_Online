@@ -100,6 +100,7 @@ builder.Services.AddTransient<IOrderDetailService, OrderDetailService>();
 builder.Services.AddTransient<IOrderPromotionService, OrderPromotionService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IProductBookService, ProductBookService>();
+builder.Services.AddTransient<IProductPromotionService, ProductPromotionService>();
 builder.Services.AddTransient<IImageService, ImageService>();
 builder.Services.AddTransient<IBookService, BookService>();
 builder.Services.AddTransient<ICollectionService, CollectionService>();
