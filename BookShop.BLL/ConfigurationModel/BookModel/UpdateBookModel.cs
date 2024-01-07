@@ -10,10 +10,10 @@ namespace BookShop.BLL.ConfigurationModel.BookModel
 	{
 		public int Id { get; set; }
 		public string? ISBN { get; set; }
+		public string Barcode { get; set; }
 		public string Title { get; set; }
 		public string? Description { get; set; }
 		public string Reader { get; set; }
-		public string Barcode { get; set; }
 		public int Price { get; set; }
 		public int ImportPrice { get; set; }
 		public int Quantity { get; set; }
@@ -21,6 +21,8 @@ namespace BookShop.BLL.ConfigurationModel.BookModel
 		public int Pages { get; set; }
 		public string Cover { get; set; }
 		public string PublicationDate { get; set; }
+		public string Img { get; set; }
+
 		public int Weight { get; set; }
 		public int Widght { get; set; }
 		public int Length { get; set; }

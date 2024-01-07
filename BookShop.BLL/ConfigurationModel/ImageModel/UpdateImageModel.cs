@@ -10,5 +10,6 @@ namespace BookShop.BLL.ConfigurationModel.ImageModel
 	{
 		public int Id { get; set; }
 		public string ImageUrl { get; set; }
+		public int Index { get; set; }
 	}
 }

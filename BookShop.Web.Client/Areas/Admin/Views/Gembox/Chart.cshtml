@@ -1,0 +1,122 @@
+﻿@* @*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css" />
+<!-- Google Fonts Roboto -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw=="
+        crossorigin="anonymous"></script>
+<body>
+    <select name="year" id="year" size="1" ></select>
+    <select name="month" id="month" size="1"></select>
+    <button id="buttonId" onclick="loadChart()">Tải biểu đồ</button>
+    <div class="card-body">
+        <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+        <canvas class="my-4 w-100 chartjs-render-monitor" id="myChart" height="301" width="990" style="display: block; width: 990px; height: 301px;"></canvas>
+    </div>
+</body>
+
+
+<script>
+    function loadChart() {
+        // Lấy giá trị tháng và năm từ các input
+        var month = $('#month').val();
+        var year = $('#year').val();
+
+        // Thực hiện AJAX request khi nút được nhấn
+        $.ajax({
+            url: `/Admin/Gembox/Chart?month=${month}&year=${year}`,
+            method: "GET",
+            success: function (data) {
+                console.log(data);
+
+                // Xóa mảng labels và dataArray
+                labels = [];
+                dataArray = [];
+
+                for (var day in data) {
+                    labels.push(day);
+                    dataArray.push(data[day]);
+                }
+
+                // Destroy the previous chart instance
+                if (myChart) {
+                    myChart.destroy();
+                }
+
+                var ctx = document.getElementById("myChart");
+                myChart = new Chart(ctx, {
+                    type: "bar",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: "Doanh thu xuất",
+                            data: dataArray,
+                            lineTension: 0,
+                            backgroundColor: "#4169E1",
+                            borderWidth: 4,
+                            pointBackgroundColor: "#007bff",
+                        }],
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: false,
+                                },
+                            }],
+                        },
+                        legend: {
+                            display: false,
+                        },
+                    },
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Lỗi AJAX:", textStatus, errorThrown);
+            }
+        });
+    }
+
+    // Khai báo biến global để lưu trữ instance của biểu đồ
+    var myChart;
+
+    // nhận sự kiện click
+    $('#buttonId').click(loadChart);
+
+        
+    // selection hiển thị tháng năm
+    $(function () {
+        //Năm tự động điền vào select
+        var seYear = $('#year');
+        var date = new Date();
+        var cur = date.getFullYear();
+
+        seYear.append('<option value="">Năm</option>');
+        for (i = cur; i >= 2000; i--) {
+            seYear.append('<option value="' + i + '">' + i + '</option>');
+        };
+
+        //Tháng tự động điền vào select
+        var seMonth = $('#month');
+        var month = new Array();
+        month[1] = 1;
+        month[2] = 2;
+        month[3] = 3;
+        month[4] = 4;
+        month[5] = 5;
+        month[6] = 6;
+        month[7] = 7;
+        month[8] = 8;
+        month[9] = 9;
+        month[10] = 10;
+        month[11] = 11;
+        month[12] = 12;
+        seMonth.append('<option value="">Tháng</option>');
+        for (i = 12; i > 0; i--) {
+            seMonth.append('<option value="' + i + '">' + month[i] + '</option>');
+        };
+
+    });
+</script>

@@ -1,0 +1,65 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<script>
+    // Gọi API và lấy dữ liệu JSON
+    var sortedProducts = await $.ajax({
+        url: "/Admin/Gembox/GetProductsSortedByQuantityAsc"
+    });
+
+    // Duyệt qua dữ liệu JSON và tạo HTML
+    var html = "";
+    for (var i = 0; i < sortedProducts.length; i++) {
+        var product = sortedProducts[i];
+
+        html += `
+    <tr>
+        <td>${product.Id}</td>
+        <td>${product.Name}</td>
+        <td>${product.Quantity}</td>
+    </tr>
+        `;
+    }
+
+    // Thêm HTML vào bảng
+    $("#product-table").html(html);
+
+</script>
+
+
+<div class="title">Số Lượng Tồn</div>
+<div class="sales-details">
+    
+    </ul>
+    <ul class="details">
+        <li class="topic">Mã Sản Phẩm</li>
+        @foreach (var product in ViewBag.ProductsSortedByQuantityAsc)
+        {
+            <p>@product.Id</p>
+        }
+    </ul>
+    <ul class="details">
+        <li class="topic">Tên Sản Phẩm</li>
+        @foreach (var product in ViewBag.ProductsSortedByQuantityAsc)
+        {
+            <p>@product.Name</p>
+        }
+
+    </ul>
+    <ul class="details">
+        <li class="topic">Số lượng tồn</li>
+        @foreach (var product in ViewBag.ProductsSortedByQuantityAsc)
+        {
+            <p>@product.Quantity</p>
+        }
+
+    </ul>
+
+</div>
+<div class="button">
+    <a href="#">See All</a>
+</div>
+
+

@@ -9,7 +9,7 @@
 
 <div class="row bg-light">
 	<div class="m-1 row">
-		<select class="col-3 border-info text-danger" id="filterSelect" onchange="filterChange()" aria-label="Default select example">
+		<select class="col-2 border-info text-danger ms-2" id="filterSelect" onchange="loadData(1)" aria-label="Default select example">
 			<option value="" selected>Tất cả</option>
 			<option value="1">Chờ xử lý</option>
 			<option value="2">Đã xác nhận</option>
@@ -22,9 +22,14 @@
 			<option value="9">Đơn đã đóng</option>
 			<option value="0">Đơn lưu tạm</option>
 		</select>
+		<select class="col-2 border-info text-danger ms-2" id="typeSelect" onchange="loadData(1)" aria-label="Default select example">
+			<option value="" selected>Tất cả</option>
+			<option value="1">Bán online</option>
+			<option value="0">Bán offline</option>
+		</select>
 		<div class="btn-group col-4">
-			<input id="keyWordFind" class="btn btn-outline-info" placeholder="nhập mã hoặc tên" oninput="searchOnEnter(event)">
-			<button onclick="findOrder()" class="btn btn-info"><i class="fa-solid fa-magnifying-glass"></i></button>
+			<input id="keyWordFind" class="btn btn-outline-info" placeholder="nhập mã hoặc tên" oninput="loadData(1)">
+			<button onclick="loadData(1)" class="btn btn-info"><i class="fa-solid fa-magnifying-glass"></i></button>
 		</div>
 	</div>
 	<div>
@@ -57,13 +62,13 @@
 	function loadData(pageIndex) {
 		// Gửi yêu cầu Ajax đến máy chủ
 		var status = document.getElementById("filterSelect").value;
+		var type = document.getElementById("typeSelect").value;
 		var keyWord = document.getElementById("keyWordFind").value;
 		var index = (pageIndex - 1) * 15;
-		index
 		$.ajax({
 			url: '@Url.Action("GetOrder", "OrderManage")',
 			type: 'GET',
-			data: { page: pageIndex, status: status, keyWord: keyWord },
+			data: { page: pageIndex, status: status, type: type, keyWord: keyWord },
 			success: function (data) {
 				// Xóa danh sách cũ trước khi thêm danh sách mới
 				var ordersList = $("#ordersList");
@@ -109,19 +114,6 @@
 				console.log('Lỗi: ' + error.responseText);
 			}
 		});
-	}
-
-	function filterChange() {
-		loadData(1)
-	}
-	function findOrder() {
-		loadData(1)
-	}
-	function searchOnEnter(event) {
-		// if (event.key === 'Enter') {
-		// 	event.preventDefault(); // Ngăn chặn hành vi mặc định của Enter (chẳng hạn là submit biểu mẫu)
-			loadData(1);
-		// }
 	}
 
 	// Gọi hàm getProducts() khi trang được tải

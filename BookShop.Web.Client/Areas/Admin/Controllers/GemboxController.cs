@@ -10,6 +10,10 @@ using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using BookShop.BLL.ConfigurationModel.OrderDetailModel;
 using BookShop.BLL.ConfigurationModel.ProductModel;
+using BookShop.BLL.ConfigurationModel.GemboxViewModel;
+using BookShop.BLL.ConfigurationModel.OrderModel;
+using Newtonsoft.Json;
+using Humanizer;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
@@ -27,66 +31,167 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
             _ProductService = new ProductService();
             _OrderService = new OrderService();
             _orderdettailservices = new OrderDetailService();
-          
+
         }
         public IActionResult export()
         {
-
             _gen.xuatExel();
-            Ok("Xuaat file ok").ToString();
-            return View("Index");
-
-        }
-        public IActionResult Index()
-        {
             return View();
         }
-        public IActionResult product()
-        {
-            return View();
-        }
-
-        public async Task<IActionResult> Topsale()
+        public async Task<IActionResult> Index()
         {
             var orders = await _OrderService.GetAll();
 
-            // Lấy danh sách chi tiết đơn đặt hàng cho mỗi đơn đặt hàng
-            var orderDetails = await Task.WhenAll(orders.Select(async order =>
+            var productSales = new Dictionary<int, int>();
+            foreach (var order in orders)
             {
-                var details = await _orderdettailservices.GetByOrder(order.Id);
-                return details?.ToList() ?? new List<OrderDetailViewModel>();
-            }));
-
-            var flattenedOrderDetails = orderDetails.SelectMany(details => details).ToList();
-
-            var top5Products = flattenedOrderDetails
-                .GroupBy(orderDetail => orderDetail.Id_Product)
-                .Select(group =>
+                var orderDetails = await _orderdettailservices.GetByOrder(order.Id);
+                // Cập nhật số lượng bán cho từng sản phẩm
+                foreach (var orderDetail in orderDetails)
                 {
-                    var productId = group.Key;
-                    var totalQuantity = group.Sum(orderDetail => orderDetail.Quantity);
-                    return new { ProductId = productId, TotalQuantity = totalQuantity };
-                })
-                .OrderByDescending(x => x.TotalQuantity)
-                .ToList();
-
-            var top5ProductsInfo = new List<ProductViewModel>();
-
-            foreach (var product in top5Products)
-            {
-                var productInfo = await _ProductService.GetById(product.ProductId);
-                if (productInfo != null)
-                {
-                   // productInfo.TotalQuantity = productInfo.TotalQuantity;
-                    top5ProductsInfo.Add(productInfo);
+                    productSales.TryGetValue(orderDetail.Id_Product, out var quantity);
+                    productSales[orderDetail.Id_Product] = quantity + orderDetail.Quantity;
                 }
             }
 
-            ViewBag.Top5 = top5ProductsInfo;
+            // Lấy danh sách sản phẩm bán chạy
+            var topSellingProducts = productSales.OrderByDescending(x => x.Value)
+                                                 .Select(x => new TopSalingProduct
+                                                 {
+                                                     Id = x.Key,
+                                                     QuantitySold = x.Value
+                                                 })
+                                                 .ToList();
+
+
+
+            foreach (var product in topSellingProducts)
+            {
+                var productDetails = await _ProductService.GetById(product.Id);
+                product.TotalRevenue = productDetails.Price * product.QuantitySold;
+            }
+
+            foreach (var product in topSellingProducts)
+            {
+                var productDetails = await _ProductService.GetById(product.Id);
+                product.Name = productDetails.Name;
+                product.Price = productDetails.Price;
+            }
+            ViewBag.ProductList = topSellingProducts.Take(5);
+            ViewBag.ProductsSortedByQuantityAsc = GetProductsSortedByQuantityAsc();
             return View();
         }
 
+        public async Task<IActionResult> GetTotalRevenue()
+        {
+            var orders = await _OrderService.GetAll();
+            var totalRevenue = 0;
+            foreach (var order in orders)
+            {
+
+                var orderDetails = await _orderdettailservices.GetByOrder(order.Id);
+                var or = new OrderViewModel();
+                // Cập nhật tổng doanh thu
+                foreach (var orderDetail in orderDetails)
+                {
+                    totalRevenue += orderDetail.Quantity * orderDetail.Price;
+                   
+                }
+            }
+            return Json(totalRevenue);
+        }
+        public async Task<IActionResult> GetTotalDateRevenue()
+        {
+            var orders = await _OrderService.GetAll();
+
+            orders = orders.FindAll(x => x.CreatedDate.Date == DateTime.Now.Date);
+
+            var totalDateRevenue = 0;
+
+            // Duyệt qua List<OrderViewModel>
+            foreach (var order in orders)
+            {
+                var orderDetails = await _orderdettailservices.GetByOrder(order.Id);
+                foreach (var orderDetail in orderDetails)
+                {
+                    totalDateRevenue += orderDetail.Quantity * orderDetail.Price;
+
+                }
+            }
+            
+         
+            return Json(totalDateRevenue);
+        }
+        public async Task<IActionResult> GetTotalRevenueByMonth()
+        {
+         
+            var orders = await _OrderService.GetAll();
+
+            // Lọc đơn hàng theo ngày
+            orders = orders.FindAll(x => x.CreatedDate.Month == DateTime.Now.Month);
+            var TotalRevenuebyMuonth = 0;
+          
+            foreach (var order in orders) 
+            {
+                var orderDetails = await _orderdettailservices.GetByOrder(order.Id);
+
+                // Cập nhật tổng doanh thu
+                foreach (var orderDetail in orderDetails)
+                {
+                    TotalRevenuebyMuonth += orderDetail.Quantity * orderDetail.Price;
+                }
+            }
+
+            
+            return Json(TotalRevenuebyMuonth);
+        }
+
+       
+        [HttpGet]
+        public async Task<IActionResult> Chart(int? month, int? year)
+        {
+            
+
+            var orders = await _OrderService.GetAll();
+            var orderss = orders.Where(x => x.CreatedDate.Month == month && x.CreatedDate.Year == year);
+            var totalRevenueByDay = new Dictionary<int, decimal>();
+            // tạo biến truyền về view
+            foreach (var order in orderss)
+            {
+                var day = order.CreatedDate.Day;
+                if (totalRevenueByDay.ContainsKey(day))
+                {
+                    totalRevenueByDay[day] += order.TotalRevenue;
+                }
+                else
+                {
+                    totalRevenueByDay.Add(day, order.TotalRevenue);
+                }
+            }
+            return Json(totalRevenueByDay);
+        }
+
+
+        public async Task<IActionResult> GetHighestInvoice()
+        {
+            var invoices = await _OrderService.GetAll();
+            var topInvoices = invoices.OrderByDescending(x => x.Total).Take(5).ToList();
+            ViewBag.HighestInvoice = topInvoices;
+           
+            return Json(topInvoices);
+           
+           
+        }
+        public async Task<IActionResult> GetProductsSortedByQuantityAsc()
+        {
+            var products = await _ProductService.GetAll();
+
+            var sortedProducts = products.OrderBy(x => x.Quantity).ToList();
+            ViewBag.ProductsSortedByQuantityAsc = sortedProducts.Take(5);
+            return Json(sortedProducts);
+
+        }
 
     }
-
 }
+

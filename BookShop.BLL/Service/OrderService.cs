@@ -173,16 +173,18 @@ namespace BookShop.BLL.Service
 
 		public async Task<List<OrderViewModel>> GetAll()
 		{
-			var orders = await _orderRepository.GetAllAsync();
+            var OrderDetails = await _orderDetailRepository.GetAllAsync();
+            var orders = await _orderRepository.GetAllAsync();
 			var users = await _userRepository.GetAllAsync();
 			var status = await _statusRepository.GetAllAsync();
+
 			var objlist = (from a in orders
 						   join b in users on a.Id_User equals b.Id into t
 						   from b1 in t.DefaultIfEmpty()
 						   join d in status on a.Id_StatusOrder equals d.Id
 						   join e in users on a.Id_Staff equals e.Id into j
 						   from e1 in j.DefaultIfEmpty()
-						   select new OrderViewModel()
+                           select new OrderViewModel()
 						   {
 							   Id = a.Id,
 							   Code = a.Code,
@@ -208,6 +210,7 @@ namespace BookShop.BLL.Service
 							   Id_Staff = a.Id_Staff,
 							   StaffCode = e1 == null ? "Trống" : e1.Code,
 							   NameStaff = e1 == null ? "Trống" : e1.Name,
+							   IsOnlineOrder = a.IsOnlineOrder,
 						   }).ToList();
 			foreach (var item in objlist)
 			{
@@ -217,7 +220,17 @@ namespace BookShop.BLL.Service
 					item.Total += (prod.Quantity * prod.Price);
 				}
 			}
-			return objlist;
+            foreach (var order in objlist)
+            {
+                var orderDetails = (await _orderDetailRepository.GetAllAsync()).Where(x => x.Id_Order == order.Id).ToList();
+
+                foreach (var orderDetail in orderDetails)
+                {
+                    order.TotalRevenue += orderDetail.Quantity * orderDetail.Price;
+
+                }
+            }
+            return objlist;
 		}
 
 
