@@ -19,88 +19,130 @@
 	}
 </style>
 <body>
-@model BookShop.BLL.ConfigurationModel.ProductModel.ProductViewModel
+	@model BookShop.BLL.ConfigurationModel.ProductModel.ProductViewModel
 
-@{
-	ViewData["Title"] = "Details";
-	Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
-	string imgUrl;
-}
+	@{
+		ViewData["Title"] = "Details";
+		Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
+	}
 
-<h1>Details</h1>
+	<div>
+		<h4 class="d-flex text-center justify-content-center col-12">---Thông Tin Sản Phẩm---</h4> <hr />
+		<div class="row">
+			<div class="col-4">
+				<div class="form-group">
+					<label class="form-label">Tên sản phẩm: <strong>@Model.Name</strong></label>
+				</div>
+				<div class="form-group">
+					<label class="form-label">Tên bộ sưu tập: <strong>@Model.CollectionName</strong></label>
+				</div>
+				<div class="form-group">
+					<label class="form-label">Số lượng bán: <strong>@Model.Quantity</strong></label>
+				</div>
+				<div class="form-group">
+					<label class="form-label">Giá bán: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Price)</strong></label>
+				</div>
+				<div class="form-group">
+					<label class="form-label">Giá bán sau khi giảm giá: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Price)</strong></label>
+				</div>
+				<div class="form-group">
+					<label class="form-label">
+						Phiếu giảm giá đang áp dụng:
+						@foreach (var item in Model.promotionViewModels)
+						{
+							DateTime startTime = Convert.ToDateTime(item.StartDate);
+							DateTime endTime = Convert.ToDateTime(item.EndDate);
+							int result = DateTime.Now.CompareTo(startTime);
+							<br />
+							<i class="fa-solid fa-caret-right"></i>
+							<a href="#">
+								<label class="form-label">Tên: <strong>@item.Name</strong></label>
 
-<div>
-	<h4>ProductViewModel</h4>
-	<hr />
-	<div class="row">
-		<dl class="col-4">
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.Id)
-			</dt>
-			<dd class="col-sm-6">
-				@Html.DisplayFor(model => model.Id)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.Name)
-			</dt>
-			<dd class="col-sm-6">
-				@Html.DisplayFor(model => model.Name)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.Quantity)
-			</dt>
-			<dd class="col-sm-6">
-				@Html.DisplayFor(model => model.Quantity)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.Price)
-			</dt>
-			<dd class="col-sm-6">
-				@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Price)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.Description)
-			</dt>
-			<dd class="col-sm-6">
-				@Html.DisplayFor(model => model.Description)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.CreatedDate)
-			</dt>
-			<dd class="col-sm-6">
-				@Model.CreatedDate.ToString()
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.Status)
-			</dt>
-			<dd class="col-sm-6">
-				@Html.DisplayFor(model => model.Status)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.Type)
-			</dt>
-			<dd class="col-sm-6">
-				@Html.DisplayFor(model => model.Type)
-			</dd>
-		</dl>
-		<div class="col-lg-5 col-md-5 col-ms-5">
-			@{
-				imgUrl = Model.imageViewModels.FirstOrDefault().ImageUrl;
-			}
-			<img src="@imgUrl" alt="ảnh sản phẩm" style="max-width: 80%"/>
+								<br />
+								@if (item.AmountReduct != 0)
+								{
+									<label class="form-label">Số tiền giảm: <strong>@item.AmountReduct</strong></label>
+								}
+								else
+								{
+									<label class="form-label">Số tiền giảm: <strong>@item.PercentReduct</strong></label>
+								}
+								<span>&ensp; | &ensp;</span>
+								<label>
+									Trạng thái:
+									@if (item.Status == 0)
+									{
+										<strong class="text-danger">Không áp dụng</strong>
+									}
+									else if (item.Status == 1 && result < 0)
+									{
+										<strong class="text-warning">Chưa đến ngày áp dụng</strong>
+									}
+									else if (item.Status == 1 && result >= 0 && endTime.CompareTo(DateTime.Now) >= 0)
+									{
+										<strong class="text-success">Đang Áp dụng</strong>
+									}
+									else if (item.Status == 1 && endTime.CompareTo(DateTime.Now) < 0)
+									{
+										<strong class="text-danger">Hết hạn</strong>
+									}
+								</label>
+							</a>
+						}
+					</label>
+				</div>
+				<div class="form-group">
+					<label class="form-label">Mô tả: <strong>@Model.Description</strong></label>
+				</div>
+				<div class="form-group">
+					@{
+						var productType = Model.Type == 1 ? "Bán lẻ" : "Bán combo";
+					}
+					<label class="form-label">Loại sản phẩm: <strong>@productType</strong></label>
+				</div>
+				<div class="form-group">
+					<label class="form-label">Ngày tạo: <strong>@Model.CreatedDate</strong></label>
+				</div>
+				<div class="form-group">
+					@{
+						var status = Model.Status == 1 ? "Đăng bán" : "Không đăng bán";
+					}
+					<label class="form-label">Trạng thái: <strong>@status</strong></label>
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-4 col-ms-4">
+				<strong>Hình ảnh sản phẩm</strong><br />
+				<img id="img-view" src="@Model.imageViewModels.FirstOrDefault().ImageUrl" alt="Hình ảnh sản phẩm"
+					 style="max-width: 100%; border: 3px solid #E0E0E0" />
+				<div style="border: 3px double black">
+					@foreach (var img in Model.imageViewModels)
+					{
+						<img id="img-selected" src="@img.ImageUrl" alt="Hình ảnh sản phẩm"
+							 style="max-width: 100px; max-height: 150px; border: 1px solid #C0C0C0"
+							 onclick="overViewImg(this.src)" />
+					}
+				</div>
+			</div>
+			<div class="col-4 ps-5" style="max-width: 100%; overflow-x: auto">
+				<strong>Sản phẩm chi tiết: </strong><br />
+				@foreach (var item in Model.bookViewModels)
+				{
+					<span>
+						+ @item.Title - @string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.ImportPrice)
+					</span>
+					<br />
+				}
+			</div>
 		</div>
-		<ul class="col-3">
-			@foreach (var item in Model.bookViewModels)
-			{
-				<li>
-					@item.Title - @string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.ImportPrice)
-				</li>
-			}
-		</ul>
 	</div>
-</div>
-<div>
-	@Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-	<a asp-action="Index">Back to List</a>
-</div>
+	<div class="mb-5">
+		<button class="btn btn-outline-warning" onclick="location.href='@Url.Action("Edit", new { id = Model.Id })' ">Sửa</button>
+	</div>
 </body>
+
+<script type="text/javascript">
+	function overViewImg(img) {
+		var imgView = document.getElementById('img-view');
+		imgView.src = img;
+	}
+</script>

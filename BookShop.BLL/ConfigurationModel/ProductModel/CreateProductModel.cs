@@ -1,5 +1,6 @@
 ﻿using BookShop.BLL.ConfigurationModel.BookModel;
 using BookShop.BLL.ConfigurationModel.ImageModel;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +22,6 @@ namespace BookShop.BLL.ConfigurationModel.ProductModel
 		public int? CollectionId { get; set; }
 		
 		public List<int> bookSelected { get; set; }
+		public List<IFormFile> fileCollection { get; set; }
 	}
 }

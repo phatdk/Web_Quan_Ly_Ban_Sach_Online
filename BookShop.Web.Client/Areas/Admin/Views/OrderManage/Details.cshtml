@@ -47,11 +47,11 @@
 				<label class="form-label">Cân nặng: <strong>@Model.Weight (g)</strong></label>
 			</div>
 			<div class="form-group">
-				<label class="form-label">Giá trị đơn hàng: <strong class="text-danger">@Model.Total đ</strong></label>
+				<label class="form-label">Giá trị đơn hàng: <strong class="text-danger">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Total)</strong></label>
 			</div>
 			<div class="form-group ms-3">
 				<label class="form-label">Điểm sử dụng: <strong>@Model.PointUsed</strong> Point</label><span>&ensp; | &ensp;</span>
-				<label class="form-label">Số tiền giảm: <strong>@Model.PointAmount</strong> đ</label>
+				<label class="form-label">Số tiền giảm: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.PointAmount)</strong> đ</label>
 			</div>
 			<div class="form-group ms-3">
 				<label class="form-label">
@@ -59,17 +59,17 @@
 					@foreach (var item in Model.orderPromotions)
 					{
 						<br />
-						<label class="form-label ms-3">Tên: <strong>@item.NamePromotion</strong> Point</label>
+						<label class="form-label ms-3">Tên: <strong>@item.NamePromotion</strong></label>
 						<span>&ensp; | &ensp;</span>
-						<label class="form-label">Số tiền giảm: <strong>@Model.PointAmount</strong> đ</label>
+						<label class="form-label">Số tiền giảm: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.TotalReduct)</strong></label>
 					}
 				</label>
 			</div>
 			<div class="form-group ms-3">
-				<label class="form-label">Phí giao hàng: <strong>@Model.Shipfee đ</strong></label>
+				<label class="form-label">Phí giao hàng: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Shipfee)</strong></label>
 			</div>
 			<div class="form-group">
-				<label class="form-label">Số tiền thanh toán: <strong class="text-danger">@Model.TotalPayment đ</strong></label>
+				<label class="form-label">Số tiền thanh toán: <strong class="text-danger">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.TotalPayment)</strong></label>
 			</div>
 		</div>
 		<div class="col-5 mb-5">
@@ -90,9 +90,10 @@
 			<table id="tableDetail" hidden>
 				<thead>
 					<tr class="row">
+						<th></th>
 						<th class="col-5">Tên sách</th>
 						<th class="col-2">Số lượng</th>
-						<th class="col-5">Hành động</th>
+						<th class="col-3">Hành động</th>
 					</tr>
 				</thead>
 				<tbody id="listDetail">
@@ -142,12 +143,35 @@
 			<div class="form-group">
 				<label class="form-label">Lần thay đổi gần nhất: <strong>@Model.ModifiDate</strong></label>
 			</div>
-			<div class="form-group">
-				<label class="form-label">Ghi chú đơn hàng: </label><br />
+			<details>
+				<summary>Ghi chú thay đổi</summary>
 				<div id="modifiNote" style="background-color: #E0E0E0; max-height: 250px; overflow-y: auto; padding: 3px; border: 1px solid black;"></div>
-			</div>
+			</details>
+			@if (Model.returnOrders != null)
+			{
+				<div class="form-group">
+					Phiếu trả hàng
+					@{
+						var index = 0;
+						foreach (var item in Model.returnOrders)
+						{
+							var statusReturn = item.Status == 1 ? "Chưa xử lý" : "Đã xử lý";
+							var statusColor = item.Status == 1 ? "danger" : "success";
+							index++;
+							<details class="ms-3">
+								<summary class="text-@statusColor">Phiếu trả hàng +@index</summary>
+								<div class="p-2 border-3 border-@statusColor">
+									Ngày tạo: <label class="form-label text-decoration-underline">@item.CreatedDate</label><br />
+									Ghi chú: <span>@item.Notes</span><br />
+									Trạng thái: <strong class="text-@statusColor">@statusReturn</strong>
+								</div>
+							</details>
+						}
+					}
+				</div>
+			}
 			<div id="textModify" hidden>
-				<label>Ghi chú thay đổi</label>
+				<label>Ghi chú</label>
 				<textarea id="modifyChange" class="form-control" rows="5"></textarea>
 				<label class="text-danger" id="valid" hidden></label>
 			</div>
@@ -189,16 +213,17 @@
 			case 1:
 				document.getElementById('acceptOrder').removeAttribute('hidden');
 				// document.getElementById('modifyOrder').removeAttribute('hidden');
+				document.getElementById('cancelOrder').removeAttribute('hidden');
+				document.getElementById('textModify').removeAttribute('hidden');
 				break;
 			case 2:
 				document.getElementById('deliveryOrder').removeAttribute('hidden');
-				// document.getElementById('modifyOrder').removeAttribute('hidden');
 				document.getElementById('cancelOrder').removeAttribute('hidden');
+				document.getElementById('textModify').removeAttribute('hidden');
 				break;
 			case 3:
 				document.getElementById('completeOrder').removeAttribute('hidden');
 				document.getElementById('returnOrder').removeAttribute('hidden');
-				document.getElementById('textModify').removeAttribute('hidden');
 				break;
 			case 4:
 				document.getElementById('closeOrder').removeAttribute('hidden');
@@ -212,9 +237,9 @@
 				document.getElementById('menuDetail').setAttribute('hidden', 'hidden');
 				document.getElementById('tableDetail').removeAttribute('hidden');
 				LoadDetailToTable();
-				document.getElementById('textModify').removeAttribute('hidden');
 				break;
 			case 7:
+				document.getElementById('acceptOrder').removeAttribute('hidden');
 				break;
 			case 8:
 				break;
@@ -230,8 +255,6 @@
 		checkStatus();
 	})
 
-	var url = "@Url.Action("Index", "OrderManage")";
-
 	function AcceptOrder() {
 		$.ajax({
 			url: '/Admin/OrderManage/AcceptOrder',
@@ -240,7 +263,7 @@
 			success: function (result) {
 				if (result.success) {
 					alert('Xác nhận thành công.');
-					window.location.href = url;
+					location.reload();
 				} else {
 					alert('Xác nhận thất bại: ' + result.errorMessage);
 				}
@@ -259,7 +282,7 @@
 			success: function (result) {
 				if (result.success) {
 					alert('Xác nhận giao hàng thành công.');
-					window.location.href = url;
+					location.reload();
 				} else {
 					alert('Xác nhận thất bại: ' + result.errorMessage);
 				}
@@ -278,7 +301,7 @@
 			success: function (result) {
 				if (result.success) {
 					alert('Xác nhận hoàn thành đơn hàng thành công.');
-					window.location.href = url;
+					location.reload();
 				} else {
 					alert('Xác nhận thất bại: ' + result.errorMessage);
 				}
@@ -304,7 +327,7 @@
 				success: function (result) {
 					if (result.success) {
 						alert('Xác nhận trả hàng thành công.');
-						window.location.href = url;
+						location.reload();
 					} else {
 						alert('Xác nhận thất bại: ' + result.errorMessage);
 					}
@@ -324,7 +347,7 @@
 			success: function (result) {
 				if (result.success) {
 					alert('Xác nhận hàng đã trả về đến nơi.');
-					window.location.href = url;
+					location.reload();
 				} else {
 					alert('Xác nhận thất bại: ' + result.errorMessage);
 				}
@@ -370,7 +393,7 @@
 						'<td class="col-5"><label>' + item.nameProduct + '</label></td>' +
 						'<td class="col-2"><label>' + item.quantity + '</label></td>' +
 						'<td class="col-5">' +
-						'<select id="details-' + item.id + '" onchange="HandleReturn(' + item.id + ')">' +
+						'<select id="details-' + item.id_Product + '" onchange="HandleReturn(' + item.id_Product + ')">' +
 						'<option value="" selected disabled>--Sellect action--</option>' +
 						'<option value="1">Hàng có thể trả về kho</option>' +
 						'<option value="0">Hàng lỗi cần xử lý</option>' +
@@ -401,7 +424,7 @@
 				success: function (result) {
 					if (result.success) {
 						alert('Xác nhận xủ lý hàng trả thành công.');
-						window.location.href = url;
+						location.reload();
 					} else {
 						alert('Xác nhận thất bại: ' + result.errorMessage);
 					}
@@ -428,7 +451,7 @@
 				success: function (result) {
 					if (result.success) {
 						alert('Xác nhận hủy đơn hàng thành công.');
-						window.location.href = url;
+						location.reload();
 					} else {
 						alert('Xác nhận thất bại: ' + result.errorMessage);
 					}
@@ -448,7 +471,7 @@
 			success: function (result) {
 				if (result.success) {
 					alert('Xác nhận đóng đơn hàng thành công.');
-					window.location.href = url;
+					location.reload();
 				} else {
 					alert('Xác nhận thất bại: ' + result.errorMessage);
 				}
