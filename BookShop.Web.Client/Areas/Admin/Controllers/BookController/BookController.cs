@@ -8,6 +8,7 @@ using BookShop.Web.Client.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing;
+
 namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 {
 	[Area("Admin")]
