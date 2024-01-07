@@ -66,14 +66,14 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             }
         }
 
-        [HttpGet("Create")]
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             var categorys = await LoadCategory(1);
             ViewBag.Categorys = categorys;
             return View();
         }
-        [HttpPost("Create")]
+        [HttpPost]
         public async Task<IActionResult> Create(CreateGenreModel genre)
         {
             try
@@ -112,7 +112,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
         }
 
 
-        [HttpPost("Edit/genre/{id}")]
+        [HttpPost]
         public async Task<IActionResult> Edit(int id, updateGenreModel gener)
         {
             try
@@ -134,34 +134,13 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             }
         }
 
-        [HttpGet("Detail/gener/{id}")]
+   
         public async Task<IActionResult> Details(int id)
         {
             var gener = await _genreService.GetById(id);
             return View(gener);
         }
 
-
-        [HttpGet]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var genre = await _genreService.GetById(id);
-            if (genre == null)
-            {
-                return NotFound();
-            }
-
-            try
-            {
-                // Xóa thể loại theo id
-                await _genreService.Delete(id);
-                return RedirectToAction("Index"); // Chuyển hướng sau khi xóa thành công
-            }
-            catch (Exception)
-            {
-                return RedirectToAction("Index"); // Xử lý lỗi xóa
-            }
-        }
     }
 
 }

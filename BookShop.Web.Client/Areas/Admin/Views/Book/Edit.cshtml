@@ -10,7 +10,7 @@
 	List<SupplierViewModel> suppliers = ViewBag.Supplier;
 }
 
-<h1>Edit</h1>
+<h1 style="text-align:center;">Sửa thông tin : @Model.Title</h1>
 <hr />
 <style>
 	.form-column {
@@ -27,18 +27,28 @@
 		width: 50px;
 	}
 
-	.form-control {
-		height: 30px;
+
+
+	.form-group.cus {
+		display: flex;
+		justify-content: space-between;
 	}
 </style>
-@using (Html.BeginForm("Edit", "Book", FormMethod.Post))
+@*@using (Html.BeginForm("Edit", "Book", FormMethod.Post))
 {
-	@Html.AntiForgeryToken()
+	@Html.AntiForgeryToken()*@
+<form asp-action="Edit" enctype="multipart/form-data">
 	<div class="form-column">
 		<input asp-for="Id" hidden />
 		<div class="form-group">
-			@Html.Label("Mã định danh")
-			@Html.TextBoxFor(m => m.ISBN, new { @class = "form-control" })
+			<label class="control-label"> Mã ISBN </label>
+			<input asp-for="ISBN" class="form-control" />
+			<span asp-validation-for="ISBN" class="text-danger"></span>
+		</div>
+
+		<div class="form-group">
+			<label class="form-label">Barcode</label>
+			<input asp-for="Barcode" class="form-control" required />
 		</div>
 
 		<div class="form-group">
@@ -47,42 +57,44 @@
 		</div>
 
 		<div class="form-group">
-			@Html.Label("Số lượng")
-			@Html.TextBoxFor(m => m.Quantity, new { @class = "form-control" })
+			<label class="control-label"> Số lượng </label>
+			<input asp-for="Quantity" class="form-control" type="number" min="0" required />
 		</div>
-
+		<div class="form-group">
+			<label>Chọn ảnh: </label>
+			<input type="file" name="imageFile" accept="img/*" required />
+		</div>
 		<div class="form-group">
 			@Html.Label("Độc giả")
-			@Html.TextBoxFor(m => m.Reader, new { @class = "form-control" })
+			@Html.TextBoxFor(m => m.Reader, new { @class = "form-control", @required = "required"})
 		</div>
 
 		<div class="form-group">
 			@Html.Label("Tác giả")
-			@Html.ListBoxFor(m => m.authorSelected, new MultiSelectList(authors, "Id", "Name", Model.authorSelected), new { @class = "form-control chosen-select", id = "authorSelect" })
+			@Html.ListBoxFor(m => m.authorSelected, new MultiSelectList(authors, "Id", "Name", Model.authorSelected), new { @class = "form-control chosen-select", id = "authorSelect", @required = "required" })
 			<input type="hidden" value="@Model.authorSelected" name="authorSelected" />
 		</div>
 
 		<div class="form-group">
 			@Html.Label("Thể loại")
-			@Html.ListBoxFor(m => m.genreSelected, new MultiSelectList(genres, "Id", "Name", Model.genreSelected), new { @class = "form-control chosen-select", id = "genreSelect"})
+			@Html.ListBoxFor(m => m.genreSelected, new MultiSelectList(genres, "Id", "Name", Model.genreSelected), new { @class = "form-control chosen-select", id = "genreSelect", @required = "required"})
 			<input type="hidden" value="@Model.genreSelected" name="authorSelected" />
 		</div>
 		<div class="form-group">
 			@Html.Label("Mô tả sản phẩm")
-			@Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+			@Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
 		</div>
 		<div class="form-group">
-				@Html.Label("Phân loại bìa")
-				@Html.TextBoxFor(m => m.Barcode, new { @class = "form-control" })
-			</div>
-		<div class="form-group">
-			@Html.Label("Giá bìa")
-			@Html.TextBoxFor(m => m.Price, new { @class = "form-control" })
+			@Html.Label("Phân loại bìa")
+			@Html.TextBoxFor(m => m.Barcode, new { @class = "form-control", @required = "required"})
 		</div>
-
 		<div class="form-group">
-			@Html.Label("Giá nhập")
-			@Html.TextBoxFor(m => m.ImportPrice, new { @class = "form-control" })
+			<label class="control-label"> Giá bìa </label>
+			<input asp-for="Price" class="form-control" type="number" min="0" required/>
+		</div>
+		<div class="form-group">
+			<label class="control-label"> Giá nhập </label>
+			<input asp-for="ImportPrice" class="form-control" type="number" min="0" required/>
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -104,56 +116,82 @@
 			</div>
 
 			<div class="form-group">
-			@Html.Label("Số trang")
-			@Html.TextBoxFor(m => m.Pages, new { @class = "form-control" })
-		</div>
-
-			<div class="form-group">
-				@Html.Label("Kích thước trang")
-				@Html.TextBoxFor(m => m.PageSize, new { @class = "form-control" })
+				<label class="control-label"> Số trang </label>
+				<input asp-for="Pages" class="form-control" type="number" min="0" required />
+				<span asp-validation-for="Pages" class="text-danger"></span>
 			</div>
 			<div class="form-group">
-				@Html.Label("Trọng lượng")
-				@Html.TextBoxFor(m => m.Weight, new { @class = "form-control" })
+				<label class="control-label"> Kích thước trang </label>
+				<input asp-for="PageSize" class="form-control" required />
+				<span asp-validation-for="PageSize" class="text-danger"></span>
 			</div>
 			<div class="form-group">
-				@Html.Label("Chiều cao")
-				@Html.TextBoxFor(m => m.Height, new { @class = "form-control" })
-			</div>
-			<div>
-				@Html.Label("Chiều dài sách")
-				@Html.TextBoxFor(m => m.Length, new { @class = "form-control" })
-			</div>
-			<div>
-				@Html.Label("Chiều rộng sách")
-				@Html.TextBoxFor(m => m.Widght, new { @class = "form-control" })
+				<label class="control-label"> Trọng lượng </label>
+				<input asp-for="Widght" class="form-control" type="number" min="0" />
+				<span asp-validation-for="Widght" class="text-danger"></span>
 			</div>
 			<div class="form-group">
-				@Html.Label("Status")
-				@Html.TextBoxFor(m => m.Status, new { @class = "form-control" })
+				<label class="control-label"> Chiều cao sách </label>
+				<input asp-for="Height" class="form-control" type="number" min="0" />
+				<span asp-validation-for="Height" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label class="control-label"> Chiều dài sách </label>
+				<input asp-for="Length" class="form-control" type="number" min="0" />
+				<span asp-validation-for="Length" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label class="control-label"> Chiều rộng sách </label>
+				<input asp-for="Widght" class="form-control" type="number" min="0" />
+				<span asp-validation-for="Widght" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Status" class="control-label"></label>
+				<select asp-for="Status" class="form-control">
+					<option value="1">Còn hàng</option>
+					<option value="0">Không còn hàng</option>
+				</select>
+				<span asp-validation-for="Status" class="text-danger"></span>
 			</div>
 			<div class="clear"></div>
 			<br />
-			<button type="submit" class="btn btn-primary">Save</button> &nbsp; &nbsp; &nbsp; <a asp-action="Index">Back to List</a>
+			<div class="form-group cus">
+				<a asp-action="Index">Xem danh sách Book</a>
+				<input type="submit" value="Save" class="btn btn-primary" />
+			</div>
 		</div>
 	</div>
-}
+</form>
+@*}*@
 
 <script>
-	$(document).ready(function() {
-		$('#authorSelect').change(function() {
+	$(document).ready(function () {
+		$('#authorSelect').change(function () {
 			var selectedValues = $('#authorSelected').val();
 			// Cập nhật bookSelected khi người dùng thay đổi lựa chọn
 			$('input[name="authorSelected"]').val(selectedValues);
 		});
-		$('#genreSelect').change(function() {
+		$('#genreSelect').change(function () {
 			var selectedValue = $('#genreSelect').val();
 			$('input[name="genreSelected"]').val(selectedValue);
 		});
-		$('#supplierSelected').change(function() {
+		$('#supplierSelected').change(function () {
 			var selectedValue = $('#supplierSelected').val();
 			$('input[name="supplierSelect"]').val(selectedValue);
 		});
+	});
+</script>
+<script>
+	document.getElementById("ISBN").addEventListener("input", function () {
+		var isbnInput = document.getElementById("ISBN");
+		var isbnValue = isbnInput.value;
+
+		// Kiểm tra độ dài ít nhất là 10 ký tự
+		if (isbnValue.length < 10) {
+			isbnInput.setCustomValidity("Mã ISBN phải có ít nhất 10 ký tự.");
+		} else {
+			isbnInput.setCustomValidity("");
+		}
 	});
 </script>
 

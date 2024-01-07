@@ -1,0 +1,19 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@section Scripts {
+<script>
+        $.ajax({
+            url: "/Admin/Gembox/GetTotalDateRevenue", 
+            type: "GET",
+            success: function (data) {
+                $("#GetTotalDateRevenue").text(data); 
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Lỗi AJAX:", textStatus, errorThrown);
+            }
+        })
+</script>
+}
+<p><span id="GetTotalDateRevenue">0</span> đ</p>

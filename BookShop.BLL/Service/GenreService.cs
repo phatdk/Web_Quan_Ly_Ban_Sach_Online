@@ -14,8 +14,10 @@ namespace BookShop.BLL.Service
 	public class GenreService : IGenreService
 	{
 		protected readonly IRepository<Genre> _repository;
+		protected readonly IRepository<Category> _categoryrepository;
         public GenreService()
         {
+			_categoryrepository = new Repository<Category>();
             _repository = new Repository<Genre>();
         }
         public async Task<bool> Add(CreateGenreModel requet)
@@ -42,8 +44,10 @@ namespace BookShop.BLL.Service
 
 		public async Task<List<GenreModel>> GetAll()
 		{
-			var obj = await _repository.GetAllAsync();
-			var query = from g in obj
+			var genr = await _repository.GetAllAsync();
+			var cate = await _categoryrepository.GetAllAsync();
+			var query = from g in genr join
+						c in cate on g.Id_Category equals c.Id
 						select new GenreModel()
 						{
 							Id = g.Id,
@@ -52,6 +56,7 @@ namespace BookShop.BLL.Service
 							CreatedDate = g.CreatedDate,
 							Id_Category = g.Id_Category,
 							Index = g.Index,
+							NameCategory = c.Name
 						};
 			return query.ToList();
 		}

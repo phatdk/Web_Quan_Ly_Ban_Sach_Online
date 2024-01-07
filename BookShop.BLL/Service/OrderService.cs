@@ -208,6 +208,7 @@ namespace BookShop.BLL.Service
 							   Id_Staff = a.Id_Staff,
 							   StaffCode = e1 == null ? "Trống" : e1.Code,
 							   NameStaff = e1 == null ? "Trống" : e1.Name,
+							   IsOnlineOrder = a.IsOnlineOrder,
 						   }).ToList();
 			foreach (var item in objlist)
 			{

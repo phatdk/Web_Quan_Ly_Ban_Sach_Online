@@ -43,9 +43,10 @@ namespace BookShop.BLL.ConfigurationModel.OrderModel
 		public int Height { get; set; }
 		public int Total { get; set; }
 		public int TotalPayment { get; set; }
+		public int TotalRevenue { get; set; }
 
-		// join properties
-		public string UserCode { get; set; }
+        // join properties
+        public string UserCode { get; set; }
 		public string NameUser { get; set; }
 		public string? StaffCode { get; set; }
 		public string? NameStaff { get; set; }

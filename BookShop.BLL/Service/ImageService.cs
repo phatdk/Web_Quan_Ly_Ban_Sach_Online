@@ -55,6 +55,7 @@ namespace BookShop.BLL.Service
 			{
 				var obj = await _imageRepository.GetByIdAsync(model.Id);
 				obj.ImageUrl = model.ImageUrl;
+				obj.Index = model.Index;
 				await _imageRepository.UpdateAsync(model.Id, obj);
 				return true;
 			}catch (Exception ex) { return false; }

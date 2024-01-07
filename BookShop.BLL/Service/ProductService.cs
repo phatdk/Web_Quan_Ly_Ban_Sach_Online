@@ -1,6 +1,7 @@
 ﻿using BookShop.BLL.ConfigurationModel.BookModel;
 using BookShop.BLL.ConfigurationModel.ImageModel;
 using BookShop.BLL.ConfigurationModel.ProductModel;
+using BookShop.BLL.Gembox;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;
@@ -9,11 +10,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Reflection.Metadata.BlobBuilder;
 using Image = BookShop.DAL.Entities.Image;
+
 
 namespace BookShop.BLL.Service
 {
@@ -28,6 +31,8 @@ namespace BookShop.BLL.Service
 		private readonly IRepository<BookGenre> _bookGenreRepository;
 		private readonly IRepository<CollectionBook> _collectionBookRepository;
 		private readonly IRepository<Evaluate> _CommentRepository;
+		private readonly IRepository<Genre> _genretRepository;
+		private readonly IRepository<Category> _categorytRepository;
 		public ProductService()
 		{
 			_productRepository = new Repository<Product>();
@@ -38,6 +43,9 @@ namespace BookShop.BLL.Service
 			_bookGenreRepository = new Repository<BookGenre>();
 			_collectionBookRepository = new Repository<CollectionBook>();
 			_CommentRepository = new Repository<Evaluate>();
+			_genretRepository = new Repository<Genre>();
+			_categorytRepository = new Repository<Category>();
+
 		}
 		public async Task<CreateProductModel> Add(CreateProductModel model)
 		{
@@ -104,14 +112,25 @@ namespace BookShop.BLL.Service
 					CreatedDate = item.CreatedDate,
 					Status = item.Status,
 					Type = item.Type,
-
 				};
-				var img = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == item.Id).FirstOrDefault();
-				if (img != null)
+				obj.CollectionName = item.Id_Collection != null ? (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == item.Id_Collection).FirstOrDefault().Name : "Trống";
+				var images = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == item.Id).OrderBy(x => x.Index);
+				var imagevms = new List<ImageViewModel>();
+				foreach (var image in images)
 				{
-					obj.ImgUrl = img.ImageUrl;
+					var imagevm = new ImageViewModel()
+					{
+						Id = image.Id,
+						ImageUrl = image.ImageUrl,
+						Index = image.Index,
+						CreatedDate = image.CreatedDate,
+						Status = image.Status,
+						Id_Product = image.Id_Product,
+					};
+					imagevms.Add(imagevm);
 				}
-
+				obj.imageViewModels = imagevms;
+				obj.ImgUrl = images != null ? images.FirstOrDefault().ImageUrl : "image null";
 				objlist.Add(obj);
 			}
 			return objlist;
@@ -139,6 +158,24 @@ namespace BookShop.BLL.Service
 						Status = productV.Status,
 						Type = productV.Type,
 					};
+					obj.CollectionName = productV.Id_Collection != null ? (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == productV.Id_Collection).FirstOrDefault().Name : "Trống";
+					var images = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == item.Id).OrderBy(x => x.Index);
+					var imagevms = new List<ImageViewModel>();
+					foreach (var image in images)
+					{
+						var imagevm = new ImageViewModel()
+						{
+							Id = image.Id,
+							ImageUrl = image.ImageUrl,
+							Index = image.Index,
+							CreatedDate = image.CreatedDate,
+							Status = image.Status,
+							Id_Product = image.Id_Product,
+						};
+						imagevms.Add(imagevm);
+					}
+					obj.imageViewModels = imagevms;
+					obj.ImgUrl = images != null ? images.FirstOrDefault().ImageUrl : "image null";
 					products.Add(obj);
 				}
 			}
@@ -166,6 +203,24 @@ namespace BookShop.BLL.Service
 						Status = productV.Status,
 						Type = productV.Type,
 					};
+					obj.CollectionName = productV.Id_Collection != null ? (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == productV.Id_Collection).FirstOrDefault().Name : "Trống";
+					var images = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == item.Id).OrderBy(x => x.Index);
+					var imagevms = new List<ImageViewModel>();
+					foreach (var image in images)
+					{
+						var imagevm = new ImageViewModel()
+						{
+							Id = image.Id,
+							ImageUrl = image.ImageUrl,
+							Index = image.Index,
+							CreatedDate = image.CreatedDate,
+							Status = image.Status,
+							Id_Product = image.Id_Product,
+						};
+						imagevms.Add(imagevm);
+					}
+					obj.imageViewModels = imagevms;
+					obj.ImgUrl = images != null ? images.FirstOrDefault().ImageUrl : "image null";
 					products.Add(obj);
 				}
 			}
@@ -194,8 +249,8 @@ namespace BookShop.BLL.Service
 				books.Add(bookvm);
 			}
 
-			var image = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == id);
-			var imgages = new List<ImageViewModel>();
+			var image = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == id).OrderBy(x => x.Index);
+			var imagevms = new List<ImageViewModel>();
 			foreach (var item in image)
 			{
 				var imagev = new ImageViewModel()
@@ -206,15 +261,10 @@ namespace BookShop.BLL.Service
 					CreatedDate = item.CreatedDate,
 					Status = item.Status,
 				};
-				imgages.Add(imagev);
+				imagevms.Add(imagev);
 			}
 
-			string collecionName = string.Empty;
-			if (product.Id_Collection != null)
-			{
-				collecionName = (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == product.Id_Collection).FirstOrDefault().Name;
-			}
-			return new ProductViewModel()
+			var obj = new ProductViewModel()
 			{
 				Id = product.Id,
 				Name = product.Name,
@@ -225,10 +275,12 @@ namespace BookShop.BLL.Service
 				Status = product.Status,
 				Type = product.Type,
 				bookViewModels = books,
-				imageViewModels = imgages,
+				imageViewModels = imagevms,
+				ImgUrl = imagevms != null ? imagevms.FirstOrDefault().ImageUrl : "image null",
 				CollectionId = product.Id_Collection,
-				CollectionName = collecionName,
+				CollectionName = product.Id_Collection != null ? (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == product.Id_Collection).FirstOrDefault().Name : "Trống",
 			};
+			return obj;
 		}
 
 		public async Task<ProductViewModel> GetByIdAndCommnet(int id)
@@ -253,7 +305,7 @@ namespace BookShop.BLL.Service
 				books.Add(bookvm);
 			}
 
-			var image = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == id);
+			var image = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == id).OrderBy(x => x.Index);
 			var images = new List<ImageViewModel>();
 			foreach (var item in image)
 			{
@@ -267,12 +319,6 @@ namespace BookShop.BLL.Service
 				};
 				images.Add(imagev);
 			}
-
-			string collecionName = string.Empty;
-			if (product.Id_Collection != null)
-			{
-				collecionName = (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == product.Id_Collection).FirstOrDefault().Name;
-			}
 			return new ProductViewModel()
 			{
 				Id = product.Id,
@@ -285,8 +331,9 @@ namespace BookShop.BLL.Service
 				Type = product.Type,
 				bookViewModels = books,
 				imageViewModels = images,
+				ImgUrl = images != null ? images.FirstOrDefault().ImageUrl : "image null",
 				CollectionId = product.Id_Collection,
-				CollectionName = collecionName,
+				CollectionName = product.Id_Collection != null ? (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == product.Id_Collection).FirstOrDefault().Name : "Trống",
 				Comment = (await _CommentRepository.GetAllAsync()).Where(x => x.Id_Product == id).Select(x => new ConfigurationModel.EvaluateModel.EvaluateViewModel()
 				{
 					Point = x.Point,
@@ -384,5 +431,36 @@ namespace BookShop.BLL.Service
 			}
 			catch { return false; }
 		}
+
+		public async Task<List<ProductViewModel>> GetDanhMuc(string danhmuc)
+		{
+
+			var productsInCategory =  (
+				from category in (await _categorytRepository.GetAllAsync()).DefaultIfEmpty()
+				join genre in (await _genretRepository.GetAllAsync()).DefaultIfEmpty() on category.Id equals genre.Id_Category
+				join bookGenre in (await _bookGenreRepository.GetAllAsync()).DefaultIfEmpty() on genre.Id equals bookGenre.Id_Genre
+				join book in (await _bookRepository.GetAllAsync()).DefaultIfEmpty() on bookGenre.Id_Book equals book.Id
+				join productBook in (await _productBookRepository.GetAllAsync()).DefaultIfEmpty() on book.Id equals productBook.Id_Book
+				join product in (await _productRepository.GetAllAsync()).DefaultIfEmpty() on productBook.Id_Product equals product.Id
+				join image in (await _imageRepository.GetAllAsync()).DefaultIfEmpty() on product.Id equals image.Id_Product
+				where category.Name == danhmuc
+                select new ProductViewModel
+				{
+					Id = product.Id,
+					Name = product.Name,
+					Price = product.Price,
+					Quantity = product.Quantity,
+					Description = product.Description,
+					CreatedDate = product.CreatedDate,
+					Status = product.Status,
+					ImgUrl = image.ImageUrl,
+					
+                }
+			).Distinct().ToList();
+            var distinctProducts = productsInCategory.GroupBy(p => p.Id).Select(g => g.First()).ToList();
+            return distinctProducts;
+			
+		}
+
 	}
 }

@@ -85,6 +85,10 @@ namespace BookShop.DAL.Migrations
                     b.Property<int>("Id_Supplier")
                         .HasColumnType("int");
 
+                    b.Property<string>("Img")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(250)");
+
                     b.Property<int>("ImportPrice")
                         .HasColumnType("int");
 

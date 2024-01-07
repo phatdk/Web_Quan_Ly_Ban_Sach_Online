@@ -79,27 +79,11 @@ builder.Services.AddSession(op =>
 });
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddAuthorization(op =>
+op.AddPolicy("ManagerMenu", builder =>
 {
-
-    op.AddPolicy("ManagerMenu", builder =>
-    {
-        builder.RequireAuthenticatedUser();
-        builder.RequireRole("Admin");
-    });
-
-    // Thêm chính sách khác
-    op.AddPolicy("CheckStaff", builder =>
-    {
-        builder.RequireAuthenticatedUser();
-        builder.RequireRole("Staff");
-    });
-    op.AddPolicy("CheckCustomer", builder =>
-    {
-        builder.RequireAuthenticatedUser();
-        builder.RequireRole("Customer");
-    });
-});
-
+    builder.RequireAuthenticatedUser();
+    builder.RequireRole("Admin");
+}));
 
 #endregion
 
@@ -116,6 +100,7 @@ builder.Services.AddTransient<IOrderDetailService, OrderDetailService>();
 builder.Services.AddTransient<IOrderPromotionService, OrderPromotionService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IProductBookService, ProductBookService>();
+builder.Services.AddTransient<IProductPromotionService, ProductPromotionService>();
 builder.Services.AddTransient<IImageService, ImageService>();
 builder.Services.AddTransient<IBookService, BookService>();
 builder.Services.AddTransient<ICollectionService, CollectionService>();
@@ -132,6 +117,7 @@ builder.Services.AddTransient<IVNPayService, VNPayService>();
 builder.Services.AddTransient<IWishListService, WishListService>();
 builder.Services.AddTransient<INewsService, NewsService>();
 builder.Services.AddTransient<IEvaluateService, EvaluateService>();
+builder.Services.AddTransient<IReturnOrderService, ReturnOrderService>();
 
 builder.Services.AddTransient<IUserRoleService, UserRoleService>();
 
@@ -142,32 +128,32 @@ var app = builder.Build();
 #region SeedData
 using (var scope = app.Services.CreateScope())
 {
-    //    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Userr>>();
-    //    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
-    //    SeedDataMD.SeedAsync(userManager, roleManager).Wait();
-    //}
-    //using (var scope = app.Services.CreateScope())
-    //{
-    //    var service = scope.ServiceProvider.GetRequiredService<IStatusOrderService>();
+//    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Userr>>();
+//    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+//    SeedDataMD.SeedAsync(userManager, roleManager).Wait();
+//}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var service = scope.ServiceProvider.GetRequiredService<IStatusOrderService>();
 
-    //    SeedDataMD.SeedDataStatus(service).Wait();
-    //}
-    //using (var scope = app.Services.CreateScope())
-    //{
-    //    var service1 = scope.ServiceProvider.GetRequiredService<IPaymentFormService>();
+//    SeedDataMD.SeedDataStatus(service).Wait();
+//}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var service1 = scope.ServiceProvider.GetRequiredService<IPaymentFormService>();
 
-    //    SeedDataMD.SeedDataPayment(service1).Wait();
-    //}
-    //using (var scope = app.Services.CreateScope())
+//    SeedDataMD.SeedDataPayment(service1).Wait();
+//}
+//using (var scope = app.Services.CreateScope())
 
-    //{ 
-    //var service2 = scope.ServiceProvider.GetRequiredService<IPromotionTypeService>();
+//{ 
+//var service2 = scope.ServiceProvider.GetRequiredService<IPromotionTypeService>();
 
-    //SeedDataMD.SeedPromotionType(service2).Wait();
-    //var service1 = scope.ServiceProvider.GetRequiredService<IProductService>();
-    //var service2 = scope.ServiceProvider.GetRequiredService<ICollectionService>();
+//SeedDataMD.SeedPromotionType(service2).Wait();
+//var service1 = scope.ServiceProvider.GetRequiredService<IProductService>();
+//var service2 = scope.ServiceProvider.GetRequiredService<ICollectionService>();
 
-    //SeedDataMD.FaKerProduct(service1,service2).Wait();
+//SeedDataMD.FaKerProduct(service1,service2).Wait();
 }
 #endregion
 if (!app.Environment.IsDevelopment())
