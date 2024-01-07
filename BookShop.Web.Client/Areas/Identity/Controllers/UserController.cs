@@ -29,8 +29,8 @@ using Microsoft.Extensions.Logging;
 namespace ShopWheyProject.MVC.Areas.Identity.Controllers
 {
     [Area("Identity")]
-    [Authorize(Roles = "Admin,Staff")]
     [Route("/ManageUser/[action]")]
+    [Authorize(Roles = "Admin,Staff")]
     public class UserController : Controller
     {
 
@@ -48,8 +48,7 @@ namespace ShopWheyProject.MVC.Areas.Identity.Controllers
         [TempData]
         public string StatusMessage { get; set; }
 
-        //
-        // GET: /ManageUser/Index
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages, [FromQuery] int sortop = 0)
         {
             var model = new UserListModel();
@@ -132,6 +131,7 @@ namespace ShopWheyProject.MVC.Areas.Identity.Controllers
         }
 
         // GET: /ManageUser/AddRole/id
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> AddRole(int id)
         {
