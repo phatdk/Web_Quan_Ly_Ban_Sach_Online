@@ -24,6 +24,7 @@ namespace BookShop.BLL.ConfigurationModel.BookModel
 		public int Widght { get; set; }
 		public int Length { get; set; }
 		public int Height { get; set; }
+		public string Img { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public int Status { get; set; }
 		public int Id_Supplier { get; set; }

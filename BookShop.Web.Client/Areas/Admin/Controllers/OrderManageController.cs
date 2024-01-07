@@ -74,18 +74,19 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			return View();
 		}
 
-		public async Task<IActionResult> GetOrder(int page, int? status, string? keyWord)
+		public async Task<IActionResult> GetOrder(int page, int? status, int? type, string? keyWord)
 		{
-
+			_orders = await _orderService.GetAll();
 			if (status != null)
 			{
-				_orders = (await _orderService.GetAll()).Where(
+				_orders = _orders.Where(
 					x => x.Status == Convert.ToInt32(status)
 					).ToList();
 			}
-			else
+			if(type != null)
 			{
-				_orders = await _orderService.GetAll();
+				if (type == 1) _orders = _orders.Where(x => x.IsOnlineOrder == true).ToList();
+				else if (type == 0) _orders = _orders.Where(x=>x.IsOnlineOrder == false).ToList();
 			}
 			if (!string.IsNullOrEmpty(keyWord))
 			{
@@ -393,7 +394,11 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 								actionNote += "Sản phẩm " + product.Name + " | trả về kho\n";
 							}
 						}
-						else actionNote += "Sản phẩm " + product.Name + " | lỗi không được trả về kho\n";
+						else
+						{
+							condition = true;
+							actionNote += "Sản phẩm " + product.Name + " | lỗi không được trả về kho\n";
+						}
 					}
 					if (condition)
 					{

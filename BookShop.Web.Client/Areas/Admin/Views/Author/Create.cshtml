@@ -4,11 +4,15 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<style>
+    .form-group.cus {
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
+<h1 style="text-align:center;">Thêm mới danh mục</h1>
 
-<h4>AuthorModel</h4>
-<br />
-<div class="row">
+<div class="row" style="justify-content: center;">
     <div class="col-md-4">
         <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -38,19 +42,20 @@
             </div>*@
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
+                <select asp-for="Status" class="form-control">
+                    <option value="1">Hoạt động</option>
+                    <option value="0">Không hoạt động</option>
+                </select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
-            <div class="form-group">
+			<div class="form-group cus">
+				<a asp-action="Index">Back to List</a>
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 <script>
     $(function () {
         $("#CreatedDate").datepicker({

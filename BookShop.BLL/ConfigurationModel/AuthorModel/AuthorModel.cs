@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +12,10 @@ namespace BookShop.BLL.ConfigurationModel.AuthorModel
 		public int Id { get; set; }
 		public string? Name { get; set; }
 		public string? Img { get; set; }
-		public int? Index { get; set; }
+		public int Index { get; set; }
 		public DateTime? CreatedDate { get; set; }
-		public int? Status { get; set; }
-	}
+		public int Status { get; set; }
+		public IFormFile imageFile { get; set; }
+
+    }
 }

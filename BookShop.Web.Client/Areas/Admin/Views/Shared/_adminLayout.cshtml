@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
 	<link href="~/css/Admin/style.css" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -27,53 +27,54 @@
 	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 	<link rel="stylesheet" href="/css/Admin/Responsive.css">
 	<link rel="stylesheet" href="/css/Admin/style.css">
-	
+
 </head>
 <body>
-    <div class="sidebar close">
-        <div class="logo">
-            <i class="fab fa-trade-federation"></i>
-            <span class="logo-name">ADMIN</span>
-        </div>
+	<div class="sidebar close">
+		<div class="logo">
+			<i class="fab fa-trade-federation"></i>
+			<span class="logo-name">ADMIN</span>
+		</div>
 
-        <ul class="nav-list">
-            <li>
-                <a href="#">
-                    <i class="fab fa-microsoft"></i>
-                    <span class="link-name">Bàn làm việc</span>
-                </a>
+		<ul class="nav-list">
+			<li>
+				<a href="#">
+					<i class="fab fa-microsoft"></i>
+					<span class="link-name">Bàn làm việc</span>
+				</a>
 
-                <ul class="sub-menu blank">
-                    <li><a href="#" class="link-name">Controller ở đây</a></li>
-                </ul>
-            </li>
+				<ul class="sub-menu blank">
+					<li><a href="" class="link-name">Quản đơn hàng</a></li>
+					<li><a asp-area="Admin" asp-controller="OrderManage" asp-action="Index">Quản lý đơn hàng</a></li>
+				</ul>
+			</li>
 
-            <li>
-                <div class="icon-link">
-                    <a href="#">
-                        <i class="fab fa-codepen"></i>
-                        <span class="link-name">Quản lí sản phẩm</span>
-                    </a>
-                    <i class="fas fa-caret-down arrow"></i>
-                </div>
+			<li>
+				<div class="icon-link">
+					<a href="#">
+						<i class="fab fa-codepen"></i>
+						<span class="link-name">Quản lí sản phẩm</span>
+					</a>
+					<i class="fas fa-caret-down arrow"></i>
+				</div>
 
-                <ul class="sub-menu">
+				<ul class="sub-menu">
 					<li><a href="#" class="link-name">Sản Phẩm</a></li>
 					<li><a asp-area="Admin" asp-controller="Product" asp-action="Index">Danh sách sản phẩm</a></li>
-                   
-                </ul>
-            </li>
 
-            <li>
-                <div class="icon-link">
-                    <a href="#">
-                        <i class="fab fa-blogger"></i>
-                        <span class="link-name">Quản lí sách</span>
-                    </a>
-                    <i class="fas fa-caret-down arrow"></i>
-                </div>
+				</ul>
+			</li>
 
-                <ul class="sub-menu">
+			<li>
+				<div class="icon-link">
+					<a href="#">
+						<i class="fab fa-blogger"></i>
+						<span class="link-name">Quản lí sách</span>
+					</a>
+					<i class="fas fa-caret-down arrow"></i>
+				</div>
+
+				<ul class="sub-menu">
 					<li><a href="#" class="link-name">Quản lí sách</a></li>
 					<li>
 						<a asp-area="Admin" asp-controller="Book" asp-action="Index"> Sách</a>
@@ -90,10 +91,10 @@
 					<li>
 						<a asp-area="Admin" asp-controller="Categories" asp-action="Index"> Danh mục</a>
 					</li>
-                </ul>
-            </li>
+				</ul>
+			</li>
 
-            <li>
+			<li>
 				<div class="icon-link">
 					<a href="#">
 						<i class="fab fa-blogger"></i>
@@ -137,7 +138,7 @@
 		</div>
 		<div class="main-content">
 			<div class="container">
-		@RenderBody()
+				@RenderBody()
 			</div>
 		</div>
 	</div>

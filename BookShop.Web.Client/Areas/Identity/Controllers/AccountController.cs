@@ -182,7 +182,6 @@ namespace App.Areas.Identity.Controllers
 				if (emailCheck.Any())
 				{
 					_logger.LogInformation("Email đã được sử dụng.");
-                    ViewBag.Mess = "Email đã được sử dụng";
 					return View(model);
 				}
 				var user = new Userr { Code = "KH" + await GenerateCode(7), UserName = model.UserName, Email = model.Email, Name = model.Name, Gender = 0, CreatedDate = DateTime.Now, Status = 1 };
