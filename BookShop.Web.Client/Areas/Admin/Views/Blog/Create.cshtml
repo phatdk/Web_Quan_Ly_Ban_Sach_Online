@@ -2,9 +2,10 @@
 
 @{
     ViewData["Title"] = "Create";
+    Layout = "_Layout";
 }
 
-<h1>Create</h1>
+<h1>Tạo mới blog</h1>
 <hr />
 <div class="row">
     <div class="col-md-12">
@@ -41,13 +42,11 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 
 @section Scripts{
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-
-    
     <script src="~/lib/jqueryui/jquery-ui.min.js"></script>
     <script src="~/lib/elfinder/js/elfinder.min.js"></script>    <script src="~/lib/summernote/summernote-bs5.min.js"></script>
     <link href="~/lib/summernote/summernote-bs5.min.css" rel="stylesheet" />
@@ -129,12 +128,13 @@
                     ['color', ['color']],
                     ['para', ['ul', 'ol', 'paragraph']],
                     ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video','elfinder']],
+                    ['insert', ['link', 'picture', 'video', 'elfinder']],
                     ['view', ['fullscreen', 'codeview', 'help']]
                 ]
             });
 
         });
-       
+
     </script>
+
 }
