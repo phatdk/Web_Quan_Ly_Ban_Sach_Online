@@ -11,9 +11,13 @@
     }
 
     .oi {
+        margin-top:20px;
+       
         justify-content: center;
     }
-    .dktk{
+
+	.dktk {
+		border-radius: 20px;
         margin-top:30px;
     }
 
@@ -32,7 +36,7 @@
 </style>
 <div class="container fomdangnhap">
     <div class="row oi">
-        <section class="col-6 dktk">   
+        <section class=" dktk">   
             <form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
