@@ -47,15 +47,14 @@
         justify-content:center;
     }
 </style>
-@if (details != null)
-{
+
     <div>
         <h4>TRẠNG THÁI ĐƠN HÀNG</h4>
         <hr />
         <div class="row chungttdh">
             <div class="col-4">
                 <ul class="ps-0" style="list-style: none">
-                    @foreach (var item in details)
+                    @foreach (var item in Model.orderDetails)
                     {
                         total += (item.Price * item.Quantity);
                         <li class="row">
@@ -163,12 +162,7 @@
     <div>
         <a asp-action="Index" asp-controller="Home">Trở lại trang chủ</a>
     </div>
-}else
-{
-    <div>
-        Chưa có đơn hàngs
-    </div>
-}
+
 <script type="text/javascript">
     function checkStatus() {
         if (@Model.Status >= 3) {
