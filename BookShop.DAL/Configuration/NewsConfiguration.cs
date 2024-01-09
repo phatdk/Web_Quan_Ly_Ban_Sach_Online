@@ -17,6 +17,7 @@ namespace BookShop.DAL.Configuration
 			builder.Property(x => x.Title).HasColumnType("nvarchar(100)");
 			builder.Property(x => x.Content).HasColumnType("nvarchar(max)");
 			builder.Property(x => x.Description).HasColumnType("nvarchar(255)").IsRequired(false);
-		}
+            builder.Property(x => x.Img).HasColumnType("nvarchar(250)");
+        }
 	}
 }

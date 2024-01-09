@@ -1,0 +1,104 @@
+﻿@model IEnumerable<BookShop.BLL.ConfigurationModel.EvaluateModel.EvaluateViewModel>
+@using System.Globalization;
+@{
+    ViewData["Title"] = "Index";
+
+}
+
+<partial name="_Paging" model="@ViewBag.pagingmodel" />
+<div class="book">
+    <div class="content">
+        <h1>Danh sách Đánh Giá</h1>
+        <div class="header">
+            <p>
+            </p>
+            <div class="search-container">
+                <div class="loc">
+                    <select class="trangthai" style="text-align:center" id="filterSelect" onchange="filterChange()" aria-label="Default select example">
+                        <option value="" selected>Tất cả trạng thái</option>
+                        <option value="0">Không hoạt động</option>
+                        <option value="1">Đang hoạt động</option>
+                    </select>
+                    <div class="search-bar">
+                        <a><i class="fa fa-search" style="font-size:30px" onclick="findOrder()"></i></a>
+                        <input id="keyWordFind" oninput="searchOnEnter(event)" type="text" placeholder="Tìm kiếm">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ct-body">
+            <table class="table table-bordered border-dark table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th class="text-center">STT</th>
+                        <th class="text-center">Tên tài khoản</th>
+                        <th class="text-center">Tên sản phẩm</th>
+                        <th class="text-center">Point</th>
+                        <th class="text-center">Content</th>
+                        <th class="text-center">CreateDate</th>
+                    </tr>
+                </thead>
+                <tbody id="listcategory">
+                </tbody>
+            </table>
+            <div id="buttonContainer"></div>
+        </div>
+    </div>
+</div>
+<script src="~/js/site.js"></script>
+<script>
+    function loadData(pageIndex) {
+        // Gửi yêu cầu Ajax đến máy chủ
+        var status = document.getElementById("filterSelect").value;
+        var keyWord = document.getElementById("keyWordFind").value;
+        var index = (pageIndex - 1) * 10;
+        $.ajax({
+            url: '@Url.Action("Getdata", "Evaluate")',
+            type: 'GET',
+            data: { page: pageIndex, status: status, keyWord: keyWord },
+
+            success: function (data) {
+
+                // Xóa danh sách cũ trước khi thêm danh sách mới
+                var listcategory = $("#listcategory");
+                listcategory.empty();
+                // Thêm danh sách đơn hàng vào HTML
+                data.data.forEach(function (item) {
+                    index += 1;
+                    var categoryRow = '<tr>' +
+                        '<td class="text-center">' + index + '</td>' +
+                        '<td class="text-center"><label>' + item.nameuser + '</label></td>' +
+                        '<td class="text-center"><label>' + item.nameproduct + '</label></td>' +
+                        '<td class="text-center"><label>' + item.point + '</label></td>' +
+                        '<td class="text-center"><label>' + item.content + '</label></td>' +
+                        '<td class="text-center"><label>' + formatDate(item.createdDate) + '</label></td>'+
+                        '</tr>';
+
+                    listcategory.append(categoryRow);
+                });
+                createPagingButtons(1, data.max, data.page);
+            },
+            error: function (error) {
+                console.log('Lỗi: ' + error.responseText);
+            }
+        });
+    }
+    function filterChange() {
+        loadData(1)
+    }
+    function findOrder() {
+        loadData(1)
+    }
+    function searchOnEnter(event) {
+        loadData(1);
+    }
+    $(document).ready(function () {
+        loadData(1);
+    });
+
+
+
+
+
+
+</script>
