@@ -554,6 +554,10 @@ namespace BookShop.DAL.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<string>("Img")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(250)");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 

@@ -121,8 +121,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 			_book.Height = _book.Height / 100;
 			return View(_book);
 		}
-
-		[HttpGet("Book/Create")]
+        [Authorize(Roles = "Admin")]
+        [HttpGet("Book/Create")]
 		// GET: BookController/Create
 		public async Task<IActionResult> Create()
 		{
@@ -215,9 +215,9 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 			return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
 		}
 
-
-		// GET: BookController/Edit/5
-		[HttpGet("Book/Edit")]
+        [Authorize(Roles = "Admin")]
+        // GET: BookController/Edit/5
+        [HttpGet("Book/Edit")]
 		public async Task<IActionResult> Edit(int id)
 		{
 			ViewBag.Authors = await LoadAuthor(1);

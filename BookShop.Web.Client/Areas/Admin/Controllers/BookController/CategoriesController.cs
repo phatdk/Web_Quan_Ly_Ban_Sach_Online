@@ -11,7 +11,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 {
     [Area("Admin")]
    
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Staff")]
     public class CategoriesController : Controller
     {
         private readonly ICategoryService _categoryService;
@@ -45,7 +45,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             category = category.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 			return Json(new { data = category, page = page, max = Math.Ceiling(totalPage) });
 		}
-		[HttpGet("Create/category")]
+        [Authorize(Roles = "Admin")]
+        [HttpGet("Create/category")]
         public async Task<IActionResult> Create()
         {
             return View();
@@ -67,7 +68,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             }
             return View(category);
         }
-       
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
             var category = await _categoryService.GetById(id);
@@ -98,7 +99,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
             var category = await _categoryService.GetById(id);
             return View(category);
         }
-
+        [Authorize(Roles = "Admin")]
         //[HttpDelete("Delete/category/{id}")]
         public async Task<IActionResult> Delete(int id)
         {

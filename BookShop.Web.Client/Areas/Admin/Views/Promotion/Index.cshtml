@@ -1,8 +1,10 @@
-﻿@model IEnumerable<BookShop.BLL.ConfigurationModel.PromotionModel.PromotionViewModel>
+﻿@using BookShop.BLL.ConfigurationModel.PromotionTypeModel;
+@model IEnumerable<BookShop.BLL.ConfigurationModel.PromotionModel.PromotionViewModel>
 
 @{
 	ViewData["Title"] = "Danh sách khuyến mãi";
 	Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+	List<PromotionTypeViewModel> typePromotion = ViewBag.Type;
 }
 
 @if (TempData["SuccessMessage"] != null)
@@ -29,141 +31,114 @@
 </div>
 <div class="card">
 	<div class="card-body">
-		<div class="row m-b-30">
-			<div class="col-lg-8">
-				<a class="btn btn-primary" asp-area="Admin" asp-controller="Promotion" asp-action="Create"><i class="anticon anticon-plus-circle m-r-5"></i><span>Thêm mới khuyến mãi</span></a>
-					<a class="btn btn-success btn-tone m-r-5" asp-area="Admin" asp-controller="Promotion" asp-action="Delete" id="deleteButton">Xóa</a>
-			</div>
-			<div class="col-lg-4 text-right">
+		<div class="col-lg-8">
+			<a class="btn btn-primary" asp-area="Admin" asp-controller="Promotion" asp-action="Create"><i class="anticon anticon-plus-circle m-r-5"></i><span>Thêm mới khuyến mãi</span></a>
+		</div>
+		<div class="m-1 row">
+			<select class="col-2 border-info text-danger ms-2" id="filterType" onchange="loadData(1)" aria-label="Default select example">
+				<option value="" selected>Tất cả</option>
+				@foreach (var item in typePromotion)
+				{
+					<option value="@item.Id">@item.Name</option>
+				}
+			</select>
+			<select class="col-2 border-info text-danger ms-2" id="filterStatus" onchange="loadData(1)" aria-label="Default select example">
+				<option value="" selected>Tất cả</option>
+				<option value="1">Đang áp dụng</option>
+				<option value="0">Chưa áp dụng</option>
+			</select>
+			<select class="col-2 border-info text-danger ms-2" id="filterDate" onchange="loadData(1)" aria-label="Default select example">
+				<option value="" selected>Tất cả</option>
+				<option value="1">Còn hạn</option>
+				<option value="0">Hết hạn</option>
+			</select>
+			<div class="btn-group col-4">
+				<input id="keyWordFind" class="btn btn-outline-info" placeholder="nhập mã hoặc tên" oninput="loadData(1)">
+				<button onclick="loadData(1)" class="btn btn-info"><i class="fa-solid fa-magnifying-glass"></i></button>
 			</div>
 		</div>
-		<div class ="table-responsive">
+		<div class="table-responsive">
 			<table class="table table-hover e-commerce-table">
 				<thead>
 					<tr>
-						<th><input type="checkbox" id="selectAll"></th>
-						<th>ID</th>
-						<th>Tên</th>
-						<th>Code</th>
-						<th>Loại khuyến mãi</th>
-						<th>Tình trạng</th>
-						<th>Thời hạn</th>
-						<th>số tiền giảm</th>
-						<th>phần trăm giảm</th>
-						<th>Giảm tối đa</th>
-						<th>Số lượng</th>
-						<th>Ngày tạo</th>
-						<th>Ngày bắt đầu</th>
-						<th>Ngày kết thúc</th>
-						<th>Mô tả</th>
-						<th>Trạng thái</th>
-						<th></th>
+						<th class="text-center">STT</th>
+						<th class="text-center">Tên</th>
+						<th class="text-center">Loại</th>
+						<th class="text-center">Số lượng</th>
+						<th class="text-center">Ngày tạo</th>
+						<th class="text-center">Ngày bắt đầu</th>
+						<th class="text-center">Ngày kết thúc</th>
+						<th class="text-center">Trạng thái</th>
+						<th class="text-center"></th>
 					</tr>
 				</thead>
-				<tbody>
-					@if (Model != null)
-					{
-						foreach (var item in Model)
-						{
-							<tr>
-								<td>
-									<input type="checkbox" class="checkbox-item" data-id="@item.Id">
-								</td>
-								<td>@item.Id</td>
-								<td>
-									<div class="d-flex align-items-center">
-										<img class="img-fluid rounded" src="assets/images/others/thumb-9.jpg" style="max-width: 60px" alt="">
-										<h6 class="m-b-0 m-l-10">@item.Name</h6>
-									</div>
-								</td>
-								<td>@item.Code</td>
-								<td>@item.NameType</td>
-								<td>@item.Condition</td>
-								<td>@item.StorageTerm</td>
-								<td>@item.AmountReduct</td>
-								<td>@item.PercentReduct</td>
-								<td>@item.ReductMax</td>
-								<td>@item.Quantity</td>
-								<td>@item.Description</td>
-								<td>@item.CreatedDate</td>
-								<td>@item.StartDate</td>
-								<td>@item.EndDate</td>
-								<td>
-									@if (item.Status <= 1)
-									{
-										<div class="d-flex align-items-center">
-											<div class="badge badge-success badge-dot m-r-10"></div>
-											<div>Mở</div>
-										</div>
-									}
-									else
-									{
-										<div class="d-flex align-items-center">
-											<div class="badge badge-success badge-dot m-r-10"></div>
-											<div>Khóa</div>
-										</div>
-									}
-								</td>
-								<td>
-									<a class="btn btn-primary btn-tone m-r-5" asp-area="Admin" asp-controller="Promotion" asp-action="Details" asp-route-id="@item.Id">Chi tiết</a>
-									<a class="btn btn-secondary btn-tone m-r-5" asp-area="Admin" asp-controller="Promotion" asp-action="Edit" asp-route-id="@item.Id">Sửa</a>
-								</td>
-							</tr>
-						}
-					}
+				<tbody id="dataList">
 				</tbody>
 			</table>
-
-		
+			<div id="buttonContainer"></div>
 		</div>
 	</div>
 </div>
-<partial name="_Paging" model="@ViewBag.pagingmodel" />
+
+<script src="~/js/site.js"></script>
 <script>
-	//document.addEventListener("click", function (event) {
-	//	if (event.target && event.target.id === 'deleteButton') {
-	document.addEventListener("DOMContentLoaded", function () {
-		
-
-	document.getElementById('deleteButton').addEventListener('click', function (event) {
-		var selectedIds = [];
-		var checkboxes = document.getElementsByClassName('checkbox-item');
-		for (var i = 0; i < checkboxes.length; i++) {
-			if (checkboxes[i].checked) {
-				selectedIds.push(parseInt(checkboxes[i].getAttribute('data-id')));
-			}
-		}
-
-		if (selectedIds.length > 0 && confirmDelete()) {
-			$.ajax({
-				url: '/Admin/Promotion/Delete',
-				method: 'POST',
-				data: { ids: selectedIds },
-				success: function (data) {
-					for (var i = 0; i < selectedIds.length; i++) {
-						var row = document.querySelector('tr[data-id="' + selectedIds[i] + '"]');
-						if (row) {
-							row.remove();
-						}
-					}
-					alert('Xóa thành công');
-					var deleteButton = document.getElementById('deleteButton');
-					if (deleteButton && document.getElementsByClassName('checkbox-item').length === 0) {
-						deleteButton.style.display = 'none';
-					}
-				},
-				error: function (error) {
-					console.error(error);
-				}
-			});
-		} else {
-			alert('Please select items to delete.');
-			event.preventDefault();
-		}
-	});
-
-	function confirmDelete() {
-		return confirm("Bạn có chắc chắn muốn xóa các mục đã chọn không?");
+	function getDetail(id) {
+		var url = "@Url.Action("Details", "Promotion")?id=" + id
+		window.location.href = url;
 	}
-	});
+	function loadData(pageIndex) {
+		var type = $('#filterType').val();
+		var status = $('#filterStatus').val();
+		var date = $('#filterDate').val();
+		var keyWordFind = $('#keyWordFind').val();
+		var index = (pageIndex - 1) * 10;
+		$.ajax({
+			url: '@Url.Action("GetPromotion", "Promotion")',
+			type: 'GET',
+			data: { page: pageIndex, type: type, status: status, date: date, keyWord: keyWordFind },
+			success: function (data) {
+				var dataList = $("#dataList");
+				dataList.empty();
+				let status = "";
+				let statusColor = "";
+				var now = new Date();
+				data.data.forEach(function (item) {
+					index++;
+					var endTime = new Date(item.endDate);
+					var result = endTime.getTime() - now.getTime();
+					if (result >= 0 && item.status == 1) {
+						status = "Đang áp dụng";
+						statusColor = "text-success";
+					}
+					else if (item.Status == 0) {
+						status = "Chưa áp dụng";
+						statusColor = "text-danger";
+					}
+					else if (result < 0 && item.status == 1) {
+						status = "Hết hạn";
+						statusColor = "text-danger";
+					}
+					var rowData = '<tr>' +
+						'<td class="text-center">' + index + '</td>' +
+						'<td class="text-center">' + item.name + '</td>' +
+						'<td class="text-center">' + item.nameType + '</td>' +
+						'<td class="text-center">' + item.quantity + '</td>' +
+						'<td class="text-center">' + formatDate(item.createdDate) + ' </td>' +
+						'<td class="text-center">' + formatDate(item.startDate) + '</td>' +
+						'<td class="text-center">' + formatDate(item.endDate) + '</td>' +
+						'<td class="text-center ' + statusColor + '">' + status + '</td>' +
+						'<td>' +
+						'<a class="btn btn-primary" href="/Admin/Promotion/Details/' + item.id + '"> Chi tiết </a>' +
+						'<a class="btn btn-warning" href="/Admin/Promotion/Edit/' + item.id + '"> Sửa </a>' +
+						'</td>' +
+						'</tr>'
+					dataList.append(rowData);
+				})
+				createPagingButtons(1, data.max, data.page);
+			}
+		})
+	}
+	$(document).ready(function () {
+		loadData(1);
+	})
 </script>

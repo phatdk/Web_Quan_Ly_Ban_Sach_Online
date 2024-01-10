@@ -161,7 +161,6 @@ namespace BookShop.Web.Client.Controllers
 
 		// POST: CartController/Edit/5
 		[HttpPost]
-		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> EditCart(int id, int quantity) // truyền id cart detail (không phải idUser) và số lượng trên thẻ input
 		{
 			try
@@ -169,7 +168,7 @@ namespace BookShop.Web.Client.Controllers
 				var itemCart = await _cartDetailService.GetById(id);
 				if(itemCart != null) {
 					itemCart.Quantity = quantity;
-					var result = await _cartDetailService.Update(id, new UpdateCartDetailModel { Quantity = quantity });
+					var result = await _cartDetailService.Update(id, new UpdateCartDetailModel { Quantity = itemCart.Quantity });
 					return Json(new { success = result });
 				}
 				return Json(new { success = false, message = "không tìm thấy item" });
@@ -214,5 +213,45 @@ namespace BookShop.Web.Client.Controllers
 			}
 
 		}
-	}
+        public async Task<IActionResult> RemoveAllProduct()
+        {
+            var user = await GetCurrentUserAsync();
+            if (user != null) // co nguoi
+            {
+                var cd = (await _cartDetailService.GetByCart(user.Id)).ToList();
+                if (cd != null)
+                {
+					foreach (var item in cd.ToList())
+					{
+						await _cartDetailService.Delete(item.Id);
+					}
+                    return RedirectToAction(nameof(CartDetails));
+                }
+                return Json(new { success = "error" + "product: " + "| user: " + user.Id });
+
+            }
+            else
+            {
+                var customCartChar = HttpContext.Session.GetString("sessionCart");
+                var customCart = new List<CartDetailViewModel>();
+                if (!string.IsNullOrEmpty(customCartChar))
+                {
+                    customCart = JsonConvert.DeserializeObject<List<CartDetailViewModel>>(customCartChar);
+                    var pc = customCart.ToList();
+                    if (pc != null)
+                    {
+						foreach (var itr in pc.ToList())
+						{
+							customCart.Remove(itr);
+							HttpContext.Session.SetString("sessionCart", JsonConvert.SerializeObject(customCart));
+							
+						}
+                        return RedirectToAction(nameof(CartDetails));
+                    }
+                }
+                return RedirectToAction(nameof(CartDetails));
+            }
+
+        }
+    }
 }

@@ -40,7 +40,7 @@ namespace BookShop.BLL.Service
             return (await GenerateCode(length)).ToString();
         }
 
-        public async Task<bool> Add(CreatePromotionModel model)
+        public async Task<CreatePromotionModel> Add(CreatePromotionModel model)
         {
             try
             {
@@ -54,6 +54,7 @@ namespace BookShop.BLL.Service
                     Code = model.Code,
                     Condition = model.Condition,
                     StorageTerm = model.StorageTerm,
+                    ConversionPoint = model.ConversionPoint,
                     AmountReduct = model.AmountReduct,
                     PercentReduct = model.PercentReduct,
                     ReductMax = model.ReductMax,
@@ -65,10 +66,11 @@ namespace BookShop.BLL.Service
                     Status = model.Status,
                     Id_Type = model.Id_Type,
                 };
-                await _promotionRepository.CreateAsync(obj);
-                return true;
+                var result = await _promotionRepository.CreateAsync(obj);
+                model.Id = result.Id;
+                return model;
             }
-            catch (Exception ex) { return false; }
+            catch (Exception ex) { return model; }
         }
 
         public async Task<bool> Delete(int id)
@@ -94,6 +96,7 @@ namespace BookShop.BLL.Service
                                Code = a.Code,
                                Condition = a.Condition,
                                StorageTerm = a.StorageTerm,
+                               ConversionPoint = a.ConversionPoint,
                                PercentReduct = a.PercentReduct,
                                AmountReduct = a.AmountReduct,
                                ReductMax = a.ReductMax,
@@ -122,6 +125,7 @@ namespace BookShop.BLL.Service
                                Code = a.Code,
                                Condition = a.Condition,
                                StorageTerm = a.StorageTerm,
+                               ConversionPoint = a.ConversionPoint,
                                PercentReduct = a.PercentReduct,
                                AmountReduct = a.AmountReduct,
                                ReductMax = a.ReductMax,
@@ -150,6 +154,7 @@ namespace BookShop.BLL.Service
                                Code = a.Code,
                                Condition = a.Condition,
                                StorageTerm = a.StorageTerm,
+                               ConversionPoint = a.ConversionPoint,
                                PercentReduct = a.PercentReduct,
                                AmountReduct = a.AmountReduct,
                                ReductMax = a.ReductMax,
@@ -178,6 +183,7 @@ namespace BookShop.BLL.Service
                                Code = a.Code,
                                Condition = a.Condition,
                                StorageTerm = a.StorageTerm,
+                               ConversionPoint = a.ConversionPoint,
                                PercentReduct = a.PercentReduct,
                                AmountReduct = a.AmountReduct,
                                ReductMax = a.ReductMax,
@@ -206,6 +212,7 @@ namespace BookShop.BLL.Service
                                Code = a.Code,
                                Condition = a.Condition,
                                StorageTerm = a.StorageTerm,
+                               ConversionPoint = a.ConversionPoint,
                                PercentReduct = a.PercentReduct,
                                AmountReduct = a.AmountReduct,
                                ReductMax = a.ReductMax,
@@ -227,9 +234,10 @@ namespace BookShop.BLL.Service
             {
                 var obj = await _promotionRepository.GetByIdAsync(id);
                 obj.Name = model.Name;
-                obj.Code = model.Code;
+                obj.Code = model.Code == null ? obj.Code : model.Code;
                 obj.Condition = model.Condition;
                 obj.StorageTerm = model.StorageTerm;
+                obj.ConversionPoint = model.ConversionPoint;
                 obj.AmountReduct = model.AmountReduct;
                 obj.PercentReduct = model.PercentReduct;
                 obj.ReductMax = model.ReductMax;

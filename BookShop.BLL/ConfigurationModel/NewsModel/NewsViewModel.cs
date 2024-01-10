@@ -14,5 +14,6 @@ namespace BookShop.BLL.ConfigurationModel.NewsModel
 		public string? Description { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public int Status { get; set; }
+		public string Img { get; set; }
 	}
 }
