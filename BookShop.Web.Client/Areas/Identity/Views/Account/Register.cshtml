@@ -35,6 +35,11 @@
         <section class="col-6 dktk">   
             <form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                @if (!string.IsNullOrEmpty(ViewBag.Mess))
+                {
+                    <p class="text-danger">@ViewBag.Mess</p>
+                }
                 <div class="form-group">
                     <label asp-for="Name" class="control-label">Họ và Tên</label>
                     <div> 

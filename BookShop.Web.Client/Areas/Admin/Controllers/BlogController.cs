@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Staff")]
     public class BlogController : Controller
     {
         private readonly INewsService _newService;
