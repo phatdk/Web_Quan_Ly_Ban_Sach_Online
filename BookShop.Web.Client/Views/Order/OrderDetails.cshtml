@@ -4,7 +4,7 @@
 
 @{
     ViewData["Title"] = "TRẠNG THÁI ĐƠN HÀNG";
-    List<OrderDetailViewModel> details = ViewBag.Details;
+    OrderDetailViewModel details = ViewBag.Details;
     int total = 0;
 }
 <style>
@@ -47,7 +47,6 @@
         justify-content:center;
     }
 </style>
-
     <div>
         <h4>TRẠNG THÁI ĐƠN HÀNG</h4>
         <hr />
@@ -162,7 +161,6 @@
     <div>
         <a asp-action="Index" asp-controller="Home">Trở lại trang chủ</a>
     </div>
-
 <script type="text/javascript">
     function checkStatus() {
         if (@Model.Status >= 3) {

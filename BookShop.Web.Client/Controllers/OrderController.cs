@@ -409,6 +409,43 @@ namespace BookShop.Web.Client.Controllers
 			}
 			else return Json(new { success = false });
 		}
+		// Xoa gio hang
+        public async Task<IActionResult> RemoveAllProduct()
+        {
+            var user = await GetCurrentUserAsync();
+            if (user != null) // co nguoi
+            {
+                var cd = (await _cartDetailService.GetByCart(user.Id)).ToList();
+                if (cd != null)
+                {
+                    foreach (var item in cd.ToList())
+                    {
+                        await _cartDetailService.Delete(item.Id);
+                    }
+                }
+                return Json(new { success = "error" + "product: " + "| user: " + user.Id });
 
-	}
+            }
+            else
+            {
+                var customCartChar = HttpContext.Session.GetString("sessionCart");
+                var customCart = new List<CartDetailViewModel>();
+                if (!string.IsNullOrEmpty(customCartChar))
+                {
+                    customCart = JsonConvert.DeserializeObject<List<CartDetailViewModel>>(customCartChar);
+                    var pc = customCart.ToList();
+                    if (pc != null)
+                    {
+                        foreach (var itr in pc.ToList())
+                        {
+                            customCart.Remove(itr);
+                            HttpContext.Session.SetString("sessionCart", JsonConvert.SerializeObject(customCart));
+
+                        }
+                    }
+                }
+            }
+            return BadRequest();
+        }
+    }
 }

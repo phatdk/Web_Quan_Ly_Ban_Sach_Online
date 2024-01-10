@@ -8,8 +8,8 @@
 <h1>Tạo mới blog</h1>
 <hr />
 <div class="row">
-    <div class="col-md-12">
-        <form asp-action="Create">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
@@ -18,14 +18,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="Content" class="control-label"></label>
-               @*  <i class="note-icon-picture" /> *@
-                <textarea id="sumernote" asp-for="Content" class="form-control"></textarea>
+                <input asp-for="Content" class="form-control" />
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Chọn ảnh: </label>
+                <input type="file" name="imageFile" accept="img/*" />
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
@@ -42,6 +45,7 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
 @{
     await Html.RenderPartialAsync("_ValidationScriptsPartial");
 }

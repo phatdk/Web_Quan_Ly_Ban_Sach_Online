@@ -14,6 +14,7 @@ namespace BookShop.BLL.Service
 	public class EvaluateService : IEvaluateService
 	{
 		private readonly IRepository<Evaluate> _evaluateRepository;
+		private readonly IRepository<Product> _productRepository;
 		private readonly IRepository<Userr> _userRepository;
 		private readonly IRepository<Order> _OrDer;
 		private readonly IRepository<OrderDetail> _OrDerDetails;
@@ -21,6 +22,7 @@ namespace BookShop.BLL.Service
 		public EvaluateService()
 		{
 			_evaluateRepository = new Repository<Evaluate>();
+			_productRepository = new Repository<Product>();
 			_userRepository = new Repository<Userr>();
 			_OrDer = new Repository<Order>();
 			_OrDerDetails = new Repository<OrderDetail>();
@@ -117,16 +119,20 @@ namespace BookShop.BLL.Service
 		{
 			var evaluates = await _evaluateRepository.GetAllAsync();
 			var users = await _userRepository.GetAllAsync();
+			var pro = await _productRepository.GetAllAsync();
 			var objlist = (from a in evaluates
-						   join b in users on a.Id_User equals b.Id into t
+						   join b in users on a.Id_User equals b.Id 
+						   join c in pro on a.Id_Product equals c.Id/*into t
 						   from b in t.DefaultIfEmpty()
-						   where a.Id_Parents == null //điều kiện: id_parents = null sẽ lấy đánh giá chính
+						   where a.Id_Parents == null //điều kiện: id_parents = null sẽ lấy đánh giá chính*/
 						   select new EvaluateViewModel()
 						   {
 							   Id = a.Id,
-							   Point = a.Point,
+                               NameUser = b.Name,
+                               Point = a.Point,
 							   Content = a.Content,
-							   NameUser = b.Name,
+							   CreatedDate = a.CreatedDate,
+							   NameProduct = c.Name,
 							   Id_Product = a.Id_Product,
 							   Id_User = a.Id_User,
 							   Id_Parents = a.Id_Parents,

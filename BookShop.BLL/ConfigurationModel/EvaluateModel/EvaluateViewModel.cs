@@ -15,6 +15,7 @@ namespace BookShop.BLL.ConfigurationModel.EvaluateModel
 
 		// join properties
 		public string NameUser { get; set; }
+		public string NameProduct { get; set; }
 
 		//foreign key
 		public int? Id_Parents { get; set; }
