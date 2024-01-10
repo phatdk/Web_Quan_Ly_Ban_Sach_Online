@@ -69,6 +69,7 @@ namespace BookShop.BLL.Service
             var images = await _imageRepository.GetAllAsync();
             var objlist = (from a in carts
                            join b in products on a.Id_Product equals b.Id
+
                            join c in images on b.Id equals c.Id_Product into imageGroup
                            select new CartDetailViewModel()
                            {
