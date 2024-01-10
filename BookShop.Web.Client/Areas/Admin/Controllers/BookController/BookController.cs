@@ -115,6 +115,10 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 		public async Task<IActionResult> Details(int id)
 		{
 			_book = await _bookService.GetById(id);
+			_book.Weight = _book.Weight / 1000;
+			_book.Widght = _book.Widght / 100;
+			_book.Length = _book.Length / 100;
+			_book.Height = _book.Height / 100;
 			return View(_book);
 		}
 
@@ -189,10 +193,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 		{
 			// Loại bỏ dấu tiếng Việt
 			string removedDiacritics = RemoveDiacritics(input);
-
 			// Chuyển thành chữ thường và loại bỏ khoảng trắng
 			string result = removedDiacritics.ToLower().Replace(" ", "");
-
 			return result;
 		}
 
@@ -283,7 +285,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 							System.IO.File.Delete(oldImagePath);
 						}
 					}
-
 					var extension = Path.GetExtension(imageFile.FileName);
 					var filename = "Book_" + convert + "_" + Guid.NewGuid().ToString() + extension;
 					var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "book", filename);
@@ -292,9 +293,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 					imageFile.CopyTo(stream);
 					book.Img = filename;
 				}
-
-				//...
-
 				if (book.Quantity == 0)
 				{
 					book.Status = 0;

@@ -33,7 +33,7 @@ namespace BookShop.DAL.Configuration
 			builder.Property(x => x.Commune).HasColumnType("varchar(100)").IsRequired(false);
 
 			builder.Property(x => x.ModifiNotes).HasColumnType("nvarchar(max)").IsRequired(false);
-			builder.Property(x => x.Description).HasColumnType("nvarchar(255)").IsRequired(false);
+			builder.Property(x => x.Description).HasColumnType("nvarchar(max)").IsRequired(false);
 
 			builder.HasOne(x => x.User).WithMany(x => x.Orders).HasForeignKey(x => x.Id_User).OnDelete(DeleteBehavior.NoAction);
 			builder.HasOne(x => x.Staff).WithMany(x => x.StaffOrders).HasForeignKey(x => x.Id_Staff).OnDelete(DeleteBehavior.NoAction);
