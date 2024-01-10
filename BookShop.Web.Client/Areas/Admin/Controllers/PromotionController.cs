@@ -66,12 +66,13 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
             }
             return View(promotion);
         }
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["LoaiKhuyenMai"] = new SelectList(_dbcontext.PromotionTypes, "Id", "Name");
             return View();
         }
-        [HttpPost]
+        [HttpPost]        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Promotion model)
         {
             if (!ModelState.IsValid)
@@ -114,6 +115,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
             return RedirectToAction("Index");
 
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
             var promotion = await _promotionService.GetById(id);
