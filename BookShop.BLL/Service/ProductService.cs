@@ -23,16 +23,21 @@ namespace BookShop.BLL.Service
 
 	public class ProductService : IProductService
 	{
-		private readonly IRepository<Product> _productRepository;
-		private readonly IRepository<Image> _imageRepository;
-		private readonly IRepository<ProductBook> _productBookRepository;
-		private readonly IRepository<Book> _bookRepository;
-		private readonly IRepository<BookAuthor> _bookAuthorRepository;
-		private readonly IRepository<BookGenre> _bookGenreRepository;
-		private readonly IRepository<CollectionBook> _collectionBookRepository;
+		private readonly IRepository<Product> _productRepository;//12
+		private readonly IRepository<Image> _imageRepository;//11
+		private readonly IRepository<ProductBook> _productBookRepository;//10
+		private readonly IRepository<Book> _bookRepository;//9
+		private readonly IRepository<BookAuthor> _bookAuthorRepository;//8
+		private readonly IRepository<BookGenre> _bookGenreRepository;//7
+		private readonly IRepository<CollectionBook> _collectionBookRepository;//6
 		private readonly IRepository<Evaluate> _CommentRepository;
-		private readonly IRepository<Genre> _genretRepository;
-		private readonly IRepository<Category> _categorytRepository;
+		private readonly IRepository<Genre> _genretRepository;//5
+		private readonly IRepository<Category> _categorytRepository;//4
+		private readonly IRepository<ProductPromotion> _productPromotionRepository;//3
+		private readonly IRepository<Category> _categoriesRepository;//2
+		private readonly IRepository<Promotion> _promotionRepository; //1
+		private readonly IRepository<PromotionType> _promotionTypeRepository; //0
+		private readonly IRepository<Author> _authorRepository; //0
 		public ProductService()
 		{
 			_productRepository = new Repository<Product>();
@@ -45,6 +50,10 @@ namespace BookShop.BLL.Service
 			_CommentRepository = new Repository<Evaluate>();
 			_genretRepository = new Repository<Genre>();
 			_categorytRepository = new Repository<Category>();
+			_promotionTypeRepository = new Repository<PromotionType>();
+			_promotionRepository = new Repository<Promotion>();
+			_productPromotionRepository = new Repository<ProductPromotion>();
+			_authorRepository = new Repository<Author>();
 
 		}
 		public async Task<CreateProductModel> Add(CreateProductModel model)
@@ -442,5 +451,35 @@ namespace BookShop.BLL.Service
 			
 		}
 
+		public async Task<List<ProductViewModel>> Search(int? gennerId, int?categoriId, int? colectionId, int?authorId,int min =0)
+		{
+			var query = (from p in (await _productRepository.GetAllAsync()).DefaultIfEmpty()
+						 join i in (await _imageRepository.GetAllAsync()).DefaultIfEmpty() on p.Id equals i.Id_Product into imgGroup
+						 join cb in (await _collectionBookRepository.GetAllAsync()).DefaultIfEmpty() on p.Id_Collection != null ? p.Id_Collection : 0 equals cb.Id
+						 join pb in (await _productBookRepository.GetAllAsync()).DefaultIfEmpty() on p.Id equals pb.Id_Product
+						 join b in (await _bookRepository.GetAllAsync()).DefaultIfEmpty() on pb.Id_Book equals b.Id
+						 join ba in (await _bookAuthorRepository.GetAllAsync()).DefaultIfEmpty() on b.Id equals ba.Id_Book
+						 join a in (await _authorRepository.GetAllAsync()).DefaultIfEmpty() on ba.Id_Author equals a.Id
+						 join bg in (await _bookGenreRepository.GetAllAsync()).DefaultIfEmpty() on b.Id equals bg.Id_Book
+						 join g in (await _genretRepository.GetAllAsync()).DefaultIfEmpty() on bg.Id_Genre equals g.Id
+						 join c in (await _categorytRepository.GetAllAsync()).DefaultIfEmpty() on g.Id_Category equals c.Id
+						 //join pp in (await _productPromotionRepository.GetAllAsync()).DefaultIfEmpty() on p.Id equals pp.Id_Product
+						 //join pr in (await _promotionRepository.GetAllAsync()).DefaultIfEmpty() on pp.Id_Promotion equals pr.Id
+						 //join prt in (await _promotionTypeRepository.GetAllAsync()).DefaultIfEmpty() on pr.Id_Type equals prt.Id
+						 where g.Id == gennerId || c.Id == categoriId || a.Id == authorId/* || cb.Id == colectionId */|| p.Price > min
+						 select new ProductViewModel()
+						 {
+							 Id = p.Id,
+							 Name = p.Name,
+							 Price = p.Price,
+							 Quantity = p.Quantity,
+							
+							 Status = p.Status,
+							 ImgUrl = imgGroup.FirstOrDefault()?.ImageUrl,
+						 }).Distinct().ToList();
+			return query;
+		}
+
+	
 	}
 }
