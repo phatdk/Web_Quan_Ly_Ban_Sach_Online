@@ -13,6 +13,6 @@ namespace BookShop.BLL.IService
         public Task<List<WishListViewModel>> Timkiem(int userId ,string keyword);
         public Task<bool> GetByUserId(int userId, int bookId);
 		public Task<bool> Add(CreateWishListModel model);
-		public Task<bool> Delete(int id);
+		public Task<bool> Delete(int id_user,int id_product);
 	}
 }

@@ -17,6 +17,7 @@ namespace BookShop.Web.Client.Controllers
 		private readonly ILogger<HomeController> _logger;
 
 		private List<ProductViewModel> _products;
+		private List<WishListViewModel> _wishList;
 		private ProductViewModel _product;
 		private readonly IProductService _productService;
 		private readonly IWishListService _WishListService;
@@ -25,6 +26,7 @@ namespace BookShop.Web.Client.Controllers
 		public HomeController(ILogger<HomeController> logger, IProductService productService, IWishListService wishListService, UserManager<Userr> userManager)
 		{
 			_logger = logger;
+			_wishList = new List<WishListViewModel>();
 			_products = new List<ProductViewModel>();
 			_product = new ProductViewModel();
 			_productService = productService;
@@ -41,13 +43,22 @@ namespace BookShop.Web.Client.Controllers
 			_products = await _productService.GetDanhMuc("Cổ điển");
 
 			var product = _products.OrderByDescending(c => c.CreatedDate).ToList();
-			return Json(new { data = product });
+			var top10Products = product.Take(10).ToList();
+			return Json(new { data = top10Products });
 		}
 		public async Task<IActionResult> DanhSachSanPham()
 		{
 			var Products = await _productService.GetAll();
 			var top10Products = Products.Take(10).ToList();
 
+			return Json(new { data = top10Products });
+		}
+		public async Task<IActionResult> NuoiDayCon()
+		{
+			_products = await _productService.GetDanhMuc("Nuôi dạy con");
+
+			var product = _products.OrderBy(c => c.CreatedDate).ToList();
+			var top10Products = product.Take(7).ToList();
 			return Json(new { data = top10Products });
 		}
 		public async Task<IActionResult> ChiTietSanPham(int id)
@@ -102,16 +113,13 @@ namespace BookShop.Web.Client.Controllers
 			}
 		}
 
-		[HttpPost]
+		
 		public async Task<IActionResult> XoaYeuThich(int id)
 		{
-			var delete = await _WishListService.Delete(id);
+			var user = await GetCurrentUserAsync();
+			var delete = await _WishListService.Delete(user.Id, id);
 			if (delete)
 			{
-				Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
-				Response.Headers["Pragma"] = "no-cache";
-				Response.Headers["Expires"] = "0";
-
 				return Json(new { success = true });
 			}
 			return Json(new { success = false });
@@ -128,15 +136,24 @@ namespace BookShop.Web.Client.Controllers
 
 		public async Task<IActionResult> Danhsachyeuthich()
 		{
-			var user = await GetCurrentUserAsync();
-			var obj = await _WishListService.GetByUser(user.Id);
-			if (obj != null)
-			{
-				return View(obj);
-			}
 			return View();
 		}
+		[HttpGet]
+		public async Task<IActionResult> Getdata(int page, string? keyWord)
+		{
+            var user = await GetCurrentUserAsync();
+            _wishList = await _WishListService.GetByUser(user.Id);
+			if (keyWord != null)
+			{
+				_wishList = _wishList.Where(c => c.Name.Contains(keyWord)).ToList();
+			}
 
+			var listwish = _wishList.OrderByDescending(c => c.CreatedDate).ToList();
+			int pageSize = 10;
+			double totalPage = (double)listwish.Count / pageSize;
+			listwish = listwish.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+			return Json(new { data = listwish, page = page, max = Math.Ceiling(totalPage) });
+		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()

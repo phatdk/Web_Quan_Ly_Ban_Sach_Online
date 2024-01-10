@@ -13,27 +13,21 @@
 {
 
     <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
-        <div class="nav-link text-dark">
+        <div class="text-dark">
             <div class="dropdown">
                 <h6 class="text-dark dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                    Xin chào @((await UserManager.GetUserAsync(User)).UserName)!
+                    Xin chào <br> @((await UserManager.GetUserAsync(User)).UserName)!
                 </h6>
                 <div class="dropdown-menu">
 
                     <a class="dropdown-item" asp-area="Identity" asp-controller="Manage" asp-action="Index" title="">
                         Thông tin tài khoản
                     </a>
+                   
                     <div role="separator" class="dropdown-divider"></div>
                     <a class="dropdown-item" href="#">
                         Trạng thái đơn hàng
                     </a>
-                    @if (isAdmin)
-                    {
-                        <div role="separator" class="dropdown-divider"></div>
-                        <a class="dropdown-item" asp-area="Admin" asp-controller="Blog" asp-action="Index">
-                            Trang admin
-                        </a>
-                    }
                     <div role="separator" class="dropdown-divider"></div>
                     <button type="submit" class="dropdown-item">
                         Đăng xuất

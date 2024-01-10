@@ -3,6 +3,8 @@ using BookShop.BLL.ConfigurationModel.UserModel;
 using BookShop.BLL.IService;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Repositopy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,14 +22,31 @@ namespace BookShop.BLL.Service
 		protected readonly IRepository<Cart> _CartRepository;
 		protected readonly IRepository<WalletPoint> _WalletPointRepository;
 		protected readonly IRepository<WishList> _WishListRepository;
-		public UserService()
+		private readonly UserManager<Userr> _UserManager;
+        public UserService(UserManager<Userr> userManager = null)
+        {
+            _WishListRepository = new Repository<WishList>();
+            _CartRepository = new Repository<Cart>();
+            _Userrepository = new Repository<Userr>();
+            _WalletPointRepository = new Repository<WalletPoint>();
+            _UserManager = userManager;
+        }
+		
+		public async Task<List<string>> GetRoleUserById(int Id)
 		{
-			_WishListRepository = new Repository<WishList>();
-			_CartRepository = new Repository<Cart>();
-			_Userrepository = new Repository<Userr>();
-			_WalletPointRepository = new Repository<WalletPoint>();
-		}
-		public async Task<bool> Add(CreateUserModel requet)
+			var user = await _UserManager.Users.FirstOrDefaultAsync(x => x.Id == Id);
+			if (user==null)
+			{
+				return null;
+			}
+			var RoleUSer=await _UserManager.GetRolesAsync(user);
+            if (RoleUSer.Count <0)
+            {
+                return null;
+            }
+			return RoleUSer.ToList();
+        }
+        public async Task<bool> Add(CreateUserModel requet)
 		{
 			try
 			{

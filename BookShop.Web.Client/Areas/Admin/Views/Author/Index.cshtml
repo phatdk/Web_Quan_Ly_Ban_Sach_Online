@@ -86,7 +86,7 @@
 						'<td class="text-center anh"><img src=/img/author/'+ item.img +' alt='+ item.name +' title='+item.name+' / > </td>' +
 						'<td class="text-center"><label>' + item.name + '</label></td>' +
 						'<td class="text-center"><label>' + formatDate(item.createdDate) + '</label></td>' +
-						'<td class="text-center"><label>' + item.status + '</label></td>' +
+						'<td class="text-center"><label>' + (item.status === 1 ? 'Hoạt động' : 'Không hoạt động') + '</label></td>' +
 						'<td class="text-center"><button class="btn btn-warning" onclick="getDetail(' + item.id + ')">Xem</button> <button class="btn btn-primary" onclick="update(' + item.id + ')">Sửa</button></td>' +
 						'</tr>';
 

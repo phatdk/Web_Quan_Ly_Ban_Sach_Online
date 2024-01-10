@@ -1,19 +1,18 @@
-﻿@*
+﻿@using BookShop.BLL.ConfigurationModel.OrderModel
+@using BookShop.BLL.ConfigurationModel.ProductModel
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+   
 }
-@model IEnumerable<BookShop.BLL.ConfigurationModel.OrderModel.OrderViewModel>
 
 <!DOCTYPE html>
 <!-- Coding by CodingNepal | www.codingnepalweb.com -->
 <html lang="en" dir="ltr">
-    @{
-    Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
-}
 <style>
     /* Googlefont Poppins CDN Link */
-    * {
+    *{
         margin: 0;
         padding: 0;
         box-sizing: border-box;
@@ -61,7 +60,7 @@
 
     .home-content1 .box .number {
         display: inline-block;
-        font-size: 35px;
+        font-size: 25px;
         margin-top: -6px;
         font-weight: 500;
     }
@@ -87,15 +86,11 @@
         background: #e87d88;
     }
 
-    .home-content1 .box .indicator .text {
-        font-size: 12px;
-    }
-
     .home-content1 .box .cart {
         display: inline-block;
         font-size: 32px;
         height: 50px;
-        width: 50px;
+        width: 70px;
         background: #cce5ff;
         line-height: 50px;
         text-align: center;
@@ -132,7 +127,7 @@
 
         /* left box */
         .home-content1 .sales-boxes .recent-sales {
-            width: 65%;
+            width: 100%;
             background: #fff;
             padding: 20px 30px;
             margin: 0 20px;
@@ -189,44 +184,6 @@
             .sales-boxes .box .button a:hover {
                 background: #0d3073;
             }
-    /* Right box */
-    .home-content1 .sales-boxes .top-sales {
-        width: 35%;
-        background: #fff;
-        padding: 20px 30px;
-        margin: 0 20px 0 0;
-        border-radius: 12px;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .sales-boxes .top-sales li {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin: 10px 0;
-    }
-
-        .sales-boxes .top-sales li a img {
-            height: 40px;
-            width: 40px;
-            object-fit: cover;
-            border-radius: 12px;
-            margin-right: 10px;
-            background: #333;
-        }
-
-        .sales-boxes .top-sales li a {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-        }
-
-        .sales-boxes .top-sales li .product,
-        .price {
-            font-size: 17px;
-            font-weight: 400;
-            color: #333;
-        }
 </style>
 <head>
     <meta charset="UTF-8">
@@ -243,44 +200,30 @@
         <div class="overview-boxes">
             <div class="box">
                 <div class="right-side">
-                    <div class="box-topic">Total Order</div>
-                    <div class="number">40,876</div>
-                    <div class="indicator">
-                        <i class='bx bx-up-arrow-alt'></i>
-                        <span class="text">Up from yesterday</span>
+                    <div class="box-topic">Doanh thu hôm nay</div>
+                    <div class="number"> @await Html.PartialAsync("GetTotalDateRevenue")</div>
+                    <div class="indicator">    
                     </div>
                 </div>
                 <i class='bx bx-cart-alt cart'></i>
             </div>
             <div class="box">
                 <div class="right-side">
-                    <div class="box-topic">Total Sales</div>
-                    <div class="number">38,876</div>
+                    <div class="box-topic">Doanh thu Tháng nay</div>
+                    <div class="number"> @await Html.PartialAsync("GetTotalRevenueByMonth")</div>
                     <div class="indicator">
-                        <i class='bx bx-up-arrow-alt'></i>
-                        <span class="text">Up from yesterday</span>
                     </div>
                 </div>
                 <i class='bx bxs-cart-add cart two'></i>
             </div>
+           
             <div class="box">
                 <div class="right-side">
-                    <div class="box-topic">Total Profit</div>
-                    <div class="number">$12,876</div>
+                    <div class="box-topic">Toàn bộ doanh thu</div>
+                    <div class="number">@await Html.PartialAsync("GetTotalRevenue")</div>
                     <div class="indicator">
-                        <i class='bx bx-up-arrow-alt'></i>
-                        <span class="text">Up from yesterday</span>
-                    </div>
-                </div>
-                <i class='bx bx-cart cart three'></i>
-            </div>
-            <div class="box">
-                <div class="right-side">
-                    <div class="box-topic">Total Return</div>
-                    <div class="number">11,086</div>
-                    <div class="indicator">
-                        <i class='bx bx-down-arrow-alt down'></i>
-                        <span class="text">Down From Today</span>
+                       @*  <i class='bx bx-down-arrow-alt down'></i>
+                        <span class="text">Down From Today</span> *@
                     </div>
                 </div>
                 <i class='bx bxs-cart-download cart four'></i>
@@ -289,104 +232,58 @@
 
         <div class="sales-boxes">
             <div class="recent-sales box">
-                <div class="title">Recent Sales</div>
+                <div class="title">Top Selling</div>
                 <div class="sales-details">
                     <ul class="details">
-                        <li class="topic">Date</li>
-                        @if (ViewBag.Top5 != null && ViewBag.Top5.Any())
+                        <li class="topic">Tên Sản Phẩm</li>
+                        @foreach (var product in ViewBag.ProductList)
                         {
-                            <div>
-                                <!-- Hiển thị dữ liệu từ ViewBag -->
-                                @foreach (var productInfo in ViewBag.Top5)
-                                {
-                                    <p>@productInfo.Product.Name - Quantity: @productInfo.TotalQuantity</p>
-                                }
-                            </div>
-                        }
-                        else
-                        {
-                            <p>No data available.</p>
+                            <p>@product.Name</p>
                         }
                     </ul>
                     <ul class="details">
-                        <li class="topic">Customer</li>
-                        @if (ViewBag.Top5 != null && ViewBag.Top5.Any())
+                        <li class="topic">Giá</li>
+                        @foreach (var product in ViewBag.ProductList)
                         {
-                            <div>
-                                <!-- Hiển thị dữ liệu từ ViewBag -->
-                                @foreach (var productInfo in ViewBag.Top5)
-                                {
-                                    <p>@productInfo.Product.Name - Quantity: @productInfo.TotalQuantity</p>
-                                }
-                            </div>
-                        }
-                        else
-                        {
-                            <p>No data available.</p>
+                            <p>@product.Price</p>
                         }
                     </ul>
                     <ul class="details">
-                        <li class="topic">Sales</li>
-                        @if (ViewBag.Top5 != null && ViewBag.Top5.Any())
+                        <li class="topic">Số Lượng đã bán</li>
+                        @foreach (var product in ViewBag.ProductList)
                         {
-                            <div>
-                                <!-- Hiển thị dữ liệu từ ViewBag -->
-                                @foreach (var productInfo in ViewBag.Top5)
-                                {
-                                    <p>@productInfo.Name - Quantity: @productInfo.TotalQuantity</p>
-                                }
-                            </div>
-                        }
-                        else
-                        {
-                            <p>No data available.</p>
+                            <p>@product.QuantitySold</p>
                         }
                     </ul>
                     <ul class="details">
-                        <li class="topic">Total</li>
-                        @if (ViewBag.Top5 != null && ViewBag.Top5.Any())
+                        <li class="topic">Tổng</li>
+                        @foreach (var product in ViewBag.ProductList)
                         {
-                            <div>
-                                <!-- Hiển thị dữ liệu từ ViewBag -->
-                                @foreach (var productInfo in ViewBag.Top5)
-                                {
-                                    <p>@productInfo.Product.Name - Quantity: @productInfo.TotalQuantity</p>
-                                }
-                            </div>
+                            <p>@product.TotalRevenue</p>
                         }
-                        else
-                        {
-                            <p>No data available.</p>
-                        }
+                    </ul>
+                    <ul class="details">
+                        <li class="topic">Ảnh</li>
+                        <div>Null Image</div>
                     </ul>
                 </div>
-                <div class="button">
-                    <a href="#">See All</a>
-                </div>
+              
             </div>
-            <div class="top-sales box">
-                <div class="title">Top Seling Product</div>
-                @if (ViewBag.Top5 != null && ViewBag.Top5.Any())
-                {
-                    <div>
-                        <!-- Hiển thị dữ liệu từ ViewBag -->
-                        @foreach (var productInfo in ViewBag.Top5)
-                        {
-                            <p>@productInfo.Orders.Email - Quantity: @productInfo.TotalQuantity</p>
-                        }
-                    </div>
-                }
-                else
-                {
-                    <p>No data available.</p>
-                }
+            
+        </div>
+        <p>         </p>
+
+        <div class="sales-boxes">
+            <div class="recent-sales box">
+                @await Html.PartialAsync("Chart")
             </div>
         </div>
     </div>
-    @await Html.PartialAsync("_product");
-    <button asp-action="export" asp-controller="Gembox" id="myButton">Download File Thong ke<</button>
+    
+    <button id="myButton"><a asp-action="export" asp-controller="Gembox" download="D:\Study File\DATN\BookShop.Web.Client\wwwroot\exel\demothongke.xlsx">Download File Thong ke</a></button>
    
 </body>
+</html>
 <script>
     // Lấy tham chiếu đến nút bằng cách sử dụng phương thức querySelector
     var myButton = document.querySelector('#myButton');
@@ -397,4 +294,3 @@
         alert('Đã lưu');
     });
 </script>
-</html> 
