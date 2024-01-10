@@ -102,12 +102,13 @@
             display:flex;
         gap:20px;
         }
-        .menu-home ul
-        {
+        .menu-home ul {
+            display:grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
             margin-bottom: 0;
             padding-left:0;
             list-style:none;
-            display:flex;
+           
             gap:25px;
         }
 
@@ -136,17 +137,59 @@
                 padding-left: 10px;
             }
 
-            .search-bar a {
+            .search-bar a.docquyen {
+                border-radius: 5px;
+                text-align: center;
+                background: red;
+                width: 40px;
                 position: absolute;
                 top: 50%;
                 right: 10px;
                 transform: translateY(-50%);
                 cursor: pointer;
                 font-size: 18px !important;
-                color: #333 !important;
+                color: white !important;
                 text-decoration: none !important;
                 border-bottom: 0 !important;
             }
+
+        .list-dm .category.hide{
+            display:none;
+        }
+
+        .list-dm .category.show{
+            position:absolute;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            right: -444px;
+            margin-top: 20px;
+            width: 1150px;
+            z-index: 100;
+            background: white;
+        }
+
+            .list-dm .category.show span{
+                font-weight: bold;
+                font-size: 1.5em;
+                color: #7A7E7F;
+                text-align: left;
+            }
+
+            .list-dm .category.show a {
+                font-weight: 500;
+                margin-left: 20px;
+                text-align: start;
+                position: relative;
+            }
+
+                .list-dm .category.show a:hover{
+                    color: #C92127 !important;
+                }
+      ul.category{
+          position:absolute;
+
+      }
     </style>
 </head>
 <body class="bb">
@@ -173,9 +216,16 @@
 
 					<div class="search-bar">
 						<div class="list-dm" style="margin-right:20px">
-                            <i class="fas fa-bars" style="font-size:30px; color:#999999"></i>
+                            <i class="fas fa-bars" onclick="showcate()" style="font-size:30px; color:#999999"></i>
+							<div id="hienthidanhmuc" class="category hide">
+                                <span>Danh Mục Sách</span>
+                                <ul id="listcate">
+
+								</ul>
+                            </div>
+                           
 						</div>
-                        <a href="javascript:"> <i class="fa fa-search"></i></a>
+                        <a class="docquyen" href="javascript:"> <i class="fa fa-search"></i></a>
                         <input type="text" placeholder="Tìm kiếm">
                     </div>
                </div>
@@ -224,7 +274,6 @@
                </div>
            </div>
        </div>
-
     </header>
     <div class="container">
         <main role="main" style="margin-top:20px" class="pb-3">
@@ -295,6 +344,49 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("ListDanhMuc", "Home")',
+                type: 'GET',
+                success: function (data) {
+                    console.log(data);
+                    var listcate = $("#listcate");
+                    listcate.empty();
+                    data.data.forEach(function (item) {
+                        var categoryRow = 
+                            '<li>' +
+                            '<a onclick="searchnangcao(' + item.id + ')">' + item.name + '</a>'+
+                            '</li>';
+                        listcate.append(categoryRow);
+                    });
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+
+        function searchnangcao(id) {
+            var url = "@Url.Action("Index","SearchAndFilter")?id=" + id;
+            window.location.href = url;
+        }
+    function showcate(){
+            var showmenu = document.getElementById('hienthidanhmuc');
+          
+            if (showmenu.classList.contains('hide')) {
+                showmenu.classList.remove('hide');
+                showmenu.classList.add('show');
+            } else {
+                showmenu.classList.remove('show');
+                showmenu.classList.add('hide');
+            }
+    }
+    </script>
+
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

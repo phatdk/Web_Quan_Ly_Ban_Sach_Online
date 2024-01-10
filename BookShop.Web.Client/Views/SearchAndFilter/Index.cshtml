@@ -1,4 +1,14 @@
-﻿@model IEnumerable<BookShop.BLL.ConfigurationModel.ProductModel.ProductViewModel>
+﻿@using BookShop.BLL.ConfigurationModel.AuthorModel;
+@using BookShop.BLL.ConfigurationModel.GenreModel;
+@using BookShop.BLL.ConfigurationModel.SupplierModel;
+
+
+
+@{
+	List<AuthorModel> authorList = ViewBag.Author;
+	List<GenreModel> genreList = ViewBag.Genre;
+	List<SupplierViewModel> supplierList = ViewBag.Supplier;
+}
 <style>
 	.filter-content {
 		display: grid;
@@ -10,7 +20,7 @@
 	.filter_left {
 		grid-column: 1/2;
 		display: block;
-		gap:10px;
+		gap: 10px;
 		background-color: white;
 		font-family: "Poppins", sans-serif;
 	}
@@ -20,14 +30,15 @@
 		grid-column: 2/5;
 		display: grid;
 		padding: 0 10px;
-		grid-template-columns: 1fr 1fr 1fr 1fr;
+		position: relative;
 		gap: 10px;
 	}
-	.card-title-right{
-		grid-column:1/5;
+
+	.card-title-right {
+		grid-column: 1/5;
 		grid-row: 1/1;
 	}
-	
+
 
 	.product-image {
 		width: 100%;
@@ -48,12 +59,12 @@
 		justify-content: space-between;
 	}
 
-	.card-title-left p{
+	.card-title-left p {
 		margin-top: inherit;
 		margin-bottom: inherit;
-		
 	}
-	.card-title-left  {
+
+	.card-title-left {
 		display: flex;
 		line-height: 60px;
 		font-size: 20px;
@@ -62,24 +73,95 @@
 		text-align: center;
 		color: #C92127;
 		border-bottom: 2px solid #f6f6f6;
-		
 	}
+
 	.card-title {
 		color: black;
-		justify-content:start;
-		font-size : 16px;
+		justify-content: start;
+		font-size: 16px;
 		font-weight: 600;
-		display:block;
+		display: block;
 	}
+
 	li {
-		list-style:none;
+		font-weight: 500;
+		font-size: 14px;
+		
+		list-style: none;
 	}
-	ul{
-		font-weight:100;
-		font-size:13px;
+
+	ul {
+		padding-left: 0;
+		font-weight: 100;
+		font-size: 13px;
 	}
-	.author,.genre,.category,.supplier{
+
+	.author, .genre, .category, .supplier {
 		border-bottom: 2px solid #f6f6f6;
+	}
+
+	.filter-content .search-bar {
+		justify-content: center;
+		position: absolute;
+		top: 10px;
+		display: flex;
+	}
+
+	.fl {
+		margin-top: 80px;
+		display: grid;
+		grid-template-columns: repeat(4,1fr);
+		gap: 5px;
+	}
+
+	.km-sp {
+		font-weight: 700;
+		font-size: 14px;
+		justify-content: center;
+		flex-direction: column;
+		text-align: center;
+		display: flex;
+		height: 30px;
+		width: 40px;
+		color: white;
+		border-radius: 6px;
+		background-color: #C92127;
+	}
+
+	.filter .testsp p {
+		font-size: 14px;
+		font-weight: 700;
+	}
+
+	.filter .giaban {
+		align-items: center;
+		display: flex;
+		gap: 10px;
+	}
+
+		.filter .giaban p {
+			color: #C92127;
+			margin-bottom: 0;
+		}
+
+	.ttsp {
+		margin-top: 10px;
+		font-size: 14px;
+		font-weight: 700;
+		min-height: 42px;
+		line-height: 1.4;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		display: -webkit-box;
+	}
+
+	.filter .testsp:hover {
+		box-shadow: 0px 0px 4px 2px rgba(0,0,0,0.1);
+	}
+
+	.filter .testsp {
+		padding: 10px;
 	}
 </style>
 <div class="filter">
@@ -91,29 +173,34 @@
 						LỌC THEO
 					</p>
 				</div>
-				<div class="author" >
+				<div class="author">
 					<div class="card-title">
 						<p>
 							Tác giả
 						</p>
 						<ul>
-							<li>
-								<input type="checkbox"/> duy 
-							</li>
-							<li>
-								<input type="checkbox" /> duy
-							</li>
-							<li>
-								<input type="checkbox" /> duy
-							</li>
+							@foreach (var item in authorList)
+							{
+								<li>
+									<input onclick="tacgiasearch(this)" value="@item.Id" type="checkbox" /> @item.Name
+								</li>
+							}
 						</ul>
 					</div>
 				</div>
-				<div class="genre" >
+				<div class="genre">
 					<div class="card-title">
 						<p>
-							Danh mục
+							Thể loại
 						</p>
+						<ul>
+							@foreach (var item in genreList)
+							{
+								<li>
+									<input onclick="theloaisearch(this)" value="@item.Id" type="checkbox" /> @item.Name
+								</li>
+							}
+						</ul>
 					</div>
 				</div>
 				<div class="category">
@@ -123,61 +210,140 @@
 						</p>
 					</div>
 				</div>
-				<div class="supplier" >
+				<div class="supplier">
 					<div class="card-title">
 						<p>
 							Nhà cung cấp
 						</p>
 					</div>
 				</div>
-			</div>
-			<div class="filter_right">
-				<div class="card-title-right">
-					KẾT QUẢ TÌM KIẾM VỚI: (@Model.Where(c=>c.Status == 1).Count() KẾT QUẢ)
-				</div>
-				@foreach (var item in Model.Where(c=>c.Status == 1))
-				{
-					<div class="product-box">
-						<div class="product-image">
-							<img src="@item.imageViewModels.FirstOrDefault().ImageUrl" alt="ảnh" title="@item.Name">
-						</div>
-						<div class="product-content">
-							<p>
-								@item.Name
-							</p>
-							<p>
-								@item.Price
-							</p>
+				<div class="price">
+					<div class="card-title">
+						<p>
+							giá
+						</p>
+						<div id="price-range">
+							<label for="price">Chọn giá tiền:</label>
+							<input type="range" id="price" name="price" min="0" max="10000000" value="0" step="100" oninput="updatePrice(event)">
+							<p id="selected-price">Giá tiền: <span id="price-value">0</span> VND</p>
 						</div>
 					</div>
-				}
+				</div>
 			</div>
+			<div class="filter_right">
+				<div class="search-bar">
+					@*<a><i class="fa fa-search" style="font-size:30px" onclick="findOrder()"></i></a>*@
+					<input id="keyWordFind" oninput="searchOnEnter(event)" type="text" placeholder="Tìm kiếm">
+				</div>
 
+				<div class="fl" id="listcategory">
+				</div>
+				<div style="text-align:center" id="buttonContainer"></div>
+			</div>
 
 		</div>
 	</div>
 </div>
+<script src="~/js/site.js"></script>
 <script>
-	$(document).ready(function () {
-		$.ajax({
-			url: '/Genre/SearchAndFilter',
-			type: 'GET',
-			success: function (data) {
-				$('.card-title ul').empty();
+	function ChiTietSanPham(id) {
+		var url = "@Url.Action("ChiTietSanPham", "Home")?id=" + id;
+		window.location.href = url;
+	}
+	function loadData(pageIndex) {
+		var keyWord = document.getElementById("keyWordFind").value;
+		var price = document.getElementById("price").value;
+		
+		console.log(price);
+		var author = authorIdList.join(',');
+		var genner = gennerIdList.join(',');
+		console.log(author);
+		console.log(genner);
 
-				$.each(data, function (index, author) {
-					var listItem = $('<li>').append(
-						$('<input>').attr({
-							type: 'checkbox',
-							value: author.name
-								console.log(author.name)
-						}),
-						console.log(author.name)
-						author.name 
-					);
-					$('.card-title ul').append(listItem);
+		$.ajax({
+			url: '@Url.Action("Getdata", "SearchAndFilter")',
+			type: 'GET',
+			data: { page: pageIndex, keyWord: keyWord, authorId: author, gennerId: genner, min: price },
+
+			success: function (data) {
+				console.log(data);
+				var listcategory = $("#listcategory");
+				listcategory.empty();
+				data.data.forEach(function (item) {
+					var categoryRow =
+						'<div class="testsp" onclick="ChiTietSanPham(' + item.id + ')">' +
+						'<div class="product-image">' +
+						'<div class="flashsale-image-container">' +
+						'<img src="' + item.imgUrl + '">' +
+						'</div>' +
+						'</div>' +
+						'<div class="ttsp">' +
+						'<a>' + item.name + '</a>' +
+
+						'</div>' +
+						'<div class="giaban">' + '<p>' +
+						formatPrice(item.newPrice) + '</p>';
+					if (item.saleoff > 0) {
+						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
+							'</div class="giabandau">' +
+							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>'
+						'</div>';
+					}
+
+
+					listcategory.append(categoryRow);
 				});
+				createPagingButtons(1, data.max, data.page);
+			},
+			error: function (error) {
+				console.log(error);
 			}
 		});
+	};
+	$(document).ready(function () {
+		loadData(1);
 	});
+	function searchOnEnter(event) {
+		loadData(1);
+
+	}
+
+	function formatPrice(price) {
+		const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+		return formattedPrice + ' đ';
+	}
+	function updatePrice(event) {
+		loadData(1);
+		var priceSlider = document.getElementById("price");
+		var priceValue = document.getElementById("price-value");
+		priceValue.innerHTML = formatPrice(priceSlider.value);
+
+	}
+
+
+	var authorIdList = []
+	function tacgiasearch(elment) {
+		if (elment.checked) {
+			authorIdList.push(elment.value)
+		} else {
+			var indexToRemove = authorIdList.indexOf(elment.value);
+			if (indexToRemove !== -1) {
+				authorIdList.splice(indexToRemove, 1);
+			} 
+		}
+		loadData(1, '');
+	}
+	var gennerIdList = []
+	function theloaisearch(elment) {
+		if (elment.checked) {
+			gennerIdList.push(elment.value)
+		} else {
+			var indexToRemove = gennerIdList.indexOf(elment.value);
+			if (indexToRemove !== -1) {
+				gennerIdList.splice(indexToRemove, 1);
+			}
+		}
+		loadData(1, '');
+	}
+
 </script>

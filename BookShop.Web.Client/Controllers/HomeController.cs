@@ -21,10 +21,12 @@ namespace BookShop.Web.Client.Controllers
 		private ProductViewModel _product;
 		private readonly IProductService _productService;
 		private readonly IWishListService _WishListService;
+		private readonly ICategoryService _categoryService;
 		private readonly UserManager<Userr> _userManager;
 
-		public HomeController(ILogger<HomeController> logger, IProductService productService, IWishListService wishListService, UserManager<Userr> userManager)
+		public HomeController(ILogger<HomeController> logger, IProductService productService, IWishListService wishListService, UserManager<Userr> userManager,ICategoryService categoryService)
 		{
+			_categoryService = categoryService;
 			_logger = logger;
 			_wishList = new List<WishListViewModel>();
 			_products = new List<ProductViewModel>();
@@ -36,6 +38,7 @@ namespace BookShop.Web.Client.Controllers
 
 		public async Task<IActionResult> Index()
 		{
+
 			return View();
 		}
 		public async Task<IActionResult> SachMoi()
@@ -86,7 +89,7 @@ namespace BookShop.Web.Client.Controllers
 
 			if (user == null)
 			{
-				return View();
+				return Json(new { success = false, errorMessage = "Bạn cần đăng nhập để thêm sẩn phẩm vào danh sách yêu thích" });
 			}
 			else
 			{
@@ -102,14 +105,14 @@ namespace BookShop.Web.Client.Controllers
 					try
 					{
 						await _WishListService.Add(wishlist);
-						return Json(new { success = true });
+						return Json(new { success = true , errorMessage = "Đã thêm sản phẩm vào danh sách yêu thích" } );
 					}
 					catch (Exception ex)
 					{
-						return Json(new { success = false });
+						return Json(new { success = false , });
 					}
 				}
-				return Json(new { success = false });
+				return Json(new { success = false, errorMessage = "Sản phẩm đã có trong danh sách yêu thích" });
 			}
 		}
 
@@ -154,7 +157,14 @@ namespace BookShop.Web.Client.Controllers
 			listwish = listwish.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 			return Json(new { data = listwish, page = page, max = Math.Ceiling(totalPage) });
 		}
-
+		public async Task<IActionResult> ListDanhMuc()
+		{
+			
+			var cate = (await _categoryService.GetAll()).Where(c=>c.Status ==1);
+			var cateList = cate.OrderByDescending(c => c.CreatedDate).ToList();
+			
+			return Json(new { data = cateList});
+		}
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
 		{
