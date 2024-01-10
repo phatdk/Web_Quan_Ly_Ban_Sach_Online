@@ -23,7 +23,7 @@ namespace BookShop.BLL.ConfigurationModel.ProductModel
 		public int? CollectionId { get; set; }
 		// join
 		public string? CollectionName { get; set; }
-		public string ImgUrl { get; set; }
+		public string? ImgUrl { get; set; }
 		public int BuyQuantity { get; set; }
 		public List<BookViewModel> bookViewModels { get; set; }
 		public List<ImageViewModel> imageViewModels { get; set; }

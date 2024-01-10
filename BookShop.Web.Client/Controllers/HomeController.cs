@@ -36,6 +36,7 @@ namespace BookShop.Web.Client.Controllers
 
 		public async Task<IActionResult> Index()
 		{
+
 			return View();
 		}
 		public async Task<IActionResult> SachMoi()

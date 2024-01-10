@@ -40,15 +40,15 @@ namespace BookShop.Web.Client.Services
 		public async Task<List<ProductViewModel>> FilterProducts(int authorId, int genreId, int collectionId)
 		{
 			var list1 = new List<ProductViewModel>(); // bo loc kep
-			if (collectionId > 0) list1 = await _productService.GetByCollection(collectionId);
-			else if (genreId > 0 && authorId > 0)
+			if (genreId > 0 && authorId > 0)
 			{
 				var genreFilter = await _productService.GetByGenre(genreId);
 				var authorFilter = await _productService.GetByAuthor(authorId);
 				list1 = genreFilter.Intersect(authorFilter).ToList();
 			}
-			else if (authorId > 0) list1 = await _productService.GetByCollection(collectionId);
+			else if (authorId > 0) list1 = await _productService.GetByAuthor(collectionId);
 			else if (genreId > 0) list1 = await _productService.GetByGenre(genreId);
+			if (collectionId > 0) list1 = list1.Where(x=>x.CollectionId == collectionId).ToList();
 			return list1;
 		}
 	}

@@ -196,6 +196,101 @@
 <script src="~/js/web/checkout.js"></script>
 
 <script type="text/javascript">
+	function formatCurrency(amount) {
+		return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+	};
+
+	function getListPromotions(id) {
+		$.ajax({
+			url: '/Order/GetPromotionByUser',
+			type: 'GET',
+			data: { id: id },
+			success: function (data) {
+				var userPromotionList = $("#selectPromotion");
+				data.forEach(function (item) {
+					var promotionRow = '<option value="' + item.id + '">' + item.name + '</option>';
+					userPromotionList.append(promotionRow);
+					userPromotionList.trigger('chosen:updated');
+				});
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	};
+
+	var total = 0;
+	var totalReduct = 0;
+	var totalPromotion = 0;
+	function promotionSelected(id) {
+		if (id != null && id != 0) {
+			$.ajax({
+				url: '/Order/GetPromotion',
+				type: 'GET',
+				data: { listId: id, total: @Model.Total },
+				success: function (data) {
+					totalPromotion = data.totalReduct;
+					totalReduct = totalPromotion + totalPoint;
+					document.getElementById('totalReduct').innerHTML = formatCurrency(totalReduct);
+					calculateShipping();
+				},
+			});
+		}
+		else {
+			totalPromotion = 0;
+			totalReduct = totalPromotion + totalPoint;
+			document.getElementById('totalReduct').innerHTML = formatCurrency(totalReduct);
+			calculateShipping();
+		}
+	}
+
+	var totalUserPoint = 0;
+	function getUser(id) {
+		$.ajax({
+			url: '/Order/GetUser',
+			type: 'GET',
+			data: { id: id },
+			success: function (data) {
+				totalUserPoint = data.point;
+				document.getElementById('pointUsed').setAttribute('max', totalUserPoint);
+				document.getElementById('totalUserPoint').innerHTML = totalUserPoint;
+			}
+		});
+	};
+
+	var totalPoint = 0;
+	function usePoint(total) {
+		var intParse = parseInt(total);
+		if (@Model.Id_User != null && @Model.Id_User != 0) {
+			if (intParse >= 0 && intParse <= totalUserPoint) {
+				totalPoint = intParse * 1000;
+				totalReduct = totalPromotion + totalPoint;
+				document.getElementById('totalReduct').innerHTML = formatCurrency(totalReduct);
+			}
+			else if (intParse > totalUserPoint) {
+				$('#pointUsed').val(totalUserPoint);
+				totalPoint = totalUserPoint * 1000;
+				totalReduct = totalPromotion + totalPoint;
+				document.getElementById('totalReduct').innerHTML = formatCurrency(totalReduct);
+			}
+			else {
+				$('#pointUsed').val(0);
+				totalPoint = 0;
+				totalReduct = totalPromotion + totalPoint;
+				document.getElementById('totalReduct').innerHTML = formatCurrency(totalReduct);
+			}
+		}
+	}
+
+	$(document).ready(function () {
+		var element = document.getElementById('selectPromotion');
+		element.removeAttribute("multiple");
+		if (@Model.Id_User !== 0) {
+			getUser(@Model.Id_User);
+		}
+		getListPromotions(@Model.Id_User);
+	});
+  
     document.addEventListener('DOMContentLoaded', function () {
         // Lắng nghe sự kiện submit form
         document.getElementById('myForm').addEventListener('submit', function (event) {
@@ -220,121 +315,6 @@
             // Đánh dấu tất cả các trường input trong form là đã chạm vào (touched)
             this.classList.add('was-validated');
         }, false);
-    });
-    function formatCurrency(amount) {
-        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
-    };
-
-    @* // Thêm sự kiện "change" cho các input radio
-        document.getElementById('selectPromotion').addEventListener('change', handleRadioChange);
-        document.getElementById('useCodePromotion').addEventListener('change', handleRadioChange);
-
-        // Hàm xử lý khi input radio thay đổi
-        function handleRadioChange(event) {
-        const chonma = document.getElementById('chonma');
-        const nhapma = document.getElementById('nhapma');
-        const selectedValue = event.target.value;
-        if (selectedValue == 1) {
-        chonma.setAttribute('hidden', 'hidden');
-        nhapma.removeAttribute('hidden');
-        }
-        else {
-        var reduct = document.getElementById('totalReduct');
-        totalReduct = 0;
-        reduct.innerHTML = formatCurrency(0);
-        calculateShipping();
-        }
-        }; *@
-
-        function getListPromotions(id) {
-            $.ajax({
-                url: '/Order/GetPromotionByUser',
-                type: 'GET',
-                data: { id: id },
-                success: function (data) {
-                    var userPromotionList = $("#selectPromotion");
-                    data.forEach(function (item) {
-                        var promotionRow = '<option value="' + item.id + '">' + item.name + '</option>';
-                        userPromotionList.append(promotionRow);
-                        userPromotionList.trigger('chosen:updated');
-                    });
-                },
-                error: function (error) {
-                    alert('Có lỗi xảy ra: ' + error.responseText);
-                }
-            });
-        };
-
-    var total = 0;
-    var totalReduct = 0;
-    var totalPromotion = 0;
-    function promotionSelected(id) {
-        if (id != null && id != 0) {
-            $.ajax({
-                url: '/Order/GetPromotion',
-                type: 'GET',
-                data: { listId: id, total: @Model.Total },
-                success: function (data) {
-                    totalPromotion = data.totalReduct;
-                    totalReduct = totalPromotion + totalPoint;
-                    document.getElementById('totalReduct').innerHTML = formatCurrency(totalReduct);
-                    calculateShipping();
-                },
-            });
-        }
-        else {
-            totalPromotion = 0;
-            totalReduct = totalPromotion + totalPoint;
-            document.getElementById('totalReduct').innerHTML = formatCurrency(totalReduct);
-            calculateShipping();
-        }
-    }
-
-    var totalUserPoint = 0;
-    function getUser(id) {
-        $.ajax({
-            url: '/Order/GetUser',
-            type: 'GET',
-            data: { id: id },
-            success: function (data) {
-                totalUserPoint = data.point;
-                document.getElementById('pointUsed').setAttribute('max', totalUserPoint);
-                document.getElementById('totalUserPoint').innerHTML = totalUserPoint;
-            }
-        });
-    };
-
-    var totalPoint = 0;
-    function usePoint(total) {
-        var intParse = parseInt(total);
-        if (@Model.Id_User != null && @Model.Id_User != 0) {
-            if (intParse >= 0 && intParse <= totalUserPoint) {
-                totalPoint = intParse * 1000;
-                totalReduct = totalPromotion + totalPoint;
-                document.getElementById('totalReduct').innerHTML = formatCurrency(totalReduct);
-            }
-            else if (intParse > totalUserPoint) {
-                $('#pointUsed').val(totalUserPoint);
-                totalPoint = totalUserPoint * 1000;
-                totalReduct = totalPromotion + totalPoint;
-                document.getElementById('totalReduct').innerHTML = formatCurrency(totalReduct);
-            }
-            else {
-                $('#pointUsed').val(0);
-                totalPoint = 0;
-                totalReduct = totalPromotion + totalPoint;
-                document.getElementById('totalReduct').innerHTML = formatCurrency(totalReduct);
-            }
-        }
-    }
-
-    $(document).ready(function () {
-        var element = document.getElementById('selectPromotion');
-        element.removeAttribute("multiple");
-        if (@Model.Id_User !== 0) {
-            getUser(@Model.Id_User);
-        }
-        getListPromotions(@Model.Id_User);
     });
 </script>
 

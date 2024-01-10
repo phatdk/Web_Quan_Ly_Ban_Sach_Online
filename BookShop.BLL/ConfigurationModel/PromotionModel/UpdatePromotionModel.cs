@@ -8,10 +8,12 @@ namespace BookShop.BLL.ConfigurationModel.PromotionModel
 {
 	public class UpdatePromotionModel
 	{
+		public int Id { get; set; }
 		public string Name { get; set; }
 		public string Code { get; set; }
 		public int? Condition { get; set; }
         public int? StorageTerm { get; set; }
+        public int? ConversionPoint { get; set; }
         public int? AmountReduct { get; set; }
 		public int? PercentReduct { get; set; }
 		public int ReductMax { get; set; }
@@ -23,5 +25,6 @@ namespace BookShop.BLL.ConfigurationModel.PromotionModel
 
 		//foreign key
 		public int Id_Type { get; set; }
+		public string NameType { get; set; }
 	}
 }

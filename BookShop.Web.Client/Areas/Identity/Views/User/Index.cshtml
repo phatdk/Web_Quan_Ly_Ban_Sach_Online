@@ -11,6 +11,10 @@
 }
 <h2>@ViewData["Title"]</h2>
 <partial name="_StatusMessage"></partial>
+@if (isAdmin)
+{
+    <a asp-action="Create">Thêm nhân viên</a>
+}
 <p>Tổng số thành viên: @Model.totalUsers</p>
 <div class="col">
     <div class="col-4">
@@ -22,6 +26,7 @@
     </div>
     
 </div>
+
 
 <table class="table">
     <tr>
