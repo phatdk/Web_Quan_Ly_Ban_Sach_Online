@@ -159,7 +159,7 @@ namespace BookShop.BLL.Service
 						Type = productV.Type,
 					};
 					obj.CollectionName = productV.Id_Collection != null ? (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == productV.Id_Collection).FirstOrDefault().Name : "Trống";
-					var images = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == item.Id).OrderBy(x => x.Index);
+					var images = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == productV.Id).OrderBy(x => x.Index);
 					var imagevms = new List<ImageViewModel>();
 					foreach (var image in images)
 					{
@@ -204,7 +204,7 @@ namespace BookShop.BLL.Service
 						Type = productV.Type,
 					};
 					obj.CollectionName = productV.Id_Collection != null ? (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == productV.Id_Collection).FirstOrDefault().Name : "Trống";
-					var images = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == item.Id).OrderBy(x => x.Index);
+					var images = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == productV.Id).OrderBy(x => x.Index);
 					var imagevms = new List<ImageViewModel>();
 					foreach (var image in images)
 					{
@@ -345,26 +345,6 @@ namespace BookShop.BLL.Service
 					Id = x.Id
 				}).ToList(),
 			};
-		}
-
-		public async Task<List<ProductViewModel>> GetByCollection(int collectionId)
-		{
-			var products = (await _productRepository.GetAllAsync()).Where(x => x.Id_Collection == collectionId);
-			var productsvm = new List<ProductViewModel>();
-			foreach (var item in products)
-			{
-				var productvm = new ProductViewModel()
-				{
-					Id = item.Id,
-					Name = item.Name,
-					Price = item.Price,
-					Quantity = item.Quantity,
-					Status = item.Status,
-					Type = item.Type,
-				};
-				productsvm.Add(productvm);
-			}
-			return productsvm;
 		}
 
 		public async Task<bool> Update(UpdateProductModel model)

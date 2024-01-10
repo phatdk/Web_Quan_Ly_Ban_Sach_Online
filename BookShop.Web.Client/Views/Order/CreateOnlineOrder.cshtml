@@ -200,45 +200,24 @@
 		return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 	};
 
-	@* // Thêm sự kiện "change" cho các input radio
-		document.getElementById('selectPromotion').addEventListener('change', handleRadioChange);
-		document.getElementById('useCodePromotion').addEventListener('change', handleRadioChange);
-
-		// Hàm xử lý khi input radio thay đổi
-		function handleRadioChange(event) {
-		const chonma = document.getElementById('chonma');
-		const nhapma = document.getElementById('nhapma');
-		const selectedValue = event.target.value;
-		if (selectedValue == 1) {
-		chonma.setAttribute('hidden', 'hidden');
-		nhapma.removeAttribute('hidden');
-		}
-		else {
-		var reduct = document.getElementById('totalReduct');
-		totalReduct = 0;
-		reduct.innerHTML = formatCurrency(0);
-		calculateShipping();
-		}
-		}; *@
-
-		function getListPromotions(id) {
-			$.ajax({
-				url: '/Order/GetPromotionByUser',
-				type: 'GET',
-				data: { id: id },
-				success: function (data) {
-					var userPromotionList = $("#selectPromotion");
-					data.forEach(function (item) {
-						var promotionRow = '<option value="' + item.id + '">' + item.name + '</option>';
-						userPromotionList.append(promotionRow);
-						userPromotionList.trigger('chosen:updated');
-					});
-				},
-				error: function (error) {
-					alert('Có lỗi xảy ra: ' + error.responseText);
-				}
-			});
-		};
+	function getListPromotions(id) {
+		$.ajax({
+			url: '/Order/GetPromotionByUser',
+			type: 'GET',
+			data: { id: id },
+			success: function (data) {
+				var userPromotionList = $("#selectPromotion");
+				data.forEach(function (item) {
+					var promotionRow = '<option value="' + item.id + '">' + item.name + '</option>';
+					userPromotionList.append(promotionRow);
+					userPromotionList.trigger('chosen:updated');
+				});
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	};
 
 	var total = 0;
 	var totalReduct = 0;

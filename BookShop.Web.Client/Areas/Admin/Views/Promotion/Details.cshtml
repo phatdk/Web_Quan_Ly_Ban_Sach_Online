@@ -1,104 +1,255 @@
-﻿@model BookShop.BLL.ConfigurationModel.PromotionModel.PromotionViewModel
+﻿@using System.Globalization;
+@using BookShop.BLL.ConfigurationModel.AuthorModel;
+@using BookShop.BLL.ConfigurationModel.CollectionBookModel;
+@using BookShop.BLL.ConfigurationModel.GenreModel;
+@model BookShop.BLL.ConfigurationModel.PromotionModel.PromotionViewModel
 
 @{
-    ViewData["Title"] = "Chi tiết khuyến mãi";
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+	ViewData["Title"] = "Chi tiết khuyến mãi";
+	Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+	List<AuthorModel> authorList = ViewBag.Author;
+	List<GenreModel> genreList = ViewBag.Genre;
+	List<CollectionModel> collectionList = ViewBag.Collection;
 }
 
 <h1>Chi tiết khuyễn mãi</h1>
 
 <div>
- 
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Code)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Code)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Condition)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Condition)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StorageTerm)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StorageTerm)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AmountReduct)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AmountReduct)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PercentReduct)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PercentReduct)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ReductMax)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ReductMax)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Quantity)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Quantity)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.NameType)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.NameType)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CreatedDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
- 
-    </dl>
+	<hr />
+	<div class="row">
+		<div class="col-5">
+			<div class="form-group">
+				<label class="form-label">Loại khuyến mãi: <strong id="typeText">@Model.NameType</strong></label>
+			</div>
+			<div class="form-group" id="promotionCode">
+				<label class="form-label">Mã khuyến mãi: <strong>@Model.Code</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Tên mã khuyến mãi: <strong>@Model.Name</strong></label>
+			</div>
+			<div class="form-group" id="promotionCondition">
+				<label class="form-label">Điều kiện sử dụng: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Condition)</strong></label>
+			</div>
+			<div class="form-group" id="promorionConversionPoint">
+				<label class="form-label">Số điểm đổi: <strong>@Model.ConversionPoint Point</strong></label>
+			</div>
+			<div class="form-group" id="promotionStorageTerm">
+				<label class="form-label">Thời gian lưu trữ: <strong>@Model.StorageTerm Ngày</strong></label>
+			</div>
+			<div class="form-group" id="amountReduct">
+				<label class="form-label">Số tiền giảm: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.AmountReduct)</strong></label>
+			</div>
+			<div class="form-group" id="percentReduct">
+				<label class="form-label">Số phần trăm giảm: <strong>@Model.PercentReduct %</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Số tiền giảm tối đa: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.ReductMax)</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Số lượng phát hành: <strong>@Model.Quantity </strong> lượt dùng</label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Ngày tạo: <strong>@Model.CreatedDate</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Ngày bắt đầu: <strong>@Model.StartDate</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Ngày kết thúc: <strong>@Model.EndDate</strong></label>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Mô tả:</label><br />
+				<p class="w-100">@Model.Description</p>
+			</div>
+			<div class="form-group">
+				@{
+					var status = Model.Status == 1 ? "Đang áp dụng" : "Không áp dụng";
+				}
+				<label class="form-label">Trạng thái: <strong>@status</strong></label>
+			</div>
+			<div class="m-3">
+				<a asp-action="Index" asp-controller="Promotion" asp-area="Admin" class="btn btn-outline-primary">Trở lại</a>
+				<a asp-action="Edit" asp-controller="Promotion" asp-area="Admin" asp-route-id="@Model.Id" class="btn btn-outline-warning">Sửa</a>
+				<input type="button" id="addBorder" hidden class="btn btn-outline-secondary" value="Thêm sản phẩm" onclick="addTable()" />
+			</div>
+		</div>
+		<div id="addToProduct" class="col-7">
+			<div style="border: 3px double black">
+				<div class="row">
+					<strong class="col-1 ms-2 text-center">Stt</strong>|
+					<strong class="col-5 text-center">Tên sản phẩm</strong>|
+					<strong class="col-2 text-center">Giá gốc</strong>|
+					<strong class="col-2 text-center">Giá mới</strong>|
+					<strong class="col-1"></strong>
+				</div> <hr />
+				<div id="addedList" style="min-height: 250px; max-height: 250px; overflow-y: auto; padding-inline: 3px"></div>
+			</div>
+			<div style="border: 3px double black">
+				<div class="row p-1">
+					<div class="col-lg-6 col-md-12">
+						<select class="chosen-select w-100" id="genreSelect" onchange="loadData(1)">
+							<option value="" selected>Thể loại</option>
+							@foreach (var item in genreList)
+							{
+								<option value="@item.Id">@item.Name</option>
+							}
+						</select>
+						<div class="col-lg-6 col-md-12 text-center text-secondary lh-1 w-100">-----or-----</div>
+						<select class="chosen-select w-100" id="authorSelect" onchange="loadData(1)">
+							<option value="" selected>Tác giả</option>
+							@foreach (var item in authorList)
+							{
+								<option value="@item.Id">@item.Name</option>
+							}
+						</select>
+						<hr style="margin: 3px" />
+						<select class="chosen-select w-100" id="collectionSelect" onchange="loadData(1)">
+							<option value="" selected>Bộ sưu tập</option>
+							@foreach (var item in collectionList)
+							{
+								<option value="@item.Id">@item.Name</option>
+							}
+						</select>
+					</div>
+					<div class="col-lg-6 col-md-12">
+						<div class="btn-group col-12 mt-1 mb-1">
+							<input id="keyWordFind" class="btn btn-outline-info w-75" placeholder="nhập mã hoặc tên" oninput="loadData(1)">
+							<button onclick="loadData(1)" class="btn btn-info w-25"><i class="fa-solid fa-magnifying-glass"></i></button>
+						</div>
+						<input type="button" class="btn-success w-100" style="border-radius: 5px" onclick="saveChange()" value="Lưu" />
+					</div>
+					<div class="row-cols-auto">
+						<div id="buttonContainer" class="col-12 mt-1 d-flex justify-content-start"></div>
+					</div>
+				</div>
+				<div class="row">
+					<span class="col-1 ms-2 text-center fw-bold">Stt</span>|
+					<span class="col-2 text-center fw-bold">Ảnh</span>|
+					<span class="col-5 text-center fw-bold">Tên sản phẩm</span>|
+					<span class="col-2 text-center fw-bold">Giá gốc</span>|
+					<span class="col-1 text-center fw-bold"></span>
+				</div><hr />
+				<div id="productList"></div>
+			</div>
+		</div>
+	</div>
 </div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { id =Model.Id }) |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+<script src="~/js/site.js"></script>
+<script type="text/javascript">
+
+	function addCheck(id) {
+		$.ajax({
+			url: '@Url.Action("AddProduct", "Promotion")',
+			type: 'GET',
+			data: { promotionId: @Model.Id, productId: id },
+			success: function (data) {
+				addedList();
+			}
+		})
+	}
+
+	function loadData(pageIndex) {
+		var genre = document.getElementById("genreSelect").value;
+		var author = document.getElementById("authorSelect").value;
+		var collection = document.getElementById("collectionSelect").value;
+		var keyWord = document.getElementById("keyWordFind").value;
+		var index = (pageIndex - 1) * 10;
+		$.ajax({
+			url: '@Url.Action("GetProduct", "Product")',
+			type: 'GET',
+			data: { page: pageIndex, author: author, genre: genre, collection: collection, keyWord: keyWord },
+			success: function (data) {
+				var dataList = $("#productList");
+				dataList.empty();
+				data.data.forEach(function (item) {
+					index++;
+					// <i class="fa-solid fa-minus"></i>
+					// <i class="fa-solid fa-plus"></i>
+					var dataRow =
+						'<div class="row mt-2">' +
+						'<span class="text-center ms-2 col-1 fw-bold">' + index + '</span>|' +
+						'<span class="text-center col-2"><img id="img-selected" src="' + item.imgUrl + '" alt="Ảnh sản phẩm" class="w-100" /></span>|' +
+						'<span class="text-center col-5">' + item.name + '</span>|' +
+						'<span class="text-center col-2">' + formatCurrency(item.price) + '</span>|' +
+						'<span class="text-center col-1">' +
+						'<button id="functionButton-' + item.id + '" class="btn-success" style="border-radius: 5px; width: 40px; height: 40px" onclick="addCheck(' + item.id + ')"><i class="fa-solid fa-plus"></i></button>' +
+						'</span>' +
+						'</div>';
+
+					dataList.append(dataRow);
+				})
+				createPagingButtons(1, data.max, data.page);
+			}
+		})
+	}
+
+	var addList = [];
+	function addedList() {
+		var index = 0;
+		$.ajax({
+			url: '@Url.Action("AddedList", "Promotion")',
+			type: 'GET',
+			data: { promotionId: @Model.Id},
+			success: function (data) {
+				var addedList = $("#addedList");
+				addedList.empty();
+				addList.length = 0;
+				data.forEach(function (item) {
+					index++;
+					var lastPrice = item.productPrice - item.totalReduct;
+					if (lastPrice < 0) lastPrice = 0;
+					var addedRow =
+						'<div class="row mt-2">' +
+						'<span class="text-center ms-2 col-1 fw-bold">' + index + '</span>|' +
+						'<span class="text-center col-5">' + item.nameProduct + '</span>|' +
+						'<span class="text-center col-2 text-danger fw-bold">' + formatCurrency(item.productPrice) + '</span>|' +
+						'<span class="text-center col-2 text-success fw-bold">' + formatCurrency(lastPrice) + '</span>|' +
+						'<span class="text-center col-1">' +
+						'<button id="functionButton-' + item.id_Product + '" class="btn-danger" style="border-radius: 5px; width: 40px; height: 40px" onclick="addCheck(' + item.id_Product + ')"><i class="fa-solid fa-minus"></i></button>' +
+						'</span>' +
+						'</div>';
+					addedList.append(addedRow);
+					addList.push(item.id_Product);
+				})
+			}
+		})
+	}
+
+	function saveChange() {
+		$.ajax({
+			url: '@Url.Action("AddToProduct", "Promotion")',
+			type: 'POST',
+			data: { id: @Model.Id },
+			success: function (data) {
+				if (data.success === true) {
+					alert('Lưu thành công!');
+					location.reload();
+				}
+				else alert('Lưu thất bại, vui lòng thử lại!');
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+
+		})
+	}
+
+	function addTable() {
+		$("#addToProduct").prop("hidden", function (i, val) {
+			if (val == true) {
+				addedList();
+				loadData(1);
+			}
+			return !val;
+		});
+	}
+
+	$(document).ready(function () {
+		const type = document.getElementById('typeText').innerText;
+		$("#addToProduct").prop("hidden", true);
+		if (type === "Phiếu giảm giá sản phẩm") $("#addBorder").prop("hidden", false);
+		else $("#addBorder").prop("hidden", true);
+	})
+
+</script>

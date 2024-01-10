@@ -25,7 +25,7 @@ using System.Text.RegularExpressions;
 namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 {
 	[Area("Admin")]
-	[Authorize(Roles ="Admin,Staff")]
+	[Authorize(Roles = "Admin,Staff")]
 	public class OfflineSaleController : Controller
 	{
 		private readonly IOrderService _orderService;
@@ -98,8 +98,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 			{
 				var details = await _orderDetailService.GetByOrder(id);
 				HttpContext.Session.SetString("sessionOrder", JsonConvert.SerializeObject(details));
+				sessionDetails = HttpContext.Session.GetString("sessionOrder");
 			}
-			sessionDetails = HttpContext.Session.GetString("sessionOrder");
 			var data = JsonConvert.DeserializeObject<List<OrderDetailViewModel>>(sessionDetails);
 			int total = 0;
 			foreach (var item in data)

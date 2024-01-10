@@ -66,7 +66,7 @@
 
 		<div class="form-group">
 			<label class="form-label">Bộ sưu tập</label>
-			<select asp-for="CollectionId" class="form-control chosen-select w-100" onchange="selectItem()" required>
+			<select asp-for="CollectionId" class="form-control chosen-select w-100" onchange="selectItem()">
 				<option value="" selected>--Select collection--</option>
 				@foreach (var item in listCollection)
 				{
