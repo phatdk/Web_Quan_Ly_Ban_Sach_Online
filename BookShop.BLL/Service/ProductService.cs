@@ -519,7 +519,7 @@ namespace BookShop.BLL.Service
 
 		}
 
-		public async Task<List<ProductViewModel>> Search(int? gennerId, int? categoriId, int? colectionId, int? authorId, int min = 0)
+		public async Task<List<ProductViewModel>> Search(int? gennerId, int? categoriId, int? colectionId, int? authorId)
 		{
 
 		
@@ -534,7 +534,7 @@ namespace BookShop.BLL.Service
 							 join g in (await _genretRepository.GetAllAsync()).DefaultIfEmpty() on bg.Id_Genre equals g.Id
 							 join c in (await _categorytRepository.GetAllAsync()).DefaultIfEmpty() on g.Id_Category equals c.Id
 
-							 where g.Id == gennerId || c.Id == categoriId || a.Id == authorId || p.Price > min
+							 where g.Id == gennerId || c.Id == categoriId || a.Id == authorId 
 							 select new ProductViewModel()
 							 {
 								 Id = p.Id,
