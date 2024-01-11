@@ -204,6 +204,8 @@ namespace App.Areas.Identity.Controllers
                         Point = 0,
                     };
                     await _WalletPointRepository.Add(walletPoint);
+                    var AddRoleUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == user.UserName);
+                    await _userManager.AddToRoleAsync(AddRoleUser, "Customers");
                     _logger.LogInformation("Đã tạo user mới.");
                     var users = await _userManager.FindByNameAsync(user.UserName);
                     if (users != null)
