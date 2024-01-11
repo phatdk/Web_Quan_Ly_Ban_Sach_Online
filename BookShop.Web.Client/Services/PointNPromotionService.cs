@@ -75,7 +75,7 @@ namespace BookShop.Web.Client.Services
 			else
 			{
 				var promotion = await _promotionService.GetById(promotionId);
-				if(promotion != null && promotion.Quantity >= 1)
+				if (promotion != null && promotion.Quantity >= 1)
 				{
 					var obj = new UpdatePromotionModel()
 					{

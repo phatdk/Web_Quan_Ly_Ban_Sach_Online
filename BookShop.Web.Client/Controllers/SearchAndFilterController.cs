@@ -38,23 +38,55 @@ namespace BookShop.Web.Client.Controllers
 			_productService = productService;
 
 		}
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(int? id)
 		{
 			var author = (await _authorService.Getall()).Where(x => x.Status == 1).ToList();
-			var genre = (await _genreService.GetAll()).Where(x => x.Status == 1).ToList();
+			if (id != null)
+			{
+				var genre = (await _genreService.GetAll()).Where(x => x.Status == 1 && x.Id_Category == id).ToList();
+				ViewBag.Genre = genre;
+			}
+			else
+			{
+				var genreNotIf = (await _genreService.GetAll()).Where(x => x.Status == 1).ToList();
+                ViewBag.Genre = genreNotIf;
+            }
+			
 			var supplier = (await _supplierService.GetAll()).Where(c=>c.Status ==1).ToList();
 			ViewBag.Author = author;
-			ViewBag.Genre = genre;
+		
 			ViewBag.Supplier = supplier;
 			return View();
 		}
 		[HttpGet("SearchAndFilter/Index")]
-		public async Task<IActionResult> Getdata(int page, string? keyWord, int? gennerId, int? categoriId, int? colectionId, int? authorId,int min )
+		public async Task<IActionResult> Getdata(int page, string? keyWord, List<int>? gennerId, int? categoriId, int? colectionId, List<int>? authorId ,int? min)
 		{
-			_products = await _productService.Search(gennerId, categoriId, colectionId, authorId, min);
+			
+			if (!authorId.Contains(0) && authorId.Count > 0)
+			{
+				foreach (var item in authorId)
+				{
+					_products = await _productService.Search(0, 0, 0, item);
+				}
+			}
+			if (!gennerId.Contains(0) && gennerId.Count > 0)
+			{
+				foreach (var item in gennerId)
+				{
+					_products = await _productService.Search(item, 0, 0, 0);
+				}
+			}
+			else
+			{
+				_products = await _productService.GetAll();
+			}
 			if (keyWord != null)
 			{
 				_products = _products.Where(c => c.Name.Contains(keyWord)).ToList();
+			}
+			if (min != null )
+			{
+				_products =  _products.Where(c => c.Price > min).ToList();
 			}
 
 			var productListSearch = _products.OrderByDescending(c => c.CreatedDate).ToList();

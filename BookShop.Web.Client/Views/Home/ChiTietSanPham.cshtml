@@ -574,11 +574,11 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
 			url: url,
 			success: function (data) {
 				if (data.success === true) {
-					console.log(data.success);
-					alert("Đã thêm sản phẩm vào yêu thích");
+					console.log(data.errorMessage);
+					alert(data.errorMessage);
 				} else {
-					alert("Sản phẩm này đã có trong mục yêu thích");
-					console.log("Failed to add item to wishlist");
+					alert(data.errorMessage);
+					console.log(data.errorMessage);
 				}
 			},
 			error: function () {
