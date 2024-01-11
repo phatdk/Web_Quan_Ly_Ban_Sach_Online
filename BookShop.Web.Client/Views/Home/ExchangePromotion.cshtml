@@ -1,4 +1,4 @@
-﻿@using BookShop.BLL.ConfigurationModel.PromotionModel;
+﻿@* @using BookShop.BLL.ConfigurationModel.PromotionModel;
 @using BookShop.BLL.IService;
 @using BookShop.DAL.Entities;
 @using Microsoft.AspNetCore.Identity;
@@ -12,11 +12,12 @@
     var wallet = await walletService.GetById(Model.Id);
     List<PromotionViewModel> promotionList = ViewBag.Promotion;
 }
-
-@if()
+ *@
+@* @if()
 <div class="row">
     @foreach(var item in promotionList)
     {
         
     }
 </div>
+ *@

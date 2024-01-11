@@ -12,6 +12,10 @@ using BookShop.BLL.ConfigurationModel.OrderDetailModel;
 using BookShop.BLL.ConfigurationModel.ProductModel;
 using BookShop.BLL.ConfigurationModel.GemboxViewModel;
 using BookShop.BLL.ConfigurationModel.OrderModel;
+using Newtonsoft.Json;
+using Humanizer;
+using System.Security.Cryptography.X509Certificates;
+using MailKit.Search;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
@@ -19,9 +23,11 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
     public class GemboxController : Controller
     {
         public Gen _gen;
+        public List<OrderViewModel> _orderViewModels;
         public OrderDetailService _orderdettailservices;
         public OrderService _OrderService;
         public ProductService _ProductService;
+        public StatusOrderService _statusservice;
 
         public GemboxController()
         {
@@ -29,6 +35,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
             _ProductService = new ProductService();
             _OrderService = new OrderService();
             _orderdettailservices = new OrderDetailService();
+            _statusservice = new StatusOrderService();
 
         }
         public IActionResult export()
@@ -75,36 +82,49 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
                 product.Name = productDetails.Name;
                 product.Price = productDetails.Price;
             }
-            ViewBag.ProductList = topSellingProducts;
-         
+            ViewBag.ProductList = topSellingProducts.Take(5);
+
             return View();
         }
 
         public async Task<IActionResult> GetTotalRevenue()
         {
+
+
+
+
             var orders = await _OrderService.GetAll();
             var totalRevenue = 0;
             foreach (var order in orders)
             {
 
                 var orderDetails = await _orderdettailservices.GetByOrder(order.Id);
-
+                var or = new OrderViewModel();
                 // Cập nhật tổng doanh thu
                 foreach (var orderDetail in orderDetails)
                 {
                     totalRevenue += orderDetail.Quantity * orderDetail.Price;
+
                 }
             }
+
+
+
+
+
             return Json(totalRevenue);
         }
         public async Task<IActionResult> GetTotalDateRevenue()
         {
+
+
+
             var orders = await _OrderService.GetAll();
 
             orders = orders.FindAll(x => x.CreatedDate.Date == DateTime.Now.Date);
 
-            var totalDateRevenue = 0;
 
+            var totalDateRevenue = 0;
             // Duyệt qua List<OrderViewModel>
             foreach (var order in orders)
             {
@@ -112,22 +132,28 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
                 foreach (var orderDetail in orderDetails)
                 {
                     totalDateRevenue += orderDetail.Quantity * orderDetail.Price;
+
                 }
             }
 
-         
+
+
+
+
             return Json(totalDateRevenue);
         }
         public async Task<IActionResult> GetTotalRevenueByMonth()
         {
-         
+
+
+
             var orders = await _OrderService.GetAll();
 
             // Lọc đơn hàng theo ngày
             orders = orders.FindAll(x => x.CreatedDate.Month == DateTime.Now.Month);
             var TotalRevenuebyMuonth = 0;
-          
-            foreach (var order in orders) 
+
+            foreach (var order in orders)
             {
                 var orderDetails = await _orderdettailservices.GetByOrder(order.Id);
 
@@ -138,39 +164,97 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
                 }
             }
 
-            
+
             return Json(TotalRevenuebyMuonth);
         }
+
+
         [HttpGet]
-        public async Task<IActionResult> Chart(int month, int year)
+        public async Task<IActionResult> Chart(int? month, int? year, int? online)
         {
-            
             var orders = await _OrderService.GetAll();
-
-            var orderss = orders.Where(x => x.CreatedDate.Month == 1 && x.CreatedDate.Year == 2023);
             var totalRevenueByDay = new Dictionary<int, decimal>();
-             
-           
-            foreach (var order in orderss)
+            if (online == null)
             {
-                // Lấy ngày của đơn hàng
-                var day = order.CreatedDate.Day;
-
-                if (totalRevenueByDay.ContainsKey(day))
+                var orderss = orders.Where(x => x.CreatedDate.Month == month && x.CreatedDate.Year == year);
+                // tạo biến truyền về view
+                foreach (var order in orderss)
                 {
-                    totalRevenueByDay[day] += order.TotalRevenue;
-                }
-                else
-                {
-                    totalRevenueByDay.Add(day, order.TotalRevenue);
+                    var day = order.CreatedDate.Day;
+                    if (totalRevenueByDay.ContainsKey(day))
+                    {
+                        totalRevenueByDay[day] += order.TotalRevenue;
+                    }
+                    else
+                    {
+                        totalRevenueByDay.Add(day, order.TotalRevenue);
+                    }
                 }
             }
-          
+            else
+            {
+                var isonline = online == 1 ? true : false;
+                var orderss = orders.Where(x => x.CreatedDate.Month == month && x.CreatedDate.Year == year && x.IsOnlineOrder == isonline);
 
-            // Trả về View
+
+                // tạo biến truyền về view
+                foreach (var order in orderss)
+                {
+                    var day = order.CreatedDate.Day;
+                    if (totalRevenueByDay.ContainsKey(day))
+                    {
+                        totalRevenueByDay[day] += order.TotalRevenue;
+                    }
+                    else
+                    {
+                        totalRevenueByDay.Add(day, order.TotalRevenue);
+                    }
+                }
+            }
+
             return Json(totalRevenueByDay);
-            
         }
-    }
 
+
+        public async Task<IActionResult> GetHighestInvoice()
+        {
+            var invoices = await _OrderService.GetAll();
+            var topInvoices = invoices.OrderByDescending(x => x.Total).Take(5).ToList();
+            ViewBag.HighestInvoice = topInvoices;
+
+            return Json(topInvoices);
+
+
+        }
+        public async Task<IActionResult> GetProductsSortedByQuantityAsc()
+        {
+            var products = await _ProductService.GetAll();
+
+            var sortedProducts = products.OrderBy(x => x.Quantity).ToList();
+            ViewBag.ProductsSortedByQuantityAsc = sortedProducts;
+
+            return Json(sortedProducts);
+
+        }
+        public async Task<IActionResult> GetOrderByStatus()
+        {
+
+            var orders = await _OrderService.GetAll();
+
+
+            var orderssdone = orders.Where(x => x.Id_Status == 1).Count();
+            var orderwaitingtouse = orders.Where(orders => orders.Status == 6).Count();
+            var ordercancel = orders.Where(x => x.Id_Status == 10).Count();
+
+            var orderCounts = new
+            {
+                orderssdone = orderssdone,
+                orderwaitingtouse = orderwaitingtouse,
+                ordercancel = ordercancel
+            };
+            return Json(orderCounts);
+        }
+
+    }
 }
+

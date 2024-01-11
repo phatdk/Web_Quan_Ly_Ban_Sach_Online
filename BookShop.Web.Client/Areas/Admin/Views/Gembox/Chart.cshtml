@@ -1,50 +1,65 @@
-﻿@*
+﻿@* @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
-@{
-    
-}
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css" />
 <!-- Google Fonts Roboto -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw=="
         crossorigin="anonymous"></script>
-
-
-<body>
+<body> 
+    <select onchange="loadChart()" name="year" id="year" size="1"></select>
+    <select onchange="loadChart()" name="month" id="month" size="1"></select>
+    <select onchange="loadChart()" name="isonline" id="isonline" size="1">
+        <option value="" selected="selected">Tất cả</option>
+        <option value="1">Bán Online</option>
+        <option value="2">Bán Offline</option>
+    </select>
     <div class="card-body">
         <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
         <canvas class="my-4 w-100 chartjs-render-monitor" id="myChart" height="301" width="990" style="display: block; width: 990px; height: 301px;"></canvas>
     </div>
 </body>
-<!-- Custom scripts -->
+
+
 <script>
-    //Graph
-    $(document).ready(function () {
+    function loadChart() {
+        // Lấy giá trị tháng và năm từ các input
+        var month = $('#month').val();
+        var year = $('#year').val();
+        var isonline = $('#isonline').val();
+
+        // Thực hiện AJAX request khi nút được nhấn
         $.ajax({
-            url: "/Admin/Gembox/Chart",
+            url: `/Admin/Gembox/Chart?month=${month}&year=${year}&online=${isonline}`,
             method: "GET",
             success: function (data) {
-                // Chuyển đổi dictionary thành mảng
-                var labels = [];
-                var dataArray = [];
+                console.log(data);
+
+                // Xóa mảng labels và dataArray
+                labels = [];
+                dataArray = [];
+
                 for (var day in data) {
                     labels.push(day);
                     dataArray.push(data[day]);
                 }
 
+                // Destroy the previous chart instance
+                if (myChart) {
+                    myChart.destroy();
+                }
+
                 var ctx = document.getElementById("myChart");
-                var myChart = new Chart(ctx, {
-                    type: "line",
+                myChart = new Chart(ctx, {
+                    type: "bar",
                     data: {
-                        labels: labels, // Sử dụng mảng labels trực tiếp
+                        labels: labels,
                         datasets: [{
                             label: "Doanh thu xuất",
                             data: dataArray,
                             lineTension: 0,
-                            backgroundColor: "transparent",
-                            borderColor: "#007bff",
+                            backgroundColor: "#4169E1",
                             borderWidth: 4,
                             pointBackgroundColor: "#007bff",
                         }],
@@ -67,5 +82,36 @@
                 console.error("Lỗi AJAX:", textStatus, errorThrown);
             }
         });
+    }
+
+    // Khai báo biến global để lưu trữ instance của biểu đồ
+    var myChart;
+
+    // nhận sự kiện click
+    $('#buttonId').click(loadChart);
+
+        
+    // selection hiển thị tháng năm
+    $(function () {
+        var seYear = $('#year');
+        var date = new Date();
+        var curYear = date.getFullYear();
+        var curMonth = date.getMonth() + 1;
+        seYear.append('<option value="' + curYear + '" selected="selected">' + curYear + '</option>');
+        for (i = curYear - 1; i >= 2000; i--) {
+            seYear.append('<option value="' + i + '">' + i + '</option>');
+        };   
+        var seMonth = $('#month');
+        seMonth.append('<option value="' + curMonth + '" selected="selected">' + curMonth + '</option>'); 
+        for (i = 12; i > 1; i--) { 
+            seMonth.append('<option value="' + i + '">' + i + '</option>');
+        };
     });
+
+    $(document).ready(function () {
+        loadChart();
+    })
+
+
+
 </script>
