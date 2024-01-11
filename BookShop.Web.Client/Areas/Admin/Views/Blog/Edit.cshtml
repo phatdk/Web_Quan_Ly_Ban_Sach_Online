@@ -1,4 +1,4 @@
-﻿@model BookShop.BLL.ConfigurationModel.NewsModel.NewsViewModel
+﻿@model BookShop.BLL.ConfigurationModel.NewsModel.CreateNewsModel    
 
 @{
     ViewData["Title"] = "Edit";
@@ -32,7 +32,8 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="file" asp-for="Img" name="Img" class="form-control" />
+                <label>Chọn ảnh: </label>
+                <input type="file" name="imageFile" accept="img/*" />
             </div>
 
             <div class="image-preview">
