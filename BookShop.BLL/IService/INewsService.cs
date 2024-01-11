@@ -11,9 +11,9 @@ namespace BookShop.BLL.IService
 	{
 		public Task<List<NewsViewModel>> GetAll();
 		public Task<List<NewsViewModel>> GetByStatus(int status);
-		public Task<NewsViewModel> GetById(int id);
+		public Task<CreateNewsModel> GetById(int id);
 		public Task<bool> Add(CreateNewsModel model);
-		public Task<bool> Update(int id, NewsViewModel model);
+		public Task<bool> Update(int id, CreateNewsModel model);
 		public Task<bool> Delete(int id);
 	}
 }

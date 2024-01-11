@@ -222,23 +222,25 @@
 	}
 
 	.testsp {
-		position:relative;
+		position: relative;
 		padding: 5px;
 		font-size: 12px;
 		cursor: pointer;
 	}
-	.giaban p{
+
+	.giaban p {
 		font-size: 14px;
-		
-	}
-	.giaban p:nth-child(2){
+
+		.giaban p:nth-child(2) {
 			color: #c4c3be;
 			text-decoration: line-through;
-	}
+		}
+
 	.giaban {
-		display:flex;
-		justify-content:space-between;
+		display: flex;
+		justify-content: space-between;
 	}
+
 	.listdsds {
 		overflow-y: auto;
 	}
@@ -249,7 +251,7 @@
 
 
 	.danhmuc-sach {
-		gap:10px;
+		gap: 10px;
 		padding: 0 10px;
 		display: grid;
 		grid-template-columns: repeat(5,1fr);
@@ -276,7 +278,8 @@
 	.fa-solid.fa-eye {
 		margin-left: 20px;
 	}
-	.km-sp{
+
+	.km-sp {
 		justify-content: center;
 		flex-direction: column;
 		text-align: center;
@@ -290,20 +293,28 @@
 		top: -10px;
 		background-color: #C92127;
 	}
-	.nuoidaycon .testsp:nth-child(1){
-		grid-row:1/3;
-		grid-column:1/3;
-		gap:20px;
+
+	.nuoidaycon .testsp:nth-child(1) {
+		grid-row: 1/3;
+		grid-column: 1/3;
+		gap: 20px;
 	}
+
 	.dm {
-		justify-content:center;
-		margin-bottom:20px;
+		justify-content: center;
+		margin-bottom: 20px;
 		background-color: #FCDDEF;
 	}
-	.dm span{
+
+		.dm span {
 			margin-left: 20px;
 			font-weight: 600;
 			font-size: 28px;
+		}
+
+	.giabandau {
+		color: #DCDCDC;
+		text-decoration: line-through;
 	}
 	.giabandau{
 		color:#DCDCDC;
@@ -475,7 +486,7 @@
 					alert("Đã thêm sản phẩm vào yêu thích");
 				} else {
 					alert("Sản phẩm này đã có trong mục yêu thích");
-				
+
 				}
 			},
 			error: function () {
@@ -502,15 +513,14 @@
 						'</div>' +
 						'<div class="ttsp">' +
 						'<h4>' + item.name + '</h4>' +
-						
 						'</div>' +
 						'<div class="giaban">' + '<p>' +
 						formatPrice(item.newPrice) + '</p>';
 					if (item.saleoff > 0) {
 						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
 							'<div class="giabandau">' +
-							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>'+
-						'</div>';
+							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>' +
+							'</div>';
 					}
 
 					listcategory.append(categoryRow);
@@ -547,8 +557,8 @@
 					if (item.saleoff > 0) {
 						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
 							'<div class="giabandau">' +
-							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>'+
-						'</div>';
+							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>' +
+							'</div>';
 					}
 
 					listcategory.append(categoryRow);
@@ -598,10 +608,12 @@
 					if (item.saleoff > 0) {
 						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
 							'<div class="giabandau">' +
-							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>'+
-						'</div>';
+
+							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>' +
+							'</div>';
 					}
-						listcategory.append(categoryRow);
+					listcategory.append(categoryRow);
+
 				});
 			},
 			error: function (error) {
@@ -609,7 +621,6 @@
 			}
 		});
 	});
-
 
 
 </script>
