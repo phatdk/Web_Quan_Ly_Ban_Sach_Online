@@ -182,6 +182,7 @@ namespace App.Areas.Identity.Controllers
 				if (emailCheck.Any())
 				{
 					_logger.LogInformation("Email đã được sử dụng.");
+                    ViewBag.Mess = "Email đã đc sử dụng";
 					return View(model);
 				}
 				var user = new Userr { Code = "KH" + await GenerateCode(7), UserName = model.UserName, Email = model.Email, Name = model.Name, Gender = 0, CreatedDate = DateTime.Now, Status = 1 };
@@ -203,6 +204,8 @@ namespace App.Areas.Identity.Controllers
                         Point = 0,
                     };
                     await _WalletPointRepository.Add(walletPoint);
+                    var AddRoleUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == user.UserName);
+                    await _userManager.AddToRoleAsync(AddRoleUser, "Customers");
                     _logger.LogInformation("Đã tạo user mới.");
                     var users = await _userManager.FindByNameAsync(user.UserName);
                     if (users != null)

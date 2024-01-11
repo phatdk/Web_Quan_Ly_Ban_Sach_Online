@@ -230,7 +230,6 @@
 
 	.giaban p {
 		font-size: 14px;
-	}
 
 		.giaban p:nth-child(2) {
 			color: #c4c3be;
@@ -315,6 +314,10 @@
 
 	.giabandau {
 		color: #DCDCDC;
+		text-decoration: line-through;
+	}
+	.giabandau{
+		color:#DCDCDC;
 		text-decoration: line-through;
 	}
 </Style>
@@ -510,7 +513,6 @@
 						'</div>' +
 						'<div class="ttsp">' +
 						'<h4>' + item.name + '</h4>' +
-
 						'</div>' +
 						'<div class="giaban">' + '<p>' +
 						formatPrice(item.newPrice) + '</p>';
@@ -606,10 +608,12 @@
 					if (item.saleoff > 0) {
 						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
 							'<div class="giabandau">' +
+
 							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>' +
 							'</div>';
 					}
 					listcategory.append(categoryRow);
+
 				});
 			},
 			error: function (error) {

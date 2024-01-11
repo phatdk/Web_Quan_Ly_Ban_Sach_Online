@@ -250,6 +250,7 @@
 		var url = "@Url.Action("ChiTietSanPham", "Home")?id=" + id;
 		window.location.href = url;
 	}
+
 	function loadData(pageIndex) {
 		var keyWord = document.getElementById("keyWordFind").value;
 		var price = document.getElementById("price").value;
@@ -260,9 +261,11 @@
 		console.log(author);
 		console.log(genner);
 
+
 		$.ajax({
 			url: '@Url.Action("Getdata", "SearchAndFilter")',
 			type: 'GET',
+
 			data: { page: pageIndex, keyWord: keyWord, authorId: author, gennerId: genner, min: price },
 
 			success: function (data) {
