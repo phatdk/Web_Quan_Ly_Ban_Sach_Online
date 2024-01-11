@@ -113,7 +113,6 @@
 		margin-top: 24px;
 		background-color: white;
 		border-radius: 10px;
-		padding: 15px;
 		overflow-y: auto;
 	}
 
@@ -230,8 +229,11 @@
 	}
 	.giaban p{
 		font-size: 14px;
-		color: #c4c3be;
-		text-decoration: line-through;
+		
+	}
+	.giaban p:nth-child(2){
+			color: #c4c3be;
+			text-decoration: line-through;
 	}
 	.giaban {
 		display:flex;
@@ -246,22 +248,23 @@
 	}
 
 
-	.danhmuc-codien {
+	.danhmuc-sach {
+		gap:10px;
 		padding: 0 10px;
 		display: grid;
 		grid-template-columns: repeat(5,1fr);
 	}
 
-		.danhmuc-codien .ttsp h4 {
+		.danhmuc-sach .ttsp h4 {
 			font-size: 14px;
 		}
 
-		.danhmuc-codien .giaban {
+		.danhmuc-sach .giaban {
 			font-size: 16px;
 			color: #C92127;
 		}
 
-		.danhmuc-codien .testsp:hover {
+		.danhmuc-sach .testsp:hover {
 			box-shadow: 0px 0px 4px 2px rgba(0,0,0,0.1);
 		}
 
@@ -274,18 +277,37 @@
 		margin-left: 20px;
 	}
 	.km-sp{
-		justify-content:center;
+		justify-content: center;
 		flex-direction: column;
 		text-align: center;
 		display: flex;
-		height: 30px;
+		height: 50px;
 		width: 50px;
 		color: white;
 		border-radius: 25px;
-		right: 10px;
+		right: -5px;
 		position: absolute;
-		top: 1px;
+		top: -10px;
 		background-color: #C92127;
+	}
+	.nuoidaycon .testsp:nth-child(1){
+		grid-row:1/3;
+		grid-column:1/3;
+		gap:20px;
+	}
+	.dm {
+		justify-content:center;
+		margin-bottom:20px;
+		background-color: #FCDDEF;
+	}
+	.dm span{
+			margin-left: 20px;
+			font-weight: 600;
+			font-size: 28px;
+	}
+	.giabandau{
+		color:#DCDCDC;
+		text-decoration: line-through;
 	}
 </Style>
 <div class="row">
@@ -406,7 +428,7 @@
 			<p style="justify-content:center; display:flex; align-items: center;font-size:25px; font-weight: 700; color: black; height:50px">Sản phẩm bày bán</p>
 		</div>
 	</div>
-	<div class="danhmuc-codien" id="listproduct">
+	<div class="danhmuc-sach" id="listproduct">
 	</div>
 
 	<div class="xemthem">
@@ -417,13 +439,25 @@
 <!-- Danh Muc San Pham-->
 <div class="danhmucsanpham">
 	<div class="dm" style="display:flex;">
-		<h2>Danh mục sản phẩm</h2>
+		<span>Cổ điển</span>
 	</div>
 
 	<div class="listsanpham">
-		<div class="danhmuc-codien" id="listcategory">
+		<div class="danhmuc-sach" id="listcategory">
 		</div>
 	</div>
+
+</div>
+<div class="danhmucsanpham">
+	<div class="dm" style="display:flex;">
+		<span>Nuôi dạy con</span>
+	</div>
+
+	<div class="nuoidaycon">
+		<div class="danhmuc-sach" id="listnuoidaycon">
+		</div>
+	</div>
+
 </div>
 
 
@@ -441,7 +475,7 @@
 					alert("Đã thêm sản phẩm vào yêu thích");
 				} else {
 					alert("Sản phẩm này đã có trong mục yêu thích");
-					console.log("Failed to add item to wishlist");
+				
 				}
 			},
 			error: function () {
@@ -460,7 +494,7 @@
 				listcategory.empty();
 				data.data.forEach(function (item) {
 					var categoryRow =
-						'<div class="testsp">' +
+						'<div class="testsp" onclick="ChiTietSanPham(' + item.id + ')">' +
 						'<div class="product-image">' +
 						'<div class="flashsale-image-container">' +
 						'<img src="' + item.imgUrl + '">' +
@@ -470,12 +504,14 @@
 						'<h4>' + item.name + '</h4>' +
 						
 						'</div>' +
-						'<div class="giaban">'+
-						formatPrice(item.price) +
-						'<p>'+"200.000 đ" +'</p>'+
-						'<div class="km-sp">' + "10 %" +'</div>'+
-						'</div>' +
+						'<div class="giaban">' + '<p>' +
+						formatPrice(item.newPrice) + '</p>';
+					if (item.saleoff > 0) {
+						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
+							'<div class="giabandau">' +
+							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>'+
 						'</div>';
+					}
 
 					listcategory.append(categoryRow);
 				});
@@ -485,6 +521,46 @@
 			}
 		});
 	});
+
+	$(document).ready(function () {
+		$.ajax({
+			url: '@Url.Action("NuoiDayCon", "Home")',
+			type: 'GET',
+			success: function (data) {
+				console.log(data);
+				var listcategory = $("#listnuoidaycon");
+				listcategory.empty();
+				data.data.forEach(function (item) {
+					var categoryRow =
+						'<div class="testsp" onclick="ChiTietSanPham(' + item.id + ')">' +
+						'<div class="product-image">' +
+						'<div class="flashsale-image-container">' +
+						'<img src="' + item.imgUrl + '">' +
+						'</div>' +
+						'</div>' +
+						'<div class="ttsp">' +
+						'<h4>' + item.name + '</h4>' +
+
+						'</div>' +
+						'<div class="giaban">' + '<p>' +
+						formatPrice(item.newPrice) + '</p>';
+					if (item.saleoff > 0) {
+						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
+							'<div class="giabandau">' +
+							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>'+
+						'</div>';
+					}
+
+					listcategory.append(categoryRow);
+				});
+			},
+			error: function (error) {
+				console.log(error);
+			}
+		});
+	});
+
+
 	function formatPrice(price) {
 		const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 		return formattedPrice + ' đ';
@@ -507,7 +583,7 @@
 				listcategory.empty();
 				data.data.forEach(function (item) {
 					var categoryRow =
-						'<div class="testsp"  onclick="ChiTietSanPham(' + item.id + ')">' +
+						'<div class="testsp" onclick="ChiTietSanPham(' + item.id + ')">' +
 						'<div class="product-image">' +
 						'<div class="flashsale-image-container">' +
 						'<img src="' + item.imgUrl + '">' +
@@ -515,11 +591,16 @@
 						'</div>' +
 						'<div class="ttsp">' +
 						'<h4>' + item.name + '</h4>' +
-						'<div class="giaban">' +
-						formatPrice(item.price) +
-						'<p>' + "200.000 đ" + '</p>' +
-						'<div class="km-sp">' + "10 %" + '</div>' +
+
+						'</div>' +
+						'<div class="giaban">' + '<p>' +
+						formatPrice(item.newPrice) + '</p>';
+					if (item.saleoff > 0) {
+						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
+							'<div class="giabandau">' +
+							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>'+
 						'</div>';
+					}
 						listcategory.append(categoryRow);
 				});
 			},

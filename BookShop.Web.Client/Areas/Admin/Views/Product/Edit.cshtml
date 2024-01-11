@@ -56,7 +56,7 @@
 
 		<div class="form-group">
 			<label class="form-label">Số lượng</label>
-			<input asp-for="Quantity" type="number" id="quantity" class="form-control w-100" min="0" required />
+			<input asp-for="Quantity" type="number" id="quantity" class="form-control w-100" min="0" step="1" required />
 		</div>
 
 		<div class="form-group">
@@ -66,7 +66,7 @@
 
 		<div class="form-group">
 			<label class="form-label">Bộ sưu tập</label>
-			<select asp-for="CollectionId" class="form-control chosen-select w-100" onchange="selectItem()" required>
+			<select asp-for="CollectionId" class="form-control chosen-select w-100" onchange="selectItem()">
 				<option value="" selected>--Select collection--</option>
 				@foreach (var item in listCollection)
 				{
@@ -83,7 +83,7 @@
 					<img id="img-selected" src="@img.ImageUrl" alt="Ảnh sản phẩm" style="max-width: 24%; margin: 2px; border: 1px solid black" />
 				}
 			</div>
-			<input type="file" id="img-input" asp-for="fileCollection" multiple class="form-control" accept=".png" />
+			<input type="file" id="img-input" asp-for="fileCollection" multiple class="form-control" />
 		</div>
 		<div class="form-group">
 			<label>Trạng thái</label><br />

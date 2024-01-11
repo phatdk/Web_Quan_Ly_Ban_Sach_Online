@@ -1,7 +1,12 @@
 ﻿﻿@using BookShop.DAL.Entities;
+@using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Identity;
 @inject SignInManager<Userr> SignInManager
 @inject UserManager<Userr> UserManager
+@inject IAuthorizationService _IAuthorizationService
+@{
+    var isAdmin = (await _IAuthorizationService.AuthorizeAsync(User, "ManagerMenu")).Succeeded;
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,6 +20,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
     <!-- jQuery library -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
@@ -84,117 +90,143 @@
         h6 {
             margin-bottom: 0 !important;
         }
+        .menu-home{
+            height:70px;
+            flex-direction: column;
+            justify-content: center;
+            display: flex;
+            background-color:white;
+        }
+        .container.content{
+            justify-content: space-between;
+            display:flex;
+        gap:20px;
+        }
+        .menu-home ul
+        {
+            margin-bottom: 0;
+            padding-left:0;
+            list-style:none;
+            display:flex;
+            gap:25px;
+        }
+
+        .menu-home .dropdown-toggle::after{
+            content:none;
+        }
+            .menu-home ul li a{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                text-align: center;
+            }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            position: relative;
+            width: 100%;
+        }
+
+            .search-bar input[type="text"] {
+                padding-right: 30px;
+                width: 370px;
+                border-radius: 5px;
+                height: 40px;
+                border: 1px solid #dddddd;
+                padding-left: 10px;
+            }
+
+            .search-bar a {
+                position: absolute;
+                top: 50%;
+                right: 10px;
+                transform: translateY(-50%);
+                cursor: pointer;
+                font-size: 18px !important;
+                color: #333 !important;
+                text-decoration: none !important;
+                border-bottom: 0 !important;
+            }
     </style>
 </head>
 <body class="bb">
+
+    @if (isAdmin)
+    {
+        <a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">
+            Trang admin
+        </a>
+    }
     <header>
-        <a style="btn" asp-action="SachMoi" asp-controller="Home" value="2" name="2"> click</a>
         <div class="gi">
             <div style="justify-content:center">
                 <img style="text-align:center;width:100%" src="https://cdn0.fahasa.com/media/wysiwyg/Thang-11-2023/FahasaSaleThu3T1123_W1_Header_1263x60.jpg" />
             </div>
         </div>
-        <div>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 m26">
-                <div class="container">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img width="216px" height="57px" src="https://cdn0.fahasa.com/media/quiz-game-T7/Avatar_IconApp_SN47_logoSN47_1.png" /></a>
-                    <button class=" navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <div class="dropdown danhmuc">
-                                    <div class=" dropdown-toggle" data-toggle="dropdown">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-grid" viewBox="0 0 16 16">
-                                            <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
-                                        </svg><span class="	glyphicon glyphicon-menu-hamburger"></span>
-                                    </div>
-                                    <div class="dropdown-menu row" style="width:760px;">
-                                        <div class="col-md-6">
-                                            <h5>Danh Mục Sản Phẩm</h5>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <h5>Danh Mục Sản Phẩm</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="nav-item">
-                                <form action="#" method="GET" class="timkiem">
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Từ khóa tìm kiếm" aria-label="Từ khóa tìm kiếm" aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="submit">Tìm Kiếm</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </li>
-                        </ul>
-                        <ul class="navbar navbar-nav justify-content-end">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
-                                        <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
-                                    </svg> Thông Báo
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="CartDetails">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cart4" viewBox="0 0 16 16">
-                                        <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l.5 2H5V5H3.14zM6 5v2h2V5H6zm3 0v2h2V5H9zm3 0v2h1.36l.5-2H12zm1.11 3H12v2h.61l.5-2zM11 8H9v2h2V8zM8 8H6v2h2V8zM5 8H3.89l.5 2H5V8zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z" />
-                                    </svg> Giỏ Hàng
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <div class="class=" nav-link text-dark"">
-                                    @{
-                                        var user = await UserManager.GetUserAsync(User);
-                                        if (user != null)
-                                        {
-                                            //<a class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#myModal">
-                                            //    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                            //        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                                            //        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
-                                            //    </svg>
-                                            //    @user.UserName
-                                            //</a>
-                                            <div class="nav-link text-dark">
-                                                <partial name="_LoginPartial" />
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="nav-link text-dark">
-                                                <div class="dropdown">
-                                                    <a class="dropdown-toggle nav-link text-dark" data-toggle="dropdown" style="cursor:pointer">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                                                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
-                                                        </svg>
-                                                        Tài khoản
 
-                                                    </a>
-                                                    <div class="dropdown-menu">
-                                                        <a class="dropdown-item aidn1" asp-area="Identity" asp-controller="Account" asp-action="Login">Đăng Nhập</a>
-                                                        <a class="dropdown-item aidn2" asp-area="Identity" asp-controller="Account" asp-action="Register">Đăng Ký</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        }
-                                    }
-                                </div>
-                            </li>
-                        </ul>
+       <div class="menu-home">
+           <div class="container content">
+               <div class="logo">
+					<a  asp-area="" asp-controller="Home" asp-action="Index"> <img src="~/img/Layer1.png" style="width:220px" alt="trẻ thơ strore"></a>
+               </div>
+               <div class="hv-danhmuc">
+
+					<div class="search-bar">
+						<div class="list-dm" style="margin-right:20px">
+                            <i class="fas fa-bars" style="font-size:30px; color:#999999"></i>
+						</div>
+                        <a href="javascript:"> <i class="fa fa-search"></i></a>
+                        <input type="text" placeholder="Tìm kiếm">
                     </div>
-                </div>
-            </nav>
-        </div>
-   
+               </div>
+               <div class="option">
+                   <ul>
+                       <li>
+                            <a class="text-dark" asp-area="" asp-controller="Cart" asp-action="CartDetails"><i class="fa fa-bell" style="color:#999999"></i> Thông báo </a>
+                       </li>
+                        <li>
+                            <a class="text-dark" asp-area="" asp-controller="Home" asp-action="Danhsachyeuthich"> <i class="fas fa-heart" style="color:#C92127"></i> Yêu thích </a>
+                        </li>
+                       <li>
+							<a class="text-dark" asp-area="" asp-controller="Cart" asp-action="CartDetails"> <i class="fa fa-shopping-cart" style="color:#999999"></i> Giỏ hàng </a>
+                       </li>
+                       <li>
+                            <div class="text-dark">
+                                @{
+                                    var user = await UserManager.GetUserAsync(User);
+                                    if (user != null)
+                                    {
+                                        
+                                            <partial name="_LoginPartial" />
+                                      
+                                    }
+                                    else
+                                    {
+                                        
+                                                <a class="dropdown-toggle  text-dark" data-toggle="dropdown" style="cursor:pointer">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                                                    </svg>
+                                                    Tài khoản
+
+                                                </a>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item aidn1" asp-area="Identity" asp-controller="Account" asp-action="Login">Đăng Nhập</a>
+                                                    <a class="dropdown-item aidn2" asp-area="Identity" asp-controller="Account" asp-action="Register">Đăng Ký</a>
+                                                </div>
+                                       
+                                    }
+                                }
+                            </div>
+                       </li>
+                   </ul>
+               </div>
+           </div>
+       </div>
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" style="margin-top:20px" class="pb-3">
             @RenderBody()
         </main>
     </div>

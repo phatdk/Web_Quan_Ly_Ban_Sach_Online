@@ -5,58 +5,113 @@
 
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.Raw(item.Content)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreatedDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    <a class="btn btn-danger" asp-route-Id="@item.Id" asp-action="Edit">Sửa</a>
-                    <a class="btn btn-danger" asp-route-Id="@item.Id" asp-action="Delete">Xoá</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
 <partial name="_Paging" model="@ViewBag.pagingmodel" />
+<div class="book">
+    <div class="content">
+        <h1>Danh sách Blog</h1>
+        <div class="header">
+            <p>
+                <a class="btn btn-secondary" asp-action="Create">Thêm mới</a>
+
+            </p>
+            <div class="search-container">
+                <div class="loc">
+                    <select class="trangthai" style="text-align:center" id="filterSelect" onchange="filterChange()" aria-label="Default select example">
+                        <option value="" selected>Tất cả trạng thái</option>
+                        <option value="0">Không hoạt động</option>
+                        <option value="1">Đang hoạt động</option>
+                    </select>
+                    <div class="search-bar">
+                        <a><i class="fa fa-search" style="font-size:30px" onclick="findOrder()"></i></a>
+                        <input id="keyWordFind" oninput="searchOnEnter(event)" type="text" placeholder="Tìm kiếm">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ct-body">
+            <table class="table table-bordered border-dark table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th class="text-center">STT</th>
+                        <th class="text-center">Tiêu Đề</th>
+                        <th class="text-center">Nội Dung</th>
+                        <th class="text-center">Mô Tả</th>
+                        <th class="text-center">Ngày Tạo</th>
+                        <th class="text-center">Trạng Thái</th>
+                        <th class="text-center">Options</th>
+
+                    </tr>
+                </thead>
+                <tbody id="listcategory">
+                </tbody>
+            </table>
+            <div id="buttonContainer"></div>
+        </div>
+    </div>
+</div>
+<script src="~/js/site.js"></script>
+<script>
+    function getDetail(id) {
+        var url = "@Url.Action("Details", "Blog")?id=" + id
+        window.location.href = url;
+    }
+    function update(id) {
+        var url = "@Url.Action("Edit", "Blog")?id=" + id
+        window.location.href = url;
+    }
+    function loadData(pageIndex) {
+        // Gửi yêu cầu Ajax đến máy chủ
+        var status = document.getElementById("filterSelect").value;
+        var keyWord = document.getElementById("keyWordFind").value;
+        var index = (pageIndex - 1) * 10;
+        $.ajax({
+            url: '@Url.Action("Getdata", "Blog")',
+            type: 'GET',
+            data: { page: pageIndex, status: status, keyWord: keyWord },
+
+            success: function (data) {
+
+                // Xóa danh sách cũ trước khi thêm danh sách mới
+                var listcategory = $("#listcategory");
+                listcategory.empty();
+                // Thêm danh sách đơn hàng vào HTML
+                data.data.forEach(function (item) {
+                    index += 1;
+                    var categoryRow = '<tr>' +
+                        '<td class="text-center">' + index + '</td>' +
+                        '<td class="text-center"><label>' + item.title + '</label></td>' +
+                        '<td class="text-center"><label>' + item.content + '</label></td>' +
+                        '<td class="text-center"><label>' + item.description + '</label></td>' +
+                        '<td class="text-center"><label>' + formatDate(item.createdDate) + '</label></td>' +
+                        '<td class="text-center"><label>' + (item.status === 1 ? 'Đang hoạt động' : 'Không hoạt động') + '</label></td>' +
+                        '<td class="text-center"><button class="btn btn-warning" onclick="getDetail(' + item.id + ')">Xem</button> <button class="btn btn-primary" onclick="update(' + item.id + ')">Sửa</button></td>' +
+                        '</tr>';
+
+                    listcategory.append(categoryRow);
+                });
+                createPagingButtons(1, data.max, data.page);
+            },
+            error: function (error) {
+                console.log('Lỗi: ' + error.responseText);
+            }
+        });
+    }
+    function filterChange() {
+        loadData(1)
+    }
+    function findOrder() {
+        loadData(1)
+    }
+    function searchOnEnter(event) {
+        loadData(1);
+    }
+    $(document).ready(function () {
+        loadData(1);
+    });
+
+
+
+
+
+
+</script>

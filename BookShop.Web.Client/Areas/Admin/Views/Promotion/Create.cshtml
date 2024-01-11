@@ -1,87 +1,175 @@
-﻿@model BookShop.BLL.ConfigurationModel.PromotionModel.CreatePromotionModel
- 
+﻿@using BookShop.BLL.ConfigurationModel.PromotionTypeModel;
+@model BookShop.BLL.ConfigurationModel.PromotionModel.CreatePromotionModel
+
 
 @{
-    ViewData["Title"] = "Thêm mới";
- 
-    Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
+	ViewData["Title"] = "Thêm mới";
+	Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
+	List<PromotionTypeViewModel> typePromotion = ViewBag.Type;
 }
 
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Condition" class="control-label"></label>
-                <input asp-for="Condition" class="form-control" />
-                <span asp-validation-for="Condition" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StorageTerm" class="control-label"></label>
-                <input asp-for="StorageTerm" class="form-control" />
-                <span asp-validation-for="StorageTerm" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AmountReduct" class="control-label"></label>
-                <input asp-for="AmountReduct" class="form-control" />
-                <span asp-validation-for="AmountReduct" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PercentReduct" class="control-label"></label>
-                <input asp-for="PercentReduct" class="form-control" />
-                <span asp-validation-for="PercentReduct" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ReductMax" class="control-label"></label>
-                <input asp-for="ReductMax" class="form-control" />
-                <span asp-validation-for="ReductMax" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Quantity" class="control-label"></label>
-                <input asp-for="Quantity" class="form-control" />
-                <span asp-validation-for="Quantity" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
-                <input asp-for="EndDate" class="form-control" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="">loại KM</label>
-                    <select class="form-control" asp-for="Id_Type" asp-items="@ViewBag.LoaiKhuyenMai" required>
-                        <option value="0" disabled selected>Chọn loại KM</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+	<div class="col-md-6">
+		<form asp-action="Create" class="mt-3" style="max-width: 1000px">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label class="form-label">Loại khuyến mãi</label>
+				<select asp-for="Id_Type" id="promotionType" required onchange="typeCheck(this)">
+					<option value="0" disabled selected>Chọn loại KM</option>
+					@foreach (var item in typePromotion)
+					{
+						<option value="@item.Id">@item.Name</option>
+					}
+				</select>
+			</div>
+			<div class="form-group" id="promotionCode" hidden>
+				<label class="form-label">Mã khuyến mãi (nếu bỏ trống mã sẽ được gen tự động)</label>
+				<input asp-for="Code" id="inputCode" class="form-control" />
+			</div>
+			<div class="form-group">
+				<label class="form-label">Tên mã khuyến mãi</label>
+				<input asp-for="Name" class="form-control" required />
+			</div>
+			<div class="form-group" id="promotionCondition" hidden>
+				<label class="form-label">Điều kiện giảm (Giá trị đơn hàng tối thiểu để có thể áp dụng mã)</label>
+				<input type="number" asp-for="Condition" id="inputCondition" class="form-control" />
+			</div>
+			<div class="form-group" id="promorionConversionPoint" hidden>
+				<label class="form-label">Số điểm đổi</label>
+				<input type="number" asp-for="ConversionPoint" id="inputConversionPoint" class="form-control" />
+			</div>
+			<div class="form-group" id="promotionStorageTerm" hidden>
+				<label class="form-label">Thời gian lưu trữ (ngày)</label>
+				<input type="number" asp-for="StorageTerm" id="inputStorageTerm" class="form-control" />
+			</div>
+			<div>
+				<br /> &ensp;
+				<input type="radio" id="percent" name="typeReduct" value="1" checked="checked" /><span> Giảm theo phần trăm</span> &ensp;
+				<input type="radio" id="amount" name="typeReduct" value="0" /><span> Giảm theo số tiền cố định</span>
+			</div>
+			<div class="form-group" id="amountReduct" hidden>
+				<label class="form-label">Số tiền giảm (đ)</label>
+				<input type="number" asp-for="AmountReduct" id="inputAmount" class="form-control" />
+			</div>
+			<div class="form-group" id="percentReduct">
+				<label class="form-label">Số phần trăm giảm (%)</label>
+				<input type="number" asp-for="PercentReduct" id="inputPercent" class="form-control" required/>
+
+				<label class="form-label">Số tiền giảm tối đa (đ)</label>
+				<input type="number" asp-for="ReductMax" id="inputMax" class="form-control" required/>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Số lượng phát hành</label>
+				<input type="number" asp-for="Quantity" class="form-control" required />
+			</div>
+			<div class="form-group">
+				<label class="form-label">Ngày bắt đầu</label>
+				<input asp-for="StartDate" class="form-control" required />
+			</div>
+			<div class="form-group">
+				<label class="form-label">Ngày kết thúc</label>
+				<input asp-for="EndDate" class="form-control" required />
+			</div>
+			<div class="form-group">
+				<label class="form-label">Mô tả</label>
+				<textarea asp-for="Description" class="form-control" row="3"></textarea>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Trạng thái</label>
+				<select asp-for="Status" class="form-control">
+					<option value="1">Áp dụng</option>
+					<option value="0">Không áp dụng</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Create" class="btn btn-primary m-3" />
+			</div>
+		</form>
+	</div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+	<a asp-action="Index">Back to List</a>
 </div>
- 
+
+<script type="text/javascript">
+	function typeCheck(select) {
+		var selectText = select.options[select.selectedIndex].text;
+		const code = $("#promotionCode");
+		const condition = $("#promotionCondition");
+		const storageTerm = $("#promotionStorageTerm");
+		const conversionPoint = $("#promorionConversionPoint");
+		const inputCode = $("#inputCode");
+		const inputCondition = $("#inputCondition");
+		const inputConversionPoint = $("#inputConversionPoint");
+		const inputStorageTerm = $("#inputStorageTerm");
+
+		inputCode.val('');
+		inputCondition.val('');
+		inputConversionPoint.val('');
+		inputStorageTerm.val('');
+		inputCondition.prop("required", false);
+		inputStorageTerm.prop("required", false);
+		inputConversionPoint.prop("required", false);
+
+		if (selectText === "Phiếu khuyến mãi áp dụng tự động") {
+			code.prop("hidden", true);
+			condition.prop("hidden", false);
+			storageTerm.prop("hidden", true);
+			conversionPoint.prop("hidden", true);
+			inputCondition.prop("required", true);
+		} else if (selectText === "Phiếu khuyến mãi điểm đổi") {
+			code.prop("hidden", true);
+			condition.prop("hidden", false);
+			storageTerm.prop("hidden", false);
+			conversionPoint.prop("hidden", false);
+			inputCondition.prop("required", true);
+			inputStorageTerm.prop("required", true);
+			inputConversionPoint.prop("required", true);
+		} else if (selectText === "Phiếu khuyến mãi phát hành mã") {
+			code.prop("hidden", false);
+			condition.prop("hidden", false);
+			storageTerm.prop("hidden", false);
+			conversionPoint.prop("hidden", true);
+			inputCondition.prop("required", true);
+			inputStorageTerm.prop("required", true);
+		} else if (selectText === "Phiếu giảm giá sản phẩm") {
+			code.prop("hidden", true);
+			condition.prop("hidden", true);
+			storageTerm.prop("hidden", true);
+			conversionPoint.prop("hidden", true);
+		} else console.log("Not found")
+	}
+
+	// Thêm sự kiện "change" cho các input radio
+	document.getElementById('amount').addEventListener('change', handleRadioChange);
+	document.getElementById('percent').addEventListener('change', handleRadioChange);
+
+	// Hàm xử lý khi input radio thay đổi
+	function handleRadioChange(event) {
+		const amount = $("#amountReduct");
+		const percent = $("#percentReduct");
+		const inputAmount = $("#inputAmount");
+		const inputPercent = $("#inputPercent");
+		const inputMax = $("#inputMax");
+
+		inputAmount.val('');
+		inputPercent.val('');
+		inputMax.val('');
+		inputAmount.prop("required", false);
+		inputPercent.prop("required", false);
+		inputMax.prop("required", false);
+		const selectedValue = event.target.value;
+		if (selectedValue == 1) {
+			amount.prop("hidden", true);
+			percent.prop("hidden", false);
+			inputPercent.prop("required", true);
+			inputMax.prop("required", true);
+		} else if(selectedValue == 0) {
+			amount.prop("hidden", false);
+			percent.prop("hidden", true);
+			inputAmount.prop("required", true);
+		}
+	};
+
+</script>

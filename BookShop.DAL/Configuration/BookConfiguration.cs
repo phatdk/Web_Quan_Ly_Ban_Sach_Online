@@ -16,9 +16,9 @@ namespace BookShop.DAL.Configuration
 			builder.Property(x => x.ISBN).HasColumnType("varchar(20)").IsRequired(false);
 			builder.Property(x => x.Barcode).HasColumnType("nvarchar(13)");
 			builder.Property(x => x.Img).HasColumnType("nvarchar(250)");
-			builder.Property(x => x.Title).HasColumnType("nvarchar(50)");
+			builder.Property(x => x.Title).HasColumnType("nvarchar(max)");
 			builder.Property(x => x.Reader).HasColumnType("nvarchar(50)");
-			builder.Property(x => x.Description).HasColumnType("nvarchar(255)");
+			builder.Property(x => x.Description).HasColumnType("nvarchar(max)");
 			builder.Property(x => x.PageSize).HasColumnType("varchar(50)");
 			builder.Property(x => x.Cover).HasColumnType("nvarchar(50)");
 			builder.Property(x => x.PublicationDate).HasColumnType("varchar(50)");

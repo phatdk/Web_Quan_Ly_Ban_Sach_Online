@@ -4,77 +4,168 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Encodings.Web;
+using System.Text;
 using System.Threading.Tasks;
 using App.Areas.Identity.Models.AccountViewModels;
 using App.Areas.Identity.Models.ManageViewModels;
 using App.Areas.Identity.Models.RoleViewModels;
 using App.Areas.Identity.Models.UserViewModels;
+using BookShop.BLL.ConfigurationModel.CartDetailModel;
+using BookShop.BLL.ConfigurationModel.PointTranHistoryModel;
 using BookShop.BLL.IService;
+using BookShop.BLL.Service;
 using BookShop.DAL.ApplicationDbContext;
 using BookShop.DAL.Entities;
 using BookShop.DAL.Entities.Identity;
 using BookShop.Web.Client.ExtendMethods;
+using BookShop.Web.Client.Models;
 using MessagePack;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ShopWheyProject.MVC.Areas.Identity.Controllers
 {
-
-    /// <summary>
-    /// [Authorize(Roles = RoleName.Administrator)]
-    /// </summary>
     [Area("Identity")]
-    [Authorize(Roles = "Admin")]
     [Route("/ManageUser/[action]")]
+    [Authorize(Roles = "Admin,Staff")]
     public class UserController : Controller
     {
 
         private readonly RoleManager<Role> _roleManager;
         private readonly IUserRoleService _UserRole;
         private readonly UserManager<Userr> _userManager;
-
-        public UserController(RoleManager<Role> roleManager, IUserRoleService userRole, UserManager<Userr> userManager)
+        private readonly ICartService _CartRepository;
+        private readonly IWalletpointService _WalletPointRepository;
+        public UserController(RoleManager<Role> roleManager, IUserRoleService userRole, UserManager<Userr> userManager, ICartService cartRepository, IWalletpointService walletPointRepository)
         {
             _roleManager = roleManager;
             _UserRole = userRole;
             _userManager = userManager;
+            _CartRepository = cartRepository;
+            _WalletPointRepository = walletPointRepository;
         }
 
         [TempData]
         public string StatusMessage { get; set; }
 
-        //
-        // GET: /ManageUser/Index
-        public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPage = 1)
+
+
+
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Staff")]
+        public IActionResult Create()
         {
-            if (currentPage < 1)
-                currentPage = 1;
+            return View();
+        }
 
+        public async Task<string> GenerateCode(int length)
+        {
+            // Khởi tạo đối tượng Random
+            Random random = new Random();
+
+            // Tạo một chuỗi các ký tự ngẫu nhiên
+            string characters = "0123456789";
+            string code = "";
+            for (int i = 0; i < length; i++)
+            {
+                code += characters[random.Next(characters.Length)];
+            }
+            var duplicate = (await _userManager.Users.ToListAsync()).Where(c => c.Code.Equals(code));
+            if (!duplicate.Any())
+            {
+                return code;
+            }
+            return (await GenerateCode(length)).ToString();
+        }
+
+        // POST: /Account/Register
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [ActionName("Create")]
+        public async Task<IActionResult> CreateCF(RegisterViewModel model)
+        {
+
+
+            if (ModelState.IsValid)
+            {
+                // kiểm cha email
+                var emailCheck = (await _userManager.Users.ToListAsync()).Where(x => x.Email.Equals(model.Email));
+                if (emailCheck.Any())
+                {
+
+                    ViewBag.Mess = "Email đã được sử dụng";
+                    return View(model);
+                }
+                var user = new Userr { Code = "KH" + await GenerateCode(7), UserName = model.UserName, Email = model.Email, Name = model.Name, Gender = 0, CreatedDate = DateTime.Now, Status = 1, EmailConfirmed = true };
+                var result = await _userManager.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
+                {
+                    var cart = new CartViewModel()
+                    {
+                        Id_User = user.Id,
+
+                    };
+                    await _CartRepository.Add(cart);
+                    var walletPoint = new WalletPointViewModel()
+                    {
+                        Id_User = user.Id,
+                        CreatedDate = DateTime.Now,
+                        Status = 1,
+                        Point = 0,
+                    };
+                    await _WalletPointRepository.Add(walletPoint);
+                    var users = await _userManager.FindByNameAsync(user.UserName);
+                    var listRole = new List<string>() { "Staff", "Customers" };
+                    await _userManager.AddToRolesAsync(users, listRole);
+
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ModelState.AddModelError(result);
+                }
+
+
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+
+        [Authorize(Roles = "Admin,Staff")]
+        public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPages, [FromQuery] int sortop = 0)
+        {
             var model = new UserListModel();
-            model.currentPage = currentPage;
+            var Listuser = await _userManager.Users.ToListAsync();
+            int pagesize = 10;
+            if (pagesize <= 0)
+            {
+                pagesize = 10;
+            }
 
-            var qr = _userManager.Users.OrderBy(u => u.UserName);
 
-            model.totalUsers = await qr.CountAsync();
-            model.countPages = (int)Math.Ceiling((double)model.totalUsers / model.ITEMS_PER_PAGE);
 
-            if (model.currentPage > model.countPages)
-                model.currentPage = model.countPages;
+            var qr1 = Listuser.Select(u => new UserAndRole()
+            {
+                Id = u.Id,
+                UserName = u.UserName,
 
-            var qr1 = qr.Skip((model.currentPage - 1) * model.ITEMS_PER_PAGE)
-                        .Take(model.ITEMS_PER_PAGE)
-                        .Select(u => new UserAndRole()
-                        {
-                            Id = u.Id,
-                            UserName = u.UserName,
-                        });
+            });
+
             if (qr1.Count() > 0)
             {
                 model.users = qr1.ToList();
@@ -83,24 +174,63 @@ namespace ShopWheyProject.MVC.Areas.Identity.Controllers
                 {
                     var roles = await _userManager.GetRolesAsync(user);
                     user.RoleNames = string.Join(",", roles);
+                }
+
+                if (sortop == 1)
+                {
+                    model.users = model.users.Where(x => x.RoleNames.Contains("Customers")).ToList();
+
+                }
+                if (sortop == 2)
+                {
+                    model.users = model.users.Where(x => x.RoleNames.Contains("Staff")).ToList();
 
                 }
 
-                return View(model);
+
+
             }
-            else
+
+            int countPages = (int)Math.Ceiling((double)model.users.Count() / pagesize);
+            if (currentPages > countPages)
             {
-                return View();
+                currentPages = countPages;
             }
+            if (currentPages < 1)
+            {
+                currentPages = 1;
+            }
+
+            var pagingmodel = new PagingModel()
+            {
+                currentpage = currentPages,
+                countpages = countPages,
+                generateUrl = (int? p) => Url.Action("Index", "User", new { areas = "Identity", p = p, pagesize = pagesize, sortop = sortop })
+            };
+            ViewBag.pagingmodel = pagingmodel;
+            // Listuser = Listuser.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
+            model.users = model.users.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
+            model.totalUsers = _userManager.Users.Count();
+            return View(model);
 
         }
-
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Details(int id)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (user != null)
+            {
+                return View(user);
+            }
+            return NotFound();
+        }
         public async Task<IActionResult> ViewPromotionUser(int IdUser)
         {
             return View(await _userManager.Users.Include(x => x.UserPromotions).FirstOrDefaultAsync(x => x.Id == IdUser));
         }
 
         // GET: /ManageUser/AddRole/id
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> AddRole(int id)
         {

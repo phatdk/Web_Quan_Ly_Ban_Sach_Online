@@ -102,9 +102,12 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			return View();
 		}
 
-		public async Task<IActionResult> GetProduct(int page, int? type, int? status, string? keyWord)
+		public async Task<IActionResult> GetProduct(int page, int? author, int? genre, int? type, int? collection, int? status, string? keyWord)
 		{
-			var dataList = await _productService.GetAll();
+			var dataList = new List<ProductViewModel>();
+			if(author != null) dataList = await _productService.GetByAuthor(Convert.ToInt32(author));
+			else if(genre != null) dataList =await _productService.GetByAuthor(Convert.ToInt32(genre));
+			else dataList = await _productService.GetAll();
 			if (type != null)
 			{
 				if (type >= 1) dataList = dataList.Where(x => x.Type == Convert.ToInt32(type)).ToList();
@@ -114,11 +117,11 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 				if (status <= 1) dataList = dataList.Where(x => x.Status == Convert.ToInt32(status)).ToList();
 				else if (status == 2) dataList = dataList.Where(x => x.Status == 1 && x.Quantity < 1).ToList();
 			}
+			if (collection != null) dataList = dataList.Where(x => x.CollectionId == collection).ToList();
 			if (!string.IsNullOrEmpty(keyWord))
 			{
 				dataList = dataList.Where(
 					x => x.Name.ToLower().Contains(keyWord.ToLower())
-					|| x.CollectionName.ToLower().Contains(keyWord.ToLower())
 					).ToList();
 			}
 			dataList = dataList.OrderByDescending(x => x.CreatedDate).ToList();

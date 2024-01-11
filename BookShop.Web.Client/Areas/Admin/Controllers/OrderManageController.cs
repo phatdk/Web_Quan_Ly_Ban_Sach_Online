@@ -157,8 +157,9 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			return View(_order);
 		}
 
-		// GET: OrderManageController/Edit/5
-		public async Task<IActionResult> Edit(int id)
+        // GET: OrderManageController/Edit/5
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int id)
 		{
 			_order = await _orderService.GetById(id);
 			return View(_order);

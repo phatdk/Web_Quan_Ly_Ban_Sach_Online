@@ -69,7 +69,8 @@ namespace BookShop.BLL.Service
             var images = await _imageRepository.GetAllAsync();
             var objlist = (from a in carts
                            join b in products on a.Id_Product equals b.Id
-                           join c in images on b.Id equals c.Id_Product
+
+                           join c in images on b.Id equals c.Id_Product into imageGroup
                            select new CartDetailViewModel()
                            {
                                Id = a.Id,
@@ -80,7 +81,7 @@ namespace BookShop.BLL.Service
                                ProductName = b.Name,
                                ProductPrice = b.Price,
                                TotalPrice = a.Quantity * b.Price,
-                               ImgProductCartDetail = c.ImageUrl,
+                               ImgProductCartDetail = imageGroup.FirstOrDefault()?.ImageUrl,
                                SoLuongKho = b.Quantity,
                                Status = b.Quantity > 0 && b.Status == 1 ? 1 : 0,
                            }).ToList();
