@@ -1,0 +1,52 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: `/Admin/Gembox/GetOrderByStatus`
+        }).done(function (data) {
+            $("#orderssdone").text(data.orderssdone);
+            $("#orderwaitingtouse").text(data.orderwaitingtouse);
+            $("#ordercancel").text(data.ordercancel);
+        });
+    });
+
+</script>
+
+<div class="overview-boxes">
+    <div class="box">
+        <div class="right-side">
+            <div class="box-topic">Hoàn thành</div>
+            <div class="number" id="orderssdone"></div>
+            <div class="indicator">
+            </div>
+        </div>
+        <i class='bx bxs-bell' style="font-size: 50px;"></i>
+    </div>
+    <div class="box">
+        <div class="right-side">
+            <div class="box-topic">Đang chờ</div>
+
+            <div class="number" id="orderwaitingtouse"></div>
+
+            <div class="indicator">
+            </div>
+        </div>
+        <i class='bx bxs-bell-ring' style="font-size: 50px;"></i>
+    </div>
+
+    <div class="box">
+        <div class="right-side">
+            <div class="box-topic">Đã hủy</div>
+            <div class="number" id="ordercancel"></div>
+            <div class="indicator">
+                @*  <i class='bx bx-down-arrow-alt down'></i>
+                <span class="text">Down From Today</span> *@
+            </div>
+        </div>
+        <i class='bx bxs-bell-off' style="font-size: 50px;"></i>
+    </div>
+</div>

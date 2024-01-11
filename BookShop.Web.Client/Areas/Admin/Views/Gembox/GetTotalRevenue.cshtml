@@ -4,8 +4,9 @@
 @{
 }
 <script>
+
     $.ajax({
-        url: "/Admin/Gembox/GetTotalRevenue",
+            url: `/Admin/Gembox/GetTotalRevenue`,
         type: "GET",
         success: function (data) {
             $("#totalRevenue").text(data);
@@ -14,6 +15,7 @@
             console.error("Lỗi AJAX:", textStatus, errorThrown);
         }
     })
+
 </script>
 
 <p><span id="totalRevenue">0</span> đ</p>
