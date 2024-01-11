@@ -13,8 +13,8 @@
     <Folder Include="wwwroot\img\author\" />
     <Folder Include="wwwroot\img\blog\" />
     <Folder Include="wwwroot\img\product\" />
-    <Folder Include="wwwroot\uploads\blog\" />
     <Folder Include="wwwroot\exel\" />
+    <Folder Include="wwwroot\uploads\blog\" />
     <Folder Include="wwwroot\uploads\users\" />
   </ItemGroup>
 

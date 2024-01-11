@@ -205,7 +205,7 @@
                     <div class="indicator">    
                     </div>
                 </div>
-                <i class='bx bx-cart-alt cart'></i>
+                <i class='bx bxs-cart' style="font-size: 50px;"></i>
             </div>
             <div class="box">
                 <div class="right-side">
@@ -214,7 +214,7 @@
                     <div class="indicator">
                     </div>
                 </div>
-                <i class='bx bxs-cart-add cart two'></i>
+                <i class='bx bxs-cart-add' style="font-size: 50px"></i>
             </div>
            
             <div class="box">
@@ -226,10 +226,26 @@
                         <span class="text">Down From Today</span> *@
                     </div>
                 </div>
-                <i class='bx bxs-cart-download cart four'></i>
+                <i class='bx bxs-cart-download' style="font-size:50px"></i>
             </div>
         </div>
 
+        <p>      </p>
+        <div class="sales-boxes">
+            <div class="recent-sales box">
+                @await Html.PartialAsync("Chart")
+            </div>
+        </div>
+
+        <p>      </p>
+
+
+                @await Html.PartialAsync("GetOrderByStatus")
+         
+      
+
+
+        <p>   </p>
         <div class="sales-boxes">
             <div class="recent-sales box">
                 <div class="title">Top Selling</div>
@@ -262,25 +278,34 @@
                             <p>@product.TotalRevenue</p>
                         }
                     </ul>
-                    <ul class="details">
-                        <li class="topic">Ảnh</li>
-                        <div>Null Image</div>
-                    </ul>
+                
                 </div>
-              
+                <div class="button">
+                    <a href="#">See All</a>
+                </div>
             </div>
             
         </div>
-        <p>         </p>
+      
+       
 
+        <p>         </p>
+        <div class="sales-boxes">
+           <div class="recent-sales box">
+                @await Html.PartialAsync("GetHighestInvoice")
+            </div> 
+        </div>
+        <p>         </p>
         <div class="sales-boxes">
             <div class="recent-sales box">
-                @await Html.PartialAsync("Chart")
+                @await Html.PartialAsync("GetProductsSortedByQuantityAsc")
+               
             </div>
         </div>
+        <button id="myButton"><a asp-action="export" asp-controller="Gembox" download="D:\Study File\DATN\BookShop.Web.Client\wwwroot\exel\demothongke.xlsx">Download File Thong ke</a></button>
     </div>
     
-    <button id="myButton"><a asp-action="export" asp-controller="Gembox" download="D:\Study File\DATN\BookShop.Web.Client\wwwroot\exel\demothongke.xlsx">Download File Thong ke</a></button>
+   
    
 </body>
 </html>

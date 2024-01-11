@@ -1,0 +1,57 @@
+﻿<script>
+    
+    $(document).ready(function () {
+        $.ajax({
+            url: "/Admin/Gembox/GetProductsSortedByQuantityAsc"
+        }).done(function (data) {
+
+            for (var i = 0; i < data.length; i++) {
+                var invoice = data[i];
+                $("#invoice-" + (i + 1) + "-idproduct").text(invoice.id);
+                $("#invoice-" + (i + 1) + "-name").text(invoice.name);
+                $("#invoice-" + (i + 1) + "-quantity").text(invoice.quantity);
+            }
+
+        });
+    });
+
+</script>
+<div class="title">Số lượng tồn</div>
+<div class="sales-details">
+
+    </ul>
+    <ul class="details">
+        <li class="topic">Mã sản phẩm </li>
+
+        <p><div id="invoice-1-idproduct"></div></p>
+        <p><div id="invoice-2-idproduct"></div></p>
+        <p><div id="invoice-3-idproduct"></div></p>
+        <p><div id="invoice-4-idproduct"></div></p>
+        <p><div id="invoice-5-idproduct"></div></p>
+        
+    </ul>
+    <ul class="details">
+        <li class="topic">Tên sản phẩm</li>
+        <p><div id="invoice-1-name"></div></p>
+        <p><div id="invoice-2-name"></div></p>
+        <p><div id="invoice-3-name"></div></p>
+        <p><div id="invoice-4-name"></div></p>
+        <p><div id="invoice-5-name"></div></p>
+
+    </ul>
+    <ul class="details">
+        <li class="topic">Số lượng tồn</li>
+        <p><div id="invoice-1-quantity"></div></p>
+        <p><div id="invoice-2-quantity"></div></p>
+        <p><div id="invoice-3-quantity"></div></p>
+        <p><div id="invoice-4-quantity"></div></p>
+        <p><div id="invoice-5-quantity"></div></p>
+    </ul>
+   
+
+</div>
+<div class="button">
+    <a href="#">See All</a>
+</div>
+
+

@@ -143,7 +143,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
                     Status = author.Status
                 };
 
-                await _authorService.Update(id, authorud);
+                //await _authorService.Update(id, authorud);
                 return RedirectToAction("Index");
             }
             else
