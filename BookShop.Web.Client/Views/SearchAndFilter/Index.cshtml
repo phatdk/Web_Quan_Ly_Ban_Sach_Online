@@ -1,4 +1,14 @@
-﻿
+﻿@using BookShop.BLL.ConfigurationModel.AuthorModel;
+@using BookShop.BLL.ConfigurationModel.GenreModel;
+@using BookShop.BLL.ConfigurationModel.SupplierModel;
+
+
+
+@{
+	List<AuthorModel> authorList = ViewBag.Author;
+	List<GenreModel> genreList = ViewBag.Genre;
+	List<SupplierViewModel> supplierList = ViewBag.Supplier;
+}
 <style>
 	.filter-content {
 		display: grid;
@@ -20,7 +30,7 @@
 		grid-column: 2/5;
 		display: grid;
 		padding: 0 10px;
-	position:relative;
+		position: relative;
 		gap: 10px;
 	}
 
@@ -78,6 +88,7 @@
 	}
 
 	ul {
+		padding-left: 0;
 		font-weight: 100;
 		font-size: 13px;
 	}
@@ -88,17 +99,16 @@
 
 	.filter-content .search-bar {
 		justify-content: center;
-	
 		position: absolute;
 		top: 10px;
-	
 		display: flex;
 	}
-	.fl{
-		margin-top:80px;
-		display:grid;
-		grid-template-columns:repeat(4,1fr);
-		gap:5px;
+
+	.fl {
+		margin-top: 80px;
+		display: grid;
+		grid-template-columns: repeat(4,1fr);
+		gap: 5px;
 	}
 
 	.km-sp {
@@ -112,28 +122,29 @@
 		width: 40px;
 		color: white;
 		border-radius: 6px;
-		
 		background-color: #C92127;
 	}
 
-	.filter .testsp p{
-		font-size:14px;
-		font-weight:700;
+	.filter .testsp p {
+		font-size: 14px;
+		font-weight: 700;
 	}
 
-	.filter .giaban{
-		align-items:center;
-		display:flex;
-		gap:10px;
+	.filter .giaban {
+		align-items: center;
+		display: flex;
+		gap: 10px;
 	}
 
-	.filter .giaban p{
-			color: #C92127 ;margin-bottom:0;
-	}
-	.ttsp{
-		
-		font-size:14px;
-		font-weight:700;
+		.filter .giaban p {
+			color: #C92127;
+			margin-bottom: 0;
+		}
+
+	.ttsp {
+		margin-top: 10px;
+		font-size: 14px;
+		font-weight: 700;
 		min-height: 42px;
 		line-height: 1.4;
 		-webkit-line-clamp: 2;
@@ -146,7 +157,7 @@
 		box-shadow: 0px 0px 4px 2px rgba(0,0,0,0.1);
 	}
 
-	.filter .testsp{
+	.filter .testsp {
 		padding: 10px;
 	}
 </style>
@@ -165,16 +176,12 @@
 							Tác giả
 						</p>
 						<ul>
-							<li>
-								<input type="checkbox" /> duy
-							</li>
-							<li>
-								<input type="checkbox" /> duy
-							</li>
-							<li>
-								<input type="checkbox" /> duy
-							</li>
-
+							@foreach (var item in authorList)
+							{
+								<li>
+									<input onclick="tacgiasearch(this)" value="@item.Id" type="checkbox" /> @item.Name
+								</li>
+							}
 						</ul>
 					</div>
 				</div>
@@ -222,7 +229,7 @@
 				</div>
 				<div id="buttonContainer"></div>
 			</div>
-			
+
 		</div>
 	</div>
 </div>
@@ -232,18 +239,16 @@
 		var url = "@Url.Action("ChiTietSanPham", "Home")?id=" + id;
 		window.location.href = url;
 	}
-	function loadData(pageIndex) {
-
+	function loadData(pageIndex, genre) {
 		var keyWord = document.getElementById("keyWordFind").value;
 		var price = document.getElementById("price").value;
-		console.log("pageIndex:", pageIndex);
-		console.log("keyWord:", keyWord);
-		console.log("price:", price);
+	
+
 		$.ajax({
 			url: '@Url.Action("Getdata", "SearchAndFilter")',
 			type: 'GET',
 			data: { page: pageIndex, keyWord: keyWord, min: price },
-			
+
 			success: function (data) {
 				console.log(data);
 				var listcategory = $("#listcategory");
@@ -261,12 +266,14 @@
 
 						'</div>' +
 						'<div class="giaban">' + '<p>' +
-						formatPrice(item.price) + '</p>'+
-						
-						'<div class="km-sp">' + "10 %" + '</div>' +
-						'</div class="giabandau">' +
-						'<div>' +'<p>' + "200.000 đ" + '</p>' +'</div>'
+						formatPrice(item.newPrice) + '</p>';
+					if (item.saleoff > 0) {
+						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
+							'</div class="giabandau">' +
+							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>'
 						'</div>';
+					}
+
 
 					listcategory.append(categoryRow);
 				});
@@ -279,25 +286,35 @@
 	};
 	$(document).ready(function () {
 		loadData(1);
-		
 	});
 	function searchOnEnter(event) {
 		loadData(1);
-		
+
 	}
 
 	function formatPrice(price) {
 		const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 		return formattedPrice + ' đ';
 	}
-	function updatePrice(event) {	
+	function updatePrice(event) {
 		loadData(1);
 		var priceSlider = document.getElementById("price");
 		var priceValue = document.getElementById("price-value");
 		priceValue.innerHTML = formatPrice(priceSlider.value);
-		
+
 	}
 
 
+	var authorIdList = []
+	function tacgiasearch(elment) {
+		if (elment.checked) {
+			authorIdList.push(elment.value)
+		} else {
+			var indexToRemove = authorIdList.indexOf(elment.value);
+			if (indexToRemove !== -1) {
+				authorIdList.splice(indexToRemove, 1);
+			} 
+		}
+	}
 
 </script>

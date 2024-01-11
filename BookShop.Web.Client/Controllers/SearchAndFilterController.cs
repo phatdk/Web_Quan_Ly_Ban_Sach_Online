@@ -15,13 +15,21 @@ namespace BookShop.Web.Client.Controllers
 		protected readonly IGenreService _genreService;
 		private readonly UserManager<Userr> _userManager;
 		private List<ProductViewModel> _products;
+		protected readonly IAuthorService _authorService;
+		protected readonly ISupplierService _supplierService;
+		
 		public SearchAndFilterController(
+			ISupplierService supplierService,
+			IAuthorService authorService,
 			UserManager<Userr> userManager,
 			IGenreService genreService,
 			IBookService bookService,
 			IProductBookService productBookService,
 			IProductService productService)
 		{
+			_supplierService = supplierService;
+			_authorService = authorService;
+
 			_products = new List<ProductViewModel>();
 			_userManager = userManager;
 			_genreService = genreService;
@@ -32,14 +40,18 @@ namespace BookShop.Web.Client.Controllers
 		}
 		public async Task<IActionResult> Index()
 		{
+			var author = (await _authorService.Getall()).Where(x => x.Status == 1).ToList();
+			var genre = (await _genreService.GetAll()).Where(x => x.Status == 1).ToList();
+			var supplier = (await _supplierService.GetAll()).Where(c=>c.Status ==1).ToList();
+			ViewBag.Author = author;
+			ViewBag.Genre = genre;
+			ViewBag.Supplier = supplier;
 			return View();
 		}
-		[HttpGet]
+		[HttpGet("SearchAndFilter/Index")]
 		public async Task<IActionResult> Getdata(int page, string? keyWord, int? gennerId, int? categoriId, int? colectionId, int? authorId,int min )
 		{
-			var user = await GetCurrentUserAsync();
-			_products = await _productService.Search(gennerId, categoriId, colectionId, authorId,min);
-
+			_products = await _productService.Search(gennerId, categoriId, colectionId, authorId, min);
 			if (keyWord != null)
 			{
 				_products = _products.Where(c => c.Name.Contains(keyWord)).ToList();
@@ -52,6 +64,16 @@ namespace BookShop.Web.Client.Controllers
 			return Json(new { data = productListSearch, page = page, max = Math.Ceiling(totalPage) });
 		}
 
+		[HttpGet]
+		public async Task<IActionResult> GenreList()
+		{
+			var genre = await _genreService.GetAll();
+			return Json( new { data = genre });
+		}
+
+
+
+
 		private Task<Userr> GetCurrentUserAsync()
 		{
 			return _userManager.GetUserAsync(HttpContext.User);
@@ -59,12 +81,8 @@ namespace BookShop.Web.Client.Controllers
 
 
 
-		[HttpGet]
-		public async Task<IActionResult> Genre()
-		{
-			var genre = await _genreService.GetAll();
-			return Json(genre);
-		}
+		
+	
 
 	}
 }

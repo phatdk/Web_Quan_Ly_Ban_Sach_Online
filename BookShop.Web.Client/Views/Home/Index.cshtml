@@ -229,8 +229,11 @@
 	}
 	.giaban p{
 		font-size: 14px;
-		color: #c4c3be;
-		text-decoration: line-through;
+		
+	}
+	.giaban p:nth-child(2){
+			color: #c4c3be;
+			text-decoration: line-through;
 	}
 	.giaban {
 		display:flex;
@@ -301,6 +304,10 @@
 			margin-left: 20px;
 			font-weight: 600;
 			font-size: 28px;
+	}
+	.giabandau{
+		color:#DCDCDC;
+		text-decoration: line-through;
 	}
 </Style>
 <div class="row">
@@ -497,12 +504,14 @@
 						'<h4>' + item.name + '</h4>' +
 						
 						'</div>' +
-						'<div class="giaban">'+
-						formatPrice(item.price) +
-						'<p>'+"200.000 đ" +'</p>'+
-						'<div class="km-sp">' + "10 %" +'</div>'+
-						'</div>' +
+						'<div class="giaban">' + '<p>' +
+						formatPrice(item.newPrice) + '</p>';
+					if (item.saleoff > 0) {
+						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
+							'<div class="giabandau">' +
+							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>'+
 						'</div>';
+					}
 
 					listcategory.append(categoryRow);
 				});
@@ -533,12 +542,14 @@
 						'<h4>' + item.name + '</h4>' +
 
 						'</div>' +
-						'<div class="giaban">' +
-						formatPrice(item.price) +
-						'<p>' + "200.000 đ" + '</p>' +
-						'<div class="km-sp">' + "10 %" + '</div>' +
-						'</div>' +
+						'<div class="giaban">' + '<p>' +
+						formatPrice(item.newPrice) + '</p>';
+					if (item.saleoff > 0) {
+						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
+							'<div class="giabandau">' +
+							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>'+
 						'</div>';
+					}
 
 					listcategory.append(categoryRow);
 				});
@@ -572,7 +583,7 @@
 				listcategory.empty();
 				data.data.forEach(function (item) {
 					var categoryRow =
-						'<div class="testsp"  onclick="ChiTietSanPham(' + item.id + ')">' +
+						'<div class="testsp" onclick="ChiTietSanPham(' + item.id + ')">' +
 						'<div class="product-image">' +
 						'<div class="flashsale-image-container">' +
 						'<img src="' + item.imgUrl + '">' +
@@ -580,11 +591,16 @@
 						'</div>' +
 						'<div class="ttsp">' +
 						'<h4>' + item.name + '</h4>' +
-						'<div class="giaban">' +
-						formatPrice(item.price) +
-						'<p>' + "200.000 đ" + '</p>' +
-						'<div class="km-sp">' + "10 %" + '</div>' +
+
+						'</div>' +
+						'<div class="giaban">' + '<p>' +
+						formatPrice(item.newPrice) + '</p>';
+					if (item.saleoff > 0) {
+						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
+							'<div class="giabandau">' +
+							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>'+
 						'</div>';
+					}
 						listcategory.append(categoryRow);
 				});
 			},
