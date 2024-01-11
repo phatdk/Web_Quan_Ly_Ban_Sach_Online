@@ -68,16 +68,16 @@ namespace BookShop.BLL.Service
             return objlist;
         }
 
-        public async Task<NewsViewModel> GetById(int id)
+        public async Task<CreateNewsModel> GetById(int id)
         {
             var obj = await _repository.GetByIdAsync(id);
-            return new NewsViewModel()
+            return new CreateNewsModel()
             {
                 Id = obj.Id,
                 Title = obj.Title,
                 Content = obj.Content,
                 Description = obj.Description,
-                CreatedDate = obj.CreatedDate,
+                //CreatedDate = obj.CreatedDate,
                 Status = obj.Status,
                 Img = obj.Img
             };
@@ -104,7 +104,7 @@ namespace BookShop.BLL.Service
             return objlist;
         }
 
-        public async Task<bool> Update(int id, NewsViewModel model)
+        public async Task<bool> Update(int id, CreateNewsModel model)
         {
             try
             {
@@ -113,7 +113,11 @@ namespace BookShop.BLL.Service
                 obj.Content = model.Content;
                 obj.Description = model.Description;
                 obj.Status = model.Status;
-                obj.Img = model.Img;
+                if (model.Img != null)
+                {
+                    obj.Img = model.Img;
+                }
+
 
                 await _repository.UpdateAsync(id, obj);
                 return true;
