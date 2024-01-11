@@ -5,8 +5,9 @@
 }
 @section Scripts {
 <script>
+      
         $.ajax({
-            url: "/Admin/Gembox/GetTotalDateRevenue", 
+            url: `/Admin/Gembox/GetTotalDateRevenue`, 
             type: "GET",
             success: function (data) {
                 $("#GetTotalDateRevenue").text(data); 

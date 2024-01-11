@@ -1,6 +1,7 @@
 ﻿<script>
+   
     $.ajax({
-        url: "/Admin/Gembox/GetTotalRevenueByMonth", // Thay URL phù hợp với controller của bạn
+        url: `/Admin/Gembox/GetTotalRevenueByMonth`, // Thay URL phù hợp với controller của bạn
         type: "GET",
         success: function (data) {
             // Xử lý dữ liệu JSON nhận được (tổng doanh thu)
