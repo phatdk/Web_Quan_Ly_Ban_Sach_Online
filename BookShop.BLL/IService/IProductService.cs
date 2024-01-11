@@ -19,6 +19,6 @@ namespace BookShop.BLL.IService
 		public Task<bool> Update(UpdateProductModel model);
 		public Task<bool> ChangeQuantity(int id, int changeAmount);
 		public Task<bool> Delete(int id);
-		public Task<List<ProductViewModel>> Search(int ?gennerId,int? categoriId, int? colectionId,int? authorId,int min = 0);
+		public Task<List<ProductViewModel>> Search(int ?gennerId,int? categoriId, int? colectionId,int? authorId);
 	}
 }

@@ -84,6 +84,9 @@
 	}
 
 	li {
+		font-weight: 500;
+		font-size: 14px;
+		
 		list-style: none;
 	}
 
@@ -188,8 +191,16 @@
 				<div class="genre">
 					<div class="card-title">
 						<p>
-							Danh mục
+							Thể loại
 						</p>
+						<ul>
+							@foreach (var item in genreList)
+							{
+								<li>
+									<input onclick="theloaisearch(this)" value="@item.Id" type="checkbox" /> @item.Name
+								</li>
+							}
+						</ul>
 					</div>
 				</div>
 				<div class="category">
@@ -221,13 +232,13 @@
 			</div>
 			<div class="filter_right">
 				<div class="search-bar">
-					<a><i class="fa fa-search" style="font-size:30px" onclick="findOrder()"></i></a>
+					@*<a><i class="fa fa-search" style="font-size:30px" onclick="findOrder()"></i></a>*@
 					<input id="keyWordFind" oninput="searchOnEnter(event)" type="text" placeholder="Tìm kiếm">
 				</div>
 
 				<div class="fl" id="listcategory">
 				</div>
-				<div id="buttonContainer"></div>
+				<div style="text-align:center" id="buttonContainer"></div>
 			</div>
 
 		</div>
@@ -239,15 +250,23 @@
 		var url = "@Url.Action("ChiTietSanPham", "Home")?id=" + id;
 		window.location.href = url;
 	}
-	function loadData(pageIndex, genre) {
+
+	function loadData(pageIndex) {
 		var keyWord = document.getElementById("keyWordFind").value;
 		var price = document.getElementById("price").value;
-	
+		
+		console.log(price);
+		var author = authorIdList.join(',');
+		var genner = gennerIdList.join(',');
+		console.log(author);
+		console.log(genner);
+
 
 		$.ajax({
 			url: '@Url.Action("Getdata", "SearchAndFilter")',
 			type: 'GET',
-			data: { page: pageIndex, keyWord: keyWord, min: price },
+
+			data: { page: pageIndex, keyWord: keyWord, authorId: author, gennerId: genner, min: price },
 
 			success: function (data) {
 				console.log(data);
@@ -315,6 +334,19 @@
 				authorIdList.splice(indexToRemove, 1);
 			} 
 		}
+		loadData(1, '');
+	}
+	var gennerIdList = []
+	function theloaisearch(elment) {
+		if (elment.checked) {
+			gennerIdList.push(elment.value)
+		} else {
+			var indexToRemove = gennerIdList.indexOf(elment.value);
+			if (indexToRemove !== -1) {
+				gennerIdList.splice(indexToRemove, 1);
+			}
+		}
+		loadData(1, '');
 	}
 
 </script>
