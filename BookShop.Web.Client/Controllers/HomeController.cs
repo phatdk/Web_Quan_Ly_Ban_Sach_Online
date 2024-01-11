@@ -4,6 +4,7 @@ using BookShop.BLL.IService;
 using BookShop.BLL.Service;
 using BookShop.DAL.Entities;
 using BookShop.Web.Client.Models;
+using BookShop.Web.Client.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -22,8 +23,9 @@ namespace BookShop.Web.Client.Controllers
 		private readonly IProductService _productService;
 		private readonly IWishListService _WishListService;
 		private readonly UserManager<Userr> _userManager;
+		private readonly PointNPromotionSerVice _pointNPromotionSerVice;
 
-		public HomeController(ILogger<HomeController> logger, IProductService productService, IWishListService wishListService, UserManager<Userr> userManager)
+		public HomeController(ILogger<HomeController> logger, IProductService productService, IWishListService wishListService, UserManager<Userr> userManager, PointNPromotionSerVice pointNPromotionSerVice)
 		{
 			_logger = logger;
 			_wishList = new List<WishListViewModel>();
@@ -32,6 +34,7 @@ namespace BookShop.Web.Client.Controllers
 			_productService = productService;
 			_WishListService = wishListService;
 			_userManager = userManager;
+			_pointNPromotionSerVice = pointNPromotionSerVice;
 		}
 
 		public async Task<IActionResult> Index()
@@ -139,6 +142,16 @@ namespace BookShop.Web.Client.Controllers
 		{
 			return View();
 		}
+
+		public async Task<IActionResult> ExchangePromotion()
+		{
+			var user = await GetCurrentUserAsync();
+			var promotionList = (await _pointNPromotionSerVice.GetActivePromotion()).Where(x => x.NameType.Equals("Phiếu khuyến mãi điểm đổi"));
+			ViewBag.Promotion = promotionList;
+			return View();
+		}
+
+
 		[HttpGet]
 		public async Task<IActionResult> Getdata(int page, string? keyWord)
 		{

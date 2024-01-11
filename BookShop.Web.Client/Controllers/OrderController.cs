@@ -194,7 +194,7 @@ namespace BookShop.Web.Client.Controllers
 			createModel.Length = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Length / 100)));
 			createModel.Height = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Height / 100)));
 			var validPromotion = new List<PromotionViewModel>();
-			foreach (var promotion in (await _pointNPromotionService.GetActivePromotion()).Where(x => x.NameType.Equals("Tự động")))
+			foreach (var promotion in (await _pointNPromotionService.GetActivePromotion()).Where(x => x.NameType.Equals("Phiếu khuyến mãi áp dụng tự động")))
 			{
 				if (promotion.Condition <= createModel.Total)
 				{

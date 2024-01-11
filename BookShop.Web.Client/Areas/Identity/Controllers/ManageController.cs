@@ -17,6 +17,7 @@ using BookShop.BLL.ConfigurationModel.UerPromotionModel;
 using BookShop.Web.Client.Models;
 using static NuGet.Packaging.PackagingConstants;
 using GemBox.Spreadsheet;
+using BookShop.BLL.ConfigurationModel.PromotionModel;
 
 namespace App.Areas.Identity.Controllers
 {
@@ -219,6 +220,49 @@ namespace App.Areas.Identity.Controllers
 				return Json(new { success = false, message = "Bạn đã hết lượt nhận mã khuyến mãi này!" });
 			}
 			return Json(new { success = false, message = "Mã khuyến mãi này đã hết lượt nhận!" });
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> ExchangePromotion(int userId, int promotionId)
+		{
+			try
+			{
+				var promotion = await _promotionService.GetById(promotionId);
+				if (promotion != null && promotion.Quantity > 0)
+				{
+					var taskResult = _userPromotionService.Add(new CreateUserPromotionModel
+					{
+						Id_User = userId,
+						Id_Promotion = promotion.Id,
+						EndDate = DateTime.Now.AddDays(Convert.ToInt32(promotion.StorageTerm)),
+						Status = 1,
+					});
+					var obj = new UpdatePromotionModel()
+					{
+						Name = promotion.Name,
+						Code = promotion.Code,
+						Condition = promotion.Condition,
+						StorageTerm = promotion.StorageTerm,
+						PercentReduct = promotion.PercentReduct,
+						AmountReduct = promotion.AmountReduct,
+						ReductMax = promotion.ReductMax,
+						Quantity = promotion.Quantity - 1,
+						StartDate = promotion.StartDate,
+						EndDate = promotion.EndDate,
+						Description = promotion.Description,
+						Status = promotion.Status,
+						Id_Type = promotion.Id_Type,
+					};
+					var result = _promotionService.Update(promotion.Id, obj);
+					await Task.WhenAll(taskResult, result);
+					return Json(new { success = true });
+				}
+				return Json(new { success = false });
+			}
+			catch
+			{
+				return Json(new { success = false });
+			}
 		}
 
 		[HttpPost]

@@ -1,0 +1,22 @@
+﻿@using BookShop.BLL.ConfigurationModel.PromotionModel;
+@using BookShop.BLL.IService;
+@using BookShop.DAL.Entities;
+@using Microsoft.AspNetCore.Identity;
+@inject UserManager<Userr> UserManager;
+@inject IWalletpointService walletService;
+
+@{
+    ViewData["Title"] = "Đổi phiếu khuyến mãi";
+    Layout = "_LayoutUser";
+    var userLogin = await UserManager.GetUserAsync(User);
+    var wallet = await walletService.GetById(Model.Id);
+    List<PromotionViewModel> promotionList = ViewBag.Promotion;
+}
+
+@if()
+<div class="row">
+    @foreach(var item in promotionList)
+    {
+        
+    }
+</div>
