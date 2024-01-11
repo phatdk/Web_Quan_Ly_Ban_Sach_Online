@@ -1,4 +1,5 @@
 ﻿using BookShop.BLL.ConfigurationModel.ProductModel;
+using BookShop.BLL.ConfigurationModel.PromotionModel;
 using BookShop.BLL.ConfigurationModel.WishListModel;
 using BookShop.BLL.IService;
 using BookShop.BLL.Service;
@@ -25,7 +26,7 @@ namespace BookShop.Web.Client.Controllers
 		private readonly UserManager<Userr> _userManager;
 		private readonly PointNPromotionSerVice _pointNPromotionSerVice;
 
-		public HomeController(ILogger<HomeController> logger, IProductService productService, IWishListService wishListService, UserManager<Userr> userManager, PointNPromotionSerVice pointNPromotionSerVice)
+		public HomeController(ILogger<HomeController> logger, IProductService productService, IWishListService wishListService, UserManager<Userr> userManager)
 		{
 			_logger = logger;
 			_wishList = new List<WishListViewModel>();
@@ -34,7 +35,7 @@ namespace BookShop.Web.Client.Controllers
 			_productService = productService;
 			_WishListService = wishListService;
 			_userManager = userManager;
-			_pointNPromotionSerVice = pointNPromotionSerVice;
+			_pointNPromotionSerVice = new PointNPromotionSerVice();
 		}
 
 		public async Task<IActionResult> Index()
@@ -146,8 +147,8 @@ namespace BookShop.Web.Client.Controllers
 		public async Task<IActionResult> ExchangePromotion()
 		{
 			var user = await GetCurrentUserAsync();
-			var promotionList = (await _pointNPromotionSerVice.GetActivePromotion()).Where(x => x.NameType.Equals("Phiếu khuyến mãi điểm đổi"));
-			ViewBag.Promotion = promotionList;
+			var promotionList = (await _pointNPromotionSerVice.GetActivePromotion()).Where(x => x.NameType.Equals("Phiếu khuyến mãi điểm đổi")).ToList();
+			ViewBag.Promotion = promotionList != null ? promotionList : new List<PromotionViewModel>() ;
 			return View();
 		}
 

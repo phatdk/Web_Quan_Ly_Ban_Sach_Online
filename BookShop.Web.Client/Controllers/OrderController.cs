@@ -161,11 +161,12 @@ namespace BookShop.Web.Client.Controllers
 					{
 						NameProduct = product.Name,
 						Id_Product = product.Id,
-						Price = product.Price,
+						Price = product.NewPrice,
+						Img = product.ImgUrl,
 						Quantity = prod.Quantity,
 					};
 					createModel.orderDetails.Add(orderdetail);
-					createModel.Total += prod.Quantity * product.Price;
+					createModel.Total += prod.Quantity * product.NewPrice;
 				}
 				cartUse = 1;
 			}
@@ -183,11 +184,12 @@ namespace BookShop.Web.Client.Controllers
 				{
 					NameProduct = product.Name,
 					Id_Product = product.Id,
-					Price = product.Price,
+					Price = product.NewPrice,
+					Img = product.ImgUrl,
 					Quantity = quantity,
 				};
 				createModel.orderDetails.Add(orderdetail);
-				createModel.Total += quantity * product.Price;
+				createModel.Total += quantity * product.NewPrice;
 			}
 			createModel.Weight = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Weight / 1000)));
 			createModel.Width = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Width / 100)));

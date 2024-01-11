@@ -186,7 +186,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 				Id_Product = product.Id,
 				Quantity = quantity,
 				NameProduct = product.Name,
-				Price = product.Price,
+				Price = product.NewPrice,
 				Id_Order = orderId,
 			};
 			listDetails.Add(detail);

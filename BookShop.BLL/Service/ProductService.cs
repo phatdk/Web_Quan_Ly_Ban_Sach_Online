@@ -184,7 +184,7 @@ namespace BookShop.BLL.Service
 					if (tkm != null)
 					{
 						item.Saleoff = tkm.PercentReduct;
-						item.NewPrice = ((item.Price * 100) - (item.Price * tkm.PercentReduct)) / 100;
+						item.NewPrice = Convert.ToInt32((item.Price * 100) - (item.Price * tkm.PercentReduct)) / 100;
 
 					}
 				}
@@ -318,6 +318,12 @@ namespace BookShop.BLL.Service
 					Status = item.Status,
 				};
 				imagevms.Add(imagev);
+			}
+			var pp = (await _productPromotionRepository.GetAllAsync()).Where(x=>x.Status == 1).OrderBy(x=>x.CreatedDate);
+			foreach (var item in pp)
+			{
+				var promotion = await _promotionRepository.GetByIdAsync(item.Id);
+
 			}
 
 			var obj = new ProductViewModel()
@@ -510,7 +516,7 @@ namespace BookShop.BLL.Service
 					if (tkm != null)
 					{
 						item.Saleoff = tkm.PercentReduct;
-						item.NewPrice = ((item.Price * 100) - (item.Price * tkm.PercentReduct)) / 100;
+						item.NewPrice = Convert.ToInt32((item.Price * 100) - (item.Price * tkm.PercentReduct)) / 100;
 
 					}
 				}
@@ -563,7 +569,7 @@ namespace BookShop.BLL.Service
 						if (tkm != null)
 						{
 								item.Saleoff = tkm.PercentReduct;
-								item.NewPrice = ((item.Price * 100) - (item.Price * tkm.PercentReduct)) / 100;
+								item.NewPrice = Convert.ToInt32((item.Price * 100) - (item.Price * tkm.PercentReduct)) / 100;
 							
 						}
 					}
