@@ -128,9 +128,10 @@ namespace ShopWheyProject.MVC.Areas.Identity.Controllers
                     };
                     await _WalletPointRepository.Add(walletPoint);
                     var users = await _userManager.FindByNameAsync(user.UserName);
-                    await _userManager.AddToRoleAsync(users, "Staff");
-                    await _userManager.AddToRoleAsync(users, "Customers");
-                    return View("Index");
+                    var listRole = new List<string>() { "Staff", "Customers" };
+                    await _userManager.AddToRolesAsync(users, listRole);
+
+                    return RedirectToAction("Index");
                 }
                 else
                 {
