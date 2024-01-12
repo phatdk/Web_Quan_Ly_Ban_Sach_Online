@@ -19,7 +19,7 @@
 		<div class="col-6">
 			<label>Số điểm của bạn: <span>@wallet.Point</span> Point</label>
 		</div>
-		<div class="col-2"><a href="@Url.Action("ExchangePromotion", "Home")" class="btn btn-primary">Đổi điểm</a>@Html.ActionLink("Đổi điểm", "ExchangePromotion", "Home", new { area = "" })</div>
+		<div class="col-2">@Html.ActionLink("Đổi điểm", "ExchangePromotion", "Home", new { area = "" })</div>
 		<div class="col-4">
 			<div class="text-primary text-decoration-underline" onclick="viewHistory()">Xem lịch sử tích điểm</div>
 		</div>
