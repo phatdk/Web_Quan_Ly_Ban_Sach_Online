@@ -244,7 +244,7 @@ namespace App.Areas.Identity.Controllers
 					});
 					var history = new PointTranHistoryViewModel()
 					{
-						PointUserd = Convert.ToInt32(-promotion.ConversionPoint),
+						PointUserd = - Convert.ToInt32(promotion.ConversionPoint),
 						Id_User = userId,
 						Id_Promotion = promotionId,
 					};
@@ -255,6 +255,7 @@ namespace App.Areas.Identity.Controllers
 						Code = promotion.Code,
 						Condition = promotion.Condition,
 						StorageTerm = promotion.StorageTerm,
+						ConversionPoint = promotion.ConversionPoint,
 						PercentReduct = promotion.PercentReduct,
 						AmountReduct = promotion.AmountReduct,
 						ReductMax = promotion.ReductMax,
@@ -266,7 +267,7 @@ namespace App.Areas.Identity.Controllers
 						Id_Type = promotion.Id_Type,
 					};
 					var task3 = _promotionService.Update(promotion.Id, obj);
-					await Task.WhenAll(task1, task2, task3);
+					//await Task.WhenAll(task1, task2, task3);
 					return Json(new { success = true });
 				}
 				return Json(new { success = false });

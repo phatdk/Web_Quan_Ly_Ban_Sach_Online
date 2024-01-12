@@ -396,6 +396,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 		// GET: OfflineSaleController/Create
 		public async Task<IActionResult> CreateOfflineOrder()
 		{
+			HttpContext.Session.Remove("sessionOrder");
 			var staff = await _userManager.GetUserAsync(HttpContext.User);
 			if (staff != null)
 			{
