@@ -267,7 +267,7 @@ namespace App.Areas.Identity.Controllers
 						Id_Type = promotion.Id_Type,
 					};
 					var task3 = _promotionService.Update(promotion.Id, obj);
-					//await Task.WhenAll(task1, task2, task3);
+					await Task.WhenAll(task1, task2, task3);
 					return Json(new { success = true });
 				}
 				return Json(new { success = false });
