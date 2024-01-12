@@ -13,6 +13,7 @@ using BookShop.DAL.Entities;
 using BookShop.Web.Client.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -36,30 +37,32 @@ namespace BookShop.Web.Client.Controllers
 		private readonly IPromotionService _promotionService;
 		private readonly ProductPreviewService _productPreviewService;
 		private readonly PointNPromotionSerVice _pointNPromotionService;
+		private readonly IEmailSender _EmailSender;
 
 
-		public OrderController(UserManager<Userr> userManager, IOrderService orderService, IProductService productService, IOrderDetailService orderDetailService, IPaymentFormService paymentFormService, IOrderPaymentService orderPaymentService, IUserService userService, IStatusOrderService statusOrderService, ICartDetailService cartDetailService, IPromotionService promotionService, IUserPromotionService userPromotionService, IOrderPromotionService orderPromotionService)
-		{
-			_orders = new List<OrderViewModel>();
-			_order = new OrderViewModel();
-			_userManager = userManager;
-			_orderService = orderService;
-			_productService = productService;
-			_orderDetailService = orderDetailService;
-			_orderPromotionService = orderPromotionService;
-			_paymentFormService = paymentFormService;
-			_orderPaymentService = orderPaymentService;
-			_userService = userService;
-			_statusService = statusOrderService;
-			_cartDetailService = cartDetailService;
-			_promotionService = promotionService;
-			_userPromotionService = userPromotionService;
+        public OrderController(UserManager<Userr> userManager, IOrderService orderService, IProductService productService, IOrderDetailService orderDetailService, IPaymentFormService paymentFormService, IOrderPaymentService orderPaymentService, IUserService userService, IStatusOrderService statusOrderService, ICartDetailService cartDetailService, IPromotionService promotionService, IUserPromotionService userPromotionService, IOrderPromotionService orderPromotionService, IEmailSender emailSender)
+        {
+            _orders = new List<OrderViewModel>();
+            _order = new OrderViewModel();
+            _userManager = userManager;
+            _orderService = orderService;
+            _productService = productService;
+            _orderDetailService = orderDetailService;
+            _orderPromotionService = orderPromotionService;
+            _paymentFormService = paymentFormService;
+            _orderPaymentService = orderPaymentService;
+            _userService = userService;
+            _statusService = statusOrderService;
+            _cartDetailService = cartDetailService;
+            _promotionService = promotionService;
+            _userPromotionService = userPromotionService;
 
-			_productPreviewService = new ProductPreviewService();
-			_pointNPromotionService = new PointNPromotionSerVice();
-		}
+            _productPreviewService = new ProductPreviewService();
+            _pointNPromotionService = new PointNPromotionSerVice();
+            _EmailSender = emailSender;
+        }
 
-		private Task<Userr> GetCurrentUserAsync()
+        private Task<Userr> GetCurrentUserAsync()
 		{
 			return _userManager.GetUserAsync(HttpContext.User);
 		}
@@ -300,7 +303,11 @@ namespace BookShop.Web.Client.Controllers
 							HttpContext.Session.Remove("sessionCart");
 						}
 					}
-					return RedirectToAction("OrderDetails", new { id = result.Id });
+                    if (result.Email != null)
+                    {
+                        await _EmailSender.SendEmailAsync(result.Email, $"Đơn hàng {result.Id}", $"Đơn hàng của bạn đã được tạo");
+                    }
+                    return RedirectToAction("OrderDetails", new { id = result.Id });
 				}
 				return BadRequest();
 			}

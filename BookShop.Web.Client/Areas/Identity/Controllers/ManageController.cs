@@ -244,7 +244,7 @@ namespace App.Areas.Identity.Controllers
 					});
 					var history = new PointTranHistoryViewModel()
 					{
-						PointUserd = Convert.ToInt32(-promotion.ConversionPoint),
+						PointUserd = - Convert.ToInt32(promotion.ConversionPoint),
 						Id_User = userId,
 						Id_Promotion = promotionId,
 					};
@@ -255,6 +255,7 @@ namespace App.Areas.Identity.Controllers
 						Code = promotion.Code,
 						Condition = promotion.Condition,
 						StorageTerm = promotion.StorageTerm,
+						ConversionPoint = promotion.ConversionPoint,
 						PercentReduct = promotion.PercentReduct,
 						AmountReduct = promotion.AmountReduct,
 						ReductMax = promotion.ReductMax,
