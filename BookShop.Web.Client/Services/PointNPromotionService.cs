@@ -61,7 +61,7 @@ namespace BookShop.Web.Client.Services
 					activePromotions.Add(promotion);
 				}
 			}
-			return activePromotions;
+			return activePromotions.OrderBy(x=>x.CreatedDate).ToList();
 		}
 
 		public async Task<bool> ModifyUserPromotion(int userId, int promotionId, int status)
