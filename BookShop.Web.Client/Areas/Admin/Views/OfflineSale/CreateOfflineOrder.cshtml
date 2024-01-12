@@ -55,7 +55,7 @@
 				<div class="col-12">
 					<div class="w-75 d-block mb-2">
 						<div class="btn-group">
-							<input type="text" oninput="getProduct(this.value)" placeholder="Nhập tên sách" />
+							<input type="text" id="keyWordFind" oninput="loadData(1)" placeholder="Nhập tên sách" />
 							<i class="btn btn-outline-info fa-solid fa-magnifying-glass"></i>
 						</div>
 					</div>
@@ -156,8 +156,10 @@
 			</div>
 		</div>
 	</div>
+	<div id="buttonContainer"></div>
 </form>
 
+<script src="~/js/site.js"></script>
 <script>
 	function checkInput(id, quantity) {
 		var quantityInput = document.getElementById('quantity-' + id);
@@ -292,7 +294,7 @@
 						'<tr>' +
 						'<th>' + index + '</th>' +
 						'<td>' + item.nameProduct + '</td>' +
-						'<td>' + item.price + '</td>' +
+						'<td>' + formatCurrency(item.price) + '</td>' +
 						'<td id="removeProdq-' + item.id_Product + '">' + item.quantity + '</td>' +
 						'<td hidden>' + item.id_Order + '</td>' +
 						'<td hidden>' + item.id_Product + '</td>' +
@@ -316,17 +318,19 @@
 		});
 	};
 
-	function getProduct(keyWord) {
+	function loadData(pageIndex) {
+		var keyWord = $("#keyWordFind").val();
+		var index = (pageIndex - 1) * 10;
 		$.ajax({
 			url: '/Admin/OfflineSale/GetProducts',
 			type: 'GET',
-			data: { keyWord: keyWord },
+			data: { page: pageIndex, keyWord: keyWord },
 			success: function (data) {
 				var detailsList = $("#productList");
 				detailsList.empty();
 				let statusColor = "";
 				let status = "";
-				data.forEach(function (item, index) {
+				data.data.forEach(function (item, index) {
 					index += 1;
 					if (item.quantity >= 1) {
 						status = "Còn hàng";
@@ -342,7 +346,7 @@
 						'<tr>' +
 						'<td><img width=75px src="' + item.imgUrl + '" /> </td>' +
 						'<td>' + item.name + '</td>' +
-						'<td>' + item.price + '</td>' +
+						'<td>' + formatCurrency(item.newPrice) + '</td>' +
 						'<td id="prodq-' + item.id + '">' + item.quantity + '</td>' +
 						'<td>' +
 						'<input type="number" id="quantity-' + item.id + '" class="text-center w-75" min="1" max="' + item.quantity + '" value="1" oninput="checkInput(' + item.id + ',this.value)" /> </td>' +
@@ -351,6 +355,7 @@
 						'</tr>';
 					detailsList.append(orderRow);
 				});
+				createPagingButtons(1, data.max, data.page);
 			},
 			error: function (error) {
 				alert('Có lỗi xảy ra: ' + error.responseText);
@@ -460,7 +465,7 @@
 	function reFresh() {
 		checkChange(0);
 		getWaitingOrders();
-		getProduct();
+		loadData(1);
 		checkPromotion(0);
 	};
 
@@ -486,7 +491,7 @@
 					getWaitingOrders();
 					changeChecked = false;
 					checkChange(0);
-					getProduct();
+					loadData(1);
 				} else {
 					alert('Xác nhận thất bại: ' + result.errorMessage);
 				}
@@ -520,7 +525,7 @@
 					getWaitingOrders();
 					changeChecked = false;
 					checkChange(0);
-					getProduct();
+					loadData(1);
 				} else {
 					alert('Xác nhận thất bại: ' + result.errorMessage);
 				}
@@ -533,7 +538,7 @@
 
 	$(document).ready(function () {
 		getWaitingOrders();
-		getProduct();
+		loadData(1);
 		getDetailOrders(0);
 		checkPromotion(total);
 	});

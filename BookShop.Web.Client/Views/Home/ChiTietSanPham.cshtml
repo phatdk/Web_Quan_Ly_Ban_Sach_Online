@@ -130,7 +130,7 @@
 		}
 
 		.mua .m2 {
-			width:100px;
+			width: 100px;
 			margin-left: 10px;
 			border-radius: 5px;
 			background-color: #C92127;
@@ -169,44 +169,52 @@
 		color: rgba(0,0,0,0.2);
 		text-decoration: line-through;
 	}
-	.trai{
+
+	.trai {
 		grid-template-columns: 80px auto;
 		display: grid;
 	}
-	.trai .list-anh{
+
+		.trai .list-anh {
 			height: 350px;
 			flex-direction: column;
 			gap: 10px;
 			overflow-y: auto;
 			display: flex;
-	}
-	.trai .mua{
-			margin-top:30px;
+		}
+
+		.trai .mua {
+			margin-top: 30px;
 			height: 50px;
 			grid-column: 1/3;
 			display: flex;
-	}
+		}
 </style>
 <div class="container">
 	<div class="anh row">
 		<div class="col-5 trai">
-			
+
 			<div class="list-anh">
 				@foreach (var img in Model.imageViewModels)
 				{
-					<img  id="img-selected" src="@img.ImageUrl" alt="Hình ảnh sản phẩm"
+					<img id="img-selected" src="@img.ImageUrl" alt="Hình ảnh sản phẩm"
 						 style="max-width: 100px; max-height: 150px; border: 1px solid #C0C0C0; background-color: #FFFFFF;border-radius:5px"
 						 onclick="overViewImg(this.src)" />
 				}
-				
+
 			</div>
 			<img id="img-view" class="a1" src="@Model.imageViewModels.FirstOrDefault().ImageUrl" alt="ảnh sản phẩm" style="max-width: 100%; " />
-			<div class="mua" >
-				<button id="product" onclick="ThemVaoDanhSachYeuThich(@Model.Id)" class="btn btn-outline-danger">
-					<i class="fa-solid fa-face-kiss-wink-heart"></i> Thêm Yêu Thích
-				</button>
-				<input type="button" class="m1" id="addToCart" value="Thêm Vào Giỏ Hàng" data-bs-toggle="modal" data-bs-target="#spModal" />
-				<input type="button" id="buyNow" class="m2" value="Mua" />
+			<div class="mua">
+				@if (!isAdmin)
+				{
+					<button id="product" onclick="ThemVaoDanhSachYeuThich(@Model.Id)" class="btn btn-outline-danger">
+						<i class="fa-solid fa-face-kiss-wink-heart"></i> Thêm Yêu Thích
+					</button>
+
+					<input type="button" class="m1" id="addToCart" value="Thêm Vào Giỏ Hàng" data-bs-toggle="modal" data-bs-target="#spModal" />
+					<input type="button" id="buyNow" class="m2" value="Mua" />
+				}
+
 			</div>
 		</div>
 		<div class="col-7 phai">
@@ -216,7 +224,7 @@
 				</h3>
 				<div class="row">
 					<div class="col-6">
-						<p>Nhà xuất bản:Chưa biết </p>
+						<p>Nhà xuất bản: Chưa biết </p>
 					</div>
 					<div class="col-6">
 						<p>Tác giả: Lê Quang Khánh</p>
@@ -230,7 +238,7 @@
 						@foreach (var item in Model.bookViewModels)
 						{
 							<li>
-								@item.Title - @string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.ImportPrice)
+								@item.Title
 							</li>
 						}
 					</ul>
@@ -239,10 +247,10 @@
 					<div class="col-6">
 						<div class="Gia">
 							<div class="Giaban">
-								<h3>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Price)</h3>
+								<h3>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.NewPrice)</h3>
 							</div>
 							<div class="Giagoc">
-								<p>30000 đ</p>
+								<p>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Price)</p>
 							</div>
 						</div>
 					</div>
@@ -262,10 +270,10 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
 						</div>
 					</div>
 				</div>
-				
+
 			</div>
 		</div>
-		
+
 	</div>
 </div>
 <div class="modal" id="spModal">
