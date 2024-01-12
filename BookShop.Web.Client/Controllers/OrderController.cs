@@ -318,10 +318,10 @@ namespace BookShop.Web.Client.Controllers
 
 		public async Task<IActionResult> GetPromotionByUser(int id)
 		{
+			var promotionsPublic = (await _pointNPromotionService.GetActivePromotion()).Where(x=>x.NameType.Equals("Phiếu khuyến mãi áp dụng tự động"));
 			var promotions = (await _userPromotionService.GetByUser(id)).Where(x => x.Status == 1);
 			var validPromotions = new List<PromotionViewModel>();
 
-			var promotionsPublic = await _pointNPromotionService.GetActivePromotion();
 			if (promotionsPublic != null)
 			{
 				foreach (var item in promotionsPublic)

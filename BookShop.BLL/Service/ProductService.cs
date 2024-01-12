@@ -108,71 +108,71 @@ namespace BookShop.BLL.Service
 
 		public async Task<List<ProductViewModel>> GetAll()
 		{
-			//var list = await _productRepository.GetAllAsync();
-			//var objlist = new List<ProductViewModel>();
-			//foreach (var item in list)
-			//{
-			//	var obj = new ProductViewModel()
-			//	{
-			//		Id = item.Id,
-			//		Name = item.Name,
-			//		Price = item.Price,
-			//		Quantity = item.Quantity,
-			//		Description = item.Description,
-			//		CreatedDate = item.CreatedDate,
-			//		Status = item.Status,
-			//		Type = item.Type,
-			//	};
-			//	obj.CollectionName = item.Id_Collection != null ? (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == item.Id_Collection).FirstOrDefault().Name : "Trống";
-			//	var images = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == item.Id).OrderBy(x => x.Index);
-			//	var imagevms = new List<ImageViewModel>();
-			//	foreach (var image in images)
-			//	{
-			//		var imagevm = new ImageViewModel()
-			//		{
-			//			Id = image.Id,
-			//			ImageUrl = image.ImageUrl,
-			//			Index = image.Index,
-			//			CreatedDate = image.CreatedDate,
-			//			Status = image.Status,
-			//			Id_Product = image.Id_Product,
-			//		};
-			//		imagevms.Add(imagevm);
-			//	}
-			//	obj.imageViewModels = imagevms;
-			//	obj.ImgUrl = images != null ? images.FirstOrDefault().ImageUrl : "image null";
-			//	objlist.Add(obj);
-			//}
+			var list = await _productRepository.GetAllAsync();
+			var objlist = new List<ProductViewModel>();
+			foreach (var item in list)
+			{
+				var obj = new ProductViewModel()
+				{
+					Id = item.Id,
+					Name = item.Name,
+					Price = item.Price,
+					Quantity = item.Quantity,
+					Description = item.Description,
+					CreatedDate = item.CreatedDate,
+					Status = item.Status,
+					Type = item.Type,
+				};
+				obj.CollectionName = item.Id_Collection != null ? (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == item.Id_Collection).FirstOrDefault().Name : "Trống";
+				var images = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == item.Id).OrderBy(x => x.Index);
+				var imagevms = new List<ImageViewModel>();
+				foreach (var image in images)
+				{
+					var imagevm = new ImageViewModel()
+					{
+						Id = image.Id,
+						ImageUrl = image.ImageUrl,
+						Index = image.Index,
+						CreatedDate = image.CreatedDate,
+						Status = image.Status,
+						Id_Product = image.Id_Product,
+					};
+					imagevms.Add(imagevm);
+				}
+				obj.imageViewModels = imagevms;
+				obj.ImgUrl = images != null ? images.FirstOrDefault().ImageUrl : "image null";
+				objlist.Add(obj);
+			}
 			//return objlist;
-			var query = (from
-							 p in (await _productRepository.GetAllAsync()).DefaultIfEmpty()
-						 join i in (await _imageRepository.GetAllAsync()).DefaultIfEmpty() on p.Id equals i.Id_Product into imgGroup
-						 join pb in (await _productBookRepository.GetAllAsync()).DefaultIfEmpty() on p.Id equals pb.Id_Product
-						 join b in (await _bookRepository.GetAllAsync()).DefaultIfEmpty() on pb.Id_Book equals b.Id
-						 join ba in (await _bookAuthorRepository.GetAllAsync()).DefaultIfEmpty() on b.Id equals ba.Id_Book
-						 join a in (await _authorRepository.GetAllAsync()).DefaultIfEmpty() on ba.Id_Author equals a.Id
-						 join bg in (await _bookGenreRepository.GetAllAsync()).DefaultIfEmpty() on b.Id equals bg.Id_Book
-						 join g in (await _genretRepository.GetAllAsync()).DefaultIfEmpty() on bg.Id_Genre equals g.Id
-						 join c in (await _categorytRepository.GetAllAsync()).DefaultIfEmpty() on g.Id_Category equals c.Id
+			//var query = (from
+			//				 p in (await _productRepository.GetAllAsync()).DefaultIfEmpty()
+			//			 join i in (await _imageRepository.GetAllAsync()).DefaultIfEmpty() on p.Id equals i.Id_Product into imgGroup
+			//			 join pb in (await _productBookRepository.GetAllAsync()).DefaultIfEmpty() on p.Id equals pb.Id_Product
+			//			 join b in (await _bookRepository.GetAllAsync()).DefaultIfEmpty() on pb.Id_Book equals b.Id
+			//			 join ba in (await _bookAuthorRepository.GetAllAsync()).DefaultIfEmpty() on b.Id equals ba.Id_Book
+			//			 join a in (await _authorRepository.GetAllAsync()).DefaultIfEmpty() on ba.Id_Author equals a.Id
+			//			 join bg in (await _bookGenreRepository.GetAllAsync()).DefaultIfEmpty() on b.Id equals bg.Id_Book
+			//			 join g in (await _genretRepository.GetAllAsync()).DefaultIfEmpty() on bg.Id_Genre equals g.Id
+			//			 join c in (await _categorytRepository.GetAllAsync()).DefaultIfEmpty() on g.Id_Category equals c.Id
 
-						 //where g.Id == gennerId || c.Id == categoriId || a.Id == authorId || p.Price > min
-						 select new ProductViewModel()
-						 {
-							 Id = p.Id,
-							 Name = p.Name,
-							 Price = p.Price,
-							 Quantity = p.Quantity,
-
-							 Status = p.Status,
-							 ImgUrl = imgGroup.FirstOrDefault()?.ImageUrl,
-						 }).Distinct().ToList();
+			//			 //where g.Id == gennerId || c.Id == categoriId || a.Id == authorId || p.Price > min
+			//			 select new ProductViewModel()
+			//			 {
+			//				 Id = p.Id,
+			//				 Name = p.Name,
+			//				 Price = p.Price,
+			//				 Type = p.Type,
+			//				 Quantity = p.Quantity,
+			//				 Status = p.Status,
+			//				 ImgUrl = imgGroup.FirstOrDefault()?.ImageUrl,
+			//			 }).Distinct().ToList();
 
 			var pp = (await _productPromotionRepository.GetAllAsync()).Where(c => c.Status == 1);
 			var pr = (await _promotionRepository.GetAllAsync());
 			var prt = (await _promotionTypeRepository.GetAllAsync());
 			var cb = (await _collectionBookRepository.GetAllAsync());
 
-			foreach (var item in query)
+			foreach (var item in objlist)
 			{
 				item.NewPrice = item.Price;
 				item.Saleoff = 0;
@@ -189,7 +189,7 @@ namespace BookShop.BLL.Service
 					}
 				}
 			}
-			return query;
+			return objlist;
 		}
 
 
@@ -319,12 +319,6 @@ namespace BookShop.BLL.Service
 				};
 				imagevms.Add(imagev);
 			}
-			var pp = (await _productPromotionRepository.GetAllAsync()).Where(x=>x.Status == 1).OrderBy(x=>x.CreatedDate);
-			foreach (var item in pp)
-			{
-				var promotion = await _promotionRepository.GetByIdAsync(item.Id);
-
-			}
 
 			var obj = new ProductViewModel()
 			{
@@ -342,6 +336,24 @@ namespace BookShop.BLL.Service
 				CollectionId = product.Id_Collection,
 				CollectionName = product.Id_Collection != null ? (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == product.Id_Collection).FirstOrDefault().Name : "Trống",
 			};
+			obj.NewPrice = obj.Price;
+			obj.Saleoff = 0;
+			var pp = (await _productPromotionRepository.GetAllAsync()).Where(x => x.Status == 1).OrderBy(x => x.CreatedDate);
+			foreach (var item in pp)
+			{
+				var promotion = await _promotionRepository.GetByIdAsync(item.Id_Promotion);
+				if (promotion != null)
+				{
+					DateTime startTime = Convert.ToDateTime(promotion.StartDate);
+					DateTime endTime = Convert.ToDateTime(promotion.EndDate);
+					int result = DateTime.Now.CompareTo(startTime);
+					if (result >= 0 && endTime.CompareTo(DateTime.Now) >= 0)
+					{
+						obj.Saleoff = promotion.PercentReduct;
+						obj.NewPrice = Convert.ToInt32((obj.Price * 100) - (obj.Price * promotion.PercentReduct)) / 100;
+					}
+				}
+			}
 			return obj;
 		}
 
@@ -381,7 +393,7 @@ namespace BookShop.BLL.Service
 				};
 				images.Add(imagev);
 			}
-			return new ProductViewModel()
+			var obj = new ProductViewModel()
 			{
 				Id = product.Id,
 				Name = product.Name,
@@ -407,6 +419,25 @@ namespace BookShop.BLL.Service
 					Id = x.Id
 				}).ToList(),
 			};
+			obj.NewPrice = obj.Price;
+			obj.Saleoff = 0;
+			var pp = (await _productPromotionRepository.GetAllAsync()).Where(x => x.Status == 1).OrderBy(x => x.CreatedDate);
+			foreach (var item in pp)
+			{
+				var promotion = await _promotionRepository.GetByIdAsync(item.Id_Promotion);
+				if (promotion != null)
+				{
+					DateTime startTime = Convert.ToDateTime(promotion.StartDate);
+					DateTime endTime = Convert.ToDateTime(promotion.EndDate);
+					int result = DateTime.Now.CompareTo(startTime);
+					if (result >= 0 && endTime.CompareTo(DateTime.Now) >= 0)
+					{
+						obj.Saleoff = promotion.PercentReduct;
+						obj.NewPrice = Convert.ToInt32((obj.Price * 100) - (obj.Price * promotion.PercentReduct)) / 100;
+					}
+				}
+			}
+			return obj;
 		}
 
 		public async Task<bool> Update(UpdateProductModel model)
@@ -528,52 +559,52 @@ namespace BookShop.BLL.Service
 		public async Task<List<ProductViewModel>> Search(int? gennerId, int? categoriId, int? colectionId, int? authorId)
 		{
 
-		
-				var query = (from
-							 p in (await _productRepository.GetAllAsync()).DefaultIfEmpty()
-							 join i in (await _imageRepository.GetAllAsync()).DefaultIfEmpty() on p.Id equals i.Id_Product into imgGroup
-							 join pb in (await _productBookRepository.GetAllAsync()).DefaultIfEmpty() on p.Id equals pb.Id_Product
-							 join b in (await _bookRepository.GetAllAsync()).DefaultIfEmpty() on pb.Id_Book equals b.Id
-							 join ba in (await _bookAuthorRepository.GetAllAsync()).DefaultIfEmpty() on b.Id equals ba.Id_Book
-							 join a in (await _authorRepository.GetAllAsync()).DefaultIfEmpty() on ba.Id_Author equals a.Id
-							 join bg in (await _bookGenreRepository.GetAllAsync()).DefaultIfEmpty() on b.Id equals bg.Id_Book
-							 join g in (await _genretRepository.GetAllAsync()).DefaultIfEmpty() on bg.Id_Genre equals g.Id
-							 join c in (await _categorytRepository.GetAllAsync()).DefaultIfEmpty() on g.Id_Category equals c.Id
 
-							 where g.Id == gennerId || c.Id == categoriId || a.Id == authorId 
-							 select new ProductViewModel()
-							 {
-								 Id = p.Id,
-								 Name = p.Name,
-								 Price = p.Price,
-								 Quantity = p.Quantity,
+			var query = (from
+						 p in (await _productRepository.GetAllAsync()).DefaultIfEmpty()
+						 join i in (await _imageRepository.GetAllAsync()).DefaultIfEmpty() on p.Id equals i.Id_Product into imgGroup
+						 join pb in (await _productBookRepository.GetAllAsync()).DefaultIfEmpty() on p.Id equals pb.Id_Product
+						 join b in (await _bookRepository.GetAllAsync()).DefaultIfEmpty() on pb.Id_Book equals b.Id
+						 join ba in (await _bookAuthorRepository.GetAllAsync()).DefaultIfEmpty() on b.Id equals ba.Id_Book
+						 join a in (await _authorRepository.GetAllAsync()).DefaultIfEmpty() on ba.Id_Author equals a.Id
+						 join bg in (await _bookGenreRepository.GetAllAsync()).DefaultIfEmpty() on b.Id equals bg.Id_Book
+						 join g in (await _genretRepository.GetAllAsync()).DefaultIfEmpty() on bg.Id_Genre equals g.Id
+						 join c in (await _categorytRepository.GetAllAsync()).DefaultIfEmpty() on g.Id_Category equals c.Id
 
-								 Status = p.Status,
-								 ImgUrl = imgGroup.FirstOrDefault()?.ImageUrl,
-							 }).Distinct().ToList();
+						 where g.Id == gennerId || c.Id == categoriId || a.Id == authorId
+						 select new ProductViewModel()
+						 {
+							 Id = p.Id,
+							 Name = p.Name,
+							 Price = p.Price,
+							 Quantity = p.Quantity,
 
-				var pp = (await _productPromotionRepository.GetAllAsync()).Where(c=>c.Status == 1);
-				var pr = (await _promotionRepository.GetAllAsync());
-				var prt = (await _promotionTypeRepository.GetAllAsync());
-				var cb = (await _collectionBookRepository.GetAllAsync());
+							 Status = p.Status,
+							 ImgUrl = imgGroup.FirstOrDefault()?.ImageUrl,
+						 }).Distinct().ToList();
 
-				foreach (var item in query)
+			var pp = (await _productPromotionRepository.GetAllAsync()).Where(c => c.Status == 1);
+			var pr = (await _promotionRepository.GetAllAsync());
+			var prt = (await _promotionTypeRepository.GetAllAsync());
+			var cb = (await _collectionBookRepository.GetAllAsync());
+
+			foreach (var item in query)
+			{
+				item.NewPrice = item.Price;
+				item.Saleoff = 0;
+				var km = pp.Where(c => c.Id_Product == item.Id).OrderBy(c => c.CreatedDate).FirstOrDefault();
+
+				if (km != null)
 				{
-					item.NewPrice = item.Price;
-					item.Saleoff = 0;
-					var km = pp.Where(c => c.Id_Product == item.Id).OrderBy(c=>c.CreatedDate).FirstOrDefault();
-				
-					if (km != null)
+					var tkm = pr.FirstOrDefault(c => c.Id == km.Id_Promotion);
+					if (tkm != null)
 					{
-						var tkm = pr.FirstOrDefault(c => c.Id == km.Id_Promotion);
-						if (tkm != null)
-						{
-								item.Saleoff = tkm.PercentReduct;
-								item.NewPrice = Convert.ToInt32((item.Price * 100) - (item.Price * tkm.PercentReduct)) / 100;
-							
-						}
+						item.Saleoff = tkm.PercentReduct;
+						item.NewPrice = Convert.ToInt32((item.Price * 100) - (item.Price * tkm.PercentReduct)) / 100;
+
 					}
 				}
+			}
 			return query;
 		}
 

@@ -5,37 +5,58 @@
 @using System.Globalization;
 @inject UserManager<Userr> UserManager;
 @inject IWalletpointService walletService;
+@inject IUserPromotionService userPromotionService;
 
 @{
 	ViewData["Title"] = "Đổi phiếu khuyến mãi";
 	Layout = "_LayoutUser";
 	var userLogin = await UserManager.GetUserAsync(User);
-	var wallet = await walletService.GetById(Model.Id);
+	var wallet = await walletService.GetById(userLogin.Id);
+	var userPromotionId = (await userPromotionService.GetByUser(userLogin.Id)).Select(x => x.Id_Promotion);
 	List<PromotionViewModel> promotionList = ViewBag.Promotion;
 }
 
 @if (promotionList != null)
 {
 
-	<div style="border: 3px solid #c0c0c0; border-radius: 10px;">
-		<div class="row">
-			<div class="12">
+	<div style="border: 3px solid #c0c0c0; border-radius: 10px; background-color: white; min-height: 500px">
+		<div class="row p-3">
+			<div class="col-12 p-3">
 				<span class="fw-bold">Số điểm hiện có: @wallet.Point</span>
 			</div>
 			@foreach (var item in promotionList)
 			{
-				<div class="col-3">
-					<strong class="text-center d-flex justify-content-center" style="max-width: 80%">@item.Name</strong>
-					@if (item.PercentReduct != 0 && item.PercentReduct != null)
-					{
-						<div class="row">
-							<span class="col-6">giảm: <strong class="text-danger">@item.PercentReduct %</strong></span>
-							<span class="col-6">Tối đa: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.ReductMax)</strong></span>
-							<hr class="lh-3"/>
-							<span>Hạn sử dụng: <strong>@item.StorageTerm Ngày</strong></span>
-							<span class="text-secondary text-decoration-underline fs-6">@item.EndDate</span>
+				<div class="col-5 m-2">
+					<div class="p-1" style="border: 1px solid #c0c0c0; border-radius: 10px">
+						<div style="border: 1px solid #c0c0c0; border-radius: 10px; padding: 10px;">
+							<strong class="w-100 text-danger text-center d-flex justify-content-center pt-1">@item.Name</strong>
+							<div class="w-100 d-flex justify-content-center" style="border-top: 1px solid;"></div>
+							<div style="font-size: 75%;">Áp dụng cho đơn hàng từ <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Condition)</strong> trở lên</div>
+							@if (item.PercentReduct != 0 && item.PercentReduct != null)
+							{
+								<div class="w-100 d-flex justify-content-between">
+									<span style="font-size: 75%">Giảm: <strong class="text-danger">@item.PercentReduct %</strong></span>
+									<span style="font-size: 75%">Tối đa: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.ReductMax)</strong></span>
+								</div>
+							}
+							else
+							{
+								<span style="font-size: 75%">giảm: <strong class="text-danger">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.AmountReduct)</strong></span>
+							}
+							<div class="w-100 d-flex justify-content-center" style="border-top: 1px solid;"></div>
+							<span style="font-size: 80%">Hạn sử dụng: <strong>@item.StorageTerm Ngày</strong></span>
+							<span class="text-secondary text-decoration-underline d-flex justify-content-end" style="font-size: 50%">@item.EndDate</span>
 						</div>
+					</div>
+					@{
+						var isAllow = false;
+						foreach (var promoId in userPromotionId)
+						{
+							if (item.Id == promoId) isAllow = true;
+						}
+						if (wallet.Point < item.ConversionPoint) isAllow = true;
 					}
+					<input disabled="@isAllow" type="button" class="btn btn-secondary mt-2 w-100 d-flex justify-content-center" value="Đổi @item.ConversionPoint điểm" onclick="getPromotion(@item.Id)" />
 				</div>
 			}
 		</div>
@@ -45,3 +66,20 @@ else
 {
 	<h3 class="text-center text-secondary d-flex justify-content-center">---Không có phiếu khuyến mãi nào cả---</h3>
 }
+
+<script type="text/javascript">
+	function getPromotion(id) {
+		$.ajax({
+			url: '@Url.Action("ExchangePromotion", "Manage", new { area = "Identity" })',
+			type: 'POST',
+			data: { userId: @userLogin.Id, promotionId: id },
+			success: function (response) {
+				if (response.success == true) {
+					alert('Đổi thành công');
+					location.reload()
+				}
+				else alert('Đổi thất bại, có lỗi sảy ra!')
+			},
+		})
+	}
+</script>
