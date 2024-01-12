@@ -216,7 +216,7 @@
 				</h3>
 				<div class="row">
 					<div class="col-6">
-						<p>Nhà xuất bản:Chưa biết </p>
+						<p>Nhà xuất bản: Chưa biết </p>
 					</div>
 					<div class="col-6">
 						<p>Tác giả: Lê Quang Khánh</p>
@@ -230,7 +230,7 @@
 						@foreach (var item in Model.bookViewModels)
 						{
 							<li>
-								@item.Title - @string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.ImportPrice)
+								@item.Title
 							</li>
 						}
 					</ul>
@@ -239,10 +239,10 @@
 					<div class="col-6">
 						<div class="Gia">
 							<div class="Giaban">
-								<h3>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Price)</h3>
+								<h3>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.NewPrice)</h3>
 							</div>
 							<div class="Giagoc">
-								<p>30000 đ</p>
+								<p>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Price)</p>
 							</div>
 						</div>
 					</div>

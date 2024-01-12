@@ -55,8 +55,11 @@ namespace BookShop.BLL.Service
 			try
 			{
 				var obj = await _repository.GetByIdAsync(userId);
-				obj.Point = model.Point;
-				var result = await _repository.UpdateAsync(obj.Id_User, obj);
+				if (obj != null)
+				{
+					obj.Point = model.Point;
+					var result = await _repository.UpdateAsync(obj.Id_User, obj);
+				}
 				//if (result != null)
 				//{
 				//	foreach (var item in model.PointTranHistorys)

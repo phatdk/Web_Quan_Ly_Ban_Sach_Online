@@ -83,10 +83,10 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					x => x.Status == Convert.ToInt32(status)
 					).ToList();
 			}
-			if(type != null)
+			if (type != null)
 			{
 				if (type == 1) _orders = _orders.Where(x => x.IsOnlineOrder == true).ToList();
-				else if (type == 0) _orders = _orders.Where(x=>x.IsOnlineOrder == false).ToList();
+				else if (type == 0) _orders = _orders.Where(x => x.IsOnlineOrder == false).ToList();
 			}
 			if (!string.IsNullOrEmpty(keyWord))
 			{
@@ -157,9 +157,9 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			return View(_order);
 		}
 
-        // GET: OrderManageController/Edit/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id)
+		// GET: OrderManageController/Edit/5
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> Edit(int id)
 		{
 			_order = await _orderService.GetById(id);
 			return View(_order);
@@ -271,22 +271,25 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 							await _orderPaymentService.Update(item.Id, obj);
 						}
 					}
-					// cộng điểm vào ví điểm
 					var details = await _orderDetailService.GetByOrder(order.Id);
 					foreach (var item in details)
 					{
 						order.Total += item.Price * item.Quantity;
 					}
-					int point = Convert.ToInt32(Math.Floor(Convert.ToDouble(order.Total / 20000))); // 20k = 1 điểm
-					if (point > 0)
+					// cộng điểm vào ví điểm
+					if (!user.Code.Equals("KH0000000"))
 					{
-						var history = new PointTranHistoryViewModel()
+						int point = Convert.ToInt32(Math.Floor(Convert.ToDouble(order.Total / 20000))); // 20k = 1 điểm
+						if (point > 0)
 						{
-							PointUserd = point,
-							Id_User = user.Id,
-							Id_Order = id,
-						};
-						await _pointNPromotionService.Accumulate(order.Id_User, point, history);
+							var history = new PointTranHistoryViewModel()
+							{
+								PointUserd = point,
+								Id_User = user.Id,
+								Id_Order = id,
+							};
+							await _pointNPromotionService.Accumulate(order.Id_User, point, history);
+						}
 					}
 					var result = await _orderService.Update(order);
 					return Json(new { success = result });
