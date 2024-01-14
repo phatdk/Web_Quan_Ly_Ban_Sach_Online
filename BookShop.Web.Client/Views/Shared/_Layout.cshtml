@@ -393,19 +393,7 @@
 
 		function searchOnClick() {
 			var keyword = document.getElementById("searchInput").value;
-
-			$.ajax({
-				url: '@Url.Action("Index", "SearchAndFilter")',
-				type: 'GET',
-				data: { page: 1, keyWord: keyword },
-				success: function (result) {
-
-					window.location.href = '/SearchAndFilter';
-				},
-				error: function (error) {
-					console.log(error);
-				}
-			});
+			window.location.href = '@Url.Action("Index", "SearchAndFilter")?keyWord=' + encodeURIComponent(keyword);
 		}
 
 
