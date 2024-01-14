@@ -23,14 +23,19 @@ namespace BookShop.Web.Client.Controllers
         [HttpPost]
         public async Task<IActionResult> ReplyComment(CreateEvaluateModel model)
         {
+
             var comment = new CreateEvaluateModel()
             {
                 Id_Parents = model.Id_Parents,
                 Content = model.Content,
-                Point = 5,
+                Point = model.Point,
                 Id_User = model.Id_User,
                 Id_Product = model.Id_Product
             };
+            if (model.Point==null)
+            {
+                comment.Point = 5;
+            }
             var statusadd = await Evaluate.Add(comment);
             if (!statusadd)
             {
@@ -39,10 +44,14 @@ namespace BookShop.Web.Client.Controllers
             return Redirect($"/Home/ChiTietSanPham/{model.Id_Product}");
         }
 
-        [HttpPost]
+        [HttpPost]      
         public async Task<IActionResult> CreateComment(CreateEvaluateModel Comment)
         {
-            Comment.Point =5;
+			if (Comment.Point == -1)
+			{
+				Comment.Point = 5;
+			}
+		    //	Comment.Point =5;
             var statusadd = await Evaluate.Add(Comment);
             if (!statusadd)
             {

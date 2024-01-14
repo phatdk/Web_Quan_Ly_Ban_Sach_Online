@@ -233,6 +233,7 @@
 				</div>
 				<div class="option">
 					<ul>
+
 						@if (!isAdmin)
 						{
 							<li>
@@ -244,8 +245,11 @@
 							<li>
 								<a class="text-dark" asp-area="" asp-controller="Cart" asp-action="CartDetails"> <i class="fa fa-shopping-cart" style="color:#999999"></i> Giỏ hàng </a>
 							</li>
+							
 						}
-
+						<li>
+							<a class="text-dark" asp-area="" asp-controller="Home" asp-action="News"> <i class="fa fa-shopping-cart" style="color:#999999"></i> Tin tức </a>
+						</li>
 						<li>
 							<div class="text-dark">
 								@{

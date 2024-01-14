@@ -108,14 +108,22 @@ namespace BookShop.Web.Client.Controllers
 
             if (keyWord != null)
             {
-                _products = _products.Where(c => c.Name.Contains(keyWord)).GroupBy(c => c.Id).Select(group => group.First()).ToList();
-            }
+				var listnew = new List<ProductViewModel>();
+
+				_products = _products.Where(c => c.Name.Contains(keyWord)).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+				listnew.AddRange(_products);
+				list = listnew;
+			}
             if (min > 0)
             {
-                _products = _products.Where(c => c.Price > min).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+				var listnew = new List<ProductViewModel>();
+				_products = _products.Where(c => c.Price > min).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+				listnew.AddRange(_products);
+                list = listnew;
 			}
+            
 
-            var productListSearch = list.OrderByDescending(c => c.CreatedDate).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+			var productListSearch = list.OrderByDescending(c => c.CreatedDate).GroupBy(c => c.Id).Select(group => group.First()).ToList();
             int pageSize = 10;
             double totalPage = (double)productListSearch.Count / pageSize;
             productListSearch = productListSearch.Skip((page - 1) * pageSize).Take(pageSize).ToList();

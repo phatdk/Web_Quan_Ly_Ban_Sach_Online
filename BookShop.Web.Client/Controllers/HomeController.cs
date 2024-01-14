@@ -26,8 +26,9 @@ namespace BookShop.Web.Client.Controllers
 		private readonly ICategoryService _categoryService;
 		private readonly UserManager<Userr> _userManager;
 		private readonly PointNPromotionSerVice _pointNPromotionSerVice;
+		private readonly INewsService _NewService;
 
-		public HomeController(ILogger<HomeController> logger, IProductService productService, IWishListService wishListService, ICategoryService categoryService, UserManager<Userr> userManager)
+		public HomeController(ILogger<HomeController> logger, IProductService productService, IWishListService wishListService, ICategoryService categoryService, UserManager<Userr> userManager, INewsService newService = null)
 		{
 			_logger = logger;
 			_wishList = new List<WishListViewModel>();
@@ -38,14 +39,52 @@ namespace BookShop.Web.Client.Controllers
 			_WishListService = wishListService;
 			_userManager = userManager;
 			_pointNPromotionSerVice = new PointNPromotionSerVice();
+			_NewService = newService;
 		}
 
 		public async Task<IActionResult> Index()
 		{
-
 			return View();
 		}
-		public async Task<IActionResult> SachMoi()
+		public async Task<IActionResult> News([FromQuery(Name = "p")] int currentPages)
+		{
+			var ListBlog = (await _NewService.GetAll()).ToList();
+            int pagesize = 8;
+            if (pagesize <= 0)
+            {
+                pagesize = 8;
+            }
+            int countPages = (int)Math.Ceiling((double)ListBlog.Count() / pagesize);
+            if (currentPages > countPages)
+            {
+                currentPages = countPages;
+            }
+            if (currentPages < 1)
+            {
+                currentPages = 1;
+            }
+
+            var pagingmodel = new PagingModel()
+            {
+                currentpage = currentPages,
+                countpages = countPages,
+                generateUrl = (int? p) => Url.Action("News", "Home", new { p = p, pagesize = pagesize })
+            };
+            ViewBag.pagingmodel = pagingmodel;
+            ListBlog = ListBlog.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
+            return View(ListBlog);
+		}
+		public async Task<IActionResult> DetailsNew(int id)
+		{
+			var blog = await _NewService.GetById(id);
+			if (blog==null)
+			{
+				return NotFound();
+			}
+			return View(blog);
+		}
+
+        public async Task<IActionResult> SachMoi()
 		{
 			_products = await _productService.GetDanhMuc("Cổ điển");
 

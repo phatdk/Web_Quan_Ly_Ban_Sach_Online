@@ -1,0 +1,30 @@
+﻿@model BookShop.BLL.ConfigurationModel.NewsModel.CreateNewsModel
+
+@{
+    ViewData["Title"] = "DetailsNew";
+}
+<style>
+    h1 {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    h2 {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    p {
+        font-size: 14px;
+        text-align: justify;
+    }
+</style>
+<div class="container">
+
+    <h1>@Model.Title</h1>
+    <h2>@Model.Description</h2>
+    <p>
+        @Html.Raw(Model.Content)
+    </p>
+    <a asp-action="News" asp-controller="Home" class="btn btn-outline-danger">Quay lại</a>
+</div>

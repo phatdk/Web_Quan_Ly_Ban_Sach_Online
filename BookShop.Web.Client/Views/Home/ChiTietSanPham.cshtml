@@ -7,6 +7,7 @@
 @inject UserManager<Userr> UserManager
 @inject SignInManager<Userr> SignInManager
 @inject IEvaluateService _Comment;
+@inject IEvaluateService _Comment;
 @inject IAuthorizationService _IAuthorizationService
 @{
 	var isAdmin = (await _IAuthorizationService.AuthorizeAsync(User, "ManagerMenu")).Succeeded;
@@ -391,10 +392,9 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
 								<form class="replyForm" asp-action="ReplyComment" asp-controller="Evaluate" method="post">
 									<div class="form-group">
 										<input name="Id_User" hidden value="@userLogin.Id" class="form-control" />
-										<input name="Id_Parents" hidden value="@item.Id" class="form-control" />
-										<input name="Id_Product" hidden value="@Model.Id" class="form-control" />
+										<input name="Id_Parents" hidden value="@item.Id" class="form-control" />										
 										<div class="mb-3">
-											<label for="comment">Trả lời user @userComment.UserName</label>
+											@* <label for="comment">Trả lời user @userComment.UserName</label> *@
 											<textarea class="form-control" name="Content" id="comment" rows="3"></textarea>
 										</div>
 									</div>
@@ -402,7 +402,7 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
 								</form>
 							}
 
-							@if (ComentChild.Count > 0)
+							@* @if (ComentChild.Count > 0)
 							{
 								foreach (var chill in ComentChild)
 								{
@@ -443,7 +443,7 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
 
 								}
 
-							}
+							} *@
 
 
 						</div>
@@ -458,8 +458,8 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
 
 		@if (userLogin != null)
 		{
-			if (await _Comment.CheckUserExitsBill(userLogin.Id, Model.Id))
-			{
+			@* if (await _Comment.CheckUserExitsBill(userLogin.Id, Model.Id))
+			{ *@
 
 				<form class="rating">
 					<label>
@@ -492,19 +492,20 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
 						<span class="icon">★</span>
 						<span class="icon">★</span>
 					</label>
+
 				</form>
 
 				<form asp-action="CreateComment" asp-controller="Evaluate" method="post">
 					<input name="Id_User" hidden value="@userLogin.Id" class="form-control" />
-					<input name="Id_Product" hidden value="@Model.Id" class="form-control" />
-					<input type="hidden" name="Point" id="ratingInput" value="5" />
+				@* 	<input name="Id_Product" hidden value="@Model.Id" class="form-control" /> *@
+					<input type="hidden" name="Point" id="ratingInput" />
 					<div class="mb-3">
 						<label for="comment">Bình luận của bạn:</label>
 						<textarea class="form-control" name="Content" id="comment" rows="3"></textarea>
 					</div>
 					<button type="submit" class="btn btn-primary">Gửi bình luận</button>
 				</form>
-			}
+			//}
 		}
 	</div>
 </div>
