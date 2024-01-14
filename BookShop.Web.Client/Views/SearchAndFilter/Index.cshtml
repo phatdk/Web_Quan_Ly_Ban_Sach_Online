@@ -249,7 +249,7 @@
 						<div id="price-range">
 							
 							<input type="range" id="price" name="price" min="0" max="1000000" value="0" step="100" oninput="updatePrice(event)">
-							<p id="selected-price">Giá tiền: <span id="price-value">0</span> VND</p>
+							<p id="selected-price">Giá tiền: <span id="price-value">0</span> đến 1.000.000 VND</p>
 						</div>
 					</div>
 				</div>
@@ -346,7 +346,7 @@
 
 	function formatPrice(price) {
 		const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-		return formattedPrice + ' đ';
+		return formattedPrice + 'VND';
 	}
 	function updatePrice(event) {
 		loadData(1);
