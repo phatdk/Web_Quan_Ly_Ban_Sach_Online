@@ -236,6 +236,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 				order.Id_Status = request.Id_Status;
 				order.Id_User = request.Id_User;
 				order.Id_Staff = request.Id_Staff;
+				order.Id_Promotions = request.Id_Promotions;
 				order.Receiver = request.Receiver;
 				order.Email = request.Email;
 				order.Phone = request.Phone;

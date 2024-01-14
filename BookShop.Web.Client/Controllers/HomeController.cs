@@ -26,6 +26,7 @@ namespace BookShop.Web.Client.Controllers
 		private readonly ICategoryService _categoryService;
 		private readonly UserManager<Userr> _userManager;
 		private readonly PointNPromotionSerVice _pointNPromotionSerVice;
+		private readonly ProductPreviewService _productPreviewService;
 
 		public HomeController(ILogger<HomeController> logger, IProductService productService, IWishListService wishListService, ICategoryService categoryService, UserManager<Userr> userManager)
 		{
@@ -38,11 +39,11 @@ namespace BookShop.Web.Client.Controllers
 			_WishListService = wishListService;
 			_userManager = userManager;
 			_pointNPromotionSerVice = new PointNPromotionSerVice();
+			_productPreviewService = new ProductPreviewService();
 		}
 
 		public async Task<IActionResult> Index()
 		{
-
 			return View();
 		}
 		public async Task<IActionResult> SachMoi()
@@ -71,7 +72,6 @@ namespace BookShop.Web.Client.Controllers
 		public async Task<IActionResult> ChiTietSanPham(int id)
 		{
 			var product = await _productService.GetByIdAndCommnet(id);
-			//ViewBag.Product = _product;
 			if (product != null)
 			{
 				return View(product);

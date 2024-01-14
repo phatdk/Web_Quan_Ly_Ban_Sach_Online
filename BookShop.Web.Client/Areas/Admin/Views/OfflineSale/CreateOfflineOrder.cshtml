@@ -11,191 +11,149 @@
 	List<UserModel> users = ViewBag.Users;
 }
 
-<form>
-	<div class="row">
-		<div class="col-9 bg-light">
-			<div class="row">
-				<div class="col-4">
-					<div class="table-container">
-						<table class="table table-striped border border-2 border-secondary">
-							<thead>
-								<tr>
-									<th scope="col">Stt</th>
-									<th scope="col">Code</th>
-									<th scope="col">Tên KH</th>
-									<th scope="col">Action</th>
-								</tr>
-							</thead>
-							<tbody id="waitingOrderList">
-							</tbody>
-						</table>
+
+<div class="row">
+	<div class="col-9 bg-light">
+		<div class="row">
+			<div class="col-4" style="min-height: 300px">
+				<div class="me-1">
+					<div class="row" style="border: 1px solid #c0c0c0">
+						<strong class="col-5 text-center">Code</strong>|
+						<strong class="col-4 text-center">Tên KH</strong>|
+						<strong class="col-2 text-center"></strong>
 					</div>
-				</div>
-				<div class="col-8">
-					<div class="justify-content-center text-center m-2">
-						<input hidden asp-for="Id" value="0" id="orderId" />
-						<input asp-for="Code" id="orderCode" readonly class="text-center" />
-					</div>
-					<table id="tableDetail" class="table table-striped border border-2 border-primary">
-						<thead>
-							<tr>
-								<th scope="col">Stt</th>
-								<th scope="col">Tên Sp</th>
-								<th scope="col">Giá bán</th>
-								<th scope="col">Số lượng</th>
-								<th scope="col">Action</th>
-							</tr>
-						</thead>
-						<tbody id="deatilOrder">
-						</tbody>
-					</table>
+					<div id="waitingOrderList" class="row" style="border: 1px solid #c0c0c0; max-height: 250px; overflow-y: auto;"></div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-12">
-					<div class="w-75 d-block mb-2">
-						<div class="btn-group">
-							<input type="text" id="keyWordFind" oninput="loadData(1)" placeholder="Nhập tên sách" />
-							<i class="btn btn-outline-info fa-solid fa-magnifying-glass"></i>
-						</div>
+			<div class="col-8">
+				<div class="justify-content-center text-center m-2">
+					<input hidden asp-for="Id" value="0" id="orderId" />
+					<input asp-for="Code" id="orderCode" readonly class="text-center" />
+				</div>
+				<div>
+					<div class="row" style="border: 1px solid #000099">
+						<strong class="col-1 text-center">Stt</strong>|
+						<strong class="col-4 text-center">Tên Sp</strong>|
+						<strong class="col-2 text-center">Giá bán</strong>|
+						<strong class="col-4 text-center">Số lượng</strong>
 					</div>
-					<table class="table table-striped border border-2 border-success">
-						<thead>
-							<tr>
-								<th scope="col">Hình ảnh</th>
-								<th scope="col">Tên Sp</th>
-								<th scope="col">Giá bán</th>
-								<th scope="col">Số lượng tồn</th>
-								<th scope="col">Số lượng</th>
-								<th scope="col">Trạng thái</th>
-								<th scope="col">Action</th>
-							</tr>
-						</thead>
-						<tbody id="productList">
-						</tbody>
-					</table>
+					<div id="deatilOrder" class="row" style="border: 1px solid #000099; max-height: 220px; overflow-y: auto"></div>
 				</div>
 			</div>
 		</div>
-
-		<div class="col-3 border border-2 border-secondary ps-2 pt-2 pb-2 bg-light">
-			<label class="text-black-50">Nhân viên trực ca</label>
-			<div class="form-group row">
-				<input type="text" asp-for="@Model.Id_Staff" id="orderIdStaff" hidden value="@staff.Id" />
-				<div class="flex-column justify-content-center text-center">
-					<span class="me-4 text-center text-success text-decoration-underline"><i class="fa-solid fa-user-clock"></i> @staff.Name </span>
-					<span class="text-center text-danger text-decoration-underline"><i class="fa-solid fa-barcode"></i> @staff.Code</span>
+		<div class="row">
+			<div class="col-12">
+				<div class="d-flex justify-content-between mb-2">
+					<div class="btn-group">
+						<input type="text" id="keyWordFind" oninput="loadData(1)" placeholder="Nhập tên sách" />
+						<i class="btn btn-outline-info fa-solid fa-magnifying-glass"></i>
+					</div>
+					<div id="buttonContainer"></div>
 				</div>
-			</div><hr />
-
-			<label class="text-black-50">Thông tin khách hàng</label>
-
-			<div class="mt-2 p-2 border border-top-1 border-dark">
-				<div class="form-group">
-					<label class="form-label">Tên khách hàng</label>
-					<input type="text" asp-for="@Model.Id_User" id="orderIdUser" hidden />
-					<input type="text" class="form-control" asp-for="@Model.Receiver" id="orderReceiver" />
-				</div>
-				<div class="form-group">
-					<label class="form-label">Tài khoản khách hàng</label>
-					<input type="text" class="form-control" asp-for="@Model.NameUser" id="orderNameUser" readonly />
-					<input type="text" class="form-control" asp-for="@Model.UserCode" list="codeList" id="orderUserCode" onchange="checkUser(this.value)" />
-					<datalist id="codeList">
-						@if (users != null)
-						{
-							foreach (var item in users)
-							{
-								<option value="@item.Code" />
-							}
-						}
-					</datalist>
-				</div>
-				<div class="form-group">
-					<label class="form-label">Email</label>
-					<input type="text" class="form-control" id="orderEmail" list="emailList" onchange="checkUser(this.value)" asp-for="@Model.Email" />
-					<datalist id="emailList">
-						@if (users != null)
-						{
-							foreach (var item in users)
-							{
-								<option value="@item.Email" />
-							}
-						}
-					</datalist>
-				</div>
-				<div class="form-group">
-					<label class="form-label">Số điện thoại</label>
-					<input type="text" class="form-control" list="phoneList" id="orderPhone" asp-for="@Model.Phone" />
-					<datalist id="phoneList">
-						@if (users != null)
-						{
-							foreach (var item in users)
-							{
-								<option value="@item.Phone" />
-							}
-						}
-					</datalist>
-				</div>
-			</div>
-			<div class="form-group mt-2">
-				<span class="d-block w-100 m-2">Khuyến mại được kích hoạt tự động</span>
-				<input asp-for="Id_Promotions" hidden id="orderIdPromotion" />
-				<span class="d-block w-100 m-2">Tên khuyễn mãi: <span id="orderNamePromotion"></span></span>
-				<span class="d-block w-100 m-2">Số tiền giảm: <span id="orderReduct"></span></span>
-
-				<span class="d-block w-100 m-2">Tổng tiền: <span id="total"></span></span>
-				<hr />
-				<span class="d-block w-100">Thanh toán: <span id="payment"></span></span>
-			</div>
-			<div class="justify-content-center text-center mt-5">
-				<div class="btn-group" role="group" aria-label="Basic outlined example">
-					<input type="button" class="btn btn-outline-primary" onclick="reFresh()" value="Làm mới" />
-					<input type="button" class="btn btn-outline-warning" onclick="saveOrder()" value="Lưu tạm" />
-					<input type="button" class="btn btn-outline-success" onclick="createOrder()" value="Thanh toán" />
+				<div>
+					<div class="row" style="border: 1px solid #FF0000;">
+						<strong class="col-1 text-center">Stt</strong>
+						<strong class="col-1 text-center">Ảnh</strong>
+						<strong class="col-4 text-center">Tên sản phẩm</strong>
+						<strong class="col-1 text-center">Giá bán</strong>
+						<strong class="col-1 text-center">Kho</strong>
+						<strong class="col-1 text-center">Số lượng</strong>
+						<strong class="col-2 text-center">Trạng thái</strong>
+						<strong class="col-1 text-center"></strong>
+					</div>
+					<div id="productList" class="row" style="border: 1px solid #FF0000;"></div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div id="buttonContainer"></div>
-</form>
+
+	<div class="col-3 border border-2 border-secondary ps-2 pt-2 pb-2 bg-light">
+		<label class="text-black-50">Nhân viên trực ca</label>
+		<div class="form-group row">
+			<input type="text" asp-for="@Model.Id_Staff" id="orderIdStaff" hidden value="@staff.Id" />
+			<div class="flex-column justify-content-center text-center">
+				<span class="me-4 text-center text-success text-decoration-underline"><i class="fa-solid fa-user-clock"></i> @staff.Name </span>
+				<span class="text-center text-danger text-decoration-underline"><i class="fa-solid fa-barcode"></i> @staff.Code</span>
+			</div>
+		</div><hr />
+
+		<label class="text-black-50">Thông tin khách hàng</label>
+
+		<div class="mt-2 p-2 border border-top-1 border-dark">
+			<div class="form-group">
+				<label class="form-label">Tên khách hàng</label>
+				<input type="text" asp-for="@Model.Id_User" id="orderIdUser" hidden />
+				<input type="text" class="form-control" asp-for="@Model.Receiver" id="orderReceiver" />
+			</div>
+			<div class="form-group">
+				<label class="form-label">Tài khoản khách hàng</label>
+				<input type="text" class="form-control" asp-for="@Model.NameUser" id="orderNameUser" readonly />
+				<input type="text" class="form-control" asp-for="@Model.UserCode" list="codeList" id="orderUserCode" onchange="checkUser(this.value)" />
+				<datalist id="codeList">
+					@if (users != null)
+					{
+						foreach (var item in users)
+						{
+							<option value="@item.Code" />
+						}
+					}
+				</datalist>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Email</label>
+				<input type="text" class="form-control" id="orderEmail" list="emailList" onchange="checkUser(this.value)" asp-for="@Model.Email" />
+				<datalist id="emailList">
+					@if (users != null)
+					{
+						foreach (var item in users)
+						{
+							<option value="@item.Email" />
+						}
+					}
+				</datalist>
+			</div>
+			<div class="form-group">
+				<label class="form-label">Số điện thoại</label>
+				<input type="text" class="form-control" list="phoneList" id="orderPhone" asp-for="@Model.Phone" />
+				<datalist id="phoneList">
+					@if (users != null)
+					{
+						foreach (var item in users)
+						{
+							<option value="@item.Phone" />
+						}
+					}
+				</datalist>
+			</div>
+		</div>
+		<div class="form-group mt-2">
+			<span class="d-block w-100 m-2">Khuyến mại được kích hoạt tự động</span>
+			<input asp-for="Id_Promotions" hidden id="orderIdPromotion" />
+			<span class="d-block w-100 m-2">Tên khuyễn mãi: <strong id="orderNamePromotion"></strong></span>
+			<span class="d-block w-100 m-2">Số tiền giảm: <strong id="orderReduct"></strong></span>
+			<span class="d-block w-100 m-2">Tổng tiền: <strong id="total"></strong></span>
+			<hr />
+			<span class="d-block w-100">Thanh toán: <strong id="payment"></strong></span>
+		</div>
+		<div class="justify-content-center text-center mt-5">
+			<div class="btn-group" role="group" aria-label="Basic outlined example">
+				<input type="button" class="btn btn-outline-primary" onclick="reFresh()" value="Làm mới" />
+				<input type="button" class="btn btn-outline-warning" onclick="saveOrder()" value="Lưu tạm" />
+				<input type="button" class="btn btn-outline-success" onclick="createOrder()" value="Thanh toán" />
+			</div>
+		</div>
+	</div>
+</div>
 
 <script src="~/js/site.js"></script>
 <script>
-	function checkInput(id, quantity) {
-		var quantityInput = document.getElementById('quantity-' + id);
-		var intParse = parseInt(quantity);
-
-		var minValue = parseInt(quantityInput.min);
-		var maxValue = parseInt(quantityInput.max);
-		if (quantity < minValue) quantityInput.value = minValue;
-		else if (quantity > maxValue) quantityInput.value = maxValue;
+	function checkInput(input) {
+		var intParse = parseInt(input.value);
+		var minValue = parseInt(input.min);
+		var maxValue = parseInt(input.max);
+		if (input.value < minValue) input.value = minValue;
+		else if (input.value > maxValue) input.value = maxValue;
 	}
-
-	function getWaitingOrders() {
-		$.ajax({
-			url: '/Admin/OfflineSale/GetWaitingOrder',
-			type: 'GET',
-			dataType: 'json',
-			success: function (data) {
-				var detailsList = $("#waitingOrderList");
-				detailsList.empty();
-				data.forEach(function (item, index) {
-					index += 1;
-					var orderRow =
-						'<tr>' +
-						'<th>' + index + '</th>' +
-						'<td>' + item.code + '</td>' +
-						'<td>' + item.nameUser + '</td>' +
-						'<td><input type="button" class="btn btn-info" onclick = "checkChange(' + item.id + ')" value="Xem"/></td >' +
-						'</tr>';
-					detailsList.append(orderRow);
-				});
-			},
-			error: function (error) {
-				alert('Có lỗi xảy ra: ' + error.responseText);
-			}
-		});
-	};
 
 	function checkChange(id) {
 		var checkId = document.getElementById('orderId').value;
@@ -255,7 +213,7 @@
 						$('#orderIdPromotion').val('');
 						document.getElementById('orderNamePromotion').innerHTML = "Không";
 						document.getElementById('orderReduct').innerHTML = formatCurrency(0);
-						payment = total - data.totalReduct;
+						payment = total;
 						document.getElementById('payment').innerHTML = formatCurrency(payment);
 					}
 				}
@@ -268,6 +226,29 @@
 			payment = total;
 			document.getElementById('payment').innerHTML = formatCurrency(payment);
 		}
+	};
+
+	function getWaitingOrders() {
+		$.ajax({
+			url: '/Admin/OfflineSale/GetWaitingOrder',
+			type: 'GET',
+			dataType: 'json',
+			success: function (data) {
+				var detailsList = $("#waitingOrderList");
+				detailsList.empty();
+				data.forEach(function (item) {
+					var orderRow =
+						'<hr class="ln-2" style="margin-bottom: 1px;"/>' +
+						'<span class="col-5 text-center">' + item.code + '</span>|' +
+						'<span class="col-4 text-center">' + item.nameUser + '</span>|' +
+						'<span class="col-2 text-center"><button class="btn text-success" onclick = "checkChange(' + item.id + ')"><i class="fa-solid fa-eye"></i></button></span>';
+					detailsList.append(orderRow);
+				});
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
 	};
 
 	function getDetailOrders(id) {
@@ -291,21 +272,16 @@
 				data.details.forEach(function (item, index) {
 					index += 1;
 					var orderRow =
-						'<tr>' +
-						'<th>' + index + '</th>' +
-						'<td>' + item.nameProduct + '</td>' +
-						'<td>' + formatCurrency(item.price) + '</td>' +
-						'<td id="removeProdq-' + item.id_Product + '">' + item.quantity + '</td>' +
-						'<td hidden>' + item.id_Order + '</td>' +
-						'<td hidden>' + item.id_Product + '</td>' +
-						'<th>' +
-						'<div class="btn-group w-25 me-2" role="group">' +
-						'<input type="number" class="text-center w-50" id="removeQuantity-' + item.id_Product + '" min="1" max="' + item.quantity + '" value="1"/>' +
-						'<input type="button" class="btn btn-warning w-50" onclick = "removeProduct(' + item.id_Product + ')" value="Bỏ" /> ' +
-						'</div>' +
-						'<input type="button" class="btn btn-danger" onclick = "removeAll(' + item.id_Product + ',' + item.quantity + ')" value="Bỏ hết" /> ' +
-						'</th >' +
-						'</tr>';
+						'<hr class="ln-2" style="margin-bottom: 1px;"/>' +
+						'<strong class="col-1 text-center">' + index + '</strong>|' +
+						'<span class="col-4 text-center">' + item.nameProduct + '</span>|' +
+						'<span class="col-2 text-center">' + formatCurrency(item.price) + '</span>|' +
+						'<span class="col-1 text-center" id="removeProdq-' + item.id_Product + '">' + item.quantity + '</span>' +
+						'<span class="col-3 text-center">' +
+						'<input type="number" class="text-center" style="width: 40px; border: none; border-bottom: 2px solid black;" id="removeQuantity-' + item.id_Product + '" min="1" max="' + item.quantity + '" value="1" oninput="checkInput(this)"/>' +
+						'<button class="btn btn-warning me-1" onclick = "removeProduct(' + item.id_Product + ')"><i class="fa-solid fa-minus"></i></button>' +
+						'<buttom class="btn btn-danger" onclick = "removeAll(' + item.id_Product + ',' + item.quantity + ')"><i class="fa-solid fa-xmark"></i></buttom>' +
+						'</span >';
 					detailsList.append(orderRow);
 				});
 				total = data.total; // tinh tien
@@ -330,7 +306,7 @@
 				detailsList.empty();
 				let statusColor = "";
 				let status = "";
-				data.data.forEach(function (item, index) {
+				data.data.forEach(function (item) {
 					index += 1;
 					if (item.quantity >= 1) {
 						status = "Còn hàng";
@@ -343,16 +319,18 @@
 						statusColor = "text-warning";
 					}
 					var orderRow =
-						'<tr>' +
-						'<td><img width=75px src="' + item.imgUrl + '" /> </td>' +
-						'<td>' + item.name + '</td>' +
-						'<td>' + formatCurrency(item.newPrice) + '</td>' +
-						'<td id="prodq-' + item.id + '">' + item.quantity + '</td>' +
-						'<td>' +
-						'<input type="number" id="quantity-' + item.id + '" class="text-center w-75" min="1" max="' + item.quantity + '" value="1" oninput="checkInput(' + item.id + ',this.value)" /> </td>' +
-						'<th class="' + statusColor + '">' + status + '</th>' +
-						'<td> <input type="button" class="btn btn-success" onclick = "addProduct(' + item.id + ')" value="Thêm"/></td >' +
-						'</tr>';
+						'<hr class="ln-2" style="margin-bottom: 1px;"/>' +
+						'<strong class="col-1 text-center">' + index + '</strong>' +
+						'<span class="col-1 text-center"><img width=100% src="' + item.imgUrl + '" /> </span>' +
+						'<span class="col-4 text-center">' + item.name + '</span>' +
+						'<span class="col-1 text-center">' + formatCurrency(item.newPrice) + '</span>' +
+						'<span class="col-1 text-center" id="prodq-' + item.id + '">' + item.quantity + '</span>' +
+						'<span class="col-1 text-center">' +
+						'<input type="number" id="quantity-' + item.id + '" class="text-center w-75" min="1" max="' + item.quantity + '" value="1" oninput="checkInput(this)" />' +
+						'</span>' +
+						'<strong class="col-2 text-center ' + statusColor + '">' + status + '</strong>' +
+						'<span class="col-1 text-center"><button class="btn btn-success" onclick = "addProduct(' + item.id + ')"><i class="fa-solid fa-plus"></i></button >' +
+						'</span>';
 					detailsList.append(orderRow);
 				});
 				createPagingButtons(1, data.max, data.page);
@@ -407,6 +385,7 @@
 				success: function (result) {
 					document.getElementById('prodq-' + id).innerHTML = productQuantity - quantity;
 					document.getElementById('quantity-' + id).value = 1;
+					document.getElementById('quantity-' + id).max = productQuantity - quantity;
 					getDetailOrders(orderId);
 				},
 				error: function (error) {
@@ -432,6 +411,8 @@
 				data: { id: id, orderId: orderId, quantity: -quantity },
 				success: function (result) {
 					document.getElementById('prodq-' + id).innerHTML = productQuantity + quantity;
+					document.getElementById('quantity-' + id).max = productQuantity + quantity;
+					document.getElementById('quantity-' + id).value = 1;
 					getDetailOrders(orderId);
 				},
 				error: function (error) {
@@ -454,6 +435,8 @@
 			data: { id: id, orderId: orderId, quantity: -quantity },
 			success: function (result) {
 				document.getElementById('prodq-' + id).innerHTML = productQuantity + quantity;
+				document.getElementById('quantity-' + id).max = productQuantity + quantity;
+				document.getElementById('quantity-' + id).value = 1;
 				getDetailOrders(orderId);
 			},
 			error: function (error) {
