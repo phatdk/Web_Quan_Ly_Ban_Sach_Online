@@ -5,389 +5,414 @@
 @inject UserManager<Userr> UserManager
 @inject IAuthorizationService _IAuthorizationService
 @{
-    var isAdmin = (await _IAuthorizationService.AuthorizeAsync(User, "ManagerMenu")).Succeeded;
+	var isAdmin = (await _IAuthorizationService.AuthorizeAsync(User, "ManagerMenu")).Succeeded;
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - SHOPBOOK</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/BookShop.Web.Client.styles.css" asp-append-version="true" />
-    <!-- Lọc Thành Phố, Quận Huyện, Xã phường -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - SHOPBOOK</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/BookShop.Web.Client.styles.css" asp-append-version="true" />
+	<!-- Lọc Thành Phố, Quận Huyện, Xã phường -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
-    <!-- jQuery library -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+	<!-- jQuery library -->
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
 
-    <!-- Popper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+	<!-- Popper JS -->
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 
-    <!-- Latest compiled JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+	<!-- Latest compiled JavaScript -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <link rel="stylesheet" href="~/lib/fontawesome-6.4.2/css/all.css" />
+	<link rel="stylesheet" href="~/lib/fontawesome-6.4.2/css/all.css" />
 
-    <link rel="stylesheet" href="~/lib/chosen_v1.8.7/chosen.min.css" />
-    <style>
-        .dropdown:hover > .dropdown-menu {
-            display: block;
-        }
+	<link rel="stylesheet" href="~/lib/chosen_v1.8.7/chosen.min.css" />
+	<style>
+		.dropdown:hover > .dropdown-menu {
+			display: block;
+		}
 
-        .dropdown > .dropdown-toggle:active {
-            pointer-events: none;
-        }
+		.dropdown > .dropdown-toggle:active {
+			pointer-events: none;
+		}
 
-        .timkiem {
-            margin: 26px auto 25px auto;
-            margin-left: 30px;
-        }
+		.timkiem {
+			margin: 26px auto 25px auto;
+			margin-left: 30px;
+		}
 
-        .m26 {
-            margin: auto;
-            justify-content: flex-start;
-            height: 68px;
-            text-align: center;
-            webkit-align-items: center;
-        }
+		.m26 {
+			margin: auto;
+			justify-content: flex-start;
+			height: 68px;
+			text-align: center;
+			webkit-align-items: center;
+		}
 
-        .danhmuc {
-            margin: 33px auto 33px auto;
-        }
+		.danhmuc {
+			margin: 33px auto 33px auto;
+		}
 
-        .search_box {
-            display: block;
-            width: 100%;
-        }
+		.search_box {
+			display: block;
+			width: 100%;
+		}
 
-        .bb {
-            background-color: rgb(224, 224, 224);
-        }
+		.bb {
+			background-color: rgb(224, 224, 224);
+		}
 
-        .dndk a {
-            text-align: center;
-            font-weight: 700;
-            padding-bottom: 5px;
-            color: black;
-            cursor: pointer;
-        }
+		.dndk a {
+			text-align: center;
+			font-weight: 700;
+			padding-bottom: 5px;
+			color: black;
+			cursor: pointer;
+		}
 
-            .dndk a:hover {
-                color: orangered;
-                border: 1px solid orangered;
-                text-decoration: none;
-            }
+			.dndk a:hover {
+				color: orangered;
+				border: 1px solid orangered;
+				text-decoration: none;
+			}
 
-        a:hover {
-            text-decoration: none !important;
-        }
+		a:hover {
+			text-decoration: none !important;
+		}
 
-        h6 {
-            margin-bottom: 0 !important;
-        }
-        .menu-home{
-            height:70px;
-            flex-direction: column;
-            justify-content: center;
-            display: flex;
-            background-color:white;
-        }
-        .container.content{
-            justify-content: space-between;
-            display:flex;
-        gap:20px;
-        }
-        .menu-home ul {
-            display:grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            margin-bottom: 0;
-            padding-left:0;
-            list-style:none;
-           
-            gap:25px;
-        }
+		h6 {
+			margin-bottom: 0 !important;
+		}
 
-        .menu-home .dropdown-toggle::after{
-            content:none;
-        }
-            .menu-home ul li a{
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                text-align: center;
-            }
-        .search-bar {
-            display: flex;
-            align-items: center;
-            position: relative;
-            width: 100%;
-        }
+		.menu-home {
+			height: 70px;
+			flex-direction: column;
+			justify-content: center;
+			display: flex;
+			background-color: white;
+		}
 
-            .search-bar input[type="text"] {
-                padding-right: 30px;
-                width: 370px;
-                border-radius: 5px;
-                height: 40px;
-                border: 1px solid #dddddd;
-                padding-left: 10px;
-            }
+		.container.content {
+			justify-content: space-between;
+			display: flex;
+			gap: 20px;
+		}
 
-            .search-bar a.docquyen {
-                border-radius: 5px;
-                text-align: center;
-                background: red;
-                width: 40px;
-                position: absolute;
-                top: 50%;
-                right: 10px;
-                transform: translateY(-50%);
-                cursor: pointer;
-                font-size: 18px !important;
-                color: white !important;
-                text-decoration: none !important;
-                border-bottom: 0 !important;
-            }
+		.menu-home ul {
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr 1fr;
+			margin-bottom: 0;
+			padding-left: 0;
+			list-style: none;
+			gap: 25px;
+		}
 
-        .list-dm .category.hide{
-            display:none;
-        }
+		.menu-home .dropdown-toggle::after {
+			content: none;
+		}
 
-        .list-dm .category.show{
-            position:absolute;
-            display: block;
-            padding: 10px;
-            border-radius: 5px;
-            right: -444px;
-            margin-top: 20px;
-            width: 1150px;
-            z-index: 100;
-            background: white;
-        }
+		.menu-home ul li a {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			text-align: center;
+		}
 
-            .list-dm .category.show span{
-                font-weight: bold;
-                font-size: 1.5em;
-                color: #7A7E7F;
-                text-align: left;
-            }
+		.search-bar {
+			display: flex;
+			align-items: center;
+			position: relative;
+			width: 100%;
+		}
 
-            .list-dm .category.show a {
-                font-weight: 500;
-                margin-left: 20px;
-                text-align: start;
-                position: relative;
-            }
+			.search-bar input[type="text"] {
+				padding-right: 30px;
+				width: 370px;
+				border-radius: 5px;
+				height: 40px;
+				border: 1px solid #dddddd;
+				padding-left: 10px;
+			}
 
-                .list-dm .category.show a:hover{
-                    color: #C92127 !important;
-                }
-      ul.category{
-          position:absolute;
+			.search-bar a.docquyen {
+				border-radius: 5px;
+				text-align: center;
+				background: red;
+				width: 40px;
+				position: absolute;
+				top: 50%;
+				right: 10px;
+				transform: translateY(-50%);
+				cursor: pointer;
+				font-size: 18px !important;
+				color: white !important;
+				text-decoration: none !important;
+				border-bottom: 0 !important;
+			}
 
-      }
-    </style>
+		.list-dm .category.hide {
+			display: none;
+		}
+
+		.list-dm .category.show {
+			position: absolute;
+			display: block;
+			padding: 10px;
+			border-radius: 5px;
+			right: -444px;
+			margin-top: 20px;
+			width: 1150px;
+			z-index: 100;
+			background: white;
+		}
+
+			.list-dm .category.show span {
+				font-weight: bold;
+				font-size: 1.5em;
+				color: #7A7E7F;
+				text-align: left;
+			}
+
+			.list-dm .category.show a {
+				font-weight: 500;
+				margin-left: 20px;
+				text-align: start;
+				position: relative;
+			}
+
+				.list-dm .category.show a:hover {
+					color: #C92127 !important;
+				}
+
+		ul.category {
+			position: absolute;
+		}
+	</style>
 </head>
 <body class="bb">
 
-    @if (isAdmin)
-    {
-        <a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">
-            Trang admin
-        </a>
-    }
-    <header>
-        <div class="gi">
-            <div style="justify-content:center">
-                <img style="text-align:center;width:100%" src="https://cdn0.fahasa.com/media/wysiwyg/Thang-11-2023/FahasaSaleThu3T1123_W1_Header_1263x60.jpg" />
-            </div>
-        </div>
+	@if (isAdmin)
+	{
+		<a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">
+			Trang admin
+		</a>
+	}
+	<header>
+		<div class="gi">
+			<div style="justify-content:center">
+				<img style="text-align:center;width:100%" src="https://cdn0.fahasa.com/media/wysiwyg/Thang-11-2023/FahasaSaleThu3T1123_W1_Header_1263x60.jpg" />
+			</div>
+		</div>
 
-       <div class="menu-home">
-           <div class="container content">
-               <div class="logo">
-					<a  asp-area="" asp-controller="Home" asp-action="Index"> <img src="~/img/Layer1.png" style="width:220px" alt="trẻ thơ strore"></a>
-               </div>
-               <div class="hv-danhmuc">
+		<div class="menu-home">
+			<div class="container content">
+				<div class="logo">
+					<a asp-area="" asp-controller="Home" asp-action="Index"> <img src="~/img/Layer1.png" style="width:220px" alt="trẻ thơ strore"></a>
+				</div>
+				<div class="hv-danhmuc">
 
 					<div class="search-bar">
 						<div class="list-dm" style="margin-right:20px">
-                            <i class="fas fa-bars" onclick="showcate()" style="font-size:30px; color:#999999"></i>
+							<i class="fas fa-bars" onclick="showcate()" style="font-size:30px; color:#999999"></i>
 							<div id="hienthidanhmuc" class="category hide">
-                                <span>Danh Mục Sách</span>
-                                <ul id="listcate">
-
+								<span>Danh Mục Sách</span>
+								<ul id="listcate">
 								</ul>
-                            </div>
-                           
+							</div>
 						</div>
-                        <a class="docquyen" href="javascript:"> <i class="fa fa-search"></i></a>
-                        <input type="text" placeholder="Tìm kiếm">
-                    </div>
-               </div>
-               <div class="option">
-                   <ul>
-                       <li>
-                            <a class="text-dark" asp-area="" asp-controller="Cart" asp-action="CartDetails"><i class="fa fa-bell" style="color:#999999"></i> Thông báo </a>
-                       </li>
-                        <li>
-                            <a class="text-dark" asp-area="" asp-controller="Home" asp-action="Danhsachyeuthich"> <i class="fas fa-heart" style="color:#C92127"></i> Yêu thích </a>
-                        </li>
-                       <li>
-							<a class="text-dark" asp-area="" asp-controller="Cart" asp-action="CartDetails"> <i class="fa fa-shopping-cart" style="color:#999999"></i> Giỏ hàng </a>
-                       </li>
-                       <li>
-                            <div class="text-dark">
-                                @{
-                                    var user = await UserManager.GetUserAsync(User);
-                                    if (user != null)
-                                    {
-                                        
-                                            <partial name="_LoginPartial" />
-                                      
-                                    }
-                                    else
-                                    {
-                                        
-                                                <a class="dropdown-toggle  text-dark" data-toggle="dropdown" style="cursor:pointer">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                                                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
-                                                    </svg>
-                                                    Tài khoản
+						<a class="docquyen" id="keyWordFind" href="javascript:"> <i class="fa fa-search" onclick="searchOnClick()"></i></a>
+						<input type="text" id="searchInput" value="" placeholder="Tìm kiếm">
+					</div>
+				</div>
+				<div class="option">
+					<ul>
+						@if (!isAdmin)
+						{
+							<li>
+								<a class="text-dark" asp-area="" asp-controller="Cart" asp-action="CartDetails"><i class="fa fa-bell" style="color:#999999"></i> Thông báo </a>
+							</li>
+							<li>
+								<a class="text-dark" asp-area="" asp-controller="Home" asp-action="Danhsachyeuthich"> <i class="fas fa-heart" style="color:#C92127"></i> Yêu thích </a>
+							</li>
+							<li>
+								<a class="text-dark" asp-area="" asp-controller="Cart" asp-action="CartDetails"> <i class="fa fa-shopping-cart" style="color:#999999"></i> Giỏ hàng </a>
+							</li>
+						}
 
-                                                </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item aidn1" asp-area="Identity" asp-controller="Account" asp-action="Login">Đăng Nhập</a>
-                                                    <a class="dropdown-item aidn2" asp-area="Identity" asp-controller="Account" asp-action="Register">Đăng Ký</a>
-                                                </div>
-                                       
-                                    }
-                                }
-                            </div>
-                       </li>
-                   </ul>
-               </div>
-           </div>
-       </div>
-    </header>
-    <div class="container">
-        <main role="main" style="margin-top:20px" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+						<li>
+							<div class="text-dark">
+								@{
+									var user = await UserManager.GetUserAsync(User);
+									if (user != null)
+									{
 
-    <footer class="">
-        <div class="container cuoitrang">
-            <div class="row cuoicc">
-                <div class="col-4">
-                    <img src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/logo.png" />
-                    <hr />
-                    <p>Lầu 5, 387-389 Hai Bà Trưng Quận 3 TP HCMCông Ty Cổ Phần Phát Hành Sách TP HCM - FAHASA60 - 62 Lê Lợi, Quận 1, TP. HCM, Việt Nam</p>
-                    <p>Fahasa.com nhận đặt hàng trực tuyến và giao hàng tận nơi. KHÔNG hỗ trợ đặt mua và nhận hàng trực tiếp tại văn phòng cũng như tất cả Hệ Thống Fahasa trên toàn quốc.</p>
-                    <img src="https://cdn0.fahasa.com/media/wysiwyg/Logo-NCC/logo-bo-cong-thuong-da-thong-bao1.png" style="width: 100px;" height="40px">
-                </div>
-                <div class="col-8">
-                    <div class="row">
-                        <div class="col-4">
-                            <h6>Dịch Vụ</h6>
-                            <p>Điều khoản sử dụng</p>
-                            <p>Chính sách bảo mật thông tin cá nhân</p>
-                            <p>Chính sách bảo mật thanh toán</p>
-                            <p>Giới thiệu Fahasa</p>
-                            <p>Hệ thống trung tâm - nhà sách</p>
-                        </div>
-                        <div class="col-4">
-                            <h6>Hỗ Trợ</h6>
-                            <p>Chính sách đổi - trả - hoàn tiền</p>
-                            <p>Chính sách bảo hành - bồi hoàn</p>
-                            <p>Chính sách vận chuyển</p>
-                            <p>Chính sách khách sỉ</p>
-                            <p>Phương thức thanh toán và xuất HĐ</p>
-                        </div>
-                        <div class="col-4">
-                            <h6>Tài Khoản Của Tôi</h6>
-                            <p>Đăng Nhâp/Tạo mới tài khoản</p>
-                            <p>Thay đổi địa chỉ </p>
-                            <p>Chi tiết tài khoản</p>
-                            <p>Lịch sử mua hàng</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4">
-                            <h6>Liên Hệ</h6>
-                            <p>60-62 Lê Lợi, Q.1, TP. HCM</p>
-                        </div>
-                        <div class="col-4">
-                            <h6>Email</h6>
-                            <p>lequangkhanh150103@gmail.com</p>
-                        </div>
-                        <div class="col-4">
-                            <h6>Số điện thoại</h6>
-                            <p>0987117521</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+										<partial name="_LoginPartial" />
 
-    <script src="~/lib/chosen_v1.8.7/docsupport/jquery-3.2.1.min.js" type="text/javascript"></script>
-    <script src="~/lib/chosen_v1.8.7/chosen.jquery.js" type="text/javascript"></script>
-    <script src="~/lib/chosen_v1.8.7/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
-    <script src="~/lib/chosen_v1.8.7/docsupport/init.js" type="text/javascript" charset="utf-8"></script>
+									}
+									else
+									{
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+										<a class="dropdown-toggle  text-dark" data-toggle="dropdown" style="cursor:pointer">
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+												<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+												<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+											</svg>
+											Tài khoản
 
-    
-    <script>
-        $(document).ready(function () {
-            $.ajax({
-                url: '@Url.Action("ListDanhMuc", "Home")',
-                type: 'GET',
-                success: function (data) {
-                    console.log(data);
-                    var listcate = $("#listcate");
-                    listcate.empty();
-                    data.data.forEach(function (item) {
-                        var categoryRow = 
-                            '<li>' +
-                            '<a onclick="searchnangcao(' + item.id + ')">' + item.name + '</a>'+
-                            '</li>';
-                        listcate.append(categoryRow);
-                    });
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
-        });
+										</a>
+										<div class="dropdown-menu">
+											<a class="dropdown-item aidn1" asp-area="Identity" asp-controller="Account" asp-action="Login">Đăng Nhập</a>
+											<a class="dropdown-item aidn2" asp-area="Identity" asp-controller="Account" asp-action="Register">Đăng Ký</a>
+										</div>
 
-        function searchnangcao(id) {
-            var url = "@Url.Action("Index","SearchAndFilter")?id=" + id;
-            window.location.href = url;
-        }
-    function showcate(){
-            var showmenu = document.getElementById('hienthidanhmuc');
-          
-            if (showmenu.classList.contains('hide')) {
-                showmenu.classList.remove('hide');
-                showmenu.classList.add('show');
-            } else {
-                showmenu.classList.remove('show');
-                showmenu.classList.add('hide');
-            }
-    }
-    </script>
+									}
+								}
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</header>
+	<div class="container">
+		<main role="main" style="margin-top:20px" class="pb-3">
+			@RenderBody()
+		</main>
+	</div>
+
+	<footer class="">
+		<div class="container cuoitrang">
+			<div class="row cuoicc">
+				<div class="col-4">
+					<img src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/logo.png" />
+					<hr />
+					<p>Lầu 5, 387-389 Hai Bà Trưng Quận 3 TP HCMCông Ty Cổ Phần Phát Hành Sách TP HCM - FAHASA60 - 62 Lê Lợi, Quận 1, TP. HCM, Việt Nam</p>
+					<p>Fahasa.com nhận đặt hàng trực tuyến và giao hàng tận nơi. KHÔNG hỗ trợ đặt mua và nhận hàng trực tiếp tại văn phòng cũng như tất cả Hệ Thống Fahasa trên toàn quốc.</p>
+					<img src="https://cdn0.fahasa.com/media/wysiwyg/Logo-NCC/logo-bo-cong-thuong-da-thong-bao1.png" style="width: 100px;" height="40px">
+				</div>
+				<div class="col-8">
+					<div class="row">
+						<div class="col-4">
+							<h6>Dịch Vụ</h6>
+							<p>Điều khoản sử dụng</p>
+							<p>Chính sách bảo mật thông tin cá nhân</p>
+							<p>Chính sách bảo mật thanh toán</p>
+							<p>Giới thiệu Fahasa</p>
+							<p>Hệ thống trung tâm - nhà sách</p>
+						</div>
+						<div class="col-4">
+							<h6>Hỗ Trợ</h6>
+							<p>Chính sách đổi - trả - hoàn tiền</p>
+							<p>Chính sách bảo hành - bồi hoàn</p>
+							<p>Chính sách vận chuyển</p>
+							<p>Chính sách khách sỉ</p>
+							<p>Phương thức thanh toán và xuất HĐ</p>
+						</div>
+						<div class="col-4">
+							<h6>Tài Khoản Của Tôi</h6>
+							<p>Đăng Nhâp/Tạo mới tài khoản</p>
+							<p>Thay đổi địa chỉ </p>
+							<p>Chi tiết tài khoản</p>
+							<p>Lịch sử mua hàng</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-4">
+							<h6>Liên Hệ</h6>
+							<p>60-62 Lê Lợi, Q.1, TP. HCM</p>
+						</div>
+						<div class="col-4">
+							<h6>Email</h6>
+							<p>lequangkhanh150103@gmail.com</p>
+						</div>
+						<div class="col-4">
+							<h6>Số điện thoại</h6>
+							<p>0987117521</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<script src="~/lib/chosen_v1.8.7/docsupport/jquery-3.2.1.min.js" type="text/javascript"></script>
+	<script src="~/lib/chosen_v1.8.7/chosen.jquery.js" type="text/javascript"></script>
+	<script src="~/lib/chosen_v1.8.7/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+	<script src="~/lib/chosen_v1.8.7/docsupport/init.js" type="text/javascript" charset="utf-8"></script>
+
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
 
 
-    @await RenderSectionAsync("Scripts", required: false)
+	<script>
+		$(document).ready(function () {
+			$.ajax({
+				url: '@Url.Action("ListDanhMuc", "Home")',
+				type: 'GET',
+				success: function (data) {
+					console.log(data);
+					var listcate = $("#listcate");
+					listcate.empty();
+					data.data.forEach(function (item) {
+						var categoryRow =
+							'<li>' +
+							'<a onclick="searchnangcao(' + item.id + ')">' + item.name + '</a>' +
+							'</li>';
+						listcate.append(categoryRow);
+					});
+				},
+				error: function (error) {
+					console.log(error);
+				}
+			});
+		});
+
+		function searchnangcao(id) {
+			var url = "@Url.Action("Index","SearchAndFilter")?id=" + id;
+			window.location.href = url;
+		}
+		function showcate() {
+			var showmenu = document.getElementById('hienthidanhmuc');
+
+			if (showmenu.classList.contains('hide')) {
+				showmenu.classList.remove('hide');
+				showmenu.classList.add('show');
+			} else {
+				showmenu.classList.remove('show');
+				showmenu.classList.add('hide');
+			}
+		}
+
+		function searchOnClick() {
+			var keyword = document.getElementById("searchInput").value;
+
+			$.ajax({
+				url: '@Url.Action("Index", "SearchAndFilter")',
+				type: 'GET',
+				data: { page: 1, keyWord: keyword },
+				success: function (result) {
+
+					window.location.href = '/SearchAndFilter';
+				},
+				error: function (error) {
+					console.log(error);
+				}
+			});
+		}
+
+
+	</script>
+
+
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
 
