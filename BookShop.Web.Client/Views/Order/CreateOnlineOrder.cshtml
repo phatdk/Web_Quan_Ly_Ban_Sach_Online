@@ -128,7 +128,7 @@
                         <span class="col-6">@Model.orderDetails[i].NameProduct</span>
                         <span class="col-3">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.orderDetails[i].Price)</span>
                         @Html.HiddenFor(model => model.orderDetails[i].Id_Product) <!-- Add hidden input for ID -->
-                    @Html.HiddenFor(model => model.orderDetails[i].Quantity)
+                        @Html.HiddenFor(model => model.orderDetails[i].Quantity)
                         @Html.HiddenFor(model => model.orderDetails[i].Price)
                     </li>
                 }

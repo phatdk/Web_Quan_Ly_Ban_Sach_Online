@@ -13,6 +13,7 @@ using BookShop.DAL.Entities;
 using BookShop.Web.Client.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -36,30 +37,32 @@ namespace BookShop.Web.Client.Controllers
 		private readonly IPromotionService _promotionService;
 		private readonly ProductPreviewService _productPreviewService;
 		private readonly PointNPromotionSerVice _pointNPromotionService;
+		private readonly IEmailSender _EmailSender;
 
 
-		public OrderController(UserManager<Userr> userManager, IOrderService orderService, IProductService productService, IOrderDetailService orderDetailService, IPaymentFormService paymentFormService, IOrderPaymentService orderPaymentService, IUserService userService, IStatusOrderService statusOrderService, ICartDetailService cartDetailService, IPromotionService promotionService, IUserPromotionService userPromotionService, IOrderPromotionService orderPromotionService)
-		{
-			_orders = new List<OrderViewModel>();
-			_order = new OrderViewModel();
-			_userManager = userManager;
-			_orderService = orderService;
-			_productService = productService;
-			_orderDetailService = orderDetailService;
-			_orderPromotionService = orderPromotionService;
-			_paymentFormService = paymentFormService;
-			_orderPaymentService = orderPaymentService;
-			_userService = userService;
-			_statusService = statusOrderService;
-			_cartDetailService = cartDetailService;
-			_promotionService = promotionService;
-			_userPromotionService = userPromotionService;
+        public OrderController(UserManager<Userr> userManager, IOrderService orderService, IProductService productService, IOrderDetailService orderDetailService, IPaymentFormService paymentFormService, IOrderPaymentService orderPaymentService, IUserService userService, IStatusOrderService statusOrderService, ICartDetailService cartDetailService, IPromotionService promotionService, IUserPromotionService userPromotionService, IOrderPromotionService orderPromotionService, IEmailSender emailSender)
+        {
+            _orders = new List<OrderViewModel>();
+            _order = new OrderViewModel();
+            _userManager = userManager;
+            _orderService = orderService;
+            _productService = productService;
+            _orderDetailService = orderDetailService;
+            _orderPromotionService = orderPromotionService;
+            _paymentFormService = paymentFormService;
+            _orderPaymentService = orderPaymentService;
+            _userService = userService;
+            _statusService = statusOrderService;
+            _cartDetailService = cartDetailService;
+            _promotionService = promotionService;
+            _userPromotionService = userPromotionService;
 
-			_productPreviewService = new ProductPreviewService();
-			_pointNPromotionService = new PointNPromotionSerVice();
-		}
+            _productPreviewService = new ProductPreviewService();
+            _pointNPromotionService = new PointNPromotionSerVice();
+            _EmailSender = emailSender;
+        }
 
-		private Task<Userr> GetCurrentUserAsync()
+        private Task<Userr> GetCurrentUserAsync()
 		{
 			return _userManager.GetUserAsync(HttpContext.User);
 		}
@@ -161,11 +164,12 @@ namespace BookShop.Web.Client.Controllers
 					{
 						NameProduct = product.Name,
 						Id_Product = product.Id,
-						Price = product.Price,
+						Price = product.NewPrice,
+						Img = product.ImgUrl,
 						Quantity = prod.Quantity,
 					};
 					createModel.orderDetails.Add(orderdetail);
-					createModel.Total += prod.Quantity * product.Price;
+					createModel.Total += prod.Quantity * product.NewPrice;
 				}
 				cartUse = 1;
 			}
@@ -183,11 +187,12 @@ namespace BookShop.Web.Client.Controllers
 				{
 					NameProduct = product.Name,
 					Id_Product = product.Id,
-					Price = product.Price,
+					Price = product.NewPrice,
+					Img = product.ImgUrl,
 					Quantity = quantity,
 				};
 				createModel.orderDetails.Add(orderdetail);
-				createModel.Total += quantity * product.Price;
+				createModel.Total += quantity * product.NewPrice;
 			}
 			createModel.Weight = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Weight / 1000)));
 			createModel.Width = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Width / 100)));
@@ -298,7 +303,11 @@ namespace BookShop.Web.Client.Controllers
 							HttpContext.Session.Remove("sessionCart");
 						}
 					}
-					return RedirectToAction("OrderDetails", new { id = result.Id });
+                    if (result.Email != null)
+                    {
+                        await _EmailSender.SendEmailAsync(result.Email, $"Đơn hàng {result.Id}", $"Đơn hàng của bạn đã được tạo");
+                    }
+                    return RedirectToAction("OrderDetails", new { id = result.Id });
 				}
 				return BadRequest();
 			}
@@ -316,10 +325,10 @@ namespace BookShop.Web.Client.Controllers
 
 		public async Task<IActionResult> GetPromotionByUser(int id)
 		{
+			var promotionsPublic = (await _pointNPromotionService.GetActivePromotion()).Where(x=>x.NameType.Equals("Phiếu khuyến mãi áp dụng tự động"));
 			var promotions = (await _userPromotionService.GetByUser(id)).Where(x => x.Status == 1);
 			var validPromotions = new List<PromotionViewModel>();
 
-			var promotionsPublic = await _pointNPromotionService.GetActivePromotion();
 			if (promotionsPublic != null)
 			{
 				foreach (var item in promotionsPublic)

@@ -22,7 +22,7 @@ namespace BookShop.BLL.ConfigurationModel.ProductModel
 		public int Type { get; set; }
 		public int? CollectionId { get; set; }
 		public int ?Saleoff { get;set; }
-		public float ?NewPrice { get; set; }
+		public int NewPrice { get; set; }
 
 		// join
 		public string? CollectionName { get; set; }
