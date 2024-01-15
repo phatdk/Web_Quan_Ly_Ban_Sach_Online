@@ -11,7 +11,7 @@ using System.Text;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Staff")]
     [Area("Admin")] // cấu hình cái này để nó biết đây là trang quan lí
     public class AuthorController : Controller
     {

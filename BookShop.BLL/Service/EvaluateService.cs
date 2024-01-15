@@ -27,6 +27,30 @@ namespace BookShop.BLL.Service
             _OrDer = new Repository<Order>();
             _OrDerDetails = new Repository<OrderDetail>();
         }
+
+
+        public async Task<List<EvaluateViewModel>> GetComments(int IdProduct)
+        {
+            var oderdetails = (await _OrDerDetails.GetAllAsync()).Where(x => x.Id_Product == IdProduct);
+            var users = await _userRepository.GetAllAsync();
+            var listComment = (from x in oderdetails join
+                              i in await _evaluateRepository.GetAllAsync()
+                              on x.Id equals i.Id_Product
+                              join b in users on i.Id_User equals b.Id
+                              select new EvaluateViewModel()
+                              {
+                                  Id = i.Id,
+                                  NameUser = b.Name,
+                                  Point = i.Point,
+                                  Content = i.Content,
+                                  CreatedDate = i.CreatedDate,
+                                  Id_Product = i.Id_Product,
+                                  Id_User = i.Id_User,
+                                  Id_Parents = i.Id_Parents,
+                              }).ToList();
+            return listComment;
+
+        }
         public async Task<List<EvaluateViewModel>> GetNestedComments(int parentId)
         {
             List<EvaluateViewModel> result = new List<EvaluateViewModel>();
@@ -35,9 +59,27 @@ namespace BookShop.BLL.Service
         }
         public async Task<double> GetSta(int idpro)
         {
-            var evaluates = (await _evaluateRepository.GetAllAsync()).Where(x => x.Id_Parents == null && x.Id_Product == idpro);
-            double sta;
-            if (evaluates.Count() > 5) sta = Convert.ToDouble(evaluates.Average(x => x.Point));
+			var oderdetails = (await _OrDerDetails.GetAllAsync()).Where(x => x.Id_Product == idpro);
+			var users = await _userRepository.GetAllAsync();
+			var listComment = (from x in oderdetails
+							   join
+							  i in await _evaluateRepository.GetAllAsync()
+							  on x.Id equals i.Id_Product
+							   join b in users on i.Id_User equals b.Id
+							   select new EvaluateViewModel()
+							   {
+								   Id = i.Id,
+								   NameUser = b.Name,
+								   Point = i.Point,
+								   Content = i.Content,
+								   CreatedDate = i.CreatedDate,
+								   Id_Product = i.Id_Product,
+								   Id_User = i.Id_User,
+								   Id_Parents = i.Id_Parents,
+							   }).ToList();
+			
+			double sta;
+            if (listComment.Count() > 5) sta = Convert.ToDouble(listComment.Average(x => x.Point));
             else sta = 0.0;
             return sta;
         }
@@ -85,23 +127,19 @@ namespace BookShop.BLL.Service
         {
 
             try
-            {
-                var IdOrder = (await _OrDerDetails.GetAllAsync()).Where(x => x.UserId == model.Id_User).FirstOrDefault();
-                if (IdOrder != null)
-                {
+            {        
                     var obj = new Evaluate()
                     {
                         Point = model.Point,
                         Content = model.Content,
                         CreatedDate = DateTime.Now,
-                        Id_Product = IdOrder.Id,
+                        Id_Product = model.Id_Product,
                         Id_User = model.Id_User,
                         Id_Parents = model.Id_Parents,
                     };
-                    await _evaluateRepository.CreateAsync(obj);
-                    return true;
-                }
-                return false;
+                await _evaluateRepository.CreateAsync(obj);
+                return true;
+
             }
             catch (Exception ex)
             {

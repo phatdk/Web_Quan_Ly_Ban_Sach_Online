@@ -39,8 +39,7 @@ namespace BookShop.Web.Client.Controllers
             _productService = productService;
 
         }
-
-        public async Task<IActionResult> Index(int? id)
+        public async Task<IActionResult> Index(int? id,string? keyWord)
         {
 
             var author = (await _authorService.Getall()).Where(x => x.Status == 1).ToList();
@@ -59,22 +58,33 @@ namespace BookShop.Web.Client.Controllers
             ViewBag.Author = author;
             ViewBag.Supplier = supplier;
 
-      
-            
-
-            return View();
+			HttpContext.Session.SetString("Keyword", keyWord ?? string.Empty);
+			return View();
         }
 
 
+
         [HttpPost]
-        public async Task<IActionResult> Getdata(int page, string? keyWord, List<int>? gennerId, List<int>? colectionId, List<int>? authorId, List<int>? publishersId, int? min)
+        public async Task<IActionResult> Getdata(int page, string? keyword, List<int>? gennerId, List<int>? colectionId, List<int>? authorId, List<int>? publishersId, int? min)
         {
             var list = new List<ProductViewModel>();
-            // lấy tất cả
-            if (gennerId.Count() == 0 && authorId.Count() == 0 && colectionId.Count() == 0 && publishersId.Count() == 0)
+			// lấy tất cả
+			string savedKeyword = HttpContext.Session.GetString("Keyword");
+			if (gennerId.Count() == 0 && authorId.Count() == 0 && colectionId.Count() == 0 && publishersId.Count() == 0)
             {
-                _products = (await _productService.GetAll()).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+				if (savedKeyword != null)
+				{
+					_products = (await _productService.GetAll()).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+					_products = _products.Where(c => c.Name.Contains(savedKeyword)).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+					list.AddRange(_products);
+				}
+                else
+                {
+                    _products = (await _productService.GetAll()).GroupBy(c => c.Id).Select(group => group.First()).ToList();
                 list.AddRange(_products);
+
+                }
+				
             }
             else
             {
@@ -106,14 +116,16 @@ namespace BookShop.Web.Client.Controllers
 			}
 
 
-            if (keyWord != null)
+            if (keyword != null)
             {
 				var listnew = new List<ProductViewModel>();
 
-				_products = _products.Where(c => c.Name.Contains(keyWord)).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+				_products = _products.Where(c => c.Name.Contains(keyword)).GroupBy(c => c.Id).Select(group => group.First()).ToList();
 				listnew.AddRange(_products);
 				list = listnew;
 			}
+			
+			
             if (min > 0)
             {
 				var listnew = new List<ProductViewModel>();

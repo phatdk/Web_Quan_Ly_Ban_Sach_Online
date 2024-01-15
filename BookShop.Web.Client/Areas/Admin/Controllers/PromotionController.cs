@@ -21,7 +21,7 @@ using static NuGet.Packaging.PackagingConstants;
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	[Authorize(Roles = "Admin")]
+	[Authorize(Roles = "Admin,Staff")]
 	public class PromotionController : Controller
 	{
 		IPromotionService _promotionService;

@@ -15,7 +15,7 @@ using static NuGet.Packaging.PackagingConstants;
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	[Authorize(Roles = "Admin")]
+	[Authorize(Roles = "Admin,Staff")]
 	public class ProductController : Controller
 	{
 		List<ProductViewModel> _listProduct;
@@ -105,8 +105,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		public async Task<IActionResult> GetProduct(int page, int? author, int? genre, int? type, int? collection, int? status, string? keyWord)
 		{
 			var dataList = new List<ProductViewModel>();
-			if(author != null) dataList = await _productService.GetByAuthor(Convert.ToInt32(author));
-			else if(genre != null) dataList =await _productService.GetByAuthor(Convert.ToInt32(genre));
+			if (author != null) dataList = await _productService.GetByAuthor(Convert.ToInt32(author));
+			else if (genre != null) dataList = await _productService.GetByAuthor(Convert.ToInt32(genre));
 			else dataList = await _productService.GetAll();
 			if (type != null)
 			{
@@ -178,7 +178,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					var index = 0;
 					foreach (var file in request.fileCollection)
 					{
-						var img = (await UpLoadImage(file, result.Id, index));
+						var img = await UpLoadImage(file, result.Id, index);
 						var imageProduct = new CreateImageModel()
 						{
 							ImageUrl = "/img/product/" + img,
@@ -236,9 +236,15 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					while (true)
 					{
 						if (index < imgvms.Count && index < request.fileCollection.Count) // == cap nhat anh moi
-							await UpLoadImage(request.fileCollection[index], request.Id, index);
-						else if (index < imgvms.Count && index >= request.fileCollection.Count) // cũ > mới => xóa cũ
-							await _imageService.Delete(imgvms.Where(x => x.Index == index).FirstOrDefault().Id);
+						{
+							var filename = await UpLoadImage(request.fileCollection[index], request.Id, index);
+							await _imageService.Update(new UpdateImageModel
+							{
+								Id = imgvms[index].Id,
+								Index = index,
+								ImageUrl = "/img/product/" + filename,
+							});
+						}
 						else if (index >= imgvms.Count && index < request.fileCollection.Count) // cũ < mới => thêm mới
 							await _imageService.Add(new CreateImageModel
 							{
@@ -247,6 +253,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 								Status = 1,
 								Id_Product = request.Id,
 							});
+						else if (index < imgvms.Count && index >= request.fileCollection.Count) // cũ > mới => xóa cũ
+							await _imageService.Delete(imgvms.Where(x => x.Index == index).FirstOrDefault().Id);
 						else if (index >= imgvms.Count && index >= request.fileCollection.Count) break; // duyệt qua hết các phần tử => loop break
 						index++;
 					};

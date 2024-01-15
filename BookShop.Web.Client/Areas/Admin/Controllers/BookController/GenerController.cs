@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
-    public class GenerController : Controller
+	[Authorize(Roles = "Admin,Staff")]
+	public class GenerController : Controller
     {
         private readonly IGenreService _genreService;
         List<CategoryModel> _listCategory;

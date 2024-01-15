@@ -10,10 +10,12 @@ namespace BookShop.Web.Client.Controllers
     {
 
         private readonly IEvaluateService Evaluate;
+        private readonly IOrderDetailService _OrderDetails;
 
-        public EvaluateController(IEvaluateService evaluate)
+        public EvaluateController(IEvaluateService evaluate, IOrderDetailService orderDetails )
         {
             Evaluate = evaluate;
+            _OrderDetails = orderDetails;
         }
 
         public IActionResult Index()
@@ -47,17 +49,24 @@ namespace BookShop.Web.Client.Controllers
         [HttpPost]      
         public async Task<IActionResult> CreateComment(CreateEvaluateModel Comment)
         {
-			if (Comment.Point == -1)
-			{
-				Comment.Point = 5;
-			}
-		    //	Comment.Point =5;
+            var orderdetails= (await _OrderDetails.GetAll()).Where(x => x.Id_User == Comment.Id_User).FirstOrDefault();
+            if (orderdetails==null)
+            {
+                return Content("đã có lỗi xảy ra");
+            }
+            Comment.Id_User = orderdetails.Id_User;
+            Comment.Id_Product = orderdetails.Id;
+            if (Comment.Point == -1)
+            {
+                Comment.Point = 5;
+            }
+            //	Comment.Point =5;
             var statusadd = await Evaluate.Add(Comment);
             if (!statusadd)
             {
                 return Content("đã có lỗi xảy ra");
             }
-            return Redirect($"/Home/ChiTietSanPham/{Comment.Id_Product}");
+            return Redirect($"/Home/ChiTietSanPham/{orderdetails.Id_Product}");
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿@using BookShop.BLL.ConfigurationModel.AuthorModel;
 @using BookShop.BLL.ConfigurationModel.GenreModel;
+@using BookShop.BLL.ConfigurationModel.ProductModel;
 @using BookShop.BLL.ConfigurationModel.SupplierModel;
-
 
 
 @{
@@ -18,7 +18,6 @@
 
 
 	.filter_left {
-		
 		grid-column: 1/2;
 		display: block;
 		gap: 10px;
@@ -87,12 +86,11 @@
 	li {
 		font-weight: 500;
 		font-size: 14px;
-		
 		list-style: none;
 	}
 
 	ul {
-		padding-right:5px;
+		padding-right: 5px;
 		padding-left: 0;
 		font-weight: 100;
 		font-size: 13px;
@@ -137,6 +135,7 @@
 	}
 
 	.filter .giaban {
+		height:30px;
 		align-items: center;
 		display: flex;
 		gap: 10px;
@@ -164,23 +163,27 @@
 	}
 
 	.filter .testsp {
-		
 		padding: 10px;
 	}
-	a.deplam{
-		display:flex;
+
+	a.deplam {
+		display: flex;
 		font-size: 13px;
 		padding-right: 20px;
 		color: #CC0000;
 		justify-content: center;
 	}
 
-	.ttsp a{
-		color:inherit;
+	.ttsp a {
+		color: inherit;
 	}
 
-	input#price{
-		width:95%;
+	input#price {
+		width: 95%;
+	}
+	.giabandau p{
+		color: #DCDCDC;
+		text-decoration: line-through;
 	}
 </style>
 <div class="filter">
@@ -189,7 +192,7 @@
 			<div class="filter_left">
 				<div class="card-title-left">
 					<p>
-						LỌC THEO
+						LỌC THEO 
 					</p>
 				</div>
 				<div class="author">
@@ -224,7 +227,7 @@
 						<a href="javascript:" class="deplam" onclick="theloaishow()">Xem thêm</a>
 					</div>
 				</div>
-				
+
 				<div class="supplier">
 					<div class="card-title">
 						<p>
@@ -247,9 +250,9 @@
 							Giá:
 						</p>
 						<div id="price-range">
-							
+
 							<input type="range" id="price" name="price" min="0" max="1000000" value="0" step="100" oninput="updatePrice(event)">
-							<p id="selected-price">Giá tiền: <span id="price-value">0</span> VND</p>
+							<p id="selected-price">Giá tiền: <span id="price-value">0</span> đến 1.000.000 VND</p>
 						</div>
 					</div>
 				</div>
@@ -257,7 +260,7 @@
 			<div class="filter_right">
 				<div class="search-bar">
 					<p style="margin-bottom:0" id="soluongsp"> </p>
-					<input id="keyWordFind" onclick="searchOnEnter(event)" type="text" placeholder="Tìm kiếm">
+					<input id="keyWordFind" oninput="searchOnEnter(event)" type="text" placeholder="Tìm kiếm">
 				</div>
 
 				<div class="fl" id="listcategory">
@@ -276,15 +279,16 @@
 	}
 
 	function loadData(pageIndex) {
-		var keyWord = document.getElementById("keyWordFind").value;
+		var keyWord = $('#keyWordFind').val();
 		var price = document.getElementById("price").value;
-		
+
 		console.log(price);
 		var author = authorIdList;
 		var genner = gennerIdList;
 		var publisher = supplierList;
 		console.log(author);
 		console.log(genner);
+		console.log(keyWord);
 
 
 		$.ajax({
@@ -293,11 +297,11 @@
 
 			data: {
 				page: pageIndex,
-				keyWord: keyWord, 
+				keyWord: keyWord,
 				authorId: author,
 				gennerId: genner,
 				publishersId: supplierList,
-				min: price 
+				min: price
 			},
 			success: function (data) {
 				console.log(data);
@@ -309,7 +313,7 @@
 				data.data.forEach(function (item) {
 					var categoryRow =
 						'<div class="testsp" onclick="ChiTietSanPham(' + item.id + ')">' +
-						
+
 						'<div class="product-image">' +
 						'<div class="flashsale-image-container">' +
 						'<img src="' + item.imgUrl + '">' +
@@ -322,11 +326,13 @@
 						'<div class="giaban">' + '<p>' +
 						formatPrice(item.newPrice) + '</p>';
 					if (item.saleoff > 0) {
-						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
-							'</div class="giabandau">' +
-							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>'
-						'</div>'
-					}
+						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>';
+					};
+					categoryRow += '</div>';
+					categoryRow += '<div class="giabandau">' 
+						+ '<p>' + formatPrice(item.price) + '</p>' +
+						'</div>';
+				+ '</div>';
 					listcategory.append(categoryRow);
 				});
 				createPagingButtons(1, data.max, data.page);
@@ -341,12 +347,11 @@
 	});
 	function searchOnEnter(event) {
 		loadData(1);
-
 	}
 
 	function formatPrice(price) {
 		const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-		return formattedPrice + ' đ';
+		return formattedPrice + ' VND';
 	}
 	function updatePrice(event) {
 		loadData(1);
@@ -359,7 +364,7 @@
 
 	var authorIdList = []
 	function tacgiasearch(elment) {
-		
+
 		if (elment.checked) {
 			authorIdList.push(elment.value);
 		} else {
@@ -368,7 +373,7 @@
 				authorIdList.splice(indexToRemove, 1);
 			}
 		}
-		loadData(1,'')
+		loadData(1, '')
 	}
 	var gennerIdList = []
 	function theloaisearch(elment) {
@@ -380,7 +385,7 @@
 				gennerIdList.splice(indexToRemove, 1);
 			}
 		}
-	loadData(1, '')
+		loadData(1, '')
 	}
 	var supplierList = []
 	function nhaxuatbansearch(elment) {
