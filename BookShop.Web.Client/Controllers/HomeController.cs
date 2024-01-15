@@ -109,7 +109,7 @@ namespace BookShop.Web.Client.Controllers
 			_products = await _productService.GetDanhMuc("Nuôi dạy con");
 
 			var product1 = _products.OrderByDescending(c => c.CreatedDate).ToList();
-			var top10Products1 = product1.Take(30).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+			var top10Products1 = product1.Take(7).GroupBy(c => c.Id).Select(group => group.First()).ToList();
 			return Json(new { data = top10Products1 });
 		}
 		public async Task<IActionResult> ChiTietSanPham(int id)
