@@ -18,6 +18,9 @@ using BookShop.Web.Client.Models;
 using static NuGet.Packaging.PackagingConstants;
 using GemBox.Spreadsheet;
 using BookShop.BLL.ConfigurationModel.PromotionModel;
+using BookShop.Web.Client.Services;
+using BookShop.BLL.ConfigurationModel.PointTranHistoryModel;
+using System.Drawing;
 
 namespace App.Areas.Identity.Controllers
 {
@@ -36,6 +39,7 @@ namespace App.Areas.Identity.Controllers
 		private readonly IEmailSender _emailSender;
 		private readonly ILogger<ManageController> _logger;
 		private readonly IWebHostEnvironment _hostingEnvironment;
+		private readonly PointNPromotionSerVice _pointNPromotionSerVice;
 		public ManageController(
 		UserManager<Userr> userManager,
 		IPointTranHistoryService historyService,
@@ -56,6 +60,7 @@ namespace App.Areas.Identity.Controllers
 			_logger = logger;
 			_hostingEnvironment = hostingEnvironment;
 			_Iorder = iorder;
+			_pointNPromotionSerVice = new PointNPromotionSerVice();
 		}
 		[TempData]
 		public string StatusMessage { get; set; }
@@ -183,7 +188,7 @@ namespace App.Areas.Identity.Controllers
 			int pagesize = 10;
 			double totalPage = (double)dataList.Count / pagesize;
 			dataList = dataList.Skip((page - 1) * pagesize).Take(pagesize).ToList();
-			return Json(new {data = dataList, page = page, max = Math.Ceiling(totalPage)});
+			return Json(new { data = dataList, page = page, max = Math.Ceiling(totalPage) });
 		}
 
 		public async Task<IActionResult> GetPromotion(int id, string code)
@@ -230,19 +235,27 @@ namespace App.Areas.Identity.Controllers
 				var promotion = await _promotionService.GetById(promotionId);
 				if (promotion != null && promotion.Quantity > 0)
 				{
-					var taskResult = _userPromotionService.Add(new CreateUserPromotionModel
+					var task1 = _userPromotionService.Add(new CreateUserPromotionModel
 					{
 						Id_User = userId,
 						Id_Promotion = promotion.Id,
 						EndDate = DateTime.Now.AddDays(Convert.ToInt32(promotion.StorageTerm)),
 						Status = 1,
 					});
+					var history = new PointTranHistoryViewModel()
+					{
+						PointUserd = - Convert.ToInt32(promotion.ConversionPoint),
+						Id_User = userId,
+						Id_Promotion = promotionId,
+					};
+					var task2 = _pointNPromotionSerVice.Accumulate(userId, history.PointUserd, history);
 					var obj = new UpdatePromotionModel()
 					{
 						Name = promotion.Name,
 						Code = promotion.Code,
 						Condition = promotion.Condition,
 						StorageTerm = promotion.StorageTerm,
+						ConversionPoint = promotion.ConversionPoint,
 						PercentReduct = promotion.PercentReduct,
 						AmountReduct = promotion.AmountReduct,
 						ReductMax = promotion.ReductMax,
@@ -253,8 +266,8 @@ namespace App.Areas.Identity.Controllers
 						Status = promotion.Status,
 						Id_Type = promotion.Id_Type,
 					};
-					var result = _promotionService.Update(promotion.Id, obj);
-					await Task.WhenAll(taskResult, result);
+					var task3 = _promotionService.Update(promotion.Id, obj);
+					await Task.WhenAll(task1, task2, task3);
 					return Json(new { success = true });
 				}
 				return Json(new { success = false });

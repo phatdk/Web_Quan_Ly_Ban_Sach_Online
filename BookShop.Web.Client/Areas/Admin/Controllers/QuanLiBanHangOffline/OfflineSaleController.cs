@@ -109,14 +109,17 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 			return Json(new { order = order, details = data, total = total });
 		}
 
-		public async Task<IActionResult> GetProducts(string keyWord)
+		public async Task<IActionResult> GetProducts(int page, string? keyWord)
 		{
 			var list = (await _productService.GetAll()).Where(x => x.Status == 1 && x.Type == 1).OrderByDescending(x => x.CreatedDate).ToList();
 			if (!string.IsNullOrEmpty(keyWord))
 			{
 				list = list.Where(x => x.Name.ToLower().Contains(keyWord.ToLower())).OrderByDescending(x => x.CreatedDate).ToList();
 			}
-			return Json(list.Take(10));
+			var pageSize = 10;
+			double totalPage = (double)list.Count / pageSize;
+			list = list.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+			return Json(new { data = list, page = page, max = Math.Ceiling(totalPage) });
 		}
 
 		public async Task<IActionResult> GetUser(string keyWord)
@@ -135,7 +138,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 
 		public async Task<IActionResult> CheckActivePromotion(int total)
 		{
-			var promotions = (await _pointNPromotionService.GetActivePromotion()).Where(x => x.NameType.Equals("Tự động"));
+			var promotions = (await _pointNPromotionService.GetActivePromotion()).Where(x => x.NameType.Equals("Phiếu khuyến mãi áp dụng tự động"));
 			var validPromotions = new List<PromotionViewModel>();
 			foreach (var item in promotions)
 			{
@@ -186,7 +189,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 				Id_Product = product.Id,
 				Quantity = quantity,
 				NameProduct = product.Name,
-				Price = product.Price,
+				Price = product.NewPrice,
 				Id_Order = orderId,
 			};
 			listDetails.Add(detail);
@@ -373,17 +376,19 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 				Status = 1,
 			};
 			if (!await _orderPaymentService.Add(opay)) return false; // lưu phương thức thanh toán
-
-			int point = Convert.ToInt32(Math.Floor(Convert.ToDouble(order.Total / 20000))); // 20k = 1 điểm
-			if (point > 0)
+			if (!user.Code.Equals("KH0000000"))
 			{
-				var history = new PointTranHistoryViewModel()
+				int point = Convert.ToInt32(Math.Floor(Convert.ToDouble(order.Total / 20000))); // 20k = 1 điểm
+				if (point > 0)
 				{
-					PointUserd = point,
-					Id_User = user.Id,
-					Id_Order = order.Id,
-				};
-				if (!await _pointNPromotionService.Accumulate(order.Id_User, point, history)) return false; // lưu lịch sử tích điểm
+					var history = new PointTranHistoryViewModel()
+					{
+						PointUserd = point,
+						Id_User = user.Id,
+						Id_Order = order.Id,
+					};
+					if (!await _pointNPromotionService.Accumulate(order.Id_User, point, history)) return false; // lưu lịch sử tích điểm
+				}
 			}
 			return true;
 		}
@@ -391,6 +396,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 		// GET: OfflineSaleController/Create
 		public async Task<IActionResult> CreateOfflineOrder()
 		{
+			HttpContext.Session.Remove("sessionOrder");
 			var staff = await _userManager.GetUserAsync(HttpContext.User);
 			if (staff != null)
 			{
