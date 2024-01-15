@@ -92,7 +92,7 @@
 		<div class="col-6">
 			<label class="form-label">Hình ảnh sản phẩm</label>
 			<div id="img-selected"></div>
-			<input type="file" id="img-input" asp-for="fileCollection" multiple required class="form-control"  />
+			<input type="file" id="img-input" asp-for="fileCollection" class="form-control" multiple required accept=".jpg,.png,.jpeg,.tiff,.gif" />
 		</div>
 		<button type="submit" class="btn btn-primary m-3">Create</button>
 	}
