@@ -36,29 +36,31 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 		private readonly IBookService _bookService;
 		private readonly ProductPreviewService _productPreviewService;
 		private readonly PointNPromotionSerVice _pointNPromotionService;
+		private readonly IEmailSender _EmailSender;
 
-		public OrderManageController(UserManager<Userr> userManager, IUserService userService, IOrderService orderService, IOrderDetailService orderDetailService, IOrderPaymentService orderPaymentService, IStatusOrderService statusOrderService, IReturnOrderService returnOrderService, IPromotionService promotionService, IProductService productService, IProductBookService productBookService, IBookService bookService, IOrderPromotionService orderPromotionService)
-		{
-			_orders = new List<OrderViewModel>();
-			_order = new OrderViewModel();
-			_userManager = userManager;
-			_userService = userService;
-			_orderService = orderService;
-			_orderDetailService = orderDetailService;
-			_orderPromotionService = orderPromotionService;
-			_orderPaymentService = orderPaymentService;
-			_statusOrderService = statusOrderService;
-			_returnOrderService = returnOrderService;
-			_promotionService = promotionService;
-			_productService = productService;
-			_productBookService = productBookService;
-			_bookService = bookService;
+        public OrderManageController(UserManager<Userr> userManager, IUserService userService, IOrderService orderService, IOrderDetailService orderDetailService, IOrderPaymentService orderPaymentService, IStatusOrderService statusOrderService, IReturnOrderService returnOrderService, IPromotionService promotionService, IProductService productService, IProductBookService productBookService, IBookService bookService, IOrderPromotionService orderPromotionService, IEmailSender emailSender = null)
+        {
+            _orders = new List<OrderViewModel>();
+            _order = new OrderViewModel();
+            _userManager = userManager;
+            _userService = userService;
+            _orderService = orderService;
+            _orderDetailService = orderDetailService;
+            _orderPromotionService = orderPromotionService;
+            _orderPaymentService = orderPaymentService;
+            _statusOrderService = statusOrderService;
+            _returnOrderService = returnOrderService;
+            _promotionService = promotionService;
+            _productService = productService;
+            _productBookService = productBookService;
+            _bookService = bookService;
 
-			_productPreviewService = new ProductPreviewService();
-			_pointNPromotionService = new PointNPromotionSerVice();
-		}
+            _productPreviewService = new ProductPreviewService();
+            _pointNPromotionService = new PointNPromotionSerVice();
+            _EmailSender = emailSender;
+        }
 
-		private Task<Userr> GetCurrentUserAsync()
+        private Task<Userr> GetCurrentUserAsync()
 		{
 			return _userManager.GetUserAsync(HttpContext.User);
 		}
@@ -83,10 +85,10 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					x => x.Status == Convert.ToInt32(status)
 					).ToList();
 			}
-			if(type != null)
+			if (type != null)
 			{
 				if (type == 1) _orders = _orders.Where(x => x.IsOnlineOrder == true).ToList();
-				else if (type == 0) _orders = _orders.Where(x=>x.IsOnlineOrder == false).ToList();
+				else if (type == 0) _orders = _orders.Where(x => x.IsOnlineOrder == false).ToList();
 			}
 			if (!string.IsNullOrEmpty(keyWord))
 			{
@@ -157,9 +159,9 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			return View(_order);
 		}
 
-        // GET: OrderManageController/Edit/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id)
+		// GET: OrderManageController/Edit/5
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> Edit(int id)
 		{
 			_order = await _orderService.GetById(id);
 			return View(_order);
@@ -204,13 +206,17 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 				}
 				if (order.Status == 1)
 				{
-					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 2).First().Id;
-					order.Id_Status = statusId;
+					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 2).First();
+					order.Id_Status = statusId.Id;
 					order.AcceptDate = DateTime.Now;
 					order.ModifiDate = DateTime.Now;
 					order.ModifiNotes += "\n" + DateTime.Now + " : Đơn được xác nhận bởi " + staff.Name + " - Mã code [" + staff.Code + "]\n";
 					order.Id_Staff = staff.Id;
 					var result = await _orderService.Update(order);
+					if (order.Email!=null)
+					{
+						await _EmailSender.SendEmailAsync(order.Email,$"Đơn hàng {order.Id}",$"Đơn hàng của bạn {statusId.StatusName}");
+                    }
 					return Json(new { success = result });
 				}
 				return Json(new { success = false, errorMessage = "\nTrạng thái đơn hàng không hợp lệ!" });
@@ -227,13 +233,17 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			{
 				if (order.Status == 2)
 				{
-					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 3).First().Id;
-					order.Id_Status = statusId;
+					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 3).First();
+					order.Id_Status = statusId.Id;
 					order.DeliveryDate = DateTime.Now;
 					order.ModifiDate = DateTime.Now;
 					order.ModifiNotes += "\n" + DateTime.Now + " : Đơn được xác nhận giao bởi " + staff.Name + " - Mã code [" + staff.Code + "]\n";
 					var result = await _orderService.Update(order);
-					return Json(new { success = result });
+                    if (order.Email != null)
+                    {
+                        await _EmailSender.SendEmailAsync(order.Email, $"Đơn hàng {order.Id}", $"Đơn hàng của bạn {statusId.StatusName}");
+                    }
+                    return Json(new { success = result });
 				}
 				return Json(new { success = false, errorMessage = "\nTrạng thái đơn hàng không hợp lệ!" });
 			}
@@ -250,8 +260,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			{
 				if (order.Status == 3)
 				{
-					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 4).First().Id;
-					order.Id_Status = statusId;
+					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 4).First();
+					order.Id_Status = statusId.Id;
 					order.CompleteDate = DateTime.Now;
 					order.ReceiveDate = DateTime.Now;
 					order.ModifiDate = DateTime.Now;
@@ -271,25 +281,32 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 							await _orderPaymentService.Update(item.Id, obj);
 						}
 					}
-					// cộng điểm vào ví điểm
 					var details = await _orderDetailService.GetByOrder(order.Id);
 					foreach (var item in details)
 					{
 						order.Total += item.Price * item.Quantity;
 					}
-					int point = Convert.ToInt32(Math.Floor(Convert.ToDouble(order.Total / 20000))); // 20k = 1 điểm
-					if (point > 0)
+					// cộng điểm vào ví điểm
+					if (!user.Code.Equals("KH0000000"))
 					{
-						var history = new PointTranHistoryViewModel()
+						int point = Convert.ToInt32(Math.Floor(Convert.ToDouble(order.Total / 20000))); // 20k = 1 điểm
+						if (point > 0)
 						{
-							PointUserd = point,
-							Id_User = user.Id,
-							Id_Order = id,
-						};
-						await _pointNPromotionService.Accumulate(order.Id_User, point, history);
+							var history = new PointTranHistoryViewModel()
+							{
+								PointUserd = point,
+								Id_User = user.Id,
+								Id_Order = id,
+							};
+							await _pointNPromotionService.Accumulate(order.Id_User, point, history);
+						}
 					}
 					var result = await _orderService.Update(order);
-					return Json(new { success = result });
+                    if (order.Email != null)
+                    {
+                        await _EmailSender.SendEmailAsync(order.Email, $"Đơn hàng {order.Id}", $"Đơn hàng của bạn {statusId.StatusName}");
+                    }
+                    return Json(new { success = result });
 				}
 				return Json(new { success = false, errorMessage = "\nTrạng thái đơn hàng không hợp lệ!" });
 			}
@@ -335,12 +352,16 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			{
 				if (order.Status == 5)
 				{
-					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 6).First().Id;
-					order.Id_Status = statusId;
+					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 6).First();
+					order.Id_Status = statusId.Id;
 					order.ModifiDate = DateTime.Now;
 					order.ModifiNotes += "\n" + DateTime.Now + " : Đơn được xác nhận đã hoàn trả và chờ xử lý hoàn trả bởi " + staff.Name + " - Mã code [" + staff.Code + "]\n";
 					var result = await _orderService.Update(order);
-					return Json(new { success = result });
+                    if (order.Email != null)
+                    {
+                        await _EmailSender.SendEmailAsync(order.Email, $"Đơn hàng {order.Id}", $"Đơn hàng của bạn {statusId.StatusName}");
+                    }
+                    return Json(new { success = result });
 				}
 				return Json(new { success = false, errorMessage = "\nTrạng thái đơn hàng không hợp lệ!" });
 			}
@@ -374,8 +395,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			{
 				if (order.Status == 6)
 				{
-					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 7).First().Id;
-					order.Id_Status = statusId;
+					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 7).First();
+					order.Id_Status = statusId.Id;
 					order.ModifiDate = DateTime.Now;
 					var actionNote = "";
 					var condition = false;
@@ -410,7 +431,11 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 						{
 							await _returnOrderService.Update(item.Id, new UpdateReturnOrderModel { Notes = item.Notes, Status = 0 });
 						}
-						return Json(new { success = result });
+                        if (order.Email != null)
+                        {
+                            await _EmailSender.SendEmailAsync(order.Email, $"Đơn hàng {order.Id}", $"Đơn hàng của bạn {statusId.StatusName}");
+                        }
+                        return Json(new { success = result });
 					}
 					return Json(new { success = false, errorMessage = "\nLỗi khi sử lí hàng trả lại vui lòng kiểm tra lại hệ thống!" });
 				}
@@ -426,8 +451,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			var staff = await GetCurrentUserAsync();
 			if (staff != null && order.Status <= 2)
 			{
-				var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 6).First().Id;
-				order.Id_Status = statusId;
+				var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 6).First();
+				order.Id_Status = statusId.Id;
 				order.ModifiDate = DateTime.Now;
 				order.ModifiNotes += "\n" + DateTime.Now + " : Đơn được xác nhận yêu cầu hủy bởi" + staff.Name + " - Mã code [" + staff.Code + "]\n Ghi chú: " + modifyChange + "\n";
 				var result = await _orderService.Update(order);
@@ -445,10 +470,15 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 								await _bookService.ChangeQuantity(book.Id, item.Quantity); // tang so luong sach trong kho
 							}
 							await _productPreviewService.ChangeQuantity(item.Id_Product, item.Quantity);    // tang lai sp
+
 						}
 					}
 				}
-				return Json(new { success = result });
+                if (order.Email != null)
+                {
+                    await _EmailSender.SendEmailAsync(order.Email, $"Đơn hàng {order.Id}", $"Đơn hàng của bạn {statusId.StatusName}");
+                }
+                return Json(new { success = result });
 			}
 			else return Json(new { success = false, errorMessage = "\nBạn chưa đăng nhập hoặc đơn hàng không được tìm thấy! \nVui lòng kiểm tra lại!" });
 		}
@@ -462,12 +492,16 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			{
 				if (order.Status == 4)
 				{
-					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 9).First().Id;
-					order.Id_Status = statusId;
+					var statusId = (await _statusOrderService.GetAll()).Where(x => x.Status == 9).First();
+					order.Id_Status = statusId.Id;
 					order.ModifiDate = DateTime.Now;
 					order.ModifiNotes += "\n" + DateTime.Now + " : Đơn được xác nhận đóng bởi " + staff.Name + " - Mã code [" + staff.Code + "]\n Ngày đóng đơn : " + Convert.ToDateTime(order.CompleteDate).AddDays(3);
 					var result = await _orderService.Update(order);
-					return Json(new { success = result });
+                    if (order.Email != null)
+                    {
+                        await _EmailSender.SendEmailAsync(order.Email, $"Đơn hàng {order.Id}", $"Đơn hàng của bạn {statusId.StatusName}");
+                    }
+                    return Json(new { success = result });
 				}
 				return Json(new { success = false, errorMessage = "\nTrạng thái đơn hàng không hợp lệ!" });
 			}

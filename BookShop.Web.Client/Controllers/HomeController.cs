@@ -1,4 +1,5 @@
 ﻿using BookShop.BLL.ConfigurationModel.ProductModel;
+using BookShop.BLL.ConfigurationModel.PromotionModel;
 using BookShop.BLL.ConfigurationModel.WishListModel;
 using BookShop.BLL.IService;
 using BookShop.BLL.Service;
@@ -26,13 +27,13 @@ namespace BookShop.Web.Client.Controllers
 		private readonly UserManager<Userr> _userManager;
 		private readonly PointNPromotionSerVice _pointNPromotionSerVice;
 
-		public HomeController(ILogger<HomeController> logger, IProductService productService, IWishListService wishListService, UserManager<Userr> userManager,ICategoryService categoryService)
+		public HomeController(ILogger<HomeController> logger, IProductService productService, IWishListService wishListService, ICategoryService categoryService, UserManager<Userr> userManager)
 		{
-			_categoryService = categoryService;
 			_logger = logger;
 			_wishList = new List<WishListViewModel>();
 			_products = new List<ProductViewModel>();
 			_product = new ProductViewModel();
+			_categoryService = categoryService;
 			_productService = productService;
 			_WishListService = wishListService;
 			_userManager = userManager;
@@ -49,13 +50,13 @@ namespace BookShop.Web.Client.Controllers
 			_products = await _productService.GetDanhMuc("Cổ điển");
 
 			var product = _products.OrderByDescending(c => c.CreatedDate).ToList();
-			var top10Products = product.Take(10).ToList();
+			var top10Products = product.Take(10);
 			return Json(new { data = top10Products });
 		}
 		public async Task<IActionResult> DanhSachSanPham()
 		{
 			var Products = await _productService.GetAll();
-			var top10Products = Products.Take(10).ToList();
+			var top10Products = Products.Take(10);
 
 			return Json(new { data = top10Products });
 		}
@@ -63,9 +64,9 @@ namespace BookShop.Web.Client.Controllers
 		{
 			_products = await _productService.GetDanhMuc("Nuôi dạy con");
 
-			var product = _products.OrderBy(c => c.CreatedDate).ToList();
-			var top10Products = product.Take(7).ToList();
-			return Json(new { data = top10Products });
+			var product1 = _products.OrderByDescending(c => c.CreatedDate).ToList();
+			var top10Products1 = product1.Take(30).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+			return Json(new { data = top10Products1 });
 		}
 		public async Task<IActionResult> ChiTietSanPham(int id)
 		{
@@ -108,18 +109,18 @@ namespace BookShop.Web.Client.Controllers
 					try
 					{
 						await _WishListService.Add(wishlist);
-						return Json(new { success = true , errorMessage = "Đã thêm sản phẩm vào danh sách yêu thích" } );
+						return Json(new { success = true, errorMessage = "Đã thêm sản phẩm vào danh sách yêu thích" });
 					}
 					catch (Exception ex)
 					{
-						return Json(new { success = false , });
+						return Json(new { success = false, });
 					}
 				}
 				return Json(new { success = false, errorMessage = "Sản phẩm đã có trong danh sách yêu thích" });
 			}
 		}
 
-		
+
 		public async Task<IActionResult> XoaYeuThich(int id)
 		{
 			var user = await GetCurrentUserAsync();
@@ -149,7 +150,19 @@ namespace BookShop.Web.Client.Controllers
 		{
 			var user = await GetCurrentUserAsync();
 			var promotionList = (await _pointNPromotionSerVice.GetActivePromotion()).Where(x => x.NameType.Equals("Phiếu khuyến mãi điểm đổi"));
-			ViewBag.Promotion = promotionList;
+			var activePromotions = new List<PromotionViewModel>();
+			foreach (var item in promotionList)
+			{
+				DateTime startTime = Convert.ToDateTime(item.StartDate);
+				DateTime endTime = Convert.ToDateTime(item.EndDate);
+				int result = DateTime.Now.CompareTo(startTime);
+				if (result >= 0 && endTime.CompareTo(DateTime.Now) >= 0)
+				{
+					activePromotions.Add(item);
+				}
+			}
+
+			ViewBag.Promotion = activePromotions;
 			return View();
 		}
 
@@ -157,8 +170,8 @@ namespace BookShop.Web.Client.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Getdata(int page, string? keyWord)
 		{
-            var user = await GetCurrentUserAsync();
-            _wishList = await _WishListService.GetByUser(user.Id);
+			var user = await GetCurrentUserAsync();
+			_wishList = await _WishListService.GetByUser(user.Id);
 			if (keyWord != null)
 			{
 				_wishList = _wishList.Where(c => c.Name.Contains(keyWord)).ToList();
@@ -172,11 +185,11 @@ namespace BookShop.Web.Client.Controllers
 		}
 		public async Task<IActionResult> ListDanhMuc()
 		{
-			
-			var cate = (await _categoryService.GetAll()).Where(c=>c.Status ==1);
+
+			var cate = (await _categoryService.GetAll()).Where(c => c.Status == 1);
 			var cateList = cate.OrderByDescending(c => c.CreatedDate).ToList();
-			
-			return Json(new { data = cateList});
+
+			return Json(new { data = cateList });
 		}
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()

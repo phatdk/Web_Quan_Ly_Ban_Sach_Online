@@ -1,0 +1,60 @@
+﻿
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        $.ajax({
+            url: "/Admin/Gembox/GetProductBook"
+        }).done(function (data) {
+
+            for (var i = 0; i < data.length; i++) {
+                var invoice = data[i];
+                $("#invoice-" + (i + 1) + "-idproductbook").text(invoice.id);
+                $("#invoice-" + (i + 1) + "-producbooktital").text(invoice.bookTitle);
+                $("#invoice-" + (i + 1) + "-nameproduct").text(invoice.productName);
+            }
+
+        });
+    });
+
+</script>
+<div class="title">Bill</div>
+<div class="sales-details">
+
+    </ul>
+    <ul class="details">
+        <li class="topic">Mã Sách</li>
+
+        <p><div id="invoice-1-idproductbook"></div></p>
+        <p><div id="invoice-2-idproductbook"></div></p>
+        <p><div id="invoice-3-idproductbook"></div></p>
+        <p><div id="invoice-4-idproductbook"></div></p>
+        <p><div id="invoice-5-idproductbook"></div></p>
+
+    </ul>
+    <ul class="details">
+        <li class="topic">Tital Book</li>
+        <p><div id="invoice-1-producbooktital"></div></p>
+        <p><div id="invoice-2-producbooktital"></div></p>
+        <p><div id="invoice-3-producbooktital"></div></p>
+        <p><div id="invoice-4-producbooktital"></div></p>
+        <p><div id="invoice-5-producbooktital"></div></p>
+
+    </ul>
+    <ul class="details">
+        <li class="topic">Tên sản Phẩm </li>
+        <p><div id="invoice-1-nameproduct"></div></p>
+        <p><div id="invoice-2-nameproduct"></div></p>
+        <p><div id="invoice-3-nameproduct"></div></p>
+        <p><div id="invoice-4-nameproduct"></div></p>
+        <p><div id="invoice-5-nameproduct"></div></p>
+    </ul>
+
+
+</div>
+<div class="button">
+    <a href="#">See All</a>
+</div>
+
+

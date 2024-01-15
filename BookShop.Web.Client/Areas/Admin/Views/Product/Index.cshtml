@@ -12,7 +12,7 @@
 }
 
 <body>
-	<h1>Index</h1>
+	<h1>Danh sách sản phẩm</h1>
 
 	<p>
 		<button class="btn btn-primary" onclick="location.href='@Url.Action("Create")'"><i class="fa-solid fa-circle-plus"></i> Create</button>
@@ -75,7 +75,6 @@
 		var status = document.getElementById("status-filter").value;
 		var keyWord = document.getElementById("keyWord-find").value;
 		var index = (pageIndex - 1) * 10;
-		index
 		$.ajax({
 			url: '@Url.Action("GetProduct", "Product")',
 			type: 'GET',

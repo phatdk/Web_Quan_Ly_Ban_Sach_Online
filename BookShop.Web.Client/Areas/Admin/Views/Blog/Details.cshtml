@@ -1,4 +1,4 @@
-﻿@model BookShop.BLL.ConfigurationModel.NewsModel.NewsViewModel
+﻿@model BookShop.BLL.ConfigurationModel.NewsModel.CreateNewsModel
 
 @{
     ViewData["Title"] = "Details";
@@ -76,14 +76,14 @@
                 @Html.DisplayFor(model => model.Description)
             </dd>
         </div>
-        <div class="chitiet-item">
+        @*<div class="chitiet-item">
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.CreatedDate)
             </dt>
             <dd class="col-sm-10">
                 @Html.DisplayFor(model => model.CreatedDate)
             </dd>
-        </div>
+        </div>*@
         <div class="chitiet-item">
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.Status)

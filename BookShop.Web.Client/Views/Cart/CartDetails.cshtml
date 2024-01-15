@@ -164,14 +164,6 @@
                         </td>
                         <td class="khoi3">
                             <input type="number" id="@item.Id" onchange="EditCart('@item.Id')" value="@item.Quantity" max="@item.SoLuongKho" min="1" />
-                            @if (item.SoLuongKho < 100)
-                            {
-                                <p class="saphethang">Kho: @item.SoLuongKho (Sắp hết hàng)</p>
-                            }
-                            else
-                            {
-                                <p class="conratnhieuhang">Kho: @item.SoLuongKho</p>
-                            }
                         </td>
                         <td class="khoi4" id="totalsp">@item.TotalPrice VNĐ</td>
                         <td class="khoi5">

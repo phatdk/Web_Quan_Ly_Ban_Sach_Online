@@ -230,6 +230,7 @@
 
 	.giaban p {
 		font-size: 14px;
+	}
 
 		.giaban p:nth-child(2) {
 			color: #c4c3be;
@@ -258,7 +259,12 @@
 	}
 
 		.danhmuc-sach .ttsp h4 {
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			display: -webkit-box;
 			font-size: 14px;
+			height: 35px;
 		}
 
 		.danhmuc-sach .giaban {
@@ -300,6 +306,17 @@
 		gap: 20px;
 	}
 
+		.nuoidaycon .testsp:nth-child(1) p.dautien{
+			display:block;
+			-webkit-line-clamp: 6;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			display: -webkit-box;
+		}
+
+			.nuoidaycon .testsp:nth-child(1) p.dautien span{
+				font-weight:700;
+			}
 	.dm {
 		justify-content: center;
 		margin-bottom: 20px;
@@ -316,9 +333,14 @@
 		color: #DCDCDC;
 		text-decoration: line-through;
 	}
-	.giabandau{
-		color:#DCDCDC;
+
+	.giabandau {
+		color: #DCDCDC;
 		text-decoration: line-through;
+	}
+
+	p.dautien {
+		display: none;
 	}
 </Style>
 <div class="row">
@@ -543,26 +565,31 @@
 				data.data.forEach(function (item) {
 					var categoryRow =
 						'<div class="testsp" onclick="ChiTietSanPham(' + item.id + ')">' +
-						'<div class="product-image">' +
-						'<div class="flashsale-image-container">' +
-						'<img src="' + item.imgUrl + '">' +
-						'</div>' +
-						'</div>' +
-						'<div class="ttsp">' +
-						'<h4>' + item.name + '</h4>' +
+							'<div class="product-image">' +
+								'<div class="flashsale-image-container">' +
+									'<img src="' + item.imgUrl + '">' +
+								'</div>' +
+							'</div>' +
+							'<div class="ttsp">' +
+								'<h4>' + item.name + '</h4>' +
+							'</div>' +
+							'<div class="giaban">' + '<p>' +
+								formatPrice(item.newPrice) + '</p>';
 
-						'</div>' +
-						'<div class="giaban">' + '<p>' +
-						formatPrice(item.newPrice) + '</p>';
-					if (item.saleoff > 0) {
-						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
-							'<div class="giabandau">' +
-							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>' +
-							'</div>';
-					}
+								if (item.saleoff > 0) {
+									categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
+										'<div class="giabandau">' +
+										'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>';
+								}
+
+					categoryRow += '</div>';
+					categoryRow += '</div>';
+					categoryRow += '<p class="dautien">' + '<span>' + "Mô tả : " + '</span>' + item.description + '</p>' +
+					'</div>';
 
 					listcategory.append(categoryRow);
 				});
+
 			},
 			error: function (error) {
 				console.log(error);
