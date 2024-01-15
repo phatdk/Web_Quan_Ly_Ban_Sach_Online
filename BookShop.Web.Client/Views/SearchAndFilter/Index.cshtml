@@ -18,6 +18,7 @@
 
 
 	.filter_left {
+		
 		grid-column: 1/2;
 		display: block;
 		gap: 10px;
@@ -91,6 +92,7 @@
 	}
 
 	ul {
+		padding-right:5px;
 		padding-left: 0;
 		font-weight: 100;
 		font-size: 13px;
@@ -101,6 +103,7 @@
 	}
 
 	.filter-content .search-bar {
+		gap: 40px;
 		justify-content: center;
 		position: absolute;
 		top: 10px;
@@ -161,7 +164,23 @@
 	}
 
 	.filter .testsp {
+		
 		padding: 10px;
+	}
+	a.deplam{
+		display:flex;
+		font-size: 13px;
+		padding-right: 20px;
+		color: #CC0000;
+		justify-content: center;
+	}
+
+	.ttsp a{
+		color:inherit;
+	}
+
+	input#price{
+		width:95%;
 	}
 </style>
 <div class="filter">
@@ -176,9 +195,9 @@
 				<div class="author">
 					<div class="card-title">
 						<p>
-							Tác giả
+							Tác giả (@(authorList.Count()))
 						</p>
-						<ul>
+						<ul class="showmore">
 							@foreach (var item in authorList)
 							{
 								<li>
@@ -186,14 +205,15 @@
 								</li>
 							}
 						</ul>
+						<a href="javascript:" class="deplam" onclick="tacgiashow()">Xem thêm</a>
 					</div>
 				</div>
 				<div class="genre">
 					<div class="card-title">
 						<p>
-							Thể loại
+							Thể loại (@(genreList.Count()))
 						</p>
-						<ul>
+						<ul class="showmore2">
 							@foreach (var item in genreList)
 							{
 								<li>
@@ -201,39 +221,43 @@
 								</li>
 							}
 						</ul>
+						<a href="javascript:" class="deplam" onclick="theloaishow()">Xem thêm</a>
 					</div>
 				</div>
-				<div class="category">
-					<div class="card-title">
-						<p>
-							Thể loại
-						</p>
-					</div>
-				</div>
+				
 				<div class="supplier">
 					<div class="card-title">
 						<p>
-							Nhà cung cấp
+							Nhà cung cấp (@(supplierList.Count()))
 						</p>
+						<ul class="showmore3">
+							@foreach (var item in supplierList)
+							{
+								<li>
+									<input onclick="nhaxuatbansearch(this)" value="@item.Id" type="checkbox" /> @item.Name
+								</li>
+							}
+						</ul>
+						<a href="javascript:" class="deplam" onclick="nhaxuatbanshow()">Xem thêm</a>
 					</div>
 				</div>
 				<div class="price">
 					<div class="card-title">
 						<p>
-							giá
+							Giá:
 						</p>
 						<div id="price-range">
-							<label for="price">Chọn giá tiền:</label>
-							<input type="range" id="price" name="price" min="0" max="10000000" value="0" step="100" oninput="updatePrice(event)">
-							<p id="selected-price">Giá tiền: <span id="price-value">0</span> VND</p>
+							
+							<input type="range" id="price" name="price" min="0" max="1000000" value="0" step="100" oninput="updatePrice(event)">
+							<p id="selected-price">Giá tiền: <span id="price-value">0</span> đến 1.000.000 VND</p>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="filter_right">
 				<div class="search-bar">
-					@*<a><i class="fa fa-search" style="font-size:30px" onclick="findOrder()"></i></a>*@
-					<input id="keyWordFind" oninput="searchOnEnter(event)" type="text" placeholder="Tìm kiếm">
+					<p style="margin-bottom:0" id="soluongsp"> </p>
+					<input id="keyWordFind" onclick="searchOnEnter(event)" type="text" placeholder="Tìm kiếm">
 				</div>
 
 				<div class="fl" id="listcategory">
@@ -256,32 +280,43 @@
 		var price = document.getElementById("price").value;
 		
 		console.log(price);
-		var author = authorIdList.join(',');
-		var genner = gennerIdList.join(',');
+		var author = authorIdList;
+		var genner = gennerIdList;
+		var publisher = supplierList;
 		console.log(author);
 		console.log(genner);
 
 
 		$.ajax({
 			url: '@Url.Action("Getdata", "SearchAndFilter")',
-			type: 'GET',
+			type: 'POST',
 
-			data: { page: pageIndex, keyWord: keyWord, authorId: author, gennerId: genner, min: price },
-
+			data: {
+				page: pageIndex,
+				keyWord: keyWord, 
+				authorId: author,
+				gennerId: genner,
+				publishersId: supplierList,
+				min: price 
+			},
 			success: function (data) {
 				console.log(data);
 				var listcategory = $("#listcategory");
 				listcategory.empty();
+				console.log("Tổng số sản phẩm: " + data.data.length);
+				$('#soluongsp').html('Số sản phẩm được tìm thấy: ' + data.data.length);
+
 				data.data.forEach(function (item) {
 					var categoryRow =
 						'<div class="testsp" onclick="ChiTietSanPham(' + item.id + ')">' +
+						
 						'<div class="product-image">' +
 						'<div class="flashsale-image-container">' +
 						'<img src="' + item.imgUrl + '">' +
 						'</div>' +
 						'</div>' +
 						'<div class="ttsp">' +
-						'<a>' + item.name + '</a>' +
+						'<a href="javascript:" >' + item.name + '</a>' +
 
 						'</div>' +
 						'<div class="giaban">' + '<p>' +
@@ -290,10 +325,8 @@
 						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
 							'</div class="giabandau">' +
 							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>'
-						'</div>';
+						'</div>'
 					}
-
-
 					listcategory.append(categoryRow);
 				});
 				createPagingButtons(1, data.max, data.page);
@@ -313,7 +346,7 @@
 
 	function formatPrice(price) {
 		const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-		return formattedPrice + ' đ';
+		return formattedPrice + 'VND';
 	}
 	function updatePrice(event) {
 		loadData(1);
@@ -326,27 +359,118 @@
 
 	var authorIdList = []
 	function tacgiasearch(elment) {
+		
 		if (elment.checked) {
-			authorIdList.push(elment.value)
+			authorIdList.push(elment.value);
 		} else {
 			var indexToRemove = authorIdList.indexOf(elment.value);
 			if (indexToRemove !== -1) {
 				authorIdList.splice(indexToRemove, 1);
-			} 
+			}
 		}
-		loadData(1, '');
+		loadData(1,'')
 	}
 	var gennerIdList = []
 	function theloaisearch(elment) {
 		if (elment.checked) {
-			gennerIdList.push(elment.value)
+			gennerIdList.push(elment.value);
 		} else {
 			var indexToRemove = gennerIdList.indexOf(elment.value);
 			if (indexToRemove !== -1) {
 				gennerIdList.splice(indexToRemove, 1);
 			}
 		}
-		loadData(1, '');
+	loadData(1, '')
+	}
+	var supplierList = []
+	function nhaxuatbansearch(elment) {
+		if (elment.checked) {
+			supplierList.push(elment.value);
+		} else {
+			var indexToRemove = supplierList.indexOf(elment.value);
+			if (indexToRemove !== -1) {
+				supplierList.splice(indexToRemove, 1);
+			}
+		}
+		loadData(1, '')
+	}
+</script>
+<script>
+	var maxItems1 = 4;
+	var itemsToShow1 = document.querySelectorAll('.showmore li');
+	var isExpanded1 = false;
+	var a1 = document.querySelector('.author a');
+
+	for (var i = maxItems1; i < itemsToShow1.length; i++) {
+		itemsToShow1[i].style.display = 'none';
 	}
 
+	function tacgiashow() {
+		isExpanded1 = !isExpanded1;
+
+		if (isExpanded1) {
+			for (var i = 0; i < itemsToShow1.length; i++) {
+				itemsToShow1[i].style.display = 'block';
+			}
+			a1.textContent = 'Hiển thị ít lại';
+		} else {
+			for (var i = maxItems1; i < itemsToShow1.length; i++) {
+				itemsToShow1[i].style.display = 'none';
+			}
+			a1.textContent = 'Xem thêm';
+		}
+	}
+</script>
+
+<script>
+	var maxItems2 = 4;
+	var itemsToShow2 = document.querySelectorAll('.showmore2 li');
+	var isExpanded2 = false;
+	var a2 = document.querySelector('.genre a');
+
+	for (var i = maxItems2; i < itemsToShow2.length; i++) {
+		itemsToShow2[i].style.display = 'none';
+	}
+
+	function theloaishow() {
+		isExpanded2 = !isExpanded2;
+
+		if (isExpanded2) {
+			for (var i = 0; i < itemsToShow2.length; i++) {
+				itemsToShow2[i].style.display = 'block';
+			}
+			a2.textContent = 'Hiển thị ít lại';
+		} else {
+			for (var i = maxItems2; i < itemsToShow2.length; i++) {
+				itemsToShow2[i].style.display = 'none';
+			}
+			a2.textContent = 'Xem thêm';
+		}
+	}
+</script>
+<script>
+	var maxItems3 = 4;
+	var itemsToShow3 = document.querySelectorAll('.showmore3 li');
+	var isExpanded3 = false;
+	var a3 = document.querySelector('.supplier a');
+
+	for (var i = maxItems3; i < itemsToShow3.length; i++) {
+		itemsToShow3[i].style.display = 'none';
+	}
+
+	function nhaxuatbanshow() {
+		isExpanded3 = !isExpanded3;
+
+		if (isExpanded3) {
+			for (var i = 0; i < itemsToShow3.length; i++) {
+				itemsToShow3[i].style.display = 'block';
+			}
+			a3.textContent = 'Hiển thị ít lại';
+		} else {
+			for (var i = maxItems3; i < itemsToShow3.length; i++) {
+				itemsToShow3[i].style.display = 'none';
+			}
+			a3.textContent = 'Xem thêm';
+		}
+	}
 </script>

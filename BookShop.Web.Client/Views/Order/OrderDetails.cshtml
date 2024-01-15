@@ -3,191 +3,195 @@
 @model BookShop.BLL.ConfigurationModel.OrderModel.OrderViewModel
 
 @{
-    ViewData["Title"] = "TRẠNG THÁI ĐƠN HÀNG";
-    OrderDetailViewModel details = ViewBag.Details;
-    int total = 0;
+	ViewData["Title"] = "TRẠNG THÁI ĐƠN HÀNG";
+	OrderDetailViewModel details = ViewBag.Details;
+	int total = 0;
 }
 <style>
-    .chungttdh {
-        background-color: white;
-        padding: 10px;
-    }
+	.chungttdh {
+		background-color: white;
+		padding: 10px;
+	}
 
-    .dstinhtrangdonhang {
-        display: flex;
-    }
+	.dstinhtrangdonhang {
+		display: flex;
+	}
 
-    .thukhanh {
-        margin: 10px;
-    }
+	.thukhanh {
+		margin: 10px;
+	}
 
-    .hdsu {
-        display: flex;
-        margin:10px;
-    }
+	.hdsu {
+		display: flex;
+		margin: 10px;
+	}
 
-    .khanhdam {
-        font-weight: 700;
-    }
+	.khanhdam {
+		font-weight: 700;
+	}
 
-    .giacsstthd {
-        font-weight: 700;
-        color: red;
-    }
-    .khanhdam2{
-        font-weight: 700;
-        font-size:20px;
-    }
-    .kods{
-        margin-left:5px;
-    }
+	.giacsstthd {
+		font-weight: 700;
+		color: red;
+	}
 
-    .huydonhangttdh{
-        margin:auto;
-        justify-content:center;
-    }
+	.khanhdam2 {
+		font-weight: 700;
+		font-size: 20px;
+	}
+
+	.kods {
+		margin-left: 5px;
+	}
+
+	.huydonhangttdh {
+		margin: auto;
+		justify-content: center;
+	}
 </style>
-    <div>
-        <h4>TRẠNG THÁI ĐƠN HÀNG</h4>
-        <hr />
-        <div class="row chungttdh">
-            <div class="col-4">
-                <ul class="ps-0" style="list-style: none">
-                    @foreach (var item in Model.orderDetails)
-                    {
-                        total += (item.Price * item.Quantity);
-                        <li class="row">
-                            <div class="col-3 position-relativelative">
-                                <img class="bg-light" src="@item.Img" style="width: 100%; z-index: 0" />
-                                <span class="badge" style="color: orange; position: absolute; top: 0; right: 15px; background-color: gray">@item.Quantity</span>
-                            </div>
-                            <span class="col-5">@item.NameProduct</span>
-                            <span class="col-4 giacsstthd">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)</span>
-                        </li>
-                    }
-                </ul>
-            </div>
-            <div class="col-8 dstinhtrangdonhang">
-                <div class="thukhanh">
-                    <div class=" " hidden>
-                        @Html.DisplayFor(model => model.Id)
-                    </div>
-                    <div class="hdsu">
-                        <div class=" khanhdam">
-                            Code:
-                        </div>
-                        <div class="">
-                            @Html.DisplayFor(model => model.Code)
-                        </div>
-                    </div>
-                    <div class="hdsu">
-                        <div class=" khanhdam">
-                            Người Nhận:
-                        </div>
-                        <div class="">
-                            @Html.DisplayFor(model => model.Receiver)
-                        </div>
-                    </div>
-                    <div class="hdsu">
-                        <div class=" khanhdam">
-                            Số Điện Thoại:
-                        </div>
-                        <div class="">
-                            @Html.DisplayFor(model => model.Phone)
-                        </div>
-                    </div>
-                    <div class="hdsu">
-                        <div class=" khanhdam">
-                            Ngày Tạo:
-                        </div>
-                        <div class="">
-                            @Html.DisplayFor(model => model.CreatedDate)
-                        </div>
-                    </div>
-                    <div class="hdsu">
-                        <div class=" khanhdam">
-                            Ghi Chú:
-                        </div>
-                        <div class="">
-                            @Html.DisplayFor(model => model.Description)
-                        </div>
-                    </div>
-                    <div class="hdsu">
-                        <div class=" khanhdam">
-                            Địa Chỉ:
-                        </div>
-                        <div class="">
-                            @Html.DisplayFor(model => model.Address),@Html.DisplayFor(model => model.City)
-                        </div>
-                    </div>
-                </div>
-                <div class="thukhanh kods">
-                    <div class="khanhdam2">
-                        Tổng Quan Đơn Hàng
-                    </div>
-                    <div class="kods">
-                        <div class=" khanhdam">
-                            Phí Ship
-                        </div>
-                        <div class="" id="tienship">
-                            @Html.DisplayFor(model => model.Shipfee)
-                        </div>
-                        <div class=" khanhdam">
-                            Khuyến Mãi
-                        </div>
-                        <div class="" id="tienkhuyenmai">
-                            @Html.DisplayFor(model => model.NamePromotion)
-                        </div>
-                        <div class=" khanhdam">
-                            Tổng
-                        </div>
-                        <div class="" id="tongtatca">
-                            @Html.DisplayFor(model => model.Total)
-                        </div>
-                        <div class=" khanhdam">
-                            Trạng Thái
-                        </div>
-                        <div class="">
-                            @Html.DisplayFor(model => model.Status)
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <button class="btn btn-outline-danger huydonhangttdh" id="deleteOrder" onclick="deleteOrder()" value="Xóa">Hủy đơn</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div>
-        <a asp-action="Index" asp-controller="Home">Trở lại trang chủ</a>
-    </div>
+<div>
+	<h4>TRẠNG THÁI ĐƠN HÀNG</h4>
+	<hr />
+	<div class="row chungttdh">
+		<div class="col-4">
+			<ul class="ps-0" style="list-style: none">
+				@foreach (var item in Model.orderDetails)
+				{
+					total += (item.Price * item.Quantity);
+					<li class="row">
+						<div class="col-3 position-relativelative">
+							<img class="bg-light" src="@item.Img" style="width: 100%; z-index: 0" />
+							<span class="badge" style="color: orange; position: absolute; top: 0; right: 15px; background-color: gray">@item.Quantity</span>
+						</div>
+						<span class="col-5">@item.NameProduct</span>
+						<span class="col-4 giacsstthd">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)</span>
+					</li>
+				}
+			</ul>
+		</div>
+		<div class="col-8 dstinhtrangdonhang">
+			<div class="thukhanh">
+				<div class=" " hidden>
+					@Html.DisplayFor(model => model.Id)
+				</div>
+				<div class="hdsu">
+					<div class=" khanhdam">
+						Code:
+					</div>
+					<div class="">
+						@Html.DisplayFor(model => model.Code)
+					</div>
+				</div>
+				<div class="hdsu">
+					<div class=" khanhdam">
+						Người Nhận:
+					</div>
+					<div class="">
+						@Html.DisplayFor(model => model.Receiver)
+					</div>
+				</div>
+				<div class="hdsu">
+					<div class=" khanhdam">
+						Số Điện Thoại:
+					</div>
+					<div class="">
+						@Html.DisplayFor(model => model.Phone)
+					</div>
+				</div>
+				<div class="hdsu">
+					<div class=" khanhdam">
+						Ngày Tạo:
+					</div>
+					<div class="">
+						@Html.DisplayFor(model => model.CreatedDate)
+					</div>
+				</div>
+				<div class="hdsu">
+					<div class=" khanhdam">
+						Ghi Chú:
+					</div>
+					<div class="">
+						@Html.DisplayFor(model => model.Description)
+					</div>
+				</div>
+				<div class="hdsu">
+					<div class=" khanhdam">
+						Địa Chỉ:
+					</div>
+					<div class="">
+						@Html.DisplayFor(model => model.Address),@Html.DisplayFor(model => model.City)
+					</div>
+				</div>
+			</div>
+			<div class="thukhanh kods">
+				<div class="khanhdam2">
+					Tổng Quan Đơn Hàng
+				</div>
+				<div class="kods">
+					<div class=" khanhdam">
+						Phí Ship
+					</div>
+					<div class="" id="tienship">
+						@Html.DisplayFor(model => model.Shipfee)
+					</div>
+					<div class=" khanhdam">
+						Khuyến Mãi
+					</div>
+					<div class="" id="tienkhuyenmai">
+						@Html.DisplayFor(model => model.NamePromotion)
+					</div>
+					<div class=" khanhdam">
+						Tổng
+					</div>
+					<div class="" id="tongtatca">
+						@Html.DisplayFor(model => model.Total)
+					</div>
+					<div class=" khanhdam">
+						Trạng Thái
+					</div>
+					<div class="">
+						@Html.DisplayFor(model => model.Status)
+					</div>
+				</div>
+			</div>
+			<div>
+				<div class="btn btn-outline-danger huydonhangttdh" id="deleteOrder" onclick="deleteOrder()" value="Xóa">Hủy đơn</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div>
+	<a asp-action="Index" asp-controller="Home">Trở lại trang chủ</a>
+</div>
 <script type="text/javascript">
-    function checkStatus() {
-        if (@Model.Status >= 3) {
-            document.getElementById('deleteOrder').setAttribute('disabled', 'disabled');
-        }
-    }
-    checkStatus();
-    function deleteOrder() {
-    function deleteOrder() {
+	function checkStatus() {
+		if (@Model.Status >= 3) {
+			document.getElementById('deleteOrder').setAttribute('disabled', 'disabled');
+		}
+	}
+	checkStatus();
+
+	function deleteOrder() {
+
 		if (confirm("Nếu bạn hủy đơn thì số điểm bạn đã sử dụng sẽ không được hoàn lại \n Bạn có chắc chắn muốn tiếp tục")) {
-        var url = "@Url.Action("Index", "Home")";
-        $.ajax({
-            url: '/Order/DeleteOrder',
-            type: 'POST',
-            data: { id: @Model.Id },
-            success: function (result) {
-                if (result.success) {
-                    alert('Hủy đơn thành công.');
-                    window.location.href = url;
-                } else {
-                    alert('Hủy đơn thất bại: ' + result.errorMessage);
-                }
-            },
-            error: function (error) {
-                alert('Có lỗi xảy ra: ' + error.responseText);
-            }
-        });
-    }
-    }
+			var url = "@Url.Action("Index", "Home")";
+			debugger
+			$.ajax({
+				url: '/Order/DeleteOrder',
+				type: 'POST',
+				data: { id: @Model.Id },
+				success: function (result) {
+					if (result.success) {
+						alert('Hủy đơn thành công.');
+						window.location.href = url;
+					} else {
+						alert('Hủy đơn thất bại: ' + result.errorMessage);
+					}
+				},
+				error: function (error) {
+					alert('Có lỗi xảy ra: ' + error.responseText);
+				}
+			});
+		}
+	}
 </script>
