@@ -57,7 +57,6 @@ namespace BookShop.BLL.Service
 			_promotionRepository = new Repository<Promotion>();
 			_productPromotionRepository = new Repository<ProductPromotion>();
 			_authorRepository = new Repository<Author>();
-			_suplierRepository = new Repository<Supplier>();
 
 		}
 		public async Task<CreateProductModel> Add(CreateProductModel model)
@@ -431,7 +430,7 @@ namespace BookShop.BLL.Service
 						}
 					}
 				}
-				var suplier = await _suplierRepository.GetByIdAsync(book.Id_Supplier);
+				var suplier = await _supplierRepository.GetByIdAsync(book.Id_Supplier);
 				if (obj.supplierModels.Where(x => x.Id == suplier.Id) == null)
 				{
 					obj.supplierModels.Add(new ConfigurationModel.SupplierModel.SupplierViewModel
