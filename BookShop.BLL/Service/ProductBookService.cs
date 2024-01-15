@@ -79,8 +79,27 @@ namespace BookShop.BLL.Service
 						   }).ToList();
 			return objlist;
 		}
+        public async Task<List<ProductBookViewModel>> GetAll()
+		{
+			var details = await _productDetailRepository.GetAllAsync();
+            var products = await _productRepository.GetAllAsync();
+            var books = await _bookRepository.GetAllAsync();
+            var objlist = (from a in details
+                           join b in products on a.Id_Product equals b.Id
+                           join c in books on a.Id_Book equals c.Id
+                           select new ProductBookViewModel()
+                           {
+                               Id = a.Id,
+                               Id_Book = c.Id,
+                               Id_Product = b.Id,
+                               Status = a.Status,
+                               BookTitle = c.Title,
+                               ProductName = b.Name,
+                           }).ToList();
+            return objlist;
+        }
 
-		public async Task<bool> Update(int id, ProductBook model)
+        public async Task<bool> Update(int id, ProductBook model)
 		{
 			try
 			{
