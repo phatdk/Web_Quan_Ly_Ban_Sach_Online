@@ -57,7 +57,7 @@ namespace BookShop.BLL.Service
 			_promotionRepository = new Repository<Promotion>();
 			_productPromotionRepository = new Repository<ProductPromotion>();
 			_authorRepository = new Repository<Author>();
-            _supplierRepository = new Repository<Supplier>();
+			_supplierRepository = new Repository<Supplier>();
 
 		}
 		public async Task<CreateProductModel> Add(CreateProductModel model)
@@ -560,7 +560,7 @@ namespace BookShop.BLL.Service
 				join book in (await _bookRepository.GetAllAsync()).DefaultIfEmpty() on bookGenre.Id_Book equals book.Id
 				join productBook in (await _productBookRepository.GetAllAsync()).DefaultIfEmpty() on book.Id equals productBook.Id_Book
 				join product in (await _productRepository.GetAllAsync()).DefaultIfEmpty() on productBook.Id_Product equals product.Id
-				join image in (await _imageRepository.GetAllAsync()).DefaultIfEmpty() on product.Id equals image.Id_Product
+				join image in (await _imageRepository.GetAllAsync()).DefaultIfEmpty() on product.Id equals image.Id_Product into imgGroup
 				where category.Name == danhmuc
 				select new ProductViewModel
 				{
@@ -571,7 +571,7 @@ namespace BookShop.BLL.Service
 					Description = product.Description,
 					CreatedDate = product.CreatedDate,
 					Status = product.Status,
-					ImgUrl = image.ImageUrl,
+					ImgUrl = imgGroup.FirstOrDefault()?.ImageUrl,
 
 				}
 			).Distinct().ToList();

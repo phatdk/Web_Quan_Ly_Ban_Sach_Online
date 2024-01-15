@@ -16,11 +16,13 @@ using Newtonsoft.Json;
 using Humanizer;
 using System.Security.Cryptography.X509Certificates;
 using MailKit.Search;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class GemboxController : Controller
+	[Authorize(Roles = "Admin,Staff")]
+	public class GemboxController : Controller
     {
         public Gen _gen;
         public List<OrderViewModel> _orderViewModels;
@@ -28,6 +30,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
         public OrderService _OrderService;
         public ProductService _ProductService;
         public StatusOrderService _statusservice;
+        public ProductBookService _productbookservices;
+        public BookService _bookService;
 
         public GemboxController()
         {
@@ -253,6 +257,12 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
                 ordercancel = ordercancel
             };
             return Json(orderCounts);
+        }
+        public async Task<IActionResult> GetProductBook()
+        {
+            var productbook = await _productbookservices.GetAll();
+          
+            return Json(productbook);
         }
 
     }

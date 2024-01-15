@@ -5,7 +5,7 @@
 @inject UserManager<Userr> UserManager
 @inject IAuthorizationService _IAuthorizationService
 @{
-	var isAdmin = (await _IAuthorizationService.AuthorizeAsync(User, "ManagerMenu")).Succeeded;
+	var isAdmin = (await _IAuthorizationService.AuthorizeAsync(User, "RedirectAdmin")).Succeeded;
 }
 <!DOCTYPE html>
 <html lang="en">
