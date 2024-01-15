@@ -28,6 +28,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
         public OrderService _OrderService;
         public ProductService _ProductService;
         public StatusOrderService _statusservice;
+        public ProductBookService _productbookservices;
+        public BookService _bookService;
 
         public GemboxController()
         {
@@ -253,6 +255,12 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
                 ordercancel = ordercancel
             };
             return Json(orderCounts);
+        }
+        public async Task<IActionResult> GetProductBook()
+        {
+            var productbook = await _productbookservices.GetAll();
+          
+            return Json(productbook);
         }
 
     }

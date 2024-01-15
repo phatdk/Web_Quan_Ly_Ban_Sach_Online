@@ -10,6 +10,7 @@ namespace BookShop.BLL.IService
 {
 	public interface IProductBookService
 	{
+		public Task<List<ProductBookViewModel>> GetAll();
 		public Task<List<ProductBookViewModel>> GetByProduct(int productId);
 		public Task<List<ProductBookViewModel>> GetByBook(int bookId);
 		public Task<bool> Add(ProductBook model);
