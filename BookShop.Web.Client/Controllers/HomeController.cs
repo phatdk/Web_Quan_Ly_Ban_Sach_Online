@@ -50,13 +50,13 @@ namespace BookShop.Web.Client.Controllers
 			_products = await _productService.GetDanhMuc("Cổ điển");
 
 			var product = _products.OrderByDescending(c => c.CreatedDate).ToList();
-			var top10Products = product.Take(10).ToList();
+			var top10Products = product.Take(10);
 			return Json(new { data = top10Products });
 		}
 		public async Task<IActionResult> DanhSachSanPham()
 		{
 			var Products = await _productService.GetAll();
-			var top10Products = Products.Take(10).ToList();
+			var top10Products = Products.Take(10);
 
 			return Json(new { data = top10Products });
 		}
@@ -64,9 +64,9 @@ namespace BookShop.Web.Client.Controllers
 		{
 			_products = await _productService.GetDanhMuc("Nuôi dạy con");
 
-			var product = _products.OrderBy(c => c.CreatedDate).ToList();
-			var top10Products = product.Take(7).ToList();
-			return Json(new { data = top10Products });
+			var product1 = _products.OrderByDescending(c => c.CreatedDate).ToList();
+			var top10Products1 = product1.Take(30).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+			return Json(new { data = top10Products1 });
 		}
 		public async Task<IActionResult> ChiTietSanPham(int id)
 		{
