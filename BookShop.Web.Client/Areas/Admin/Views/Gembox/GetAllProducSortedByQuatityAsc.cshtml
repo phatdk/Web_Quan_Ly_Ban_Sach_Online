@@ -1,0 +1,53 @@
+﻿<style>
+    /* Add table styling here, if desired */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<div class="title">Số lượng tồn</div>
+<div id="product-details" class="sales-details">
+    <table>
+        <thead>
+            <tr>
+                <th>Mã Sản Phẩm</th>
+                <th>Tên Sản Phẩm</th>
+                <th>Số Lượng Tồn</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: "/Admin/Gembox/GetProductsSortedByQuantityAsc"
+        }).done(function (data) {
+            var tableBody = $("#product-details table tbody");
+
+            for (var i = 0; i < data.length; i++) {
+                var product = data[i];
+
+                var row = $("<tr>");
+                $("<td>").text(product.id).appendTo(row);
+                $("<td>").text(product.name).appendTo(row);
+                $("<td>").text(product.quantity).appendTo(row);
+
+                row.appendTo(tableBody);
+            }
+        });
+    });
+</script>

@@ -12,14 +12,14 @@
                 var invoice = data[i];
                 $("#invoice-" + (i + 1) + "-id").text(invoice.id);
                 $("#invoice-" + (i + 1) + "-total").text(invoice.total);
-                $("#invoice-" + (i + 1) + "-createdate").text(invoice.createdDate);
+                $("#invoice-" + (i + 1) + "-createdate").text(invoice.createdDate );
             }
 
         });
     });
 
 </script>
-<div class="title">Bill</div>
+<div class="title">Hóa đơn giá trị cao</div>
 <div class="sales-details">
 
     </ul>
@@ -54,7 +54,7 @@
 
 </div>
 <div class="button">
-    <a href="#">See All</a>
+    <a href="/Admin/Gembox/GetAllHighestInvoice" a-asp-action="GetAllHighestInvoice"> Xem Tất Cả</a>
 </div>
 
 
