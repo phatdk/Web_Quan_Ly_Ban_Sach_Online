@@ -71,8 +71,13 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 
 		public async Task<IActionResult> GetWaitingOrder()
 		{
-			var listOrder = (await _orderService.GetAll()).Where(x => x.Status == 0).ToList();
+			var listOrder = (await _orderService.GetAll()).Where(x => x.Status == 0).OrderByDescending(x => x.CreatedDate).ToList();
 			var newList = listOrder == null ? new List<OrderViewModel>() : listOrder;
+			foreach (var order in newList)
+			{
+				var user = await _userService.GetById(order.Id_User);
+				if (user.Code.Equals("KH0000000")) order.Receiver = order.Receiver + "<br />(Vẵng lai)";
+			}
 			return Json(newList);
 		}
 
@@ -109,17 +114,17 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 			return Json(new { order = order, details = data, total = total });
 		}
 
-		public async Task<IActionResult> GetProducts(int page, string? keyWord)
+		public async Task<IActionResult> GetProducts(string? keyWord)
 		{
 			var list = (await _productService.GetAll()).Where(x => x.Status == 1 && x.Type == 1).OrderByDescending(x => x.CreatedDate).ToList();
 			if (!string.IsNullOrEmpty(keyWord))
 			{
 				list = list.Where(x => x.Name.ToLower().Contains(keyWord.ToLower())).OrderByDescending(x => x.CreatedDate).ToList();
 			}
-			var pageSize = 10;
+			var pageSize = 50;
 			double totalPage = (double)list.Count / pageSize;
-			list = list.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-			return Json(new { data = list, page = page, max = Math.Ceiling(totalPage) });
+			list = list.Take(pageSize).ToList();
+			return Json(new { data = list });
 		}
 
 		public async Task<IActionResult> GetUser(string keyWord)
@@ -147,7 +152,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 					validPromotions.Add(item);
 				}
 			}
-			var usePromotion = validPromotions.OrderByDescending(x => x.Condition).ThenByDescending(x => x.CreatedDate).FirstOrDefault();
+			var usePromotion = validPromotions.OrderByDescending(x => x.Condition).ThenBy(x => x.CreatedDate).FirstOrDefault();
 			if (usePromotion != null)
 			{
 				if (usePromotion.PercentReduct != null && usePromotion.PercentReduct > 0)
@@ -218,8 +223,9 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 			return (await GenerateCode(length)).ToString();
 		}
 
-		public async Task<OrderViewModel> SaveOrder(OrderViewModel request)
+		public async Task<ResultModel> SaveOrder(OrderViewModel request)
 		{
+			ResultModel resultModel = new ResultModel();
 			if (request.Id_User == 0)
 			{
 				var user = (await _userService.GetAll()).Where(x => x.Code.Equals("KH0000000")).FirstOrDefault();
@@ -256,15 +262,27 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 								{
 									if (detail.Quantity <= 0)
 									{
-										if (!await _orderDetailService.Delete(detail.Id)) goto skipAction1;
+										if (!await _orderDetailService.Delete(detail.Id))
+										{
+											resultModel.Message = "Lỗi khi loại bỏ sản phẩm cũ!";
+											goto skipAction1;
+										}
 									}
 									else if (detail.Quantity != data[i].Quantity)
 									{
 										detail.Quantity = data[i].Quantity;
 										detail.Price = data[i].Price;
-										if (!await _orderDetailService.Update(detail.Id, detail)) goto skipAction1;
+										if (!await _orderDetailService.Update(detail.Id, detail))
+										{
+											resultModel.Message = "Lỗi khi thay đổi số lượng sản phẩm cũ!";
+											goto skipAction1;
+										}
 									}
-									if (!await _productPreviewService.ChangeQuantity(data[i].Id_Product, detail.Quantity - data[i].Quantity)) goto skipAction1;
+									if (!await _productPreviewService.ChangeQuantity(data[i].Id_Product, detail.Quantity - data[i].Quantity))
+									{
+										resultModel.Message = "Lỗi khi thay đổi số lượng sản phẩm đăng bán!";
+										goto skipAction1;
+									}
 									data.RemoveAt(i);
 									goto skipSave;
 								}
@@ -281,45 +299,75 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 								Id_Product = item.Id_Product,
 								Price = item.Price,
 								Quantity = item.Quantity,
-							})) goto skipAction1;
-							if (!await _productPreviewService.ChangeQuantity(item.Id_Product, -item.Quantity)) goto skipAction1;
+							}))
+							{
+								resultModel.Message = "Lỗi khi thêm sản phẩm!";
+								goto skipAction1;
+							}
+							if (!await _productPreviewService.ChangeQuantity(item.Id_Product, -item.Quantity))
+							{
+								resultModel.Message = "Lỗi khi thay đổi số lượng sản phẩm đăng bán!";
+								goto skipAction1;
+							}
 						}
+						details = await _orderDetailService.GetByOrder(request.Id);
+						if (details.Count == 0) resultModel.Message = "Hiện chưa có sản phẩm nào trong đơn hàng!";
 					}
-					return request;
+					resultModel.Id = request.Id;
+					resultModel.Success = true;
+					return resultModel;
 				}
 			skipAction1:;
-				request.Id = 0;
-				return request;
+				resultModel.Id = 0;
+				resultModel.Success = false;
+				return resultModel;
 			}
 			else // đơn chưa được lưu
 			{
-				request.Id_Status = request.Id_Status; // trạng thái đơn
-				request.Code = "OF" + await GenerateCode(8);
-				var result = await _orderService.Add(request); // thêm mới đơn
-				if (result.Id != 0)
+				var sessionDetails = HttpContext.Session.GetString("sessionOrder");
+				if (!string.IsNullOrEmpty(sessionDetails))
 				{
-					var sessionDetails = HttpContext.Session.GetString("sessionOrder");
-					if (!string.IsNullOrEmpty(sessionDetails))
+					var data = JsonConvert.DeserializeObject<List<OrderDetailViewModel>>(sessionDetails);
+					if (data.Count > 0)
 					{
-						var data = JsonConvert.DeserializeObject<List<OrderDetailViewModel>>(sessionDetails);
-						foreach (var item in data)
+						request.Code = "OF" + await GenerateCode(8);
+						var result = await _orderService.Add(request); // thêm mới đơn
+						if (result.Id != 0)
 						{
-							if (!await _productPreviewService.ChangeQuantity(item.Id_Product, -item.Quantity)) goto skipAction2; // giam so luong san pham
-							var od = new OrderDetailViewModel()
+							foreach (var item in data)
 							{
-								Id_Order = result.Id,
-								Id_User = request.Id_User,
-								Id_Product = item.Id_Product,
-								Price = item.Price,
-								Quantity = item.Quantity,
-							};
-							if (!await _orderDetailService.Add(od)) goto skipAction2;
+								var od = new OrderDetailViewModel()
+								{
+									Id_Order = result.Id,
+									Id_User = request.Id_User,
+									Id_Product = item.Id_Product,
+									Price = item.Price,
+									Quantity = item.Quantity,
+								};
+								if (!await _orderDetailService.Add(od))
+								{
+									resultModel.Message = "Lỗi khi thêm sản phẩm!";
+									goto skipAction2;
+								}
+								if (!await _productPreviewService.ChangeQuantity(item.Id_Product, -item.Quantity))
+								{
+									resultModel.Message = "Lỗi khi thay đổi số lượng sản phẩm đăng bán!";
+									goto skipAction2; // giam so luong san pham
+								}
+							}
+							resultModel.Id = result.Id;
+							resultModel.Success = true;
+							return resultModel;
 						}
 					}
-					return result;
+					resultModel.Message = "Chưa có sản phẩm nào được chọn!";
+					goto skipAction2;
 				}
+				resultModel.Message = "Chưa có sản phẩm nào được chọn!";
 			skipAction2:;
-				return request;
+				resultModel.Id = 0;
+				resultModel.Success = false;
+				return resultModel;
 			}
 		}
 
@@ -421,17 +469,19 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 			{
 				request.Id_Status = (await _statusService.GetAll()).Where(x => x.Status == 4).FirstOrDefault().Id;
 				var result = await SaveOrder(request);
-				if (result.Id != 0)
+				if (result.Id != 0 && string.IsNullOrEmpty(result.Message))
 				{
-					var success = await SuccessOfflineOrder(result);
+					request.Id = result.Id;
+					var success = await SuccessOfflineOrder(request);
 					if (success)
 					{
 						await ClearTemporary();
-						return Json(new { success = true, message = "Tạo đơn thành công!" });
+						return Json(new { success = true, message = "Thanh toán thành công!" });
 					}
-					else return Json(new { success = false, errorMessage = "Tạo đơn thất bại\n Có lỗi trong quá trình hoàn thành đơn hàng!" });
+					return Json(new { success = false, errorMessage = "Thanh toán thất bại\n Có lỗi trong quá trình hoàn thành đơn hàng!" });
 				}
-				return Json(new { success = false, errorMessage = "Tạo thất bại\n Có lỗi trong quá trình lưu đơn hàng!" });
+				return Json(new { success = false, errorMessage = "Thanh toán thất bại: " + result.Message });
+
 			}
 			catch
 			{
@@ -441,17 +491,17 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 
 		public async Task<IActionResult> SaveTemprory(OrderViewModel request)
 		{
-			ResultModel resultJson = new ResultModel();
 			try
 			{
 				request.Id_Status = (await _statusService.GetAll()).Where(x => x.Status == 0).FirstOrDefault().Id;
+				request.Id_Promotions = null;
 				var result = await SaveOrder(request);
-				if (request.Id != 0)
+				if (result.Success)
 				{
 					await ClearTemporary();
-					return Json(new { success = true, message = "Lưu thành công" });
+					return Json(new { success = true, message = "Lưu thành công: " + result.Message });
 				}
-				return Json(new { success = false, errorMessage = "Lưu thất bại" });
+				return Json(new { success = false, errorMessage = "Lưu thất bại: " + result.Message });
 			}
 			catch
 			{

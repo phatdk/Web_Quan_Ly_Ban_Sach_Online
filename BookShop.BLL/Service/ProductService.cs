@@ -390,6 +390,11 @@ namespace BookShop.BLL.Service
 					Id_Parents = x.Id_Parents,
 					Id = x.Id
 				}).ToList(),
+				bookViewModels = new List<BookViewModel>(),
+				imageViewModels = new List<ImageViewModel>(),
+				authorModels = new List<ConfigurationModel.AuthorModel.AuthorModel>(),
+				supplierModels = new List<ConfigurationModel.SupplierModel.SupplierViewModel>(),
+				CoverBook = new List<string>(),
 			};
 
 			var pb = (await _productBookRepository.GetAllAsync()).Where(x => x.Id_Product == id);
@@ -426,11 +431,21 @@ namespace BookShop.BLL.Service
 					}
 				}
 				var suplier = await _suplierRepository.GetByIdAsync(book.Id_Supplier);
-				obj.supplierModels.Add(new ConfigurationModel.SupplierModel.SupplierViewModel { 
-					Id = suplier.Id,
-					Name = suplier.Name,
-				});
-				obj.CoverBook.Add(book.Cover);
+				if (obj.supplierModels.Where(x => x.Id == suplier.Id) == null)
+				{
+					obj.supplierModels.Add(new ConfigurationModel.SupplierModel.SupplierViewModel
+					{
+						Id = suplier.Id,
+						Name = suplier.Name,
+					});
+				}
+				foreach (var cover in obj.CoverBook)
+				{
+					if (!book.Cover.Equals(cover))
+					{
+						obj.CoverBook.Add(book.Cover);
+					}
+				}
 			}
 
 			var image = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == id).OrderBy(x => x.Index);

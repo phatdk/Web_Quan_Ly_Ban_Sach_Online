@@ -15,5 +15,6 @@ namespace BookShop.BLL.IService
 		public Task<bool> Update(int id, UpdateUserModel requet);
 		public Task<List<UserModel>> GetAll();
 		public Task<UserModel> GetById(int id);
+		public Task<UserModel> GetLog(string userNameOrEmail);
 	}
 }

@@ -14,41 +14,43 @@
 
 <div class="row">
 	<div class="col-9 bg-light">
-		<div class="row">
-			<div class="col-4" style="min-height: 300px">
-				<div class="me-1">
-					<div class="row" style="border: 1px solid #c0c0c0">
-						<strong class="col-5 text-center">Code</strong>|
-						<strong class="col-4 text-center">Tên KH</strong>|
-						<strong class="col-2 text-center"></strong>
-					</div>
-					<div id="waitingOrderList" class="row" style="border: 1px solid #c0c0c0; max-height: 250px; overflow-y: auto;"></div>
-				</div>
-			</div>
-			<div class="col-8">
-				<div class="justify-content-center text-center m-2">
+		<div class="row" style="min-height: 300px"	>
+			<div class="w-100 col-12 row" style="height: 40px;">
+				<div class="col-8 justify-content-center text-center mt-2">
 					<input hidden asp-for="Id" value="0" id="orderId" />
 					<input asp-for="Code" id="orderCode" readonly class="text-center" />
 				</div>
-				<div>
+				<span class="col-4 d-flex justify-content-center mt-2 text-center text-secondary">---Đơn hàng chờ---</span>
+			</div>
+			<div class="col-8" style="height: 300px;">
+				<div class="me-1">
 					<div class="row" style="border: 1px solid #000099">
 						<strong class="col-1 text-center">Stt</strong>|
 						<strong class="col-4 text-center">Tên Sp</strong>|
 						<strong class="col-2 text-center">Giá bán</strong>|
 						<strong class="col-4 text-center">Số lượng</strong>
 					</div>
-					<div id="deatilOrder" class="row" style="border: 1px solid #000099; max-height: 220px; overflow-y: auto"></div>
+					<div id="deatilOrder" class="row" style="border: 1px solid #000099;  max-height: 280px; overflow-y: auto"></div>
+				</div>
+			</div>
+			<div class="col-4">
+				<div>
+					<div class="row" style="border: 1px solid #c0c0c0">
+						<strong class="col-4 text-center">Mã đơn</strong>|
+						<strong class="col-5 text-center">Tên KH</strong>|
+						<strong class="col-2 text-center"></strong>
+					</div>
+					<div id="waitingOrderList" class="row" style="border: 1px solid #c0c0c0; max-height: 260px; overflow-y: auto;"></div>
 				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-12">
-				<div class="d-flex justify-content-between mb-2">
+				<div class="d-flex justify-content-end m-2">
 					<div class="btn-group">
-						<input type="text" id="keyWordFind" oninput="loadData(1)" placeholder="Nhập tên sách" />
+						<input type="text" id="keyWordFind" oninput="loadData()" placeholder="Nhập tên sách" />
 						<i class="btn btn-outline-info fa-solid fa-magnifying-glass"></i>
 					</div>
-					<div id="buttonContainer"></div>
 				</div>
 				<div>
 					<div class="row" style="border: 1px solid #FF0000;">
@@ -61,7 +63,7 @@
 						<strong class="col-2 text-center">Trạng thái</strong>
 						<strong class="col-1 text-center"></strong>
 					</div>
-					<div id="productList" class="row" style="border: 1px solid #FF0000;"></div>
+					<div id="productList" class="row" style="border: 1px solid #FF0000; max-height: 400px; overflow-y: auto"></div>
 				</div>
 			</div>
 		</div>
@@ -127,7 +129,7 @@
 			</div>
 		</div>
 		<div class="form-group mt-2">
-			<span class="d-block w-100 m-2">Khuyến mại được kích hoạt tự động</span>
+			<span class="d-block w-100 m-2">Khuyến mại được áp dụng tự động</span>
 			<input asp-for="Id_Promotions" hidden id="orderIdPromotion" />
 			<span class="d-block w-100 m-2">Tên khuyễn mãi: <strong id="orderNamePromotion"></strong></span>
 			<span class="d-block w-100 m-2">Số tiền giảm: <strong id="orderReduct"></strong></span>
@@ -239,9 +241,9 @@
 				data.forEach(function (item) {
 					var orderRow =
 						'<hr class="ln-2" style="margin-bottom: 1px;"/>' +
-						'<span class="col-5 text-center">' + item.code + '</span>|' +
-						'<span class="col-4 text-center">' + item.nameUser + '</span>|' +
-						'<span class="col-2 text-center"><button class="btn text-success" onclick = "checkChange(' + item.id + ')"><i class="fa-solid fa-eye"></i></button></span>';
+						'<span class="col-4 text-center">' + item.code + '</span>|' +
+						'<span class="col-5 text-center">' + item.receiver + '</span>|' +
+						'<span class="col-2"><button class="btn text-success" onclick = "checkChange(' + item.id + ')"><i class="fa-solid fa-eye"></i></button></span>';
 					detailsList.append(orderRow);
 				});
 			},
@@ -264,6 +266,7 @@
 				if (data.order.id !== orderId) {
 					$('#orderCode').val(data.order.code);
 					$('#orderIdUser').val(data.order.id_User);
+					$('#orderReceiver').val(data.order.receiver);
 					$('#orderNameUser').val(data.order.nameUser);
 					$('#orderUserCode').val(data.order.userCode);
 					$('#orderEmail').val(data.order.email);
@@ -294,19 +297,18 @@
 		});
 	};
 
-	function loadData(pageIndex) {
+	function loadData() {
 		var keyWord = $("#keyWordFind").val();
-		var index = (pageIndex - 1) * 10;
 		$.ajax({
 			url: '/Admin/OfflineSale/GetProducts',
 			type: 'GET',
-			data: { page: pageIndex, keyWord: keyWord },
+			data: { keyWord: keyWord },
 			success: function (data) {
 				var detailsList = $("#productList");
 				detailsList.empty();
 				let statusColor = "";
 				let status = "";
-				data.data.forEach(function (item) {
+				data.data.forEach(function (item, index) {
 					index += 1;
 					if (item.quantity >= 1) {
 						status = "Còn hàng";
@@ -333,7 +335,6 @@
 						'</span>';
 					detailsList.append(orderRow);
 				});
-				createPagingButtons(1, data.max, data.page);
 			},
 			error: function (error) {
 				alert('Có lỗi xảy ra: ' + error.responseText);
@@ -448,7 +449,7 @@
 	function reFresh() {
 		checkChange(0);
 		getWaitingOrders();
-		loadData(1);
+		loadData();
 		checkPromotion(0);
 	};
 
@@ -474,7 +475,7 @@
 					getWaitingOrders();
 					changeChecked = false;
 					checkChange(0);
-					loadData(1);
+					loadData();
 				} else {
 					alert('Xác nhận thất bại: ' + result.errorMessage);
 				}
@@ -486,6 +487,7 @@
 	};
 
 	function createOrder() {
+		debugger;
 		var id = document.getElementById('orderId').value;
 		var id_Staff = document.getElementById('orderIdStaff').value;
 		var id_User = document.getElementById('orderIdUser').value;
@@ -494,11 +496,12 @@
 		var email = document.getElementById('orderEmail').value;
 		var phone = document.getElementById('orderPhone').value;
 		var receiver = document.getElementById('orderReceiver').value;
+		var promotionlist = [id_Promotion];
 		$.ajax({
 			url: '/Admin/OfflineSale/CreateOfflineOrder',
 			type: 'POST',
 			data: {
-				Id: id, Id_Staff: id_Staff, Id_User: id_User, Id_Promotion: id_Promotion,
+				Id: id, Id_Staff: id_Staff, Id_User: id_User, Id_Promotions: promotionlist,
 				Email: email, Phone: phone,
 				Receiver: receiver, NameUser: nameUser
 			},
@@ -508,9 +511,9 @@
 					getWaitingOrders();
 					changeChecked = false;
 					checkChange(0);
-					loadData(1);
+					loadData();
 				} else {
-					alert('Xác nhận thất bại: ' + result.errorMessage);
+					alert(result.errorMessage);
 				}
 			},
 			error: function (error) {
@@ -521,7 +524,7 @@
 
 	$(document).ready(function () {
 		getWaitingOrders();
-		loadData(1);
+		loadData();
 		getDetailOrders(0);
 		checkPromotion(total);
 	});

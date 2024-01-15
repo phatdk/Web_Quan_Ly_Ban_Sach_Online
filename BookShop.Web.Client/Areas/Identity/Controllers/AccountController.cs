@@ -39,8 +39,9 @@ namespace App.Areas.Identity.Controllers
 		private readonly ICartService _CartRepository;
 		private readonly IWalletpointService _WalletPointRepository;
 		private readonly ICartDetailService _CartDetailService;
+		private readonly IProductService _ProductService;
 
-		public AccountController(UserManager<Userr> userManager, SignInManager<Userr> signInManager, IEmailSender emailSender, ILogger<AccountController> logger, IUserService userService, ICartService cartRepository, IWalletpointService walletPointRepository, ICartDetailService cartDetailService)
+		public AccountController(UserManager<Userr> userManager, SignInManager<Userr> signInManager, IEmailSender emailSender, ILogger<AccountController> logger, IUserService userService, ICartService cartRepository, IWalletpointService walletPointRepository, ICartDetailService cartDetailService, IProductService productService)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
@@ -50,6 +51,7 @@ namespace App.Areas.Identity.Controllers
 			_CartRepository = cartRepository;
 			_WalletPointRepository = walletPointRepository;
 			_CartDetailService = cartDetailService;
+			_ProductService = productService;
 		}
 
 		private Task<Userr> GetCurrentUserAsync()
@@ -103,7 +105,7 @@ namespace App.Areas.Identity.Controllers
 					}
 					_logger.LogInformation(1, "User logged in.");
 
-					var userLog = await GetCurrentUserAsync();
+					var userLog = await _userService.GetLog(model.UserNameOrEmail);
 					var cartSession = HttpContext.Session.GetString("sessionCart");
 					if (!string.IsNullOrEmpty(cartSession))
 					{
@@ -116,25 +118,27 @@ namespace App.Areas.Identity.Controllers
 								var cpc = new CreateCartDetailModel()
 								{
 									Id_User = userLog.Id,
-									Id_Product = item.Id,
+									Id_Product = item.Id_Product,
 									Quantity = item.Quantity,
 								};
 								await _CartDetailService.Add(cpc);
 							}
 							else
 							{
+								var product = await _ProductService.GetById(item.Id_Product);
 								var upc = new UpdateCartDetailModel()
 								{
 									Quantity = pc.Quantity + item.Quantity,
 								};
-								if (upc.Quantity > item.Quantity)
+								if (upc.Quantity > product.Quantity)
 								{
-									upc.Quantity = item.Quantity;
+									upc.Quantity = product.Quantity;
 								}
 								await _CartDetailService.Update(pc.Id, upc);
 							}
 						}
 					}
+					HttpContext.Session.Remove("sessionCart");
 					return Redirect("Home/Index");
 				}
 				if (result.RequiresTwoFactor)

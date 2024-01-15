@@ -218,34 +218,33 @@
 					@Html.DisplayFor(model => model.Name)
 				</h3>
 				<div class="row">
-					<div class="col-6">
-						<p>
-							Nhà xuất bản: @foreach (var item in Model.supplierModels)
+					<div class="col-6 row">
+						<span>
+							Nhà xuất bản:
+							@foreach (var item in Model.supplierModels)
 							{
 								<strong>@item.Name</strong>
-
 								<br />
 							}
-						</p>
+						</span>
 						<span>Bộ sưu tập: @Model.CollectionName</span>
 					</div>
-					<div class="col-6">
-						<p>
-							Tác giả: @foreach (var item in Model.authorModels)
+					<div class="col-6 row">
+						<span>
+							Tác giả:
+							@foreach (var item in Model.authorModels)
 							{
 								<strong>@item.Name</strong>
-
 								<br />
 							}
-						</p>
-						<p>
+						</span>
+						<span>
 							Hình thức bìa: @foreach (var item in Model.CoverBook)
 							{
 								<strong>@item</strong>
-
 								<br />
 							}
-						</p>
+						</span>
 					</div>
 				</div>
 				<div class="danhgia">
@@ -261,7 +260,7 @@
 					</ul>
 				</div>
 				<div class="row">
-					<div class="col-6">
+					<div class="col-12">
 						<div class="Gia">
 							@if (Model.Saleoff > 0)
 							{
@@ -282,7 +281,7 @@
 						</div>
 
 					</div>
-					<div class="col-6">
+					<div class="col-12">
 						<div class="row">
 							<div class="col-12">
 								<div id="quantity" class="form-group">
