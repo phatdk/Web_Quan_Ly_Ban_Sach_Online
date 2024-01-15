@@ -48,43 +48,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 			_collectionService = collectionService;
 		}
 
-		public async Task<List<AuthorModel>> LoadAuthor(int status)
-		{
-			var list = await _authorService.Getall();
-			if (status == 1)
-			{
-				return list.Where(p => p.Status == 1).ToList();
-			}
-			else
-			{
-				return list;
-			}
-		}
-		public async Task<List<GenreModel>> LoadGenre(int status)
-		{
-			var list = await _genreService.GetAll();
-			if (status == 1)
-			{
-				return list.Where(p => p.Status == 1).ToList();
-			}
-			else
-			{
-				return list;
-			}
-		}
-		public async Task<List<SupplierViewModel>> LoadSupplier(int status)
-		{
-			var list = await _supplierService.GetAll();
-			if (status == 1)
-			{
-				return list.Where(p => p.Status == 1).ToList();
-
-			}
-			else
-			{
-				return list;
-			}
-		}
 		// GET: BookController
 		[HttpGet]
 		public async Task<IActionResult> Index()
@@ -115,10 +78,6 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 		public async Task<IActionResult> Details(int id)
 		{
 			_book = await _bookService.GetById(id);
-			_book.Weight = _book.Weight / 1000;
-			_book.Widght = _book.Widght / 100;
-			_book.Length = _book.Length / 100;
-			_book.Height = _book.Height / 100;
 			return View(_book);
 		}
         [Authorize(Roles = "Admin")]
@@ -126,9 +85,9 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 		// GET: BookController/Create
 		public async Task<IActionResult> Create()
 		{
-			ViewBag.Authors = await LoadAuthor(1);
-			ViewBag.Genres = await LoadGenre(1);
-			ViewBag.Supplier = await LoadSupplier(1);
+			ViewBag.Authors = (await _authorService.Getall()).Where(x=>x.Status == 1).ToList();
+			ViewBag.Genres = (await _genreService.GetAll()).Where(x=>x.Status == 1).ToList();
+			ViewBag.Supplier = (await _supplierService.GetAll()).Where(x=>x.Status == 1).ToList();
 			return View();
 		}
 
@@ -220,9 +179,9 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
         [HttpGet("Book/Edit")]
 		public async Task<IActionResult> Edit(int id)
 		{
-			ViewBag.Authors = await LoadAuthor(1);
-			ViewBag.Genres = await LoadGenre(1);
-			ViewBag.Supplier = await LoadSupplier(1);
+			ViewBag.Authors = (await _authorService.Getall()).Where(x => x.Status == 1).ToList();
+			ViewBag.Genres = (await _genreService.GetAll()).Where(x => x.Status == 1).ToList();
+			ViewBag.Supplier = (await _supplierService.GetAll()).Where(x => x.Status == 1).ToList();
 			_book = await _bookService.GetById(id);
 			var updateBookModel = new UpdateBookModel()
 			{
