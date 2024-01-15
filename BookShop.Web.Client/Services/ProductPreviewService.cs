@@ -1,4 +1,5 @@
-﻿using BookShop.BLL.ConfigurationModel.ProductModel;
+﻿using BookShop.BLL.ConfigurationModel.BookModel;
+using BookShop.BLL.ConfigurationModel.ProductModel;
 using BookShop.BLL.IService;
 using BookShop.BLL.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -9,12 +10,14 @@ namespace BookShop.Web.Client.Services
 	public class ProductPreviewService
 	{
 		private readonly IProductService _productService;
+		private readonly IBookService _bookService;
 		private readonly IOrderDetailService _orderDetailService;
 		private readonly IOrderService _orderService;
 
 		public ProductPreviewService()
 		{
 			_orderDetailService = new OrderDetailService();
+			_orderService = new OrderService();
 			_productService = new ProductService();
 			_orderService = new OrderService();
 		}

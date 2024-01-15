@@ -1,4 +1,5 @@
-﻿using BookShop.BLL.ConfigurationModel.BookModel;
+﻿using BookShop.BLL.ConfigurationModel.AuthorModel;
+using BookShop.BLL.ConfigurationModel.BookModel;
 using BookShop.BLL.ConfigurationModel.EvaluateModel;
 using BookShop.BLL.ConfigurationModel.ImageModel;
 using BookShop.BLL.ConfigurationModel.PromotionModel;
@@ -32,5 +33,10 @@ namespace BookShop.BLL.ConfigurationModel.ProductModel
 		public List<ImageViewModel> imageViewModels { get; set; }
 		public List<PromotionViewModel> promotionViewModels { get; set; }
 		public List<EvaluateViewModel>? Comment { get; set; }
+
+		// tt ct
+		public List<AuthorModel.AuthorModel> authorModels { get; set; }
+		public List<SupplierModel.SupplierViewModel> supplierModels { get; set; }
+		public List<string> CoverBook { get; set; }
 	}
 }

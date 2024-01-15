@@ -26,9 +26,12 @@ namespace BookShop.Web.Client.Controllers
 		private readonly ICategoryService _categoryService;
 		private readonly UserManager<Userr> _userManager;
 		private readonly PointNPromotionSerVice _pointNPromotionSerVice;
+		private readonly ProductPreviewService _productPreviewService;
+		private readonly IPromotionService _promotionService;
 
-		public HomeController(ILogger<HomeController> logger, IProductService productService, IWishListService wishListService, ICategoryService categoryService, UserManager<Userr> userManager)
+		public HomeController(IPromotionService promotionService, ILogger<HomeController> logger, IProductService productService, IWishListService wishListService, ICategoryService categoryService, UserManager<Userr> userManager)
 		{
+			_promotionService = promotionService;
 			_logger = logger;
 			_wishList = new List<WishListViewModel>();
 			_products = new List<ProductViewModel>();
@@ -38,11 +41,11 @@ namespace BookShop.Web.Client.Controllers
 			_WishListService = wishListService;
 			_userManager = userManager;
 			_pointNPromotionSerVice = new PointNPromotionSerVice();
+			_productPreviewService = new ProductPreviewService();
 		}
 
 		public async Task<IActionResult> Index()
 		{
-
 			return View();
 		}
 		public async Task<IActionResult> SachMoi()
@@ -68,10 +71,26 @@ namespace BookShop.Web.Client.Controllers
 			var top10Products1 = product1.Take(12).GroupBy(c => c.Id).Select(group => group.First()).ToList();
 			return Json(new { data = top10Products1 });
 		}
+        public async Task<IActionResult> SanPhamSale()
+        {
+            _products = (await _productService.GetAll()).Where(c=>c.Saleoff > 0).ToList();
+
+            var product1 = _products.OrderByDescending(c => c.CreatedDate).ToList();
+            var top10Products1 = product1.Take(12).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+            return Json(new { data = top10Products1 });
+        }
+
+		public async Task<IActionResult> PhieuGiamGia()
+		{
+			var pro = (await _promotionService.GetAll()).Where(c=>c.NameType == "Phiếu khuyến mãi phát hành mã").ToList();
+			
+			var product1 = pro.OrderByDescending(c => c.CreatedDate).ToList();
+			var top4 = product1.Take(4).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+			return Json(new { data = top4 });
+		}
 		public async Task<IActionResult> ChiTietSanPham(int id)
 		{
 			var product = await _productService.GetByIdAndCommnet(id);
-			//ViewBag.Product = _product;
 			if (product != null)
 			{
 				return View(product);
