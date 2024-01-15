@@ -214,7 +214,6 @@
 					<input type="button" class="m1" id="addToCart" value="Thêm Vào Giỏ Hàng" data-bs-toggle="modal" data-bs-target="#spModal" />
 					<input type="button" id="buyNow" class="m2" value="Mua" />
 				}
-
 			</div>
 		</div>
 		<div class="col-7 phai">
@@ -223,12 +222,33 @@
 					@Html.DisplayFor(model => model.Name)
 				</h3>
 				<div class="row">
-					<div class="col-6">
-						<p>Nhà xuất bản: Chưa biết </p>
+					<div class="col-6 row">
+						<span>
+							Nhà xuất bản:
+							@foreach (var item in Model.supplierModels)
+							{
+								<strong>@item.Name</strong>
+								<br />
+							}
+						</span>
+						<span>Bộ sưu tập: @Model.CollectionName</span>
 					</div>
-					<div class="col-6">
-						<p>Tác giả: Lê Quang Khánh</p>
-						<p>Hình thức bìa: Bìa Mềm</p>
+					<div class="col-6 row">
+						<span>
+							Tác giả:
+							@foreach (var item in Model.authorModels)
+							{
+								<strong>@item.Name</strong>
+								<br />
+							}
+						</span>
+						<span>
+							Hình thức bìa: @foreach (var item in Model.CoverBook)
+							{
+								<strong>@item</strong>
+								<br />
+							}
+						</span>
 					</div>
 				</div>
 				<div class="danhgia">
@@ -244,17 +264,28 @@
 					</ul>
 				</div>
 				<div class="row">
-					<div class="col-6">
+					<div class="col-12">
 						<div class="Gia">
-							<div class="Giaban">
-								<h3>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.NewPrice)</h3>
-							</div>
-							<div class="Giagoc">
-								<p>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Price)</p>
-							</div>
+							@if (Model.Saleoff > 0)
+							{
+								<div class="Giaban">
+									<h3>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.NewPrice)</h3>
+								</div>
+								<div class="Giagoc">
+									<p>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Price)</p>
+								</div>
+								<div class="bg-danger text-light fw-bold" style="border-radius: 10px;">@Model.Saleoff</div>
+							}
+							else
+							{
+								<div class="Giaban">
+									<h3>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.NewPrice)</h3>
+								</div>
+							}
 						</div>
+
 					</div>
-					<div class="col-6">
+					<div class="col-12">
 						<div class="row">
 							<div class="col-12">
 								<div id="quantity" class="form-group">

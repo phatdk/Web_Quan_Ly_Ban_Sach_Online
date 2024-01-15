@@ -180,5 +180,17 @@ namespace BookShop.BLL.Service
 				return false;
 			}
 		}
+
+		public async Task<UserModel> GetLog(string userNameOrEmail)
+		{
+			var user = (await _Userrepository.GetAllAsync()).Where(x => x.UserName.Equals(userNameOrEmail)).FirstOrDefault();
+			if(user == null) user = (await _Userrepository.GetAllAsync()).Where(x => x.Email.Equals(userNameOrEmail)).FirstOrDefault();
+			return new UserModel { 
+				Id = user.Id,
+				UserName = user.UserName,
+				Email = user.Email,
+				Password = user.PasswordHash,
+			};
+		}
 	}
 }
