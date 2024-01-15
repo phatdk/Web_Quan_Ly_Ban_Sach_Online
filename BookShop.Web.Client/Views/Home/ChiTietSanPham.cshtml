@@ -205,11 +205,15 @@
 			</div>
 			<img id="img-view" class="a1" src="@Model.imageViewModels.FirstOrDefault().ImageUrl" alt="ảnh sản phẩm" style="max-width: 100%; " />
 			<div class="mua">
-				<button id="product" onclick="ThemVaoDanhSachYeuThich(@Model.Id)" class="btn btn-outline-danger">
-					<i class="fa-solid fa-face-kiss-wink-heart"></i> Thêm Yêu Thích
-				</button>
-				<input type="button" class="m1" id="addToCart" value="Thêm Vào Giỏ Hàng" data-bs-toggle="modal" data-bs-target="#spModal" />
-				<input type="button" id="buyNow" class="m2" value="Mua" />
+				@if (!isAdmin)
+				{
+					<button id="product" onclick="ThemVaoDanhSachYeuThich(@Model.Id)" class="btn btn-outline-danger">
+						<i class="fa-solid fa-face-kiss-wink-heart"></i> Thêm Yêu Thích
+					</button>
+
+					<input type="button" class="m1" id="addToCart" value="Thêm Vào Giỏ Hàng" data-bs-toggle="modal" data-bs-target="#spModal" />
+					<input type="button" id="buyNow" class="m2" value="Mua" />
+				}
 			</div>
 		</div>
 		<div class="col-7 phai">

@@ -39,9 +39,10 @@ namespace BookShop.BLL.Service
 		private readonly IRepository<Promotion> _promotionRepository; //1
 		private readonly IRepository<PromotionType> _promotionTypeRepository; //0
 		private readonly IRepository<Author> _authorRepository; //0
-		private readonly IRepository<Supplier> _suplierRepository;
+		private readonly IRepository<Supplier> _supplierRepository; //13
 		public ProductService()
 		{
+			_supplierRepository = new Repository<Supplier>();
 			_productRepository = new Repository<Product>();
 			_imageRepository = new Repository<Image>();
 			_productBookRepository = new Repository<ProductBook>();
@@ -600,7 +601,7 @@ namespace BookShop.BLL.Service
 
 		}
 
-		public async Task<List<ProductViewModel>> Search(int? gennerId, int? categoriId, int? colectionId, int? authorId)
+		public async Task<List<ProductViewModel>> Search(int? gennerId, int? supplierId, int? authorId)
 		{
 
 
@@ -613,9 +614,9 @@ namespace BookShop.BLL.Service
 						 join a in (await _authorRepository.GetAllAsync()).DefaultIfEmpty() on ba.Id_Author equals a.Id
 						 join bg in (await _bookGenreRepository.GetAllAsync()).DefaultIfEmpty() on b.Id equals bg.Id_Book
 						 join g in (await _genretRepository.GetAllAsync()).DefaultIfEmpty() on bg.Id_Genre equals g.Id
-						 join c in (await _categorytRepository.GetAllAsync()).DefaultIfEmpty() on g.Id_Category equals c.Id
+						 join sup in (await _supplierRepository.GetAllAsync()).DefaultIfEmpty() on b.Id_Supplier equals sup.Id
 
-						 where g.Id == gennerId || c.Id == categoriId || a.Id == authorId
+						 where g.Id == gennerId || sup.Id == supplierId || a.Id == authorId 
 						 select new ProductViewModel()
 						 {
 							 Id = p.Id,
