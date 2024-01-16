@@ -84,7 +84,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
                 product.Name = productDetails.Name;
                 product.Price = productDetails.Price;
             }
-            ViewBag.ProductList = topSellingProducts.Take(5);
+            ViewBag.ProductList = topSellingProducts;
 
             return View();
         }
@@ -221,7 +221,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
         public async Task<IActionResult> GetHighestInvoice()
         {
             var invoices = await _OrderService.GetAll();
-            var topInvoices = invoices.OrderByDescending(x => x.Total).Take(5).ToList();
+            var topInvoices = invoices.OrderByDescending(x => x.Total).ToList();
             ViewBag.HighestInvoice = topInvoices;
 
             return Json(topInvoices);
@@ -259,8 +259,20 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
         public async Task<IActionResult> GetProductBook()
         {
             var productbook = await _productbookservices.GetAll();
-          
+
             return Json(productbook);
+        }
+        public async Task<IActionResult> GetAllHighestInvoice()
+        {
+            return View();
+        }
+        public async Task<IActionResult> GetAllProducSortedByQuatityAsc()
+        {
+            return View();
+        }
+        public async Task<IActionResult> GetAllProductBook()
+        {
+            return View();
         }
 
     }

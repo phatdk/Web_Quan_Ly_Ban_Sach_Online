@@ -1,0 +1,53 @@
+﻿<style>
+    /* Add table styling here, if desired */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<div class="title">Sách</div>
+<div id="book-details" class="sales-details">
+    <table>
+        <thead>
+            <tr>
+                <th>Mã Sách</th>
+                <th>Tựa Sách</th>
+                <th>Tên Sản Phẩm</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: "/Admin/Gembox/GetProductBook"
+        }).done(function (data) {
+            var tableBody = $("#book-details table tbody");
+
+            for (var i = 0; i < data.length; i++) {
+                var book = data[i];
+
+                var row = $("<tr>");
+                $("<td>").text(book.id).appendTo(row);
+                $("<td>").text(book.bookTitle).appendTo(row);
+                $("<td>").text(book.productName).appendTo(row);
+
+                row.appendTo(tableBody);
+            }
+        });
+    });
+</script>
