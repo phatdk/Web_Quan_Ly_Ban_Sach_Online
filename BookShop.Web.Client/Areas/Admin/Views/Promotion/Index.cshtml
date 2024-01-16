@@ -107,12 +107,12 @@
 					var endTime = new Date(item.endDate);
 					var result = endTime.getTime() - now.getTime();
 					if (result >= 0 && item.status == 1) {
-						status = "Đang áp dụng";
+						status = "Đang hoạt động";
 						statusColor = "text-success";
 					}
-					else if (item.Status == 0) {
-						status = "Chưa áp dụng";
-						statusColor = "text-danger";
+					else if (item.status == 0) {
+						status = "Không hoạt động";
+						statusColor = "text-warning";
 					}
 					else if (result < 0 && item.status == 1) {
 						status = "Hết hạn";
@@ -126,7 +126,7 @@
 						'<td class="text-center">' + formatDate(item.createdDate) + ' </td>' +
 						'<td class="text-center">' + formatDate(item.startDate) + '</td>' +
 						'<td class="text-center">' + formatDate(item.endDate) + '</td>' +
-						'<td class="text-center ' + statusColor + '">' + status + '</td>' +
+						'<td class="text-center fw-bold ' + statusColor + '">' + status + '</td>' +
 						'<td>' +
 						'<a class="btn btn-primary" href="/Admin/Promotion/Details/' + item.id + '"> Chi tiết </a>' +
 						'<a class="btn btn-warning" href="/Admin/Promotion/Edit/' + item.id + '"> Sửa </a>' +

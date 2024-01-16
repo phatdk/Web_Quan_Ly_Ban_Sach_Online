@@ -57,7 +57,6 @@ namespace BookShop.BLL.Service
 			_promotionRepository = new Repository<Promotion>();
 			_productPromotionRepository = new Repository<ProductPromotion>();
 			_authorRepository = new Repository<Author>();
-			_supplierRepository = new Repository<Supplier>();
 
 		}
 		public async Task<CreateProductModel> Add(CreateProductModel model)
