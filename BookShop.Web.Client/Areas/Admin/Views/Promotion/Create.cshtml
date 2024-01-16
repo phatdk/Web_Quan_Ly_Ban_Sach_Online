@@ -15,7 +15,7 @@
 			<div class="form-group">
 				<label class="form-label">Loại khuyến mãi</label>
 				<select asp-for="Id_Type" id="promotionType" required onchange="typeCheck(this)">
-					<option value="0" disabled selected>Chọn loại KM</option>
+					<option value="" disabled selected>Chọn loại KM</option>
 					@foreach (var item in typePromotion)
 					{
 						<option value="@item.Id">@item.Name</option>
@@ -53,10 +53,10 @@
 			</div>
 			<div class="form-group" id="percentReduct">
 				<label class="form-label">Số phần trăm giảm (%)</label>
-				<input type="number" asp-for="PercentReduct" id="inputPercent" class="form-control" required/>
+				<input type="number" asp-for="PercentReduct" id="inputPercent" class="form-control" required />
 
 				<label class="form-label">Số tiền giảm tối đa (đ)</label>
-				<input type="number" asp-for="ReductMax" id="inputMax" class="form-control" required/>
+				<input type="number" asp-for="ReductMax" id="inputMax" class="form-control" required />
 			</div>
 			<div class="form-group">
 				<label class="form-label">Số lượng phát hành</label>
@@ -64,11 +64,11 @@
 			</div>
 			<div class="form-group">
 				<label class="form-label">Ngày bắt đầu</label>
-				<input asp-for="StartDate" class="form-control" required />
+				<input asp-for="StartDate" id="startDate" class="form-control" onchange="dateChecking()" required />
 			</div>
 			<div class="form-group">
 				<label class="form-label">Ngày kết thúc</label>
-				<input asp-for="EndDate" class="form-control" required />
+				<input asp-for="EndDate" id="endDate" class="form-control" onchange="dateChecking()" required />
 			</div>
 			<div class="form-group">
 				<label class="form-label">Mô tả</label>
@@ -93,6 +93,12 @@
 </div>
 
 <script type="text/javascript">
+	function dateChecking() {
+		var startDate = $('#startDate').val();
+		var endDate = $('#endDate').val();
+		console.log(startDate);
+		console.log(endDate);
+	}
 	function typeCheck(select) {
 		var selectText = select.options[select.selectedIndex].text;
 		const code = $("#promotionCode");
@@ -165,7 +171,7 @@
 			percent.prop("hidden", false);
 			inputPercent.prop("required", true);
 			inputMax.prop("required", true);
-		} else if(selectedValue == 0) {
+		} else if (selectedValue == 0) {
 			amount.prop("hidden", false);
 			percent.prop("hidden", true);
 			inputAmount.prop("required", true);

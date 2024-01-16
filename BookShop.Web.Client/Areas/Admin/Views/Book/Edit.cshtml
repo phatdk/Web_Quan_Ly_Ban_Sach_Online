@@ -34,16 +34,12 @@
 		justify-content: space-between;
 	}
 </style>
-@*@using (Html.BeginForm("Edit", "Book", FormMethod.Post))
-{
-	@Html.AntiForgeryToken()*@
 <form asp-action="Edit" enctype="multipart/form-data">
 	<div class="form-column">
 		<input asp-for="Id" hidden />
 		<div class="form-group">
 			<label class="control-label"> Mã ISBN </label>
 			<input asp-for="ISBN" class="form-control" />
-			<span asp-validation-for="ISBN" class="text-danger"></span>
 		</div>
 
 		<div class="form-group">
@@ -52,39 +48,38 @@
 		</div>
 
 		<div class="form-group">
-			@Html.Label("Tiêu đề sách")
-			@Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+			<label class="form-group">Tiêu đề sách</label>
+			<input asp-for="Title" class="form-control" required />
 		</div>
 
 		<div class="form-group">
-			<label class="control-label"> Số lượng </label>
-			<input asp-for="Quantity" class="form-control" type="number" min="0" required />
+			<label class="form-label"> Số lượng </label>
+			<input asp-for="Quantity" class="form-control" type="number" min="0" max="2000000000" required />
 		</div>
 		<div class="form-group">
 			<label>Chọn ảnh: </label>
 			<input type="file" name="imageFile" accept="img/*" />
 		</div>
 		<div class="form-group">
-			@Html.Label("Độc giả")
-			@Html.TextBoxFor(m => m.Reader, new { @class = "form-control", @required = "required"})
+			<label class="form-label">Độ tuổi</label>
+			<input asp-for="Reader" class="form-control" required />
 		</div>
 
 		<div class="form-group">
-			@Html.Label("Tác giả")
+			<label class="form-label">Tác giả</label>
 			@Html.ListBoxFor(m => m.authorSelected, new MultiSelectList(authors, "Id", "Name", Model.authorSelected), new { @class = "form-control chosen-select", id = "authorSelect", @required = "required" })
 			<input type="hidden" value="@Model.authorSelected" name="authorSelected" />
 		</div>
 
 		<div class="form-group">
-			@Html.Label("Thể loại")
+			<label class="form-label">Thể loại</label>
 			@Html.ListBoxFor(m => m.genreSelected, new MultiSelectList(genres, "Id", "Name", Model.genreSelected), new { @class = "form-control chosen-select", id = "genreSelect", @required = "required"})
 			<input type="hidden" value="@Model.genreSelected" name="authorSelected" />
 		</div>
 		<div class="form-group">
-			@Html.Label("Mô tả sản phẩm")
-			@Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
-		</div>
-	
+			<label class="form-label">Mô tả</label>
+			<textarea asp-for="Description" class="w-100" rows="3"></textarea>
+		</div>	
 		<div class="form-group">
 			<label class="control-label"> Giá bìa </label>
 			<input asp-for="Price" class="form-control" type="number" min="0" required/>
@@ -98,57 +93,52 @@
 	<div class="form-column">
 		<div class="form-group">
 			<div class="form-group">
-				@Html.Label("Phân loại bìa")
-				@Html.TextBoxFor(m => m.Cover, new { @class = "form-control" })
+				<label class="form-label">Loại bìa</label>
+				<select asp-for="Cover" class="form-control" required>
+					<option value="Bìa mềm">Bìa mềm</option>
+					<option value="Bìa cứng">Bìa cứng</option>
+				</select>
 			</div>
 			<div class="form-group">
-				@Html.Label("Nhà sản xuất")
-				@Html.DropDownListFor(m => m.Id_Supplier, new SelectList(suppliers, "Id", "Name"),"-- Select Collection --", new { @class = "form-control chosen-select", id = "supplierSelected"})
+				<label class="form-label">Nhà xuất bản</label>
+				@Html.DropDownListFor(m => m.Id_Supplier, new SelectList(suppliers, "Id", "Name"),"-- Select supplier --", new { @class = "form-control chosen-select", id = "supplierSelected", @required = "required" })
 				<input type="hidden" value="@Model.Id_Supplier" name="supplierSelect" />
 			</div>
-
 			<div class="form-group">
-				@Html.Label("Ngày xuất bản")
-				@Html.EditorFor(m => m.PublicationDate, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+				<label class="form-label">Ngày xuất bản</label>
+				<input asp-for="PublicationDate" class="form-control" required />
 			</div>
-
 			<div class="form-group">
 				<label class="control-label"> Số trang </label>
 				<input asp-for="Pages" class="form-control" type="number" min="0" required />
-				<span asp-validation-for="Pages" class="text-danger"></span>
 			</div>
 			<div class="form-group">
 				<label class="control-label"> Kích thước trang </label>
 				<input asp-for="PageSize" class="form-control" required />
-				<span asp-validation-for="PageSize" class="text-danger"></span>
 			</div>
 			<div class="form-group">
-				<label class="control-label"> Trọng lượng </label>
-				<input asp-for="Widght" class="form-control" type="number" min="0" />
+				<label class="control-label"> Trọng lượng (mg) </label>
+				<input asp-for="Weight" class="form-control" type="number" min="100" required />
+			</div>
+			<div class="form-group">
+				<label class="control-label"> Chiều dài (mm) </label>
+				<input asp-for="Length" class="form-control" type="number" min="10" required />
+			</div>
+			<div class="form-group">
+				<label class="control-label"> Chiều rộng (mm) </label>
+				<input asp-for="Widght" class="form-control" type="number" min="10" required />
 				<span asp-validation-for="Widght" class="text-danger"></span>
 			</div>
 			<div class="form-group">
-				<label class="control-label"> Chiều cao sách </label>
-				<input asp-for="Height" class="form-control" type="number" min="0" />
-				<span asp-validation-for="Height" class="text-danger"></span>
+				<label class="control-label"> Độ dày (mm) </label>
+				<input asp-for="Height" class="form-control" type="number" min="10" required />
 			</div>
 			<div class="form-group">
-				<label class="control-label"> Chiều dài sách </label>
-				<input asp-for="Length" class="form-control" type="number" min="0" />
-				<span asp-validation-for="Length" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label class="control-label"> Chiều rộng sách </label>
-				<input asp-for="Widght" class="form-control" type="number" min="0" />
-				<span asp-validation-for="Widght" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="Status" class="control-label"></label>
-				<select asp-for="Status" class="form-control">
+				<label class="control-label">Trạng thái</label>
+				<select asp-for="Status" class="form-control" required>
 					<option value="1">Còn hàng</option>
 					<option value="0">Không còn hàng</option>
 				</select>
-				<span asp-validation-for="Status" class="text-danger"></span>
 			</div>
 			<div class="clear"></div>
 			<br />
@@ -159,7 +149,6 @@
 		</div>
 	</div>
 </form>
-@*}*@
 
 <script>
 	$(document).ready(function () {

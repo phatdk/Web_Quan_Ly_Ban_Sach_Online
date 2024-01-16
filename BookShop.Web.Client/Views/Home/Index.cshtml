@@ -89,18 +89,21 @@
 	}
 
 	.xemthem {
-		margin: auto;
-		width: 200px;
-		height: 35px;
-		text-align: center;
-		border-radius: 20px;
-		box-shadow: 2px 3px 5px #ccc;
-		background-image: linear-gradient(to right, #ff9800, #F7695D);
+		margin: 20px 0;
+		display:flex;
+		text-align:center;
+		justify-content:center;
 	}
 
-		.xemthem p {
+		.xemthem a {
 			padding-top: 5px;
 			color: white;
+			width: 200px;
+			height: 35px;
+			text-align: center;
+			border-radius: 20px;
+			box-shadow: 2px 3px 5px #ccc;
+			background-image: linear-gradient(to right, #ff9800, #F7695D);
 		}
 
 	.flashsale {
@@ -110,6 +113,7 @@
 	}
 
 	.danhmucsanpham {
+		padding:5px;
 		margin-top: 24px;
 		background-color: white;
 		border-radius: 10px;
@@ -306,28 +310,31 @@
 		gap: 20px;
 	}
 
-		.nuoidaycon .testsp:nth-child(1) p.dautien{
-			display:block;
+		.nuoidaycon .testsp:nth-child(1) p.dautien {
+			display: block;
 			-webkit-line-clamp: 6;
 			-webkit-box-orient: vertical;
 			overflow: hidden;
 			display: -webkit-box;
 		}
 
-			.nuoidaycon .testsp:nth-child(1) p.dautien span{
-				font-weight:700;
+			.nuoidaycon .testsp:nth-child(1) p.dautien span {
+				font-weight: 700;
 			}
+
 	.dm {
-		justify-content: center;
+		position:relative;
+		border-bottom: 1px solid #DCDCDC;
 		margin-bottom: 20px;
-		background-color: #FCDDEF;
 	}
 
 		.dm span {
+			color: #C92127;
 			margin-left: 20px;
-			font-weight: 600;
-			font-size: 28px;
+			font-weight: 800;
+			font-size: 24px;
 		}
+
 
 	.giabandau {
 		color: #DCDCDC;
@@ -394,7 +401,7 @@
 <div class="row cms-icon-menu listdsds">
 	<div class="dss">
 		<div>
-			<a asp-area="" asp-controller="Home" asp-action="ThongTinSanPham"><img src="https://cdn0.fahasa.com/media/wysiwyg/Thang-07-2023/Icon_B2S_1.png" class="center"></a>
+			<a href="#noidaycon"><img src="https://cdn0.fahasa.com/media/wysiwyg/Thang-07-2023/Icon_B2S_1.png" class="center"></a>
 		</div>
 		<div class="cms-icon-menu-item-name">Trở Lại<br>Trường Học</div>
 	</div>
@@ -465,13 +472,13 @@
 	</div>
 
 	<div class="xemthem">
-		<p>Xem Thêm</p>
+		<a href="/SearchAndFilter">Xem Thêm</a>
 	</div>
 </div>
 
 <!-- Danh Muc San Pham-->
 <div class="danhmucsanpham">
-	<div class="dm" style="display:flex;">
+	<div class="dm" >
 		<span>Cổ điển</span>
 	</div>
 
@@ -479,15 +486,21 @@
 		<div class="danhmuc-sach" id="listcategory">
 		</div>
 	</div>
-
+	<div class="xemthem">
+		<a href="javascript:" onclick="searchnangcao(4)">Xem Thêm</a>
+	</div>
 </div>
 <div class="danhmucsanpham">
-	<div class="dm" style="display:flex;">
+	<div class="dm" >
 		<span>Nuôi dạy con</span>
+		
 	</div>
 
-	<div class="nuoidaycon">
+	<div class="nuoidaycon" id="noidaycon">
 		<div class="danhmuc-sach" id="listnuoidaycon">
+		</div>
+		<div class="xemthem">
+			<a href="javascript:" onclick="searchnangcao(8)">Xem Thêm</a>
 		</div>
 	</div>
 
@@ -498,6 +511,10 @@
 <script src="~/js/site.js"></script>
 
 <script>
+	function searchnangcao(id) {
+		var url = "@Url.Action("Index","SearchAndFilter")?id=" + id;
+		window.location.href = url;
+	}
 	function ThemVaoDanhSachYeuThich(id) {
 		var url = "@Url.Action("ThemVaoYeuThich", "Home")?id=" + id;
 		$.ajax({
@@ -565,27 +582,27 @@
 				data.data.forEach(function (item) {
 					var categoryRow =
 						'<div class="testsp" onclick="ChiTietSanPham(' + item.id + ')">' +
-							'<div class="product-image">' +
-								'<div class="flashsale-image-container">' +
-									'<img src="' + item.imgUrl + '">' +
-								'</div>' +
-							'</div>' +
-							'<div class="ttsp">' +
-								'<h4>' + item.name + '</h4>' +
-							'</div>' +
-							'<div class="giaban">' + '<p>' +
-								formatPrice(item.newPrice) + '</p>';
+						'<div class="product-image">' +
+						'<div class="flashsale-image-container">' +
+						'<img src="' + item.imgUrl + '">' +
+						'</div>' +
+						'</div>' +
+						'<div class="ttsp">' +
+						'<h4>' + item.name + '</h4>' +
+						'</div>' +
+						'<div class="giaban">' + '<p>' +
+						formatPrice(item.newPrice) + '</p>';
 
-								if (item.saleoff > 0) {
-									categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
-										'<div class="giabandau">' +
-										'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>';
-								}
+					if (item.saleoff > 0) {
+						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
+							'<div class="giabandau">' +
+							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>';
+					}
 
 					categoryRow += '</div>';
-					categoryRow += '</div>';
+					//categoryRow += '</div>';
 					categoryRow += '<p class="dautien">' + '<span>' + "Mô tả : " + '</span>' + item.description + '</p>' +
-					'</div>';
+						'</div>';
 
 					listcategory.append(categoryRow);
 				});

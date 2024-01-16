@@ -65,6 +65,7 @@
 	}
 
 	.card-title-left {
+		position:relative;
 		display: flex;
 		line-height: 60px;
 		font-size: 20px;
@@ -135,7 +136,7 @@
 	}
 
 	.filter .giaban {
-		height:30px;
+		height: 30px;
 		align-items: center;
 		display: flex;
 		gap: 10px;
@@ -181,9 +182,17 @@
 	input#price {
 		width: 95%;
 	}
-	.giabandau p{
+
+	.giabandau p {
 		color: #DCDCDC;
 		text-decoration: line-through;
+	}
+	.card-title-left a.aa
+	{
+		right: 10px;
+		top: 20px;
+		position: absolute;
+		font-size: 13px;
 	}
 </style>
 <div class="filter">
@@ -192,8 +201,9 @@
 			<div class="filter_left">
 				<div class="card-title-left">
 					<p>
-						LỌC THEO 
+						LỌC THEO
 					</p>
+					<a class="aa" href="javascript:" id="reloadButton">Làm mới</a>
 				</div>
 				<div class="author">
 					<div class="card-title">
@@ -203,9 +213,11 @@
 						<ul class="showmore">
 							@foreach (var item in authorList)
 							{
+
 								<li>
 									<input onclick="tacgiasearch(this)" value="@item.Id" type="checkbox" /> @item.Name
 								</li>
+
 							}
 						</ul>
 						<a href="javascript:" class="deplam" onclick="tacgiashow()">Xem thêm</a>
@@ -217,11 +229,25 @@
 							Thể loại (@(genreList.Count()))
 						</p>
 						<ul class="showmore2">
-							@foreach (var item in genreList)
+							@if (genreList.Count < 18)
 							{
-								<li>
-									<input onclick="theloaisearch(this)" value="@item.Id" type="checkbox" /> @item.Name
-								</li>
+								@foreach (var item in genreList)
+								{
+
+									<li class="active">
+										<input onclick="theloaisearch(this)" value="@item.Id" type="checkbox" /> @item.Name
+									</li>
+								}
+							}
+							else
+							{
+								@foreach (var item in genreList)
+								{
+
+									<li>
+										<input onclick="theloaisearch(this)" value="@item.Id" type="checkbox" /> @item.Name
+									</li>
+								}
 							}
 						</ul>
 						<a href="javascript:" class="deplam" onclick="theloaishow()">Xem thêm</a>
@@ -260,7 +286,7 @@
 			<div class="filter_right">
 				<div class="search-bar">
 					<p style="margin-bottom:0" id="soluongsp"> </p>
-					<input id="keyWordFind" oninput="searchOnEnter(event)" type="text" placeholder="Tìm kiếm">
+					<input id="key1" oninput="searchOnEnter(event)" value=" " type="text" placeholder="Tìm kiếm">
 				</div>
 
 				<div class="fl" id="listcategory">
@@ -279,7 +305,7 @@
 	}
 
 	function loadData(pageIndex) {
-		var keyWord = $('#keyWordFind').val();
+		var keyword = document.getElementById("key1").value;
 		var price = document.getElementById("price").value;
 
 		console.log(price);
@@ -288,7 +314,7 @@
 		var publisher = supplierList;
 		console.log(author);
 		console.log(genner);
-		console.log(keyWord);
+		console.log(keyword)
 
 
 		$.ajax({
@@ -297,7 +323,7 @@
 
 			data: {
 				page: pageIndex,
-				keyWord: keyWord,
+				keyWord: keyword,
 				authorId: author,
 				gennerId: genner,
 				publishersId: supplierList,
@@ -329,10 +355,10 @@
 						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>';
 					};
 					categoryRow += '</div>';
-					categoryRow += '<div class="giabandau">' 
+					categoryRow += '<div class="giabandau">'
 						+ '<p>' + formatPrice(item.price) + '</p>' +
 						'</div>';
-				+ '</div>';
+					+ '</div>';
 					listcategory.append(categoryRow);
 				});
 				createPagingButtons(1, data.max, data.page);
@@ -348,7 +374,9 @@
 	function searchOnEnter(event) {
 		loadData(1);
 	}
-
+	document.getElementById('reloadButton').addEventListener('click', function () {
+		window.location.href = '/SearchAndFilter';
+	});
 	function formatPrice(price) {
 		const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 		return formattedPrice + ' VND';
@@ -360,7 +388,17 @@
 		priceValue.innerHTML = formatPrice(priceSlider.value);
 
 	}
+	document.addEventListener("DOMContentLoaded", function () {
+		var activeLiElements = document.querySelectorAll('li.active');
 
+		activeLiElements.forEach(function (liElement) {
+			var inputElement = liElement.querySelector('input[type="checkbox"]');
+
+			if (inputElement) {
+				inputElement.click();
+			}
+		});
+	});
 
 	var authorIdList = []
 	function tacgiasearch(elment) {

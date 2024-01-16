@@ -65,7 +65,7 @@ namespace BookShop.Web.Client.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Getdata(int page, string? keyword, List<int>? gennerId, List<int>? colectionId, List<int>? authorId, List<int>? publishersId, int? min)
+        public async Task<IActionResult> Getdata(int page, string? keyWord, List<int>? gennerId, List<int>? colectionId, List<int>? authorId, List<int>? publishersId, int? min)
         {
             var list = new List<ProductViewModel>();
 			// lấy tất cả
@@ -116,11 +116,11 @@ namespace BookShop.Web.Client.Controllers
 			}
 
 
-            if (keyword != null)
+            if (keyWord != null)
             {
 				var listnew = new List<ProductViewModel>();
 
-				_products = _products.Where(c => c.Name.Contains(keyword)).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+				_products = _products.Where(c => c.Name.Contains(keyWord)).GroupBy(c => c.Id).Select(group => group.First()).ToList();
 				listnew.AddRange(_products);
 				list = listnew;
 			}
