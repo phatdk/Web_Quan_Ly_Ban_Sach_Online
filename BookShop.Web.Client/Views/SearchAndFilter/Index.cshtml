@@ -65,7 +65,7 @@
 	}
 
 	.card-title-left {
-		position:relative;
+		position: relative;
 		display: flex;
 		line-height: 60px;
 		font-size: 20px;
@@ -187,8 +187,8 @@
 		color: #DCDCDC;
 		text-decoration: line-through;
 	}
-	.card-title-left a.aa
-	{
+
+	.card-title-left a.aa {
 		right: 10px;
 		top: 20px;
 		position: absolute;
@@ -353,11 +353,12 @@
 						formatPrice(item.newPrice) + '</p>';
 					if (item.saleoff > 0) {
 						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>';
+						categoryRow += '</div>';
+						categoryRow += '<div class="giabandau">'
+							+ '<p>' + formatPrice(item.price) + '</p>' +
+							'</div>';
 					};
-					categoryRow += '</div>';
-					categoryRow += '<div class="giabandau">'
-						+ '<p>' + formatPrice(item.price) + '</p>' +
-						'</div>';
+
 					+ '</div>';
 					listcategory.append(categoryRow);
 				});

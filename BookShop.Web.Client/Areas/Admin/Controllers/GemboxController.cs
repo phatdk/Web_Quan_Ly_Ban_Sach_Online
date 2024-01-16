@@ -16,11 +16,13 @@ using Newtonsoft.Json;
 using Humanizer;
 using System.Security.Cryptography.X509Certificates;
 using MailKit.Search;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class GemboxController : Controller
+	[Authorize(Roles = "Admin,Staff")]
+	public class GemboxController : Controller
     {
         public Gen _gen;
         public List<OrderViewModel> _orderViewModels;

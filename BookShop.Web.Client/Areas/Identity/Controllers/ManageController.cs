@@ -21,6 +21,7 @@ using BookShop.BLL.ConfigurationModel.PromotionModel;
 using BookShop.Web.Client.Services;
 using BookShop.BLL.ConfigurationModel.PointTranHistoryModel;
 using System.Drawing;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace App.Areas.Identity.Controllers
 {
@@ -124,9 +125,10 @@ namespace App.Areas.Identity.Controllers
 			var user = await GetUser();
 			return View(user);
 		}
-
+		
 		public async Task<IActionResult> GetUserPromotion(int id, int page, int statusFilter, int dateFilter)
 		{
+			//HttpContext.Session.SetString("code", code ?? string.Empty);
 			var userPromotions = await _userPromotionService.GetByUser(id);
 			List<UserPromotionViewModel> dataList = new List<UserPromotionViewModel>();
 
@@ -191,15 +193,26 @@ namespace App.Areas.Identity.Controllers
 			return Json(new { data = dataList, page = page, max = Math.Ceiling(totalPage) });
 		}
 
-		public async Task<IActionResult> GetPromotion(int id, string code)
+		public async Task<IActionResult> GetPromotion(int Id,string code)
 		{
+			//if (code == null)
+			//{
+			//	string codese = HttpContext.Session.GetString("code");
+			//	code = codese;
+			//}
+			if (Id == 0)
+			{
+				var user = await GetCurrentUserAsync();
+				Id = user.Id;
+			}
+			
 			var promotion = await _promotionService.GetByCode(code);
 			if (promotion != null && promotion.Quantity > 0)
 			{
 				DateTime endTime = Convert.ToDateTime(promotion.EndDate);
 				if (endTime.CompareTo(DateTime.Now) < 0) return Json(new { success = false, message = "Mã khuyến mãi đã hết hạn" });
 				if (promotion.Status == 0) return Json(new { success = false, message = "Mã khuyến mãi đã bị đóng" });
-				var userPromotion = await _userPromotionService.GetById(id, promotion.Id);
+				var userPromotion = await _userPromotionService.GetById(Id, promotion.Id);
 				if (userPromotion == null)
 				{
 					try
@@ -207,7 +220,7 @@ namespace App.Areas.Identity.Controllers
 						var endDate = promotion.StorageTerm == null ? DateTime.Now.AddYears(100) : DateTime.Now.AddDays(Convert.ToInt32(promotion.StorageTerm));
 						var result1 = _userPromotionService.Add(new CreateUserPromotionModel
 						{
-							Id_User = id,
+							Id_User = Id,
 							Id_Promotion = promotion.Id,
 							Status = 1,
 							EndDate = endDate,

@@ -566,6 +566,7 @@ namespace BookShop.BLL.Service
 					CreatedDate = product.CreatedDate,
 					Status = product.Status,
 					ImgUrl = imgGroup.FirstOrDefault()?.ImageUrl,
+					Type = product.Type,
 
 				}
 			).Distinct().ToList();

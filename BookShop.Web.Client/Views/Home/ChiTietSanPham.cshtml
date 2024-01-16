@@ -222,7 +222,7 @@
 					@Html.DisplayFor(model => model.Name)
 				</h3>
 				<div class="row">
-					<div class="col-6 row">
+					<div class="col-7 row">
 						<span>
 							Nhà xuất bản:
 							@foreach (var item in Model.supplierModels)
@@ -233,12 +233,12 @@
 						</span>
 						<span>Bộ sưu tập: @Model.CollectionName</span>
 					</div>
-					<div class="col-6 row">
+					<div class="col-5 row">
 						<span>
 							Tác giả:
 							@foreach (var item in Model.authorModels)
 							{
-								<strong>@item.Name</strong>
+								<strong>@item.Name </strong>
 								<br />
 							}
 						</span>
@@ -258,7 +258,7 @@
 						@foreach (var item in Model.bookViewModels)
 						{
 							<li>
-								@item.Title
+								@item.Title 
 							</li>
 						}
 					</ul>
@@ -327,12 +327,34 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
 	</div>
 </div>
 
+<style>
+	.previewds{
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		display: -webkit-box;
+	}
+
+		.previewds.show {
+		-webkit-line-clamp: unset; 
+	}
+	.card .deplam{
+		justify-content: end;
+		display: flex;
+	}
+
+	.card a.deplam{
+		color:red;
+		font-weight:500;
+	}
+</style>
 <div class="card">
 	<div class="col-12">
 		<p style="font-weight:700">
 			Mô tả:
 		</p>
-		<p> @Html.DisplayFor(model => model.Description)</p>
+		<p class="previewds" id="thaydoi"> @Html.DisplayFor(model => model.Description)</p>
+		<a href="javascript:" class="deplam" onclick="xemthem()">Xem thêm</a>
 	</div>
 </div>
 
@@ -544,6 +566,18 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
 </div>
 
 <script type="text/javascript">
+	function xemthem() {
+		var element = document.getElementById('thaydoi');
+		var link = document.querySelector('.deplam');
+
+		if (element.classList.contains('show')) {
+			element.classList.remove('show');
+			link.innerText = 'Xem thêm';
+		} else {
+			element.classList.add('show');
+			link.innerText = 'Thu lại';
+		}
+	}
 	function overViewImg(img) {
 		var imgView = document.getElementById('img-view');
 		imgView.src = img;
