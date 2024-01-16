@@ -16,6 +16,7 @@ namespace BookShop.BLL.ConfigurationModel.CartDetailModel
 		// join properties
 		public string ProductName { get; set; }
 		public int ProductPrice { get; set; }
+		public int NewPrice { get; set; }
 		public int TotalPrice { get; set; }
 		public int Status { get; set; }
 		public string ImgProductCartDetail { get; set; }
