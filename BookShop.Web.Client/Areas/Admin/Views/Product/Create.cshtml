@@ -43,7 +43,7 @@
 				<select asp-for="bookSelected" id="bookSelect" class="form-control chosen-select w-100" onchange="selectItem()" required>
 					@foreach (var item in listBook)
 					{
-						<option value="@item.Id">@item.Title</option>
+						<option value="@item.Id">@item.Title @item.Price</option>
 					}
 				</select>
 			</div>

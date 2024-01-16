@@ -191,108 +191,110 @@
         }
 </style>
 <div class="container">
-    <div class="anh row">
-        <div class="col-5 trai">
 
-            <div class="list-anh">
-                @foreach (var img in Model.imageViewModels)
-                {
-                    <img id="img-selected" src="@img.ImageUrl" alt="Hình ảnh sản phẩm"
-                         style="max-width: 100px; max-height: 150px; border: 1px solid #C0C0C0; background-color: #FFFFFF;border-radius:5px"
-                         onclick="overViewImg(this.src)" />
-                }
+	<div class="anh row">
+		<div class="col-5 trai">
 
-            </div>
-            <img id="img-view" class="a1" src="@Model.imageViewModels.FirstOrDefault().ImageUrl" alt="ảnh sản phẩm" style="max-width: 100%; " />
-            <div class="mua">
-                @if (!isAdmin)
-                {
-                    <button id="product" onclick="ThemVaoDanhSachYeuThich(@Model.Id)" class="btn btn-outline-danger">
-                        <i class="fa-solid fa-face-kiss-wink-heart"></i> Thêm Yêu Thích
-                    </button>
+			<div class="list-anh">
+				@foreach (var img in Model.imageViewModels)
+				{
+					<img id="img-selected" src="@img.ImageUrl" alt="Hình ảnh sản phẩm"
+						 style="max-width: 100px; max-height: 150px; border: 1px solid #C0C0C0; background-color: #FFFFFF;border-radius:5px"
+						 onclick="overViewImg(this.src)" />
+				}
 
-                    <input type="button" class="m1" id="addToCart" value="Thêm Vào Giỏ Hàng" data-bs-toggle="modal" data-bs-target="#spModal" />
-                    <input type="button" id="buyNow" class="m2" value="Mua" />
-                }
-            </div>
-        </div>
-        <div class="col-7 phai">
-            <div class="tensach">
-                <h3>
-                    @Html.DisplayFor(model => model.Name)
-                </h3>
-                <div class="row">
-                    <div class="col-6 row">
-                        <span>
-                            Nhà xuất bản:
-                            @foreach (var item in Model.supplierModels)
-                            {
-                                <strong>@item.Name</strong>
-                                <br />
-                            }
-                        </span>
-                        <span>Bộ sưu tập: @Model.CollectionName</span>
-                    </div>
-                    <div class="col-6 row">
-                        <span>
-                            Tác giả:
-                            @foreach (var item in Model.authorModels)
-                            {
-                                <strong>@item.Name</strong>
-                                <br />
-                            }
-                        </span>
-                        <span>
-                            Hình thức bìa: @foreach (var item in Model.CoverBook)
-                            {
-                                <strong>@item</strong>
-                                <br />
-                            }
-                        </span>
-                    </div>
-                </div>
-                <div class="danhgia">
-                    <a asp-area="" asp-controller="Home" asp-action="DanhGia">Đánh Giá</a>
-                    <h6>Sản phẩm bao gồm</h6>
-                    <ul>
-                        @foreach (var item in Model.bookViewModels)
-                        {
-                            <li>
-                                @item.Title
-                            </li>
-                        }
-                    </ul>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="Gia">
-                            @if (Model.Saleoff > 0)
-                            {
-                                <div class="Giaban">
-                                    <h3>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.NewPrice)</h3>
-                                </div>
-                                <div class="Giagoc">
-                                    <p>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Price)</p>
-                                </div>
-                                <div class="bg-danger text-light fw-bold" style="border-radius: 10px; padding: 10px; margin-left: 10px;">@Model.Saleoff %</div>
-                            }
-                            else
-                            {
-                                <div class="Giaban">
-                                    <h3>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.NewPrice)</h3>
-                                </div>
-                            }
-                        </div>
+			</div>
+			<img id="img-view" class="a1" src="@Model.imageViewModels.FirstOrDefault().ImageUrl" alt="ảnh sản phẩm" style="max-width: 100%; " />
+			<div class="mua">
+				@if (!isAdmin)
+				{
+					<button id="product" onclick="ThemVaoDanhSachYeuThich(@Model.Id)" class="btn btn-outline-danger">
+						<i class="fa-solid fa-face-kiss-wink-heart"></i> Thêm Yêu Thích
+					</button>
 
-                    </div>
-                    <div class="col-12">
-                        <div class="row">
-                            <div class="col-12">
-                                <div id="quantity" class="form-group">
-                                    <div style="display: flex">
-                                        Số lượng:
-                                        <input id="quantityInput" class="form-control" min="1" max="@Model.Quantity" value="1" type="number"
-                                               style="width: 75px; height: 25px; border-bottom: 1px solid black;
+					<input type="button" class="m1" id="addToCart" value="Thêm Vào Giỏ Hàng" data-bs-toggle="modal" data-bs-target="#spModal" />
+					<input type="button" id="buyNow" class="m2" value="Mua" />
+				}
+			</div>
+		</div>
+		<div class="col-7 phai">
+			<div class="tensach">
+				<h3>
+					@Html.DisplayFor(model => model.Name)
+				</h3>
+				<div class="row">
+					<div class="col-7 row">
+						<span>
+							Nhà xuất bản:
+							@foreach (var item in Model.supplierModels)
+							{
+								<strong>@item.Name</strong>
+								<br />
+							}
+						</span>
+						<span>Bộ sưu tập: @Model.CollectionName</span>
+					</div>
+					<div class="col-5 row">
+						<span>
+							Tác giả:
+							@foreach (var item in Model.authorModels)
+							{
+								<strong>@item.Name </strong>
+								<br />
+							}
+						</span>
+						<span>
+							Hình thức bìa: @foreach (var item in Model.CoverBook)
+							{
+								<strong>@item</strong>
+								<br />
+							}
+						</span>
+					</div>
+				</div>
+				<div class="danhgia">
+					<a asp-area="" asp-controller="Home" asp-action="DanhGia">Đánh Giá</a>
+					<h6>Sản phẩm bao gồm</h6>
+					<ul>
+						@foreach (var item in Model.bookViewModels)
+						{
+							<li>
+								@item.Title 
+							</li>
+						}
+					</ul>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<div class="Gia">
+							@if (Model.Saleoff > 0)
+							{
+								<div class="Giaban">
+									<h3>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.NewPrice)</h3>
+								</div>
+								<div class="Giagoc">
+									<p>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Price)</p>
+								</div>
+								<div class="bg-danger text-light fw-bold" style="border-radius: 10px; padding: 10px; margin-left: 10px;">@Model.Saleoff %</div>
+							}
+							else
+							{
+								<div class="Giaban">
+									<h3>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.NewPrice)</h3>
+								</div>
+							}
+						</div>
+
+					</div>
+					<div class="col-12">
+						<div class="row">
+							<div class="col-12">
+								<div id="quantity" class="form-group">
+									<div style="display: flex">
+										Số lượng:
+										<input id="quantityInput" class="form-control" min="1" max="@Model.Quantity" value="1" type="number"
+											   style="width: 75px; height: 25px; border-bottom: 1px solid black;
+
 border-left: none; border-right: none;border-top:none; border-radius: 0px; text-align: center" />
                                         @Html.DisplayFor(model => model.Quantity) sản phẩm còn lại
                                     </div>
@@ -327,13 +329,37 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
     </div>
 </div>
 
+<style>
+	.previewds{
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		display: -webkit-box;
+	}
+
+		.previewds.show {
+		-webkit-line-clamp: unset; 
+	}
+	.card .deplam{
+		justify-content: end;
+		display: flex;
+	}
+
+	.card a.deplam{
+		color:red;
+		font-weight:500;
+	}
+</style>
 <div class="card">
-    <div class="col-12">
-        <p style="font-weight:700">
-            Mô tả:
-        </p>
-        <p> @Html.DisplayFor(model => model.Description)</p>
-    </div>
+
+	<div class="col-12">
+		<p style="font-weight:700">
+			Mô tả:
+		</p>
+		<p class="previewds" id="thaydoi"> @Html.DisplayFor(model => model.Description)</p>
+		<a href="javascript:" class="deplam" onclick="xemthem()">Xem thêm</a>
+	</div>
+
 </div>
 
 <div class="card">
@@ -548,70 +574,84 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
 </div>
 
 <script type="text/javascript">
-    function overViewImg(img) {
-        var imgView = document.getElementById('img-view');
-        imgView.src = img;
-    }
 
-    $(':radio').change(function () {
-        var ratingValue = this.value;
+	function xemthem() {
+		var element = document.getElementById('thaydoi');
+		var link = document.querySelector('.deplam');
 
-        // Cập nhật giá trị của thẻ input ẩn
-        $('#ratingInput').val(ratingValue);
-        console.log('New star rating: ' + this.value);
-    });
-    $(document).ready(function () {
-        // Bắt sự kiện khi nút "Trả lời" được nhấn
-        $('.replyButton').click(function () {
-            // Ẩn tất cả các form trả lời trước
-            $('.replyForm').hide();
+		if (element.classList.contains('show')) {
+			element.classList.remove('show');
+			link.innerText = 'Xem thêm';
+		} else {
+			element.classList.add('show');
+			link.innerText = 'Thu lại';
+		}
+	}
+	function overViewImg(img) {
+		var imgView = document.getElementById('img-view');
+		imgView.src = img;
+	}
 
-            // Tìm form trả lời tương ứng
-            var replyForm = $(this).closest('.comment-container').find('.replyForm');
+	$(':radio').change(function () {
+		var ratingValue = this.value;
 
-            // Hiển thị form trả lời
-            replyForm.show();
-        });
-    });
-    $(document).ready(function () {
-        $('.cancelBillBtn').click(function () {
-            $('#cancelForm').show();
-        });
+		// Cập nhật giá trị của thẻ input ẩn
+		$('#ratingInput').val(ratingValue);
+		console.log('New star rating: ' + this.value);
+	});
+	$(document).ready(function () {
+		// Bắt sự kiện khi nút "Trả lời" được nhấn
+		$('.replyButton').click(function () {
+			// Ẩn tất cả các form trả lời trước
+			$('.replyForm').hide();
+
+			// Tìm form trả lời tương ứng
+			var replyForm = $(this).closest('.comment-container').find('.replyForm');
+
+			// Hiển thị form trả lời
+			replyForm.show();
+		});
+	});
+	$(document).ready(function () {
+		$('.cancelBillBtn').click(function () {
+			$('#cancelForm').show();
+		});
 
 
-        $('#confirmCancel').click(function () {
-            // Sau khi xác nhận huỷ đơn hàng, ẩn form huỷ đơn hàng
-            $('#cancelForm').hide();
-            // Xóa nội dung lý do huỷ
-            $('#cancelReason').val('');
-        });
-    });
-    document.getElementById('addToCart').addEventListener('click', function () {
-        var quantity = document.getElementById('quantityInput').value;
-        $.ajax({
-            url: '/Cart/AddToCart?id=@Model.Id',
-            type: 'POST',
-            data: { quantity: quantity },
-            success: function (result) {
-                if (result.success) {
-                    // Xóa thành công, thực hiện các hành động bạn muốn
-                    //alert('Đã thêm vào giỏ hàng.');
-                    // Ví dụ: cập nhật giao diện hoặc làm mới danh sách sản phẩm
-                } else {
-                    alert('Xóa thất bại: ' + result.errorMessage);
-                }
-            },
-            error: function (error) {
-                alert('Có lỗi xảy ra: ' + error.responseText);
-            }
-        });
-    });
-    document.getElementById('buyNow').addEventListener('click', function () {
-        var quantity = document.getElementById('quantityInput').value;
-        var result = "@Url.Action("AddToCart", "Cart")?id=@Model.Id&quantity=" + quantity;
-        var url = "@Url.Action("CreateOnlineOrder", "Order")?id=@Model.Id&quantity=" + quantity
-        window.location.href = url;
-    });
+		$('#confirmCancel').click(function () {
+			// Sau khi xác nhận huỷ đơn hàng, ẩn form huỷ đơn hàng
+			$('#cancelForm').hide();
+			// Xóa nội dung lý do huỷ
+			$('#cancelReason').val('');
+		});
+	});
+	document.getElementById('addToCart').addEventListener('click', function () {
+		var quantity = document.getElementById('quantityInput').value;
+		$.ajax({
+			url: '/Cart/AddToCart?id=@Model.Id',
+			type: 'POST',
+			data: { quantity: quantity },
+			success: function (result) {
+				if (result.success) {
+					// Xóa thành công, thực hiện các hành động bạn muốn
+					//alert('Đã thêm vào giỏ hàng.');
+					// Ví dụ: cập nhật giao diện hoặc làm mới danh sách sản phẩm
+				} else {
+					alert('Xóa thất bại: ' + result.errorMessage);
+				}
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	});
+	document.getElementById('buyNow').addEventListener('click', function () {
+		var quantity = document.getElementById('quantityInput').value;
+		var result = "@Url.Action("AddToCart", "Cart")?id=@Model.Id&quantity=" + quantity;
+		var url = "@Url.Action("CreateOnlineOrder", "Order")?id=@Model.Id&quantity=" + quantity
+		window.location.href = url;
+	});
+
 </script>
 <script>
     function ThemVaoDanhSachYeuThich(id) {

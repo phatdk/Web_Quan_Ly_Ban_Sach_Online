@@ -38,18 +38,36 @@
 		</div>
 
 		<ul class="nav-list">
+			
 			<li>
-				<a href="#">
-					<i class="fa-solid fa-list-check"></i>
-					<span class="link-name">Bàn làm việc</span>
-				</a>
+				<div class="icon-link">
+					<a href="#">
+						<i class="fa-solid fa-list-check"></i>
+						<span class="link-name">Bàn làm việc</span>
+					</a>
+					<i class="fas fa-caret-down arrow"></i>
+				</div>
 
-				<ul class="sub-menu blank">
+				<ul class="sub-menu">
+					<li><a href="" class="link-name">Bàn làm việc</a></li>
+					<li><a asp-area="Admin" asp-controller="Gembox" asp-action="Index">Thống kê</a></li>
+					<li><a asp-area="Admin" asp-controller="OfflineSale" asp-action="CreateOfflineOrder">Bán hàng tại quầy</a></li>
+				</ul>
+			</li>
+			<li>
+				<div class="icon-link">
+					<a href="#">
+						<i class="fa-solid fa-bag-shopping"></i>
+						<span class="link-name">Quản lí đơn hàng</span>
+					</a>
+					<i class="fas fa-caret-down arrow"></i>
+				</div>
+
+				<ul class="sub-menu">
 					<li><a href="" class="link-name">Quản đơn hàng</a></li>
 					<li><a asp-area="Admin" asp-controller="OrderManage" asp-action="Index">Quản lý đơn hàng</a></li>
 				</ul>
 			</li>
-
 			<li>
 				<div class="icon-link">
 					<a href="#">
@@ -92,6 +110,9 @@
 				<ul class="sub-menu">
 					<li><a href="#" class="link-name">Quản lý Blog</a></li>
 					<li><a asp-area="Admin" asp-controller="Blog" asp-action="Index">Danh sách tin tức</a></li>
+					<li>
+						<a asp-area="Admin" asp-controller="Evaluate" asp-action="Index">Đánh Giá</a>
+					</li>
 				</ul>
 			</li>
 			<li>
@@ -120,11 +141,8 @@
 					<li>
 						<a asp-area="Admin" asp-controller="Categories" asp-action="Index"> Danh mục</a>
 					</li>
-					<li>
-						<a asp-area="Admin" asp-controller="Blog" asp-action="Index">Blog</a>
-					</li><li>
-						<a asp-area="Admin" asp-controller="Evaluate" asp-action="Index">Đánh Giá</a>
-					</li>
+					
+					
 				</ul>
 			</li>
 

@@ -18,6 +18,7 @@ namespace BookShop.Web.Client.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
+
         private List<ProductViewModel> _products;
         private List<WishListViewModel> _wishList;
         private ProductViewModel _product;
@@ -81,42 +82,61 @@ namespace BookShop.Web.Client.Controllers
             ViewBag.pagingmodel = pagingmodel;
             ListBlog = ListBlog.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
             return View(ListBlog);
-        }
-        public async Task<IActionResult> DetailsNew(int id)
-        {
-            var blog = await _NewService.GetById(id);
-            if (blog == null)
-            {
-                return NotFound();
-            }
-            return View(blog);
-            return View();
-        }
+
+		}
+		public async Task<IActionResult> DetailsNew(int id)
+		{
+			var blog = await _NewService.GetById(id);
+			if (blog==null)
+			{
+				return NotFound();
+			}
+			return View(blog);
+			
+		}
+
 
         public async Task<IActionResult> SachMoi()
         {
             _products = await _productService.GetDanhMuc("Cổ điển");
 
-            var product = _products.OrderByDescending(c => c.CreatedDate).ToList();
-            var top10Products = product.Take(10);
-            return Json(new { data = top10Products });
-        }
-        public async Task<IActionResult> DanhSachSanPham()
-        {
-            var Products = await _productService.GetAll();
-            var top10Products = Products.Take(10);
 
-            return Json(new { data = top10Products });
-        }
-        public async Task<IActionResult> NuoiDayCon()
-        {
-            _products = await _productService.GetDanhMuc("Nuôi dạy con");
+			var product = _products.OrderByDescending(c => c.CreatedDate).ToList();
+			var top10Products = product.Take(10);
+			return Json(new { data = top10Products });
+		}
+		public async Task<IActionResult> DanhSachSanPham()
+		{
+			var Products = (await _productService.GetAll()).OrderByDescending(c => c.CreatedDate).ToList();
+			var top10Products = Products.Take(10);
 
-            var product1 = _products.OrderByDescending(c => c.CreatedDate).ToList();
-            var top10Products1 = product1.Take(12).GroupBy(c => c.Id).Select(group => group.First()).ToList();
-            return Json(new { data = top10Products1 });
-        }
-        public async Task<IActionResult> SanPhamSale()
+			return Json(new { data = top10Products });
+		}
+		public async Task<IActionResult> DanhSachSanPhamCombo()
+		{
+			var Products = (await _productService.GetAll()).Where(c => c.Type == 2).ToList();
+			var top10Products = Products.Take(10).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+
+			return Json(new { data = top10Products });
+		}
+		public async Task<IActionResult> NuoiDayCon()
+		{
+			_products = (await _productService.GetDanhMuc("Nuôi dạy con")).Where(c=>c.Type ==1).ToList();
+
+			var product1 = _products.OrderByDescending(c => c.CreatedDate).ToList();
+			var top10Products1 = product1.Take(12).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+			return Json(new { data = top10Products1 });
+		}
+		public async Task<IActionResult> Manga()
+		{
+			_products = await _productService.GetDanhMuc("Manga");
+
+			var product1 = _products.OrderByDescending(c => c.CreatedDate).ToList();
+			var top10Products1 = product1.Take(12).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+			return Json(new { data = top10Products1 });
+		}
+		public async Task<IActionResult> SanPhamSale()
+
         {
             _products = (await _productService.GetAll()).Where(c => c.Saleoff > 0).ToList();
 
@@ -125,46 +145,48 @@ namespace BookShop.Web.Client.Controllers
             return Json(new { data = top10Products1 });
         }
 
-        public async Task<IActionResult> PhieuGiamGia()
-        {
-            var user = await GetCurrentUserAsync();
-            var pro = (await _promotionService.GetAll()).Where(c => c.NameType == "Phiếu khuyến mãi phát hành mã").ToList();
-            if (user != null)
-            {
-                var userPromotions = await _userPromotionService.GetByUser(user.Id);
 
-                foreach (var item in userPromotions)
-                {
-                    var existingItem = pro.FirstOrDefault(c => c.Id == item.Id_Promotion);
-                    if (existingItem != null)
-                    {
-                        pro.Remove(existingItem);
-                    }
-                }
-            }
-            var product1 = pro.OrderByDescending(c => c.CreatedDate).ToList();
-            var top4 = product1.Take(4).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+		public async Task<IActionResult> PhieuGiamGia()
+		{
+			var user = await GetCurrentUserAsync();
 
-            return Json(new { data = top4 });
-        }
+			var pro = (await _promotionService.GetAll()).Where(c => c.NameType == "Phiếu khuyến mãi phát hành mã").ToList();
 
-        public async Task<IActionResult> ChiTietSanPham(int id)
-        {
-            var product = await _productService.GetByIdAndCommnet(id);
-            product.Comment = await _EvaluateService.GetComments(id);
-            if (product != null)
-            {
-                return View(product);
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-        private Task<Userr> GetCurrentUserAsync()
-        {
-            return _userManager.GetUserAsync(HttpContext.User);
-        }
+			var userPromotions = await _userPromotionService.GetByUser(user.Id);
+
+			foreach (var item in userPromotions)
+			{
+				var existingItem = pro.FirstOrDefault(c => c.Id == item.Id_Promotion);
+				if (existingItem != null)
+				{
+					pro.Remove(existingItem);
+				}
+			}
+
+			var product1 = pro.OrderByDescending(c => c.CreatedDate).ToList();
+			var top4 = product1.Take(4).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+
+			return Json(new { data = top4 });
+		}
+
+		public async Task<IActionResult> ChiTietSanPham(int id)
+		{
+			var product = await _productService.GetByIdAndCommnet(id);
+			product.Comment = await _EvaluateService.GetComments(id); 
+			if (product != null)
+			{
+				return View(product);
+			}
+			else
+			{
+				return NotFound();
+			}
+		}
+		private Task<Userr> GetCurrentUserAsync()
+		{
+			return _userManager.GetUserAsync(HttpContext.User);
+		}
+
 
 
         public async Task<IActionResult> ThemVaoYeuThich(int id)

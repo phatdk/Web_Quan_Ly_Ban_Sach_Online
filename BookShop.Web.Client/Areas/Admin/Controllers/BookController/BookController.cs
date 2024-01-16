@@ -62,6 +62,10 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 			{
 				_listBook = _listBook.Where(c => c.Title.Contains(keyWord)).ToList();
 			}
+			if (status != null)
+			{
+				_listBook = _listBook.Where(c => c.Status == status).ToList();
+			}
 
 			var listBook = _listBook.OrderByDescending(c => c.CreatedDate).ToList();
 			int pageSize = 10;
