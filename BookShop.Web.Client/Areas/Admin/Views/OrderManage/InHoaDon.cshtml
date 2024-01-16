@@ -1,0 +1,205 @@
+﻿@using BookShop.BLL.ConfigurationModel.OrderDetailModel;
+@using System.Globalization;
+@model BookShop.BLL.ConfigurationModel.OrderModel.OrderViewModel
+
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
+    int total = 0;
+    int tongsoluong = 0;
+}
+<style>
+    .banghoadon {
+        border: 1px solid black;
+    }
+
+        .banghoadon tbody tr td {
+            border: 1px solid black;
+        }
+
+        .banghoadon tbody tr th {
+            border: 1px solid black;
+        }
+</style>
+<div style="width:1080px">
+    <div class="row" id="invoice">
+
+        <img src="~/img/trethocopy.png" width="150px"/>
+        <h2 class="d-flex text-center justify-content-center col-12">---Hóa Đơn Bán Lẻ---</h2> 
+        <div class="d-flex text-center justify-content-center col-12">
+            <div>
+                Ngày @Model.CreatedDate.Day Tháng @Model.CreatedDate.Month Năm @Model.CreatedDate.Year
+            </div>
+        </div>
+        <hr />
+        <div class="col-12 mb-5 justify-content-center">
+            <div class="form-group">
+                <label class="form-label">Khách hàng: <strong>@Model.NameUser</strong></label><span>&ensp; | &ensp;</span>
+                <label class="form-label">Mã: <strong>@Model.UserCode</strong></label>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Điện thoại: <strong>@Model.Phone</strong></label>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Địa chỉ nhận hàng: <strong>@Model.Address</strong></label>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Ghi chú của khách hàng: <strong>@Model.Description</strong></label>
+            </div>
+            <div class="form-group">
+                <table class="table banghoadon">
+                    <tbody>
+                        <tr>
+                            <th class="khoi1">Tên Sản Phẩm</th>
+                            <th class="khoi3">Số Lượng</th>
+                            <th>Đơn Giá</th>
+                            <th class="khoi5">Thành Tiền</th>
+                        </tr>
+                        @foreach (var item in Model.orderDetails)
+                        {
+                            total += (item.Price * item.Quantity);
+                            tongsoluong += item.Quantity;
+                            <tr>
+                                <td class="khoi2">
+                                    <div class="tensanphamtronggiohang">
+                                        <span class="col-6">@item.NameProduct</span>
+                                    </div>
+                                </td>
+                                <td class="khoi2">
+                                    <div class="tensanphamtronggiohang">
+                                        <span class="col-6">@item.Quantity</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div id="spd" class="giasptgh">
+                                        <span class="col-3">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div id="spd" class="giasptgh">
+                                        <span class="col-3">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price*item.Quantity)</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <th style="align-content">Cộng</th>
+                            <th class="khoi3">@tongsoluong</th>
+                            <th></th>
+                            <th class="khoi5">
+                                <strong class="text-danger">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Total)</strong>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+                <table id="tableDetail" hidden>
+                    <thead>
+                        <tr class="row">
+                            <th></th>
+                            <th class="col-5">Tên sách</th>
+                            <th class="col-2">Số lượng</th>
+                            <th class="col-3">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listDetail">
+                    </tbody>
+                </table>
+            </div>
+            <hr />
+            <div style="text-align:end">
+                <div class="form-group ms-3 ">
+                    <label class="form-label">Điểm sử dụng: <strong>@Model.PointUsed</strong> Point</label><span>&ensp; | &ensp;</span>
+                    <label class="form-label">Số tiền giảm: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.PointAmount)</strong> đ</label>
+                </div>
+                <div class="form-group ms-3">
+                    <label class="form-label">
+                        Khuyến mãi sử dụng:
+                        @foreach (var item in Model.orderPromotions)
+                        {
+                            <br />
+                            <label class="form-label ms-3">Tên: <strong>@item.NamePromotion</strong></label>
+                            <span>&ensp; | &ensp;</span>
+                            <label class="form-label">Số tiền giảm: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.TotalReduct)</strong></label>
+                        }
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Số tiền thanh toán: <strong class="text-danger">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.TotalPayment)</strong></label>
+                </div>
+            </div>
+        </div>
+        <hr />
+    </div>
+</div>
+<div>
+    <a href="@Url.Action("Index", "OrderManage")" class="btn btn-outline-info"><i class="fa-solid fa-arrow-left"></i> Trở lại</a>
+    <button id="download" class="btn btn-primary me-1"><i class="fa fa-print"></i> In Hóa Đơn</button>
+    @* <a href="@Url.Action("Edit", "OrderManage", new { id = Model.Id })" id="modifyOrder" hidden class="btn btn-outline-warning"> Chỉnh sửa</a> *@
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+<script type="text/javascript">
+    // in hóa đơn
+    window.onload = function () {
+        document.getElementById("download")
+            .addEventListener("click", () => {
+                const invoice = this.document.getElementById("invoice");
+                console.log(invoice);
+                console.log(window);
+                var opt = {
+                    margin: 1,
+                    filename: 'HoaDon.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                };
+                html2pdf().from(invoice).set(opt).save();
+            })
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        // Giải mã Unicode và thêm xuống dòng
+        var decodedText = decodeUnicode("@Model.ModifiNotes");
+        // Thêm ký tự xuống dòng vào đúng vị trí
+        decodedText = decodedText.replace(/&#xA;/g, '\n<br>');
+        // Hiển thị kết quả
+        document.getElementById('modifiNote').innerHTML = decodedText;
+    });
+    // Hàm giải mã Unicode
+    function decodeUnicode(text) {
+        return text.replace(/&#x(\w{4});/g, function (match, hex) {
+            return String.fromCharCode(parseInt(hex, 16));
+        });
+    }
+</script>
+<script type="text/javascript">
+    function LoadDetailToTable() {
+        $.ajax({
+            url: '/Admin/OrderManage/GetDetails',
+            type: 'GET',
+            data: { id: @Model.Id },
+            success: function (data) {
+                var detailsList = $("#listDetail");
+                detailsList.empty();
+                data.forEach(function (item) {
+                    condition++;
+                    var orderRow =
+                        '<tr class="row">' +
+                        '<td class="col-5"><label>' + item.nameProduct + '</label></td>' +
+                        '<td class="col-2"><label>' + item.quantity + '</label></td>' +
+                        '<td class="col-5">' +
+                        '<select id="details-' + item.id_Product + '" onchange="HandleReturn(' + item.id_Product + ')">' +
+                        '<option value="" selected disabled>--Sellect action--</option>' +
+                        '<option value="1">Hàng có thể trả về kho</option>' +
+                        '<option value="0">Hàng lỗi cần xử lý</option>' +
+                        '</select>' +
+                        '</td>' +
+                        '</tr>';
+                    detailsList.append(orderRow);
+                });
+            },
+            error: function (error) {
+                alert('Có lỗi xảy ra: ' + error.responseText);
+            }
+        });
+    }
+</script>
