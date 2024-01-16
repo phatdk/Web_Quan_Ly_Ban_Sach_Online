@@ -200,14 +200,11 @@ namespace App.Areas.Identity.Controllers
 			//	string codese = HttpContext.Session.GetString("code");
 			//	code = codese;
 			//}
-			if (Id == 0)
-			{
-				var user = await GetCurrentUserAsync();
-				Id = user.Id;
-			}
+			if (Id == 0) return Json(new { success = false, redirect = true });
 			
 			var promotion = await _promotionService.GetByCode(code);
-			if (promotion != null && promotion.Quantity > 0)
+			if(promotion == null) return Json(new {success =  false, message = "Mã khuyến mãi không tồn tại, vui lòng thử lại!" });
+			if (promotion.Quantity > 0)
 			{
 				DateTime endTime = Convert.ToDateTime(promotion.EndDate);
 				if (endTime.CompareTo(DateTime.Now) < 0) return Json(new { success = false, message = "Mã khuyến mãi đã hết hạn" });
@@ -231,13 +228,13 @@ namespace App.Areas.Identity.Controllers
 					}
 					catch (Exception ex)
 					{
-						return Json(new { success = false, message = "Có lỗi xảy ra\n" + ex.Message });
+						return Json(new { success = false, redirect = false, message = "Có lỗi xảy ra\n" + ex.Message });
 					}
 
 				}
-				return Json(new { success = false, message = "Bạn đã hết lượt nhận mã khuyến mãi này!" });
+				return Json(new { success = false, redirect = false, message = "Bạn đã hết lượt nhận mã khuyến mãi này!" });
 			}
-			return Json(new { success = false, message = "Mã khuyến mãi này đã hết lượt nhận!" });
+			return Json(new { success = false, redirect = false, message = "Mã khuyến mãi này đã hết lượt nhận!" });
 		}
 
 		[HttpPost]
