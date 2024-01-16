@@ -1,0 +1,97 @@
+﻿@using System.Globalization;
+@model BookShop.BLL.ConfigurationModel.OrderModel.OrderViewModel
+@{
+	int total = 0;
+	Layout = "_LayoutViewBill";
+}
+<div class="row">
+	<h4 class="d-flex text-center justify-content-center col-12">---Thông Tin Đơn Hàng---</h4> <hr />
+	<div class="col-7 border-end mb-5">
+		<div class="form-group">
+			<label class="form-label">Mã đơn hàng: <strong>@Model.Code</strong></label>
+		</div>
+		<div class="form-group">
+			<label class="form-label">Khách hàng: <strong>@Model.NameUser</strong></label><span>&ensp; | &ensp;</span>
+			<label class="form-label">Mã: <strong>@Model.UserCode</strong></label>
+		</div>
+		<div class="form-group">
+			<label class="form-label">Người nhận: <strong>@Model.Receiver</strong></label>
+		</div>
+		<div class="form-group">
+			<label class="form-label">Email: <strong>@Model.Email</strong></label><span>&ensp; | &ensp;</span>
+			<label class="form-label">Điện thoại: <strong>@Model.Phone</strong></label>
+		</div>
+		<div class="form-group">
+			<label class="form-label">Địa chỉ nhận hàng: <strong>@Model.Address</strong></label>
+		</div>
+		<div class="form-group">
+			<label class="form-label">Ghi chú của khách hàng: <strong>@Model.Description</strong></label>
+		</div>
+		<div class="form-group">
+			@{
+				var orderType = Model.IsOnlineOrder == true ? "Đơn hàng Online" : "Đơn hàng Offline";
+			}
+			<label class="form-label">loại đơn: <strong>@orderType</strong></label>
+		</div>
+		<div class="form-group">
+			<label class="form-label">Kích thước (L*W*H): <strong>@Model.Length * @Model.Width * @Model.Height (cm)</strong></label>
+		</div>
+		<div class="form-group">
+			<label class="form-label">Cân nặng: <strong>@Model.Weight (g)</strong></label>
+		</div>
+		<div class="form-group">
+			<label class="form-label">Giá trị đơn hàng: <strong class="text-danger">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Total)</strong></label>
+		</div>
+		<div class="form-group ms-3">
+			<label class="form-label">Điểm sử dụng: <strong>@Model.PointUsed</strong> Point</label><span>&ensp; | &ensp;</span>
+			<label class="form-label">Số tiền giảm: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.PointAmount)</strong> đ</label>
+		</div>
+		<div class="form-group ms-3">
+			<label class="form-label">
+				Khuyến mãi sử dụng:
+				@foreach (var item in Model.orderPromotions)
+				{
+					<br />
+					<label class="form-label ms-3">Tên: <strong>@item.NamePromotion</strong></label>
+					<span>&ensp; | &ensp;</span>
+					<label class="form-label">Số tiền giảm: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.TotalReduct)</strong></label>
+				}
+			</label>
+		</div>
+		<div class="form-group ms-3">
+			<label class="form-label">Phí giao hàng: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Shipfee)</strong></label>
+		</div>
+		<div class="form-group">
+			<label class="form-label">Số tiền thanh toán: <strong class="text-danger">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.TotalPayment)</strong></label>
+		</div>
+	</div>
+	<div class="col-5 mb-5">
+		<ul class="ps-0" style="list-style: none" id="menuDetail">
+			@foreach (var item in Model.orderDetails)
+			{
+				total += (item.Price * item.Quantity);
+				<li class="row">
+					<div class="col-3 position-relative">
+						<img class="bg-light" src="@item.Img" style="width: 100%; z-index: 0" />
+						<span class="badge" style="color: orange; position: absolute; top: 0; right: 15px; background-color: gray">@item.Quantity</span>
+					</div>
+					<span class="col-6">@item.NameProduct</span>
+					<span class="col-3">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)</span>
+				</li>
+			}
+		</ul>
+		<table id="tableDetail" hidden>
+			<thead>
+				<tr class="row">
+					<th></th>
+					<th class="col-5">Tên sách</th>
+					<th class="col-2">Số lượng</th>
+					<th class="col-3">Hành động</th>
+				</tr>
+			</thead>
+			<tbody id="listDetail">
+			</tbody>
+		</table>
+	</div>
+	
+</div>

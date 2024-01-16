@@ -5,7 +5,8 @@
 @inject UserManager<Userr> UserManager
 @inject IAuthorizationService _IAuthorizationService
 @{
-	var isAdmin = (await _IAuthorizationService.AuthorizeAsync(User, "RedirectAdmin")).Succeeded;
+	var isAdminStaff = (await _IAuthorizationService.AuthorizeAsync(User, "RedirectAdmin")).Succeeded;
+	var isAdmin = (await _IAuthorizationService.AuthorizeAsync(User, "ManagerMenu")).Succeeded;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -198,7 +199,7 @@
 </head>
 <body class="bb">
 
-	@if (isAdmin)
+	@if (isAdminStaff)
 	{
 		<a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">
 			Trang admin
@@ -207,7 +208,7 @@
 	<header>
 		<div class="gi">
 			<div style="justify-content:center">
-				<img style="text-align:center;width:100%" src="https://cdn0.fahasa.com/media/wysiwyg/Thang-11-2023/FahasaSaleThu3T1123_W1_Header_1263x60.jpg" />
+				<img style="text-align:center;width:100%" src="~/img/banner.png" />
 			</div>
 		</div>
 
@@ -295,10 +296,10 @@
 		<div class="container cuoitrang">
 			<div class="row cuoicc">
 				<div class="col-4">
-					<img src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/logo.png" />
+					<a asp-area="" asp-controller="Home" asp-action="Index"> <img src="~/img/Layer1.png" style="width:220px" alt="trẻ thơ strore"></a>
 					<hr />
-					<p>Lầu 5, 387-389 Hai Bà Trưng Quận 3 TP HCMCông Ty Cổ Phần Phát Hành Sách TP HCM - FAHASA60 - 62 Lê Lợi, Quận 1, TP. HCM, Việt Nam</p>
-					<p>Fahasa.com nhận đặt hàng trực tuyến và giao hàng tận nơi. KHÔNG hỗ trợ đặt mua và nhận hàng trực tiếp tại văn phòng cũng như tất cả Hệ Thống Fahasa trên toàn quốc.</p>
+					<p>Tầng 4, 406 Hồ Tùng Mậu, Bắc Từ Niêm, Hà Nội</p>
+					<p>Trẻ thơ strore nhận đặt hàng trực tuyến và giao hàng tận nơi. KHÔNG hỗ trợ đặt mua và nhận hàng trực tiếp tại văn phòng cũng như tất cả Hệ Thống Fahasa trên toàn quốc.</p>
 					<img src="https://cdn0.fahasa.com/media/wysiwyg/Logo-NCC/logo-bo-cong-thuong-da-thong-bao1.png" style="width: 100px;" height="40px">
 				</div>
 				<div class="col-8">
@@ -321,16 +322,16 @@
 						</div>
 						<div class="col-4">
 							<h6>Tài Khoản Của Tôi</h6>
-							<p>Đăng Nhâp/Tạo mới tài khoản</p>
-							<p>Thay đổi địa chỉ </p>
-							<p>Chi tiết tài khoản</p>
-							<p>Lịch sử mua hàng</p>
+							<p></p><a asp-area="Identity" asp-controller="Account" asp-action="Login">
+								Đăng Nhập
+							</a>/<a asp-area="Identity" asp-controller="Account" asp-action="Register">Tạo Tài Khoản Mới</a></p>
+
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-4">
 							<h6>Liên Hệ</h6>
-							<p>60-62 Lê Lợi, Q.1, TP. HCM</p>
+							<p>Tầng 4, 406 Hồ Tùng Mậu, Bắc Từ Niêm, Hà Nội</p>
 						</div>
 						<div class="col-4">
 							<h6>Email</h6>

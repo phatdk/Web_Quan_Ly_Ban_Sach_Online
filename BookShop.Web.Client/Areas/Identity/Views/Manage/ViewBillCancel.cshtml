@@ -1,11 +1,11 @@
 ﻿@using BookShop.BLL.ConfigurationModel.OrderModel;
 @using BookShop.BLL.IService;
 @using BookShop.BLL.Service;
-@model List<ViewOrder>
+@model List<OrderViewModel>
 @inject IProductService ProductService
 @inject IOrderDetailService OrderDetailsService
 @{
-    ViewData["Title"] = "Đơn hàng bị huỷ";
+    ViewData["Title"] = "Đơn Huỷ";
     Layout = "_LayoutViewBill";
     var total = 0;
 }
@@ -21,16 +21,15 @@
     {
         @foreach (var bill in Model)
         {
+            var BillDetails = await OrderDetailsService.GetByOrder(bill.Id);
 
-           
-                var BillDetails = await OrderDetailsService.GetByOrder(bill.Id);
-            
             <div class="card mb-3">
                 <div class="card-header">
-                    <h5 class="card-title">Bill ID: @bill.Id</h5>
+                    <h5 class="card-title"><a asp-action="DetailsBill" asp-controller="Manage" asp-route-id="@bill.Id">Mã đơn:@bill.Code</a></h5>
                     <h6 class="card-subtitle mb-2 text-muted">Status: @bill.StatusName</h6>
                     <p class="card-text">User: @bill.NameUser</p>
-                    <p class="card-text">Thời gian (@bill.CreatedDate)</p>
+                    <p class="card-text">Thời gian @bill.CreatedDate</p>
+                    @*   <p class="card-text">Mã đơn : @bill.Code</p> *@
                 </div>
                 <div class="card-body">
                     <table class="table">
@@ -46,17 +45,18 @@
                             @foreach (var item in BillDetails)
                             {
                                 var product = await ProductService.GetById(item.Id_Product);
+                                total += item.Price * item.Quantity;
                                 <tr>
                                     <td>@product.Name</td>
                                     <td>@item.Price.ToString("N0")</td>
                                     <td>@item.Quantity</td>
-                                    <th>@(total += item.Price * item.Quantity)</th>
+                                    <th>@(item.Price * item.Quantity)</th>
                                 </tr>
 
                             }
                             <tr>
                                 <td class="text-right">Tổng tiền</td>
-                                <td>@(total.ToString("N0")) VND</td>
+                                <td>@(bill.Total.ToString("N0")) VND</td>
                             </tr>
                         </tbody>
                     </table>
@@ -74,3 +74,4 @@
 </div>
 
 
+<partial name="_Paging" model="@ViewBag.pagingmodel" />

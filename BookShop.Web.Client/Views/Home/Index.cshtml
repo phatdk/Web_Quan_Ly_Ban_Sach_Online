@@ -3,6 +3,7 @@
 	ViewData["Title"] = "Home Page";
 	List<ProductViewModel> products = ViewBag.Products;
 }
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <Style>
 	.carousel-item img {
 		border-radius: 10px
@@ -89,18 +90,23 @@
 	}
 
 	.xemthem {
-		margin: auto;
-		width: 200px;
-		height: 35px;
+		margin: 20px 0;
+
+		display: flex;
 		text-align: center;
-		border-radius: 20px;
-		box-shadow: 2px 3px 5px #ccc;
-		background-image: linear-gradient(to right, #ff9800, #F7695D);
+		justify-content: center;
+
 	}
 
-		.xemthem p {
+		.xemthem a {
 			padding-top: 5px;
 			color: white;
+			width: 200px;
+			height: 35px;
+			text-align: center;
+			border-radius: 20px;
+			box-shadow: 2px 3px 5px #ccc;
+			background-image: linear-gradient(to right, #ff9800, #F7695D);
 		}
 
 	.flashsale {
@@ -110,6 +116,9 @@
 	}
 
 	.danhmucsanpham {
+
+		padding: 5px;
+
 		margin-top: 24px;
 		background-color: white;
 		border-radius: 10px;
@@ -306,28 +315,33 @@
 		gap: 20px;
 	}
 
-		.nuoidaycon .testsp:nth-child(1) p.dautien{
-			display:block;
+		.nuoidaycon .testsp:nth-child(1) p.dautien {
+			display: block;
 			-webkit-line-clamp: 6;
 			-webkit-box-orient: vertical;
 			overflow: hidden;
 			display: -webkit-box;
 		}
 
-			.nuoidaycon .testsp:nth-child(1) p.dautien span{
-				font-weight:700;
+			.nuoidaycon .testsp:nth-child(1) p.dautien span {
+				font-weight: 700;
 			}
+
 	.dm {
-		justify-content: center;
+
+		position: relative;
+
+		border-bottom: 1px solid #DCDCDC;
 		margin-bottom: 20px;
-		background-color: #FCDDEF;
 	}
 
 		.dm span {
+			color: #C92127;
 			margin-left: 20px;
-			font-weight: 600;
-			font-size: 28px;
+			font-weight: 800;
+			font-size: 24px;
 		}
+
 
 	.giabandau {
 		color: #DCDCDC;
@@ -342,6 +356,101 @@
 	p.dautien {
 		display: none;
 	}
+
+	.swiper {
+		width: 240px;
+		height: 320px;
+	}
+
+	.swiper-slide {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 18px;
+		font-size: 22px;
+		font-weight: bold;
+		color: #fff;
+	}
+
+		.swiper-slide:nth-child(1n) {
+			background-color: rgb(206, 17, 17);
+		}
+
+		.swiper-slide:nth-child(2n) {
+			background-color: rgb(0, 140, 255);
+		}
+
+		.swiper-slide:nth-child(3n) {
+			background-color: rgb(10, 184, 111);
+		}
+
+		.swiper-slide:nth-child(4n) {
+			background-color: rgb(211, 122, 7);
+		}
+
+		.swiper-slide:nth-child(5n) {
+			background-color: rgb(118, 163, 12);
+		}
+
+		.swiper-slide:nth-child(6n) {
+			background-color: rgb(180, 10, 47);
+		}
+
+		.swiper-slide:nth-child(7n) {
+			background-color: rgb(35, 99, 19);
+		}
+
+		.swiper-slide:nth-child(8n) {
+			background-color: rgb(0, 68, 255);
+		}
+
+		.swiper-slide:nth-child(9n) {
+			background-color: rgb(218, 12, 218);
+		}
+
+		.swiper-slide:nth-child(10n) {
+			background-color: rgb(54, 94, 77);
+		}
+
+	.sanphamgiamgia .km-sp.s {
+		justify-content: center;
+		flex-direction: column;
+		text-align: center;
+		display: flex;
+		top: 15px !important;
+		width: 50px;
+		color: white;
+		border-radius: 25px;
+		right: 45%;
+		position: absolute;
+		height: 0px;
+		background-color: inherit;
+	}
+
+	.sanphamgiamgia h4 {
+		-webkit-line-clamp: 1;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		display: -webkit-box;
+		font-size: 18px;
+	}
+
+	.sanphamgiamgia p {
+		font-size: 18px;
+	}
+
+	.danhmucsanphamsale {
+		background-image: url('/img/sale1.png');
+		padding: 5px;
+		margin-top: 24px;
+		background-color: white;
+		border-radius: 10px;
+	}
+
+	.sanphamgiamgia .giaban {
+		position: relative;
+		color: white;
+	}
 </Style>
 <div class="row">
 	<div class="col-sm-8">
@@ -354,7 +463,7 @@
 					<img style="height:316px" src="https://cdn0.fahasa.com/media/magentothem/banner7/DochoiT1123_BannerSlide_840x320.jpg" class="d-block w-100" alt="...">
 				</div>
 				<div class="carousel-item">
-					<img style="height:316px" src="https://cdn0.fahasa.com/media/magentothem/banner7/FahasaSaleThu3T1123_W1_Banner_840x320.jpg" class="d-block w-100" alt="...">
+					<img style="height:316px" src="~/img/slideshow3.png" class="d-block w-100" alt="...">
 				</div>
 			</div>
 			<button class="carousel-control-prev" type="button" data-target="#carouselExampleFade" data-slide="prev">
@@ -369,10 +478,10 @@
 	</div>
 	<div class="col-sm-4">
 		<div class="i">
-			<a href="pnj-fhs?fhs_campaign=homepage_subbanner_1"><img width="100%" class="border_radius_normal" src="https://cdn0.fahasa.com/media/wysiwyg/Thang-11-2023/ZaloPay11_392x156_1.jpg"></a>
+			<a href="pnj-fhs?fhs_campaign=homepage_subbanner_1"><img width="100%" class="border_radius_normal" src="~/img/l1.png"></a>
 		</div>
 		<div class="i c">
-			<a href="vnpay?fhs_campaign=homepage_subbanner_2"><img width="100%" class="border_radius_normal" src="https://cdn0.fahasa.com/media/wysiwyg/Thang-10-2023/VNPAYFHS20_392x156_1.jpg"></a>
+			<a href="vnpay?fhs_campaign=homepage_subbanner_2"><img width="100%" class="border_radius_normal" src="~/img/l2.png"></a>
 		</div>
 	</div>
 </div>
@@ -406,13 +515,13 @@
 	</div>
 	<div class="dss">
 		<div>
-			<a href="/flashsale?fhs_campaign=homepageicon"><img src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Icon_FlashSale_Thuong_120x120.png" class="center"></a>
+			<a href="#sale"><img src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Icon_FlashSale_Thuong_120x120.png" class="center"></a>
 		</div>
 		<div class="cms-icon-menu-item-name">Flash Sale</div>
 	</div>
 	<div class="dss">
 		<div>
-			<a href="/ma-giam-gia-hot?fhs_campaign=homepageicon"><img src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Icon_MaGiamGia_8px_1.png" class="center"></a>
+			<a href="#ticket"><img src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Icon_MaGiamGia_8px_1.png" class="center"></a>
 		</div>
 		<div class="cms-icon-menu-item-name">Mã Giảm Giá</div>
 	</div>
@@ -465,13 +574,48 @@
 	</div>
 
 	<div class="xemthem">
-		<p>Xem Thêm</p>
+		<a href="/SearchAndFilter">Xem Thêm</a>
 	</div>
 </div>
 
+
+<div class="danhmucsanphamsale" id="sale">
+	<div class="dm">
+		<span>Sản phẩm giảm giá</span>
+
+	</div>
+
+	<div class="sanphamgiamgia" style="width:50%" id="noidaycon">
+
+		<div class=" mySwiper">
+			<div class="swiper-wrapper" id="listsale">
+			</div>
+		</div>
+	</div>
+	<div class="xemthem">
+		<a href="javascript:" onclick="searchnangcao(4)">Xem Thêm</a>
+	</div>
+</div>
+
+<div class="danhmucsanpham">
+
+	<div class="dm">
+		<span>Nuôi dạy con</span>
+
+	</div>
+
+	<div class="nuoidaycon" id="noidaycon">
+		<div class="danhmuc-sach" id="listnuoidaycon">
+		</div>
+		<div class="xemthem">
+			<a href="javascript:" onclick="searchnangcao(8)">Xem Thêm</a>
+		</div>
+	</div>
+
+</div>
 <!-- Danh Muc San Pham-->
 <div class="danhmucsanpham">
-	<div class="dm" style="display:flex;">
+	<div class="dm">
 		<span>Cổ điển</span>
 	</div>
 
@@ -479,25 +623,68 @@
 		<div class="danhmuc-sach" id="listcategory">
 		</div>
 	</div>
-
+	<div class="xemthem">
+		<a href="javascript:" onclick="searchnangcao(4)">Xem Thêm</a>
+	</div>
 </div>
-<div class="danhmucsanpham">
-	<div class="dm" style="display:flex;">
-		<span>Nuôi dạy con</span>
+
+<style>
+	.Phieugiam{
+		
+	}
+
+	.phieugiam4cai {
+		display: grid;
+		grid-template-columns: repeat(2,1fr);
+		gap: 10px;
+		
+	}
+	.pgg{
+		justify-content: space-around;
+		padding: 10px;
+		border: 1px solid;
+		border-radius: 5px;
+		display: flex;
+		gap: 30px;
+	}
+
+	.pgg button{
+			font-weight: 700;
+			font-size: 16px;
+			border-radius: 25px;
+			width: 100px;
+			background: #C92127;
+			color: white;
+			border: none;
+	}
+</style>
+<div class="danhmucsanpham" id="ticket">
+	<div class="dm">
+		<span>Phiếu giảm giá</span>
 	</div>
 
-	<div class="nuoidaycon" id="noidaycon">
-		<div class="danhmuc-sach" id="listnuoidaycon">
+	<div class="Phieugiam">
+		<div class="phieugiam4cai" id="phieugiam">
 		</div>
 	</div>
-
+	<div class="xemthem">
+		<a href="javascript:" onclick="searchnangcao(4)">Xem Thêm</a>
+	</div>
 </div>
-
-
-
 <script src="~/js/site.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
+	var swiper = new Swiper(".mySwiper", {
+		effect: "cards",
+		grabCursor: true,
+	});
+
+</script>
+<script>
+	function searchnangcao(id) {
+		var url = "@Url.Action("Index","SearchAndFilter")?id=" + id;
+		window.location.href = url;
+	}
 	function ThemVaoDanhSachYeuThich(id) {
 		var url = "@Url.Action("ThemVaoYeuThich", "Home")?id=" + id;
 		$.ajax({
@@ -515,6 +702,51 @@
 				console.log("AJAX request failed");
 			}
 		});
+	}
+	// phiếu giảm giá
+	$(document).ready(function () {
+		$.ajax({
+			url: '@Url.Action("PhieuGiamGia", "Home")',
+			type: 'GET',
+			success: function (data) {
+				console.log(data);
+				var listcategory = $("#phieugiam");
+				listcategory.empty();
+				data.data.forEach(function (item) {
+					var categoryRow =
+					'<div class="pgg">' +
+						'<div class="left">' +
+							'<h4>' +item.name +  '</h4>' +
+								'<p>' + " Giảm : " + item.percentReduct + "%" + '</p>' +
+								'<p>' + "Tối đa : " + formatPrice(item.reductMax) + '</p>' +
+								'<p>' + "Áp dụng với hóa đơn từ : " + formatPrice(item.condition) + '</p>' +
+						'</div>' +
+						'<div class="right">' +
+						'<p>' + formatDate(item.startDate) + '</p>' +
+						'<p style="font-size: 1.2em;font-weight: 700;color: #F39801; " id="code">' + item.code + '</p>' +
+						'<button onclick="copyPromoCode()" >' + "Copy mã" + '</button>' +
+						'</div>' +
+					'</div>';
+
+					listcategory.append(categoryRow);
+				});
+			},
+			error: function (error) {
+				console.log(error);
+			}
+		});
+	});
+	function copyPromoCode() {
+		var promoCodeElement = document.getElementById("code");
+		var promoCodeText = promoCodeElement.textContent;
+		var tempElement = document.createElement("textarea");
+		document.body.appendChild(tempElement);
+		tempElement.value = promoCodeText;
+		tempElement.select();
+		document.execCommand("copy");
+		document.body.removeChild(tempElement);
+
+		alert("Đã sao chép mã khuyến mãi!");
 	}
 	/*danh mục */
 	$(document).ready(function () {
@@ -565,27 +797,27 @@
 				data.data.forEach(function (item) {
 					var categoryRow =
 						'<div class="testsp" onclick="ChiTietSanPham(' + item.id + ')">' +
-							'<div class="product-image">' +
-								'<div class="flashsale-image-container">' +
-									'<img src="' + item.imgUrl + '">' +
-								'</div>' +
-							'</div>' +
-							'<div class="ttsp">' +
-								'<h4>' + item.name + '</h4>' +
-							'</div>' +
-							'<div class="giaban">' + '<p>' +
-								formatPrice(item.newPrice) + '</p>';
+						'<div class="product-image">' +
+						'<div class="flashsale-image-container">' +
+						'<img src="' + item.imgUrl + '">' +
+						'</div>' +
+						'</div>' +
+						'<div class="ttsp">' +
+						'<h4>' + item.name + '</h4>' +
+						'</div>' +
+						'<div class="giaban">' + '<p>' +
+						formatPrice(item.newPrice) + '</p>';
 
-								if (item.saleoff > 0) {
-									categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
-										'<div class="giabandau">' +
-										'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>';
-								}
+					if (item.saleoff > 0) {
+						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
+							'<div class="giabandau">' +
+							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>';
+					}
 
 					categoryRow += '</div>';
-					categoryRow += '</div>';
+					//categoryRow += '</div>';
 					categoryRow += '<p class="dautien">' + '<span>' + "Mô tả : " + '</span>' + item.description + '</p>' +
-					'</div>';
+						'</div>';
 
 					listcategory.append(categoryRow);
 				});
@@ -596,6 +828,48 @@
 			}
 		});
 	});
+
+
+	// sản phẩm sale
+	$(document).ready(function () {
+		$.ajax({
+			url: '@Url.Action("SanPhamSale", "Home")',
+			type: 'GET',
+			success: function (data) {
+				console.log(data);
+				var listcategory = $("#listsale");
+				listcategory.empty();
+				data.data.forEach(function (item) {
+					var categoryRow =
+						'<div class="swiper-slide" >' +
+						'<div class="testsp" onclick="ChiTietSanPham(' + item.id + ')">' +
+						'<div class="product-image">' +
+						'<div class="flashsale-image-container">' +
+						'<img src="' + item.imgUrl + '">' +
+						'</div>' +
+						'</div>' +
+						'<div class="ttsp">' +
+						'<h4>' + item.name + '</h4>' +
+						'</div>' +
+						'<div class="giaban">' + '<p>' +
+						formatPrice(item.newPrice) + '</p>';
+					if (item.saleoff > 0) {
+						categoryRow += '<div class="km-sp s">' + "-" + item.saleoff + "%" + '</div>' +
+							'<div class="giabandau">' +
+							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>' +
+							'</div>';
+					}
+					+'</div>';
+					listcategory.append(categoryRow);
+				});
+			},
+			error: function (error) {
+				console.log(error);
+			}
+		});
+	});
+
+
 
 
 	function formatPrice(price) {
@@ -651,3 +925,5 @@
 
 
 </script>
+
+
