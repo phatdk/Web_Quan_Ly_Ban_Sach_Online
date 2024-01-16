@@ -120,9 +120,9 @@ namespace App.Areas.Identity.Controllers
                 _order.Total += item.Quantity * item.Price;
             }
             _order.Weight = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Weight / 1000)));
-            _order.Width = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Width / 100)));
-            _order.Length = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Length / 100)));
-            _order.Height = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Height / 100)));
+            _order.Width = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Width / 10)));
+            _order.Length = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Length / 10)));
+            _order.Height = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Height / 10)));
             _order.TotalPayment = _order.Total + Convert.ToInt32(_order.Shipfee);
             var promotions = await _orderPromotionService.GetByOrder(id);
             _order.orderPromotions = promotions;
