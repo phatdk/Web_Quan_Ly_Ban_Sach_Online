@@ -834,7 +834,7 @@
 						'<div class="right">' +
 						'<p>' + formatDate(item.startDate) + '</p>' +
 						'<p style="font-size: 1.2em;font-weight: 700;color: #F39801; " id="code">' + item.code + '</p>' +
-						'<button onclick="copyPromoCode()" >' + "Copy mã" + '</button>' +
+						'<button onclick="copyPromoCode()" >' + "Nhận mã" + '</button>' +
 						'</div>' +
 						'</div>';
 
@@ -857,14 +857,20 @@
 				code: promoCodeText
 			},
 			success: function (data) {
-				alert("Đã lưu thành công mã khuyến mãi: " + promoCodeText);
-				window.location.reload();
-				window.onload = function () {
-					var element = document.getElementById("ticket");
-					if (element) {
-						element.scrollIntoView();
-					}
-				};
+				if (data.success == true) {
+					alert(data.message);
+					window.location.reload();
+					window.onload = function () {
+						var element = document.getElementById("ticket");
+						if (element) {
+							element.scrollIntoView();
+						}
+					};
+				} else if (data.redirect == false) alert(data.message);
+				else if (data.redirect == true) window.location.href = '/login';
+			},
+			error: function(error){
+
 			}
 		});
 	}

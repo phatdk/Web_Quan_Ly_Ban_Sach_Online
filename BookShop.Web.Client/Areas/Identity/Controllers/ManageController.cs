@@ -21,7 +21,6 @@ using BookShop.BLL.ConfigurationModel.PromotionModel;
 using BookShop.Web.Client.Services;
 using BookShop.BLL.ConfigurationModel.PointTranHistoryModel;
 using System.Drawing;
-using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace App.Areas.Identity.Controllers
 {
@@ -32,7 +31,11 @@ namespace App.Areas.Identity.Controllers
 	public class ManageController : Controller
 	{
 		private readonly UserManager<Userr> _userManager;
-		private readonly IPointTranHistoryService _historyService;
+        private readonly IOrderService _orderService;
+        private readonly IOrderDetailService _orderDetailService;
+        private readonly IOrderPaymentService _orderPaymentService;
+        private readonly IOrderPromotionService _orderPromotionService;
+        private readonly IPointTranHistoryService _historyService;
 		private readonly IPromotionService _promotionService;
 		private readonly IUserPromotionService _userPromotionService;
 		private readonly IOrderService _Iorder;
@@ -41,6 +44,9 @@ namespace App.Areas.Identity.Controllers
 		private readonly ILogger<ManageController> _logger;
 		private readonly IWebHostEnvironment _hostingEnvironment;
 		private readonly PointNPromotionSerVice _pointNPromotionSerVice;
+        private readonly IProductService _productService;
+        private readonly IReturnOrderService _returnOrderService;
+
 		public ManageController(
 		UserManager<Userr> userManager,
 		IPointTranHistoryService historyService,
@@ -50,7 +56,13 @@ namespace App.Areas.Identity.Controllers
 		IEmailSender emailSender,
 		ILogger<ManageController> logger,
 		IWebHostEnvironment hostingEnvironment,
-		IOrderService iorder)
+		IOrderService iorder,
+		IProductService productService,
+		IReturnOrderService returnOrderService,
+		IOrderService orderService,
+		IOrderDetailService orderDetailService,
+		IOrderPaymentService orderPaymentService,
+		IOrderPromotionService orderPromotionService)
 		{
 			_userManager = userManager;
 			_historyService = historyService;
@@ -62,6 +74,12 @@ namespace App.Areas.Identity.Controllers
 			_hostingEnvironment = hostingEnvironment;
 			_Iorder = iorder;
 			_pointNPromotionSerVice = new PointNPromotionSerVice();
+			_productService = productService;
+			_returnOrderService = returnOrderService;
+			_orderService = orderService;
+			_orderDetailService = orderDetailService;
+			_orderPaymentService = orderPaymentService;
+			_orderPromotionService = orderPromotionService;
 		}
 		[TempData]
 		public string StatusMessage { get; set; }
@@ -71,36 +89,215 @@ namespace App.Areas.Identity.Controllers
 			return await _userManager.GetUserAsync(HttpContext.User);
 		}
 
-		private async Task<List<ViewOrder>> GetBill()
+		//private async Task<dynamic> GetBills()
+		//{
+		//	var list = _userManager.Users.Include(x => x.Orders).ThenInclude(x => x.OrderDetails).ToListAsync();
+		//	return list;
+  //      }
+		private async Task<List<OrderViewModel>> GetBill()
 		{
 			var user = await GetUser();
-			var billOfUser = await _Iorder.GetOrderByUser(user.Id);
+			var billOfUser = (await _Iorder.GetAll()).Where(x=>x.Id_User== user.Id).ToList();
 			return billOfUser;
 		}
-		// tất cả bill
-		public async Task<IActionResult> ViewAllBill()
+        public async Task<IActionResult> DetailsBill(int id)
+        {
+			var  _order = await _orderService.GetById(id);
+            var details = await _orderDetailService.GetByOrder(id);
+            _order.orderDetails = details;
+            foreach (var item in details) // chi tiet don hang
+            {
+                var product = await _productService.GetById(item.Id_Product);
+                foreach (var itemProd in product.bookViewModels)
+                {
+                    _order.Weight += (itemProd.Weight * item.Quantity);
+                    _order.Width = _order.Width > itemProd.Widght ? _order.Width : itemProd.Widght;
+                    _order.Length = _order.Length > itemProd.Length ? _order.Length : itemProd.Length;
+                    _order.Height += (itemProd.Height * item.Quantity);
+                }
+                _order.Total += item.Quantity * item.Price;
+            }
+            _order.Weight = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Weight / 1000)));
+            _order.Width = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Width / 10)));
+            _order.Length = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Length / 10)));
+            _order.Height = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Height / 10)));
+            _order.TotalPayment = _order.Total + Convert.ToInt32(_order.Shipfee);
+            var promotions = await _orderPromotionService.GetByOrder(id);
+            _order.orderPromotions = promotions;
+            if (promotions != null) // thong tin khuyen mai
+            {
+                foreach (var promotion in promotions)
+                {
+                    if (promotion.PercentReduct != null)
+                    {
+                        promotion.TotalReduct = Convert.ToInt32(Math.Floor(Convert.ToDouble((_order.Total / 100) * promotion.PercentReduct)));
+
+                        if (promotion.TotalReduct > promotion.ReductMax) promotion.TotalReduct = promotion.ReductMax;
+                        _order.TotalPayment -= promotion.TotalReduct;
+                    }
+                    else
+                    {
+                        promotion.TotalReduct = Convert.ToInt32(promotion.AmountReduct);
+                        _order.TotalPayment -= promotion.TotalReduct;
+                    }
+                }
+            }
+            if (_order.IsUsePoint) // su dung diem
+            {
+                _order.TotalPayment -= Convert.ToInt32(_order.PointAmount);
+            }
+            _order.orderPayments = await _orderPaymentService.GetByOrder(id);
+            _order.returnOrders = await _returnOrderService.GetByOrder(id);
+            return View(_order);
+        }
+        // tất cả bill
+        public async Task<IActionResult> ViewAllBill([FromQuery(Name = "p")] int currentPages)
 		{
-			return View(await GetBill());
+			var listbill = await GetBill();
+			int pagesize = 10;
+			if (pagesize <= 0)
+			{
+				pagesize = 10;
+			}
+			int countPages = (int)Math.Ceiling((double)listbill.Count() / pagesize);
+			if (currentPages > countPages)
+			{
+				currentPages = countPages;
+			}
+			if (currentPages < 1)
+			{
+				currentPages = 1;
+			}
+
+			var pagingmodel = new PagingModel()
+			{
+				currentpage = currentPages,
+				countpages = countPages,
+				generateUrl = (int? p) => Url.Action("ViewAllBill", "Manage", new { areas = "Identity", p = p, pagesize = pagesize })
+			};
+			ViewBag.pagingmodel = pagingmodel;
+			listbill = listbill.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
+			return View(listbill);
 		}
 		// bill đã xác nhận
-		public async Task<IActionResult> ViewBillAwaitConfirm()
+		public async Task<IActionResult> ViewBillAwaitConfirm([FromQuery(Name = "p")] int currentPages)
 		{
-			return View((await GetBill()).Where(x => x.Status == 1).ToList());
+
+			var listbill = (await GetBill()).Where(x => x.Status == 1).ToList();
+			int pagesize = 10;
+			if (pagesize <= 0)
+			{
+				pagesize = 10;
+			}
+			int countPages = (int)Math.Ceiling((double)listbill.Count() / pagesize);
+			if (currentPages > countPages)
+			{
+				currentPages = countPages;
+			}
+			if (currentPages < 1)
+			{
+				currentPages = 1;
+			}
+
+			var pagingmodel = new PagingModel()
+			{
+				currentpage = currentPages,
+				countpages = countPages,
+				generateUrl = (int? p) => Url.Action("ViewBillAwaitConfirm", "Manage", new { areas = "Identity", p = p, pagesize = pagesize })
+			};
+			ViewBag.pagingmodel = pagingmodel;
+			listbill = listbill.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
+			return View(listbill);
+		
 		}
 		// bill đang giao
-		public async Task<IActionResult> ViewBillShipping()
+		public async Task<IActionResult> ViewBillShipping([FromQuery(Name = "p")] int currentPages)
 		{
-			return View((await GetBill()).Where(x => x.Status == 3).ToList());
+			var listbill = (await GetBill()).Where(x => x.Status == 3).ToList();
+			int pagesize = 10;
+			if (pagesize <= 0)
+			{
+				pagesize = 10;
+			}
+			int countPages = (int)Math.Ceiling((double)listbill.Count() / pagesize);
+			if (currentPages > countPages)
+			{
+				currentPages = countPages;
+			}
+			if (currentPages < 1)
+			{
+				currentPages = 1;
+			}
+
+			var pagingmodel = new PagingModel()
+			{
+				currentpage = currentPages,
+				countpages = countPages,
+				generateUrl = (int? p) => Url.Action("ViewBillAwaitConfirm", "Manage", new { areas = "Identity", p = p, pagesize = pagesize })
+			};
+			ViewBag.pagingmodel = pagingmodel;
+			listbill = listbill.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
+			return View(listbill);
+	
 		}
 		// bill đã giao
-		public async Task<IActionResult> ViewBillSuccess()
+		public async Task<IActionResult> ViewBillSuccess([FromQuery(Name = "p")] int currentPages)
 		{
-			return View((await GetBill()).Where(x => x.Status == 4).ToList());
+			var listbill = (await GetBill()).Where(x => x.Status == 4).ToList();
+			int pagesize = 10;
+			if (pagesize <= 0)
+			{
+				pagesize = 10;
+			}
+			int countPages = (int)Math.Ceiling((double)listbill.Count() / pagesize);
+			if (currentPages > countPages)
+			{
+				currentPages = countPages;
+			}
+			if (currentPages < 1)
+			{
+				currentPages = 1;
+			}
+
+			var pagingmodel = new PagingModel()
+			{
+				currentpage = currentPages,
+				countpages = countPages,
+				generateUrl = (int? p) => Url.Action("ViewBillSuccess", "Manage", new { areas = "Identity", p = p, pagesize = pagesize })
+			};
+			ViewBag.pagingmodel = pagingmodel;
+			listbill = listbill.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
+			return View(listbill);
+			
 		}
 		// bill huỷ
-		public async Task<IActionResult> ViewBillCancel()
+		public async Task<IActionResult> ViewBillCancel([FromQuery(Name = "p")] int currentPages)
 		{
-			return View((await GetBill()).Where(x => x.Status == 8).ToList());
+			var listbill = (await GetBill()).Where(x => x.Status == 8).ToList();
+			int pagesize = 10;
+			if (pagesize <= 0)
+			{
+				pagesize = 10;
+			}
+			int countPages = (int)Math.Ceiling((double)listbill.Count() / pagesize);
+			if (currentPages > countPages)
+			{
+				currentPages = countPages;
+			}
+			if (currentPages < 1)
+			{
+				currentPages = 1;
+			}
+
+			var pagingmodel = new PagingModel()
+			{
+				currentpage = currentPages,
+				countpages = countPages,
+				generateUrl = (int? p) => Url.Action("ViewBillCancel", "Manage", new { areas = "Identity", p = p, pagesize = pagesize })
+			};
+			ViewBag.pagingmodel = pagingmodel;
+			listbill = listbill.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
+			return View(listbill);
 		}
 
 		// vi diem và khuyen mai
@@ -200,14 +397,11 @@ namespace App.Areas.Identity.Controllers
 			//	string codese = HttpContext.Session.GetString("code");
 			//	code = codese;
 			//}
-			if (Id == 0)
-			{
-				var user = await GetCurrentUserAsync();
-				Id = user.Id;
-			}
+			if (Id == 0) return Json(new { success = false, redirect = true });
 			
 			var promotion = await _promotionService.GetByCode(code);
-			if (promotion != null && promotion.Quantity > 0)
+			if(promotion == null) return Json(new {success =  false, message = "Mã khuyến mãi không tồn tại, vui lòng thử lại!" });
+			if (promotion.Quantity > 0)
 			{
 				DateTime endTime = Convert.ToDateTime(promotion.EndDate);
 				if (endTime.CompareTo(DateTime.Now) < 0) return Json(new { success = false, message = "Mã khuyến mãi đã hết hạn" });
@@ -231,13 +425,13 @@ namespace App.Areas.Identity.Controllers
 					}
 					catch (Exception ex)
 					{
-						return Json(new { success = false, message = "Có lỗi xảy ra\n" + ex.Message });
+						return Json(new { success = false, redirect = false, message = "Có lỗi xảy ra\n" + ex.Message });
 					}
 
 				}
-				return Json(new { success = false, message = "Bạn đã hết lượt nhận mã khuyến mãi này!" });
+				return Json(new { success = false, redirect = false, message = "Bạn đã hết lượt nhận mã khuyến mãi này!" });
 			}
-			return Json(new { success = false, message = "Mã khuyến mãi này đã hết lượt nhận!" });
+			return Json(new { success = false, redirect = false, message = "Mã khuyến mãi này đã hết lượt nhận!" });
 		}
 
 		[HttpPost]
@@ -294,7 +488,7 @@ namespace App.Areas.Identity.Controllers
 		[HttpPost]
 		public async Task<IActionResult> UpLoadAvata(IndexViewModel indexViewModel)
 		{
-			StatusMessage = "Tải lên ảnh đại điện thành công";
+			
 			var user = await GetCurrentUserAsync();
 			if (user == null)
 			{
@@ -302,6 +496,7 @@ namespace App.Areas.Identity.Controllers
 			}
 			if (indexViewModel._file != null)
 			{
+				StatusMessage = "Tải lên ảnh đại điện thành công";
 				var fileName = Path.GetFileNameWithoutExtension(Path.GetRandomFileName()) + Path.GetExtension(indexViewModel._file.FileName);
 				var uploadPath = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
 				string filePath = Path.Combine(uploadPath, "users", fileName);
@@ -330,8 +525,9 @@ namespace App.Areas.Identity.Controllers
 				}
 
 
+
 			}
-			return View();
+			return RedirectToAction("Index","Manage",new {area="Identity"});
 
 		}
 

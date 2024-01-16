@@ -28,7 +28,32 @@ namespace BookShop.BLL.Service
             _OrDerDetails = new Repository<OrderDetail>();
         }
 
-
+        public async Task<bool> CheckCountComent(int IdProduct , int IdUser )
+        {
+            var oderdetails = (await _OrDerDetails.GetAllAsync()).Where(x => x.Id_Product == IdProduct);
+            var users = await _userRepository.GetAllAsync();
+            var listComment = (from x in oderdetails
+                               join
+                              i in await _evaluateRepository.GetAllAsync()
+                              on x.Id equals i.Id_Product
+                               join b in users on i.Id_User equals b.Id
+                               select new EvaluateViewModel()
+                               {
+                                   Id = i.Id,
+                                   NameUser = b.Name,
+                                   Point = i.Point,
+                                   Content = i.Content,
+                                   CreatedDate = i.CreatedDate,
+                                   Id_Product = i.Id_Product,
+                                   Id_User = i.Id_User,
+                                   Id_Parents = i.Id_Parents,
+                               }).Where(x=>x.Id_User==IdUser).ToList();
+            if (listComment.Count>1)
+            {
+                return false;
+            }
+            return true;
+        }
         public async Task<List<EvaluateViewModel>> GetComments(int IdProduct)
         {
             var oderdetails = (await _OrDerDetails.GetAllAsync()).Where(x => x.Id_Product == IdProduct);
