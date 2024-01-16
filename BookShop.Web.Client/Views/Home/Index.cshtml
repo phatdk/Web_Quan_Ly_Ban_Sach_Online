@@ -91,11 +91,9 @@
 
 	.xemthem {
 		margin: 20px 0;
-
 		display: flex;
 		text-align: center;
 		justify-content: center;
-
 	}
 
 		.xemthem a {
@@ -116,9 +114,7 @@
 	}
 
 	.danhmucsanpham {
-
 		padding: 5px;
-
 		margin-top: 24px;
 		background-color: white;
 		border-radius: 10px;
@@ -328,9 +324,7 @@
 			}
 
 	.dm {
-
 		position: relative;
-
 		border-bottom: 1px solid #DCDCDC;
 		margin-bottom: 20px;
 	}
@@ -629,17 +623,16 @@
 </div>
 
 <style>
-	.Phieugiam{
-		
+	.Phieugiam {
 	}
 
 	.phieugiam4cai {
 		display: grid;
 		grid-template-columns: repeat(2,1fr);
 		gap: 10px;
-		
 	}
-	.pgg{
+
+	.pgg {
 		justify-content: space-around;
 		padding: 10px;
 		border: 1px solid;
@@ -648,7 +641,7 @@
 		gap: 30px;
 	}
 
-	.pgg button{
+		.pgg button {
 			font-weight: 700;
 			font-size: 16px;
 			border-radius: 25px;
@@ -656,7 +649,7 @@
 			background: #C92127;
 			color: white;
 			border: none;
-	}
+		}
 </style>
 <div class="danhmucsanpham" id="ticket">
 	<div class="dm">
@@ -714,19 +707,19 @@
 				listcategory.empty();
 				data.data.forEach(function (item) {
 					var categoryRow =
-					'<div class="pgg">' +
+						'<div class="pgg">' +
 						'<div class="left">' +
-							'<h4>' +item.name +  '</h4>' +
-								'<p>' + " Giảm : " + item.percentReduct + "%" + '</p>' +
-								'<p>' + "Tối đa : " + formatPrice(item.reductMax) + '</p>' +
-								'<p>' + "Áp dụng với hóa đơn từ : " + formatPrice(item.condition) + '</p>' +
+						'<h4>' + item.name + '</h4>' +
+						'<p>' + " Giảm : " + item.percentReduct + "%" + '</p>' +
+						'<p>' + "Tối đa : " + formatPrice(item.reductMax) + '</p>' +
+						'<p>' + "Áp dụng với hóa đơn từ : " + formatPrice(item.condition) + '</p>' +
 						'</div>' +
 						'<div class="right">' +
 						'<p>' + formatDate(item.startDate) + '</p>' +
 						'<p style="font-size: 1.2em;font-weight: 700;color: #F39801; " id="code">' + item.code + '</p>' +
 						'<button onclick="copyPromoCode()" >' + "Copy mã" + '</button>' +
 						'</div>' +
-					'</div>';
+						'</div>';
 
 					listcategory.append(categoryRow);
 				});
@@ -736,18 +729,30 @@
 			}
 		});
 	});
+
+
 	function copyPromoCode() {
 		var promoCodeElement = document.getElementById("code");
 		var promoCodeText = promoCodeElement.textContent;
-		var tempElement = document.createElement("textarea");
-		document.body.appendChild(tempElement);
-		tempElement.value = promoCodeText;
-		tempElement.select();
-		document.execCommand("copy");
-		document.body.removeChild(tempElement);
-
-		alert("Đã sao chép mã khuyến mãi!");
+		$.ajax({
+			url: '/Member/GetPromotion',
+			type: 'GET',
+			data: {
+				code: promoCodeText
+			},
+			success: function (data) {
+				alert("Đã lưu thành công mã khuyến mãi: " + promoCodeText);
+				window.location.reload();
+				window.onload = function () {
+					var element = document.getElementById("ticket");
+					if (element) {
+						element.scrollIntoView();
+					}
+				};
+			}
+		});
 	}
+
 	/*danh mục */
 	$(document).ready(function () {
 		$.ajax({

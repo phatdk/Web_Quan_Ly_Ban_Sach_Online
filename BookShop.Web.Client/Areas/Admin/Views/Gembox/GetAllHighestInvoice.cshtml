@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thống kê</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .statistics-container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: "/Admin/Gembox/GetHighestInvoice"
+            }).done(function (data) {
+                var table = $("<table>");
+                var headerRow = $("<tr>");
+
+                // Add table headers
+                $("<th>").text("Mã Hóa Đơn").appendTo(headerRow);
+                $("<th>").text("Ngày Tạo").appendTo(headerRow);
+                $("<th>").text("Tổng Tiền").appendTo(headerRow);
+
+                headerRow.appendTo(table);
+
+                for (var i = 0; i < data.length; i++) {
+                    var invoice = data[i];
+                    var row = $("<tr>");
+                  
+                    // Chuyển đổi ngày tạo thành định dạng ngày tháng năm giờ
+                    var createdDate = new Date(invoice.createdDate);
+                    var formattedDate = createdDate.toLocaleString();
+                  
+                    // Add invoice data to table cells
+                    $("<td>").text(invoice.id).appendTo(row);
+                    $("<td>").text(formattedDate).appendTo(row);
+                    $("<td>").text(invoice.total).appendTo(row);
+
+                    row.appendTo(table);
+                }
+
+                $(".high-value-invoices").append(table);
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <div class="statistics-container">
+        <h1>Hóa đơn giá trị cao</h1>
+        <div class="high-value-invoices">
+        </div>
+    </div>
+
+</body>
+</html>
