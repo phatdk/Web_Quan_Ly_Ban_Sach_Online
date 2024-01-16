@@ -39,9 +39,6 @@
         }
     </style>
     <script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" ></script>
-
-    <script>
         $(document).ready(function () {
             $.ajax({
                 url: "/Admin/Gembox/GetHighestInvoice"
@@ -59,11 +56,11 @@
                 for (var i = 0; i < data.length; i++) {
                     var invoice = data[i];
                     var row = $("<tr>");
-
+                  
                     // Chuyển đổi ngày tạo thành định dạng ngày tháng năm giờ
                     var createdDate = new Date(invoice.createdDate);
                     var formattedDate = createdDate.toLocaleString();
-
+                  
                     // Add invoice data to table cells
                     $("<td>").text(invoice.id).appendTo(row);
                     $("<td>").text(formattedDate).appendTo(row);
@@ -75,9 +72,6 @@
                 $(".high-value-invoices").append(table);
             });
         });
-    </script>
-
-    <!-- ... (rest of your HTML) ... -->
     </script>
 </head>
 <body>
