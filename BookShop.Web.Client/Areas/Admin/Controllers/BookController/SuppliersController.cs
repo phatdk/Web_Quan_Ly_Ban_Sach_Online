@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookShop.Web.Client.Areas.Admin.Controllers.BookController
 {
     [Area("Admin")] // cấu hình cái này để nó biết đây là trang quan lí
-    [Authorize(Roles = "Admin")]
-    public class SuppliersController : Controller
+	[Authorize(Roles = "Admin,Staff")]
+	public class SuppliersController : Controller
     {
         private readonly ISupplierService _supplierService;
         List<SupplierViewModel> _supplierView = new List<SupplierViewModel>();
