@@ -67,6 +67,7 @@
 		}
 
 		.bb {
+			position:relative;
 			background-color: rgb(224, 224, 224);
 		}
 
@@ -195,10 +196,50 @@
 		ul.category {
 			position: absolute;
 		}
+
+		.scroll-top {
+			
+			position: fixed;
+			bottom: 50px;
+			right: 30px;
+			z-index: 9999;
+		}
+
+			.scroll-top a {
+				background: #f4c865;
+				padding: 7px 10px;
+				text-align: center;
+				color: #fff;
+				bottom: 30px;
+				height: 40px;
+				width: 40px;
+				z-index: 100;
+				border-radius: 50%;
+				display: inline-block;
+				font-size: 16px;
+				opacity: 0;
+				visibility: hidden;
+				z-index: 1000;
+			}
+
+				.scroll-top a:hover {
+					padding-top: 3px;
+					background: #0c57a3;
+					color: #fff;
+				}
+
+		#back-to-top.show {
+			opacity: 1;
+			visibility: visible;
+		}
 	</style>
 </head>
 <body class="bb">
-
+	<div class="scroll-top">
+		<a href="#top" title="Về đầu trang" class="return-to-top" id="back-to-top">
+			<i class="fa fa-angle-up"></i>
+		</a>
+	</div>
 	@if (isAdminStaff)
 	{
 		<a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">
@@ -356,6 +397,22 @@
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
 
+	
+	<script>
+		var btn = $('#back-to-top');
+		$(window).scroll(function () {
+			if ($(window).scrollTop() > 300) {
+				btn.addClass('show');
+			} else {
+				btn.removeClass('show');
+			}
+		});
+
+		btn.on('click', function (e) {
+			e.preventDefault();
+			$('html, body').animate({ scrollTop: 0 }, '300');
+		});
+	</script>
 
 	<script>
 		$(document).ready(function () {
