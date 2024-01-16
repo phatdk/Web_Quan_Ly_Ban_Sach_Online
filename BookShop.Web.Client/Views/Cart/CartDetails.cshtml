@@ -163,7 +163,7 @@
                             <div id="spd" class="giasptgh">@item.ProductPrice VNĐ</div>
                         </td>
                         <td class="khoi3">
-                            <input type="number" id="@item.Id" onchange="EditCart('@item.Id')" value="@item.Quantity" max="@item.SoLuongKho" min="1" />
+                            <input type="number" onkeydown="disableMinusKey(event)" oninput="changeZeroToOne(this)" id="@item.Id" onchange="EditCart('@item.Id')" value="@item.Quantity" max="@item.SoLuongKho" min="1" />
                         </td>
                         <td class="khoi4" id="totalsp">@item.TotalPrice VNĐ</td>
                         <td class="khoi5">
@@ -206,6 +206,38 @@ else
 }
 @section scripts {
     <script>
+        function changeZeroToOne(input) {
+            // Lấy giá trị từ ô nhập số
+            var inputValue = input.value;
+            // Nếu giá trị là 0, thay đổi thành 1
+            if (parseInt(inputValue, 10) === 0) {
+                input.value = 1;
+            }
+            // Lấy giá trị max đã định nghĩa trong input
+            var max = parseInt(input.getAttribute('max'), 10);
+
+            // Kiểm tra xem giá trị có vượt quá max hay không
+            if (inputValue > max) {
+                // Nếu vượt quá, đặt giá trị thành max
+                input.value = max;
+            }
+            // Kiểm tra xem giá trị có rỗng hay không
+            //if (inputValue === '') {
+            //     Nếu rỗng, có thể thông báo lỗi hoặc xử lý theo ý muốn của bạn
+            //    alert('Vui lòng nhập giá trị vào ô nhập số.');
+            //}
+        }
+        function disableMinusKey(event) {
+            // Kiểm tra xem phím nào được nhấn
+            var keyPressed = event.key;
+
+            // Nếu phím là '-', hủy sự kiện (không cho phép nhập)
+            if (keyPressed === '-') {
+                event.preventDefault();
+            }
+        }
+    </script>
+    <script>
         $(document).ready(function () {
             updateTotalCost();
             $('input[type="number"]').change(function () {
@@ -241,6 +273,11 @@ else
                     "Expires": "0"
                 },
                 success: function (result) {
+                    if (confirm('Bạn chấc chắn xóa sản phẩn này khỏi giỏ hàng')) {
+                        window.location.href = '/Cart/CartDetails';
+                    } else {
+                        window.location.href =url;
+                    }
                 },
                 error: function (error) {
                     console.error("Error removing product:", error);

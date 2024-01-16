@@ -152,6 +152,9 @@ namespace BookShop.Web.Client.Controllers
 					Status = product.Status,
 					CreatedDate = DateTime.Now,
 					TotalPrice = product.Price * quantity,
+					ImgProductCartDetail = product.ImgUrl,
+					SoLuongKho = product.Quantity
+					
 				};
 				customCart.Add(pc);
 				HttpContext.Session.SetString("sessionCart", JsonConvert.SerializeObject(customCart));
@@ -167,7 +170,7 @@ namespace BookShop.Web.Client.Controllers
 			{
 				var itemCart = await _cartDetailService.GetById(id);
 				if(itemCart != null) {
-					itemCart.Quantity = quantity;
+					itemCart.Quantity = quantity!=(int)quantity?1:quantity;
 					var result = await _cartDetailService.Update(id, new UpdateCartDetailModel { Quantity = itemCart.Quantity });
 					return Json(new { success = result });
 				}
