@@ -139,33 +139,33 @@ var app = builder.Build();
 #region SeedData
 using (var scope = app.Services.CreateScope())
 {
-    //    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Userr>>();
-    //    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
-    //    SeedDataMD.SeedAsync(userManager, roleManager).Wait();
-    //}
-    //using (var scope = app.Services.CreateScope())
-    //{
-    //    var service = scope.ServiceProvider.GetRequiredService<IStatusOrderService>();
-
-    //    SeedDataMD.SeedDataStatus(service).Wait();
-    //}
-    //using (var scope = app.Services.CreateScope())
-    //{
-    //    var service1 = scope.ServiceProvider.GetRequiredService<IPaymentFormService>();
-
-    //    SeedDataMD.SeedDataPayment(service1).Wait();
-    //}
-    //using (var scope = app.Services.CreateScope())
-
-    //{ 
-    //var service2 = scope.ServiceProvider.GetRequiredService<IPromotionTypeService>();
-
-    //SeedDataMD.SeedPromotionType(service2).Wait();
-    //var service1 = scope.ServiceProvider.GetRequiredService<IProductService>();
-    //var service2 = scope.ServiceProvider.GetRequiredService<ICollectionService>();
-
-    //SeedDataMD.FaKerProduct(service1,service2).Wait();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Userr>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+    SeedDataMD.SeedAsync(userManager, roleManager).Wait();
 }
+//using (var scope = app.Services.CreateScope())
+//{
+//    var service = scope.ServiceProvider.GetRequiredService<IStatusOrderService>();
+
+//    SeedDataMD.SeedDataStatus(service).Wait();
+//}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var service1 = scope.ServiceProvider.GetRequiredService<IPaymentFormService>();
+
+//    SeedDataMD.SeedDataPayment(service1).Wait();
+//}
+//using (var scope = app.Services.CreateScope())
+
+//{
+//    var service2 = scope.ServiceProvider.GetRequiredService<IPromotionTypeService>();
+
+//    SeedDataMD.SeedPromotionType(service2).Wait();
+//    var service1 = scope.ServiceProvider.GetRequiredService<IProductService>();
+//    var service2 = scope.ServiceProvider.GetRequiredService<ICollectionService>();
+
+//    //SeedDataMD.FaKerProduct(service1,service2).Wait();
+//}
 #endregion
 if (!app.Environment.IsDevelopment())
 {
