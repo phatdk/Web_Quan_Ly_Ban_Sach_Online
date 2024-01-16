@@ -195,9 +195,9 @@ namespace BookShop.Web.Client.Controllers
 				createModel.Total += quantity * product.NewPrice;
 			}
 			createModel.Weight = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Weight / 1000)));
-			createModel.Width = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Width / 100)));
-			createModel.Length = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Length / 100)));
-			createModel.Height = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Height / 100)));
+			createModel.Width = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Width / 10)));
+			createModel.Length = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Length / 10)));
+			createModel.Height = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Height / 10)));
 			var validPromotion = new List<PromotionViewModel>();
 			foreach (var promotion in (await _pointNPromotionService.GetActivePromotion()).Where(x => x.NameType.Equals("Phiếu khuyến mãi áp dụng tự động")))
 			{
