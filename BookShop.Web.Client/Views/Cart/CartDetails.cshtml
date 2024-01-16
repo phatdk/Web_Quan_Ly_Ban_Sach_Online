@@ -160,14 +160,14 @@
                             <div class="tensanphamtronggiohang">
                                 @item.ProductName
                             </div>
-                            <div id="spd" class="giasptgh">@item.ProductPrice VNĐ</div>
+                            <div id="spd" class="giasptgh">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.NewPrice)</div>
                         </td>
                         <td class="khoi3">
                             <input type="number" id="@item.Id" onchange="EditCart('@item.Id')" value="@item.Quantity" max="@item.SoLuongKho" min="1" />
                         </td>
-                        <td class="khoi4" id="totalsp">@item.TotalPrice VNĐ</td>
+                        <td class="khoi4" id="totalsp">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.TotalPrice)</td>
                         <td class="khoi5">
-                            <button class="btn btn-btn-waning" type="submit" onclick="removeProduct('@item.Id_Product')">
+                            <button class="btn text-danger" type="submit" onclick="removeProduct('@item.Id_Product')">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
                                     <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
@@ -206,28 +206,28 @@ else
 }
 @section scripts {
     <script>
-        $(document).ready(function () {
-            updateTotalCost();
-            $('input[type="number"]').change(function () {
-                updateTotalCost();
-            });
-            function updateTotalCost() {
-                var totalCost = 0;
-                $('tbody tr').each(function () {
-                    var quantityInput = $(this).find('input[type="number"]');
-                    var productPrice = parseInt($(this).find('div[id="spd"]').text());
-                    var quantity = parseInt(quantityInput.val());
-                    if (!isNaN(quantity)) {
-                        var individualCost = quantity * productPrice;
-                        $(this).find('td:eq(3)').text(individualCost + " VNĐ");
-                        $(this).find('div[id="totalsp"]').text(individualCost + " VNĐ");
-                        totalCost += individualCost;
-                    }
-                });
-                $('#totalCost').text(totalCost + " VNĐ");
-            }
+        // $(document).ready(function () {
+        //     updateTotalCost();
+        //     $('input[type="number"]').change(function () {
+        //         updateTotalCost();
+        //     });
+        //     function updateTotalCost() {
+        //         var totalCost = 0;
+        //         $('tbody tr').each(function () {
+        //             var quantityInput = $(this).find('input[type="number"]');
+        //             var productPrice = parseInt($(this).find('div[id="spd"]').text());
+        //             var quantity = parseInt(quantityInput.val());
+        //             if (!isNaN(quantity)) {
+        //                 var individualCost = quantity * productPrice;
+        //                 $(this).find('td:eq(3)').text(individualCost + " VNĐ");
+        //                 $(this).find('div[id="totalsp"]').text(individualCost + " VNĐ");
+        //                 totalCost += individualCost;
+        //             }
+        //         });
+        //         $('#totalCost').text(totalCost + " VNĐ");
+        //     }
 
-        });
+        // });
     </script>
     <script type="text/javascript">
         function removeProduct(productId) {
@@ -241,6 +241,7 @@ else
                     "Expires": "0"
                 },
                 success: function (result) {
+                    location.reload();
                 },
                 error: function (error) {
                     console.error("Error removing product:", error);
@@ -253,7 +254,8 @@ else
             console.log(quantity);
             $.ajax({
                 type: 'POST',
-                url: '/Cart/EditCart?id=' + productId +'&quantity=' + quantity,
+                url: '/Cart/AddToCart',
+                data: {id: productId, quan
                 success: function (result) {
                 },
                 error: function (error) {

@@ -29,10 +29,10 @@ namespace BookShop.Web.Client.Controllers
 			return _userManager.GetUserAsync(HttpContext.User);
 		}
 		// GET: CartController
-		public ActionResult Index()
-		{
-			return View();
-		}
+		//public ActionResult Index()
+		//{
+		//	return View();
+		//}
 
         // GET: CartController/Details/5
         public async Task<IActionResult> CartDetails()
@@ -47,12 +47,18 @@ namespace BookShop.Web.Client.Controllers
                 if (cartCheck == null)
                 {
                     await _cartService.Add(new CartViewModel() { Id_User = user.Id });
-                }
+				}
 
-                detail = await _cartDetailService.GetByCart(user.Id);
+				detail = await _cartDetailService.GetByCart(user.Id);
+				foreach(var item in detail)
+				{
+					var product = await _productService.GetById(item.Id_Product);
+					item.NewPrice = product.NewPrice;
+					item.TotalPrice = item.Quantity * item.NewPrice;
+				}
 
-                // Set IsSelected to true for all items initially
-                foreach (var item in detail)
+				// Set IsSelected to true for all items initially
+				foreach (var item in detail)
                 {
                     item.IsSelected = true;
                     item.IsCanceled = false;
@@ -64,6 +70,14 @@ namespace BookShop.Web.Client.Controllers
                 if (!string.IsNullOrEmpty(customCartChar))
                 {
                     detail = JsonConvert.DeserializeObject<List<CartDetailViewModel>>(customCartChar);
+					foreach(var item in detail)
+                    {
+                        var product = await _productService.GetById(item.Id_Product);
+						item.NewPrice = product.NewPrice;
+						item.TotalPrice = item.Quantity * item.NewPrice;
+						item.SoLuongKho = product.Quantity;
+						item.ImgProductCartDetail = product.ImgUrl;
+                    }
                 }
                 else
                 {
