@@ -4,15 +4,36 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-   
+
 }
 
 <!DOCTYPE html>
 <!-- Coding by CodingNepal | www.codingnepalweb.com -->
 <html lang="en" dir="ltr">
 <style>
+    /*  DowloadButton */
+    
+
+    #myButton {
+        font-family: Arial, sans-serif; 
+        font-size: 16px;
+        border: 1px solid #ccc; 
+        border-radius: 5px; 
+        color: #fff; 
+        background-color: #007bff;
+    }
+
+    #myButton a {
+            text-decoration: none;
+            color: white;
+    }
+
+#myButton:hover {
+    background-color: #0062cc; 
+}
+
     /* Googlefont Poppins CDN Link */
-    *{
+    * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
@@ -196,39 +217,10 @@
 </head>
 
 <body>
+
+
     <div class="home-content1">
-        <div class="overview-boxes">
-            <div class="box">
-                <div class="right-side">
-                    <div class="box-topic">Doanh thu hôm nay</div>
-                    <div class="number"> @await Html.PartialAsync("GetTotalDateRevenue")</div>
-                    <div class="indicator">    
-                    </div>
-                </div>
-                <i class='bx bxs-cart' style="font-size: 50px;"></i>
-            </div>
-            <div class="box">
-                <div class="right-side">
-                    <div class="box-topic">Doanh thu Tháng nay</div>
-                    <div class="number"> @await Html.PartialAsync("GetTotalRevenueByMonth")</div>
-                    <div class="indicator">
-                    </div>
-                </div>
-                <i class='bx bxs-cart-add' style="font-size: 50px"></i>
-            </div>
-           
-            <div class="box">
-                <div class="right-side">
-                    <div class="box-topic">Toàn bộ doanh thu</div>
-                    <div class="number">@await Html.PartialAsync("GetTotalRevenue")</div>
-                    <div class="indicator">
-                       @*  <i class='bx bx-down-arrow-alt down'></i>
-                        <span class="text">Down From Today</span> *@
-                    </div>
-                </div>
-                <i class='bx bxs-cart-download' style="font-size:50px"></i>
-            </div>
-        </div>
+
 
         <p>      </p>
         <div class="sales-boxes">
@@ -237,12 +229,48 @@
             </div>
         </div>
 
+        <p>     </p>
+        <div class="overview-boxes">
+            <div class="box">
+                <div class="right-side">
+                    <div class="box-topic">Doanh thu hôm nay</div>
+                    <div class="number"> @await Html.PartialAsync("GetTotalDateRevenue")</div>
+                    <div class="indicator">
+                    </div>
+                </div>
+                <i class='bx bxs-cart' style="font-size: 50px; color: blue;"></i>
+            </div>
+            <div class="box">
+                <div class="right-side">
+                    <div class="box-topic">Doanh thu Tháng nay</div>
+                    <div class="number"> @await Html.PartialAsync("GetTotalRevenueByMonth")</div>
+                    <div class="indicator">
+                    </div>
+                </div>
+                <i class='bx bxs-cart-add' style="font-size: 50px; color: green;"></i>
+            </div>
+
+            <div class="box">
+                <div class="right-side">
+                    <div class="box-topic">Toàn bộ doanh thu</div>
+                    <div class="number">@await Html.PartialAsync("GetTotalRevenue")</div>
+                    <div class="indicator">
+                        @*  <i class='bx bx-down-arrow-alt down'></i>
+                        <span class="text">Down From Today</span> *@
+                    </div>
+                </div>
+                <i class='bx bxs-cart-download' style="font-size:50px; color:red;"></i>
+            </div>
+        </div>
+
+     
+
         <p>      </p>
 
 
-                @await Html.PartialAsync("GetOrderByStatus")
-         
-      
+        @await Html.PartialAsync("GetOrderByStatus")
+
+
 
 
         <p>   </p>
@@ -278,13 +306,13 @@
                             <p>@product.TotalRevenue</p>
                         }
                     </ul>
-                
+
                 </div>
                 <div class="button">
-                    <a href="#">See All</a>
+                    <a href="/Admin/Gembox/GetAllTopsale">Xem Tất Cả</a>
                 </div>
             </div>
-            
+
         </div>
         <p>         </p>
         <div class="sales-boxes">
@@ -296,22 +324,24 @@
 
         <p>         </p>
         <div class="sales-boxes">
-           <div class="recent-sales box">
+            <div class="recent-sales box">
                 @await Html.PartialAsync("GetHighestInvoice")
-            </div> 
+            </div>
         </div>
         <p>         </p>
         <div class="sales-boxes">
             <div class="recent-sales box">
                 @await Html.PartialAsync("GetProductsSortedByQuantityAsc")
-               
+
             </div>
         </div>
-        <button id="myButton"><a asp-action="export" asp-controller="Gembox" download="D:\Study File\DATN\BookShop.Web.Client\wwwroot\exel\demothongke.xlsx">Download File Thong ke</a></button>
+        <button class="button" id="myButton">
+            <a asp-action="export" asp-controller="Gembox" download="D:\Study File\DATN\BookShop.Web.Client\wwwroot\exel\demothongke.xlsx">Tải xuống toàn bộ hóa đơn</a>
+        </button>
     </div>
-    
-   
-   
+
+
+
 </body>
 </html>
 <script>

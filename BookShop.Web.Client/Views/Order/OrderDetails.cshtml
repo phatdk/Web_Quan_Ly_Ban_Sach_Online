@@ -69,94 +69,70 @@
 				}
 			</ul>
 		</div>
-		<div class="col-8 dstinhtrangdonhang">
-			<div class="thukhanh">
+		<div class="col-7 row dstinhtrangdonhang">
+			<div class="khanhdam col-12 w-100 d-flex justify-content-center">
+				<span>Thông tin đơn hàng</span>
+			</div>
+			<div class="col-6">
 				<div class=" " hidden>
 					@Html.DisplayFor(model => model.Id)
 				</div>
 				<div class="hdsu">
-					<div class=" khanhdam">
-						Code:
-					</div>
-					<div class="">
-						@Html.DisplayFor(model => model.Code)
-					</div>
+					<span class="fw-bold pe-2">Mã đơn:</span><span>@Model.Code</span>
 				</div>
 				<div class="hdsu">
-					<div class=" khanhdam">
-						Người Nhận:
-					</div>
-					<div class="">
-						@Html.DisplayFor(model => model.Receiver)
-					</div>
+					<span class="fw-bold pe-2">Người nhận:</span><span>@Model.Receiver</span>
 				</div>
 				<div class="hdsu">
-					<div class=" khanhdam">
-						Số Điện Thoại:
-					</div>
-					<div class="">
-						@Html.DisplayFor(model => model.Phone)
-					</div>
+					<span class="fw-bold pe-2">Số điện thoại:</span><span>@Model.Phone</span>
 				</div>
 				<div class="hdsu">
-					<div class=" khanhdam">
-						Ngày Tạo:
-					</div>
-					<div class="">
-						@Html.DisplayFor(model => model.CreatedDate)
-					</div>
+					<span class="fw-bold pe-2">Địa chỉ:</span><span>@Model.Address</span>
 				</div>
 				<div class="hdsu">
-					<div class=" khanhdam">
-						Ghi Chú:
-					</div>
-					<div class="">
-						@Html.DisplayFor(model => model.Description)
-					</div>
-				</div>
-				<div class="hdsu">
-					<div class=" khanhdam">
-						Địa Chỉ:
-					</div>
-					<div class="">
-						@Html.DisplayFor(model => model.Address),@Html.DisplayFor(model => model.City)
-					</div>
+					<span class="fw-bold pe-2">Ghi chú:</span><span>@Model.Description</span>
 				</div>
 			</div>
-			<div class="thukhanh kods">
-				<div class="khanhdam2">
-					Tổng Quan Đơn Hàng
-				</div>
+			<div class="col-6">
 				<div class="kods">
 					<div class=" khanhdam">
-						Phí Ship
+						<span class="fw-bold">Phí vận chuyển:</span>
 					</div>
 					<div class="" id="tienship">
-						@Html.DisplayFor(model => model.Shipfee)
+						<span>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Shipfee)</span>
 					</div>
 					<div class=" khanhdam">
-						Khuyến Mãi
+						<span class="fw-bold">Khuyến mãi</span>
 					</div>
 					<div class="" id="tienkhuyenmai">
-						@Html.DisplayFor(model => model.NamePromotion)
+						@foreach (var item in Model.orderPromotions)
+						{
+							<span>@item.NamePromotion</span>
+						}
 					</div>
 					<div class=" khanhdam">
-						Tổng
+						<span class="fw-bold">Số điểm sử dụng</span>
 					</div>
 					<div class="" id="tongtatca">
-						@Html.DisplayFor(model => model.Total)
+						<span>@Model.PointUsed</span>
 					</div>
 					<div class=" khanhdam">
-						Trạng Thái
+						<span class="fw-bold">Thanh toán</span>
+					</div>
+					<div class="" id="tongtatca">
+						<span>@Model.TotalPayment</span>
+					</div>
+					<div class=" khanhdam">
+						<span class="fw-bold">Trạng thái đơn hàng</span>
 					</div>
 					<div class="">
-						@Html.DisplayFor(model => model.Status)
+						<span>@Model.StatusName</span>
 					</div>
 				</div>
 			</div>
-			<div>
-				<div class="btn btn-outline-danger huydonhangttdh" id="deleteOrder" onclick="deleteOrder()" value="Xóa">Hủy đơn</div>
-			</div>
+		</div>
+		<div class="col-1">
+			<div class="btn btn-outline-danger huydonhangttdh" id="deleteOrder" onclick="deleteOrder()" value="Xóa">Hủy đơn</div>
 		</div>
 	</div>
 </div>

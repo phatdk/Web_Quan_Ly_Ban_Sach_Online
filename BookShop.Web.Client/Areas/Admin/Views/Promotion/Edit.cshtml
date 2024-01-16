@@ -26,15 +26,15 @@
 			</div>
 			<div class="form-group" id="promotionCondition">
 				<label class="form-label">Điều kiện giảm (Giá trị đơn hàng tối thiểu để có thể áp dụng mã)</label>
-				<input type="number" asp-for="Condition" id="inputCondition" class="form-control" />
+				<input type="number" asp-for="Condition" id="inputCondition" min="1000" class="form-control" />
 			</div>
 			<div class="form-group" id="promorionConversionPoint">
 				<label class="form-label">Số điểm đổi</label>
-				<input type="number" asp-for="ConversionPoint" id="inputConversionPoint" class="form-control" />
+				<input type="number" asp-for="ConversionPoint" id="inputConversionPoint" min="0" class="form-control" />
 			</div>
 			<div class="form-group" id="promotionStorageTerm">
 				<label class="form-label">Thời gian lưu trữ (ngày)</label>
-				<input type="number" asp-for="StorageTerm" id="inputStorageTerm" class="form-control" />
+				<input type="number" asp-for="StorageTerm" id="inputStorageTerm" min="0" class="form-control" />
 			</div>
 			<div>
 				<br /> &ensp;
@@ -43,26 +43,26 @@
 			</div>
 			<div class="form-group" id="amountReduct">
 				<label class="form-label">Số tiền giảm (đ)</label>
-				<input type="number" asp-for="AmountReduct" id="inputAmount" class="form-control" />
+				<input type="number" asp-for="AmountReduct" id="inputAmount" min="1000" class="form-control" />
 			</div>
 			<div class="form-group" id="percentReduct">
 				<label class="form-label">Số phần trăm giảm (%)</label>
-				<input type="number" asp-for="PercentReduct" id="inputPercent" class="form-control" />
+				<input type="number" asp-for="PercentReduct" id="inputPercent" min="0" max="100" class="form-control" />
 
 				<label class="form-label">Số tiền giảm tối đa (đ)</label>
-				<input type="number" asp-for="ReductMax" id="inputMax" class="form-control" />
+				<input type="number" asp-for="ReductMax" id="inputMax" min="1000" class="form-control" />
 			</div>
 			<div class="form-group">
 				<label class="form-label">Số lượng phát hành</label>
-				<input type="number" asp-for="Quantity" class="form-control" required />
+				<input type="number" asp-for="Quantity" class="form-control" min="0" max="2000000000" required />
 			</div>
 			<div class="form-group">
 				<label class="form-label">Ngày bắt đầu</label>
-				<input asp-for="StartDate" class="form-control" required />
+				<input asp-for="StartDate" class="form-control" onchange="dateChecking(this)" required />
 			</div>
 			<div class="form-group">
 				<label class="form-label">Ngày kết thúc</label>
-				<input asp-for="EndDate" class="form-control" required />
+				<input asp-for="EndDate" class="form-control" onchange="dateChecking(this)" required />
 			</div>
 			<div class="form-group">
 				<label class="form-label">Mô tả</label>
@@ -71,8 +71,8 @@
 			<div class="form-group">
 				<label class="form-label">Trạng thái</label>
 				<select asp-for="Status" class="form-control">
-					<option value="1">Áp dụng</option>
-					<option value="0">Không áp dụng</option>
+					<option value="1">Hoạt động</option>
+					<option value="0">Không hoạt động</option>
 				</select>
 			</div>
 			<div class="form-group">
@@ -87,6 +87,17 @@
 </div>
 
 <script type="text/javascript">
+	function dateChecking(element) {
+		var startDate = new Date($('#startDate').val());
+		var endDate = new Date($('#endDate').val());
+		if (startDate != "Invalid Date" && endDate != "Invalid Date") {
+			if (startDate > endDate) {
+				alert('Cảnh báo: Ngày Kết Thúc phải lớn hơn Ngày Bắt Đầu.');
+				element.value = "";
+			} else if (startDate < endDate) {
+			}
+		}
+	}
 	function typeCheck() {
 		var select = document.getElementById('promotionType');
 		var selectText = select.options[select.selectedIndex].text;

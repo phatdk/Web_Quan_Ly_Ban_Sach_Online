@@ -16,11 +16,13 @@ using Newtonsoft.Json;
 using Humanizer;
 using System.Security.Cryptography.X509Certificates;
 using MailKit.Search;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class GemboxController : Controller
+	[Authorize(Roles = "Admin,Staff")]
+	public class GemboxController : Controller
     {
         public Gen _gen;
         public List<OrderViewModel> _orderViewModels;
@@ -84,7 +86,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
                 product.Name = productDetails.Name;
                 product.Price = productDetails.Price;
             }
-            ViewBag.ProductList = topSellingProducts.Take(5);
+            ViewBag.ProductList = topSellingProducts;
 
             return View();
         }
@@ -221,7 +223,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
         public async Task<IActionResult> GetHighestInvoice()
         {
             var invoices = await _OrderService.GetAll();
-            var topInvoices = invoices.OrderByDescending(x => x.Total).Take(5).ToList();
+            var topInvoices = invoices.OrderByDescending(x => x.Total).ToList();
             ViewBag.HighestInvoice = topInvoices;
 
             return Json(topInvoices);
@@ -259,10 +261,66 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
         public async Task<IActionResult> GetProductBook()
         {
             var productbook = await _productbookservices.GetAll();
-          
+
             return Json(productbook);
         }
+        public async Task<IActionResult> GetAllHighestInvoice()
+        {
+            return View();
+        }
+        public async Task<IActionResult> GetAllProducSortedByQuatityAsc()
+        {
+            return View();
+        }
+        public async Task<IActionResult> GetAllProductBook()
+        {
+            return View();
+        }
+        public async Task<IActionResult> GetTopsale()
+        {
+            var orders = await _OrderService.GetAll();
 
+            var productSales = new Dictionary<int, int>();
+            foreach (var order in orders)
+            {
+                var orderDetails = await _orderdettailservices.GetByOrder(order.Id);
+                // Cập nhật số lượng bán cho từng sản phẩm
+                foreach (var orderDetail in orderDetails)
+                {
+                    productSales.TryGetValue(orderDetail.Id_Product, out var quantity);
+                    productSales[orderDetail.Id_Product] = quantity + orderDetail.Quantity;
+                }
+            }
+
+            // Lấy danh sách sản phẩm bán chạy
+            var topSellingProducts = productSales.OrderByDescending(x => x.Value)
+                                                 .Select(x => new TopSalingProduct
+                                                 {
+                                                     Id = x.Key,
+                                                     QuantitySold = x.Value
+                                                 })
+                                                 .ToList();
+
+
+
+            foreach (var product in topSellingProducts)
+            {
+                var productDetails = await _ProductService.GetById(product.Id);
+                product.TotalRevenue = productDetails.Price * product.QuantitySold;
+            }
+
+            foreach (var product in topSellingProducts)
+            {
+                var productDetails = await _ProductService.GetById(product.Id);
+                product.Name = productDetails.Name;
+                product.Price = productDetails.Price;
+            }
+            return Json(topSellingProducts);
+        }
+        public async Task<IActionResult> GetAllTopsale()
+        {
+            return View();
+        }
     }
 }
 

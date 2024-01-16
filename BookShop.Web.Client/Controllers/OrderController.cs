@@ -62,6 +62,9 @@ namespace BookShop.Web.Client.Controllers
             _EmailSender = emailSender;
         }
 
+		[TempData]
+		public string StatusMessage { get; set; }
+
         private Task<Userr> GetCurrentUserAsync()
 		{
 			return _userManager.GetUserAsync(HttpContext.User);
@@ -195,9 +198,9 @@ namespace BookShop.Web.Client.Controllers
 				createModel.Total += quantity * product.NewPrice;
 			}
 			createModel.Weight = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Weight / 1000)));
-			createModel.Width = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Width / 100)));
-			createModel.Length = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Length / 100)));
-			createModel.Height = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Height / 100)));
+			createModel.Width = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Width / 10)));
+			createModel.Length = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Length / 10)));
+			createModel.Height = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(createModel.Height / 10)));
 			var validPromotion = new List<PromotionViewModel>();
 			foreach (var promotion in (await _pointNPromotionService.GetActivePromotion()).Where(x => x.NameType.Equals("Phiếu khuyến mãi áp dụng tự động")))
 			{
@@ -418,7 +421,39 @@ namespace BookShop.Web.Client.Controllers
 			}
 			else return Json(new { success = false });
 		}
-		// Xoa gio hang
+		[HttpGet]
+        public async Task<IActionResult> DeleteOrderLoading(int id)
+        {
+            var order = await _orderService.GetById(id);
+            bool result = false;
+            var statusId = (await _statusService.GetAll()).Where(x => x.Status == 8).FirstOrDefault().Id;
+            order.Id_Status = statusId;
+            order.ModifiDate = DateTime.Now;
+            order.ModifiNotes = order.ModifiNotes + "\n" + DateTime.Now + " : Đơn hàng được hủy bởi khách hàng\n";
+            result = await _orderService.Update(order);
+            if (result)
+            {
+                var details = await _orderDetailService.GetByOrder(order.Id);
+                foreach (var item in details)
+                {
+                    await _productPreviewService.ChangeQuantity(item.Id_Product, item.Quantity); // tang lại so luong sp
+                }
+                var checkpromotions = await _orderPromotionService.GetByOrder(order.Id);
+                foreach (var item in checkpromotions)
+                {
+                    await _pointNPromotionService.ModifyUserPromotion(order.Id_User, item.Id_Promotion, 1); // thay doi lai trang thai khuyen mai
+                }
+				StatusMessage = "Huỷ đơn hàng thành công";
+
+                return RedirectToAction("ViewBillAwaitConfirm", "Manage", new { area = "Identity" });
+            }
+            else
+			{
+                return RedirectToAction("ViewBillAwaitConfirm", "Manage", new { area = "Identity" });
+
+            }
+        }
+        // Xoa gio hang
         public async Task<IActionResult> RemoveAllProduct()
         {
             var user = await GetCurrentUserAsync();

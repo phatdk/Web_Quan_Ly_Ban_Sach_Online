@@ -1,37 +1,34 @@
-﻿
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+﻿<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <script>
-    
     $(document).ready(function () {
         $.ajax({
             url: "/Admin/Gembox/GetHighestInvoice"
         }).done(function (data) {
-
             for (var i = 0; i < data.length; i++) {
                 var invoice = data[i];
+
+                // Chuyển đổi ngày tạo thành định dạng ngày tháng năm
+                var createdDate = new Date(invoice.createdDate);
+                var formattedDate = createdDate.toLocaleDateString();
+
                 $("#invoice-" + (i + 1) + "-id").text(invoice.id);
                 $("#invoice-" + (i + 1) + "-total").text(invoice.total);
-                $("#invoice-" + (i + 1) + "-createdate").text(invoice.createdDate);
+                $("#invoice-" + (i + 1) + "-createdate").text(formattedDate);
             }
-
         });
     });
-
 </script>
-<div class="title">Bill</div>
+
+<div class="title">Hóa đơn giá trị cao</div>
 <div class="sales-details">
-
-    </ul>
     <ul class="details">
-        <li class="topic">Mã Hóa Đơn </li>
-
+        <li class="topic">Mã Hóa Đơn</li>
         <p><div id="invoice-1-id"></div></p>
         <p><div id="invoice-2-id"></div></p>
         <p><div id="invoice-3-id"></div></p>
         <p><div id="invoice-4-id"></div></p>
         <p><div id="invoice-5-id"></div></p>
-        
     </ul>
     <ul class="details">
         <li class="topic">Ngày Tạo</li>
@@ -40,21 +37,16 @@
         <p><div id="invoice-3-createdate"></div></p>
         <p><div id="invoice-4-createdate"></div></p>
         <p><div id="invoice-5-createdate"></div></p>
-
     </ul>
     <ul class="details">
-        <li class="topic">Tổng Tiền </li>
+        <li class="topic">Tổng Tiền</li>
         <p><div id="invoice-1-total"></div></p>
         <p><div id="invoice-2-total"></div></p>
         <p><div id="invoice-3-total"></div></p>
         <p><div id="invoice-4-total"></div></p>
         <p><div id="invoice-5-total"></div></p>
     </ul>
-   
-
 </div>
 <div class="button">
-    <a href="#">See All</a>
+    <a href="/Admin/Gembox/GetAllHighestInvoice" a-asp-action="GetAllHighestInvoice"> Xem Tất Cả</a>
 </div>
-
-

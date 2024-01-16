@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách thống kê số lượng tồn</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .title {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #333;
+            color: #fff;
+        }
+
+        #product-details {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="title">Danh sách thống kê số lượng tồn</div>
+
+    <div id="product-details" class="sales-details">
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã Sản Phẩm</th>
+                    <th>Tên Sản Phẩm</th>
+                    <th>Số Lượng Tồn</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: "/Admin/Gembox/GetProductsSortedByQuantityAsc"
+            }).done(function (data) {
+                var tableBody = $("#product-details table tbody");
+
+                for (var i = 0; i < data.length; i++) {
+                    var product = data[i];
+
+                    var row = $("<tr>");
+                    $("<td>").text(product.id).appendTo(row);
+                    $("<td>").text(product.name).appendTo(row);
+                    $("<td>").text(product.quantity).appendTo(row);
+
+                    row.appendTo(tableBody);
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

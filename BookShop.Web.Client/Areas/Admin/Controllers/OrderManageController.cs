@@ -17,7 +17,7 @@ using System;
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	[Authorize(Roles = "Admin")]
+	[Authorize(Roles = "Admin,Staff")]
 	public class OrderManageController : Controller
 	{
 		private List<OrderViewModel> _orders;
@@ -175,9 +175,9 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 				_order.Total += item.Quantity * item.Price;
 			}
 			_order.Weight = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Weight / 1000)));
-			_order.Width = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Width / 100)));
-			_order.Length = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Length / 100)));
-			_order.Height = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Height / 100)));
+			_order.Width = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Width / 10)));
+			_order.Length = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Length / 10)));
+			_order.Height = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Height / 10)));
 			_order.TotalPayment = _order.Total + Convert.ToInt32(_order.Shipfee);
 			var promotions = await _orderPromotionService.GetByOrder(id);
 			_order.orderPromotions = promotions;
@@ -262,10 +262,14 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					order.ModifiNotes += "\n" + DateTime.Now + " : Đơn được xác nhận bởi " + staff.Name + " - Mã code [" + staff.Code + "]\n";
 					order.Id_Staff = staff.Id;
 					var result = await _orderService.Update(order);
-					if (order.Email!=null)
+					if (order.Email != null)
 					{
-						await _EmailSender.SendEmailAsync(order.Email,$"Đơn hàng {order.Id}",$"Đơn hàng của bạn {statusId.StatusName}");
-                    }
+						await _EmailSender.SendEmailAsync(order.Email, $"Shop trẻ thơ", $"Đơn hàng {order.Code} của bạn {statusId.StatusName}" +
+							$"hỗ trợ xin vui lòng liên hệ : Trần Đức Duy - bookshoptretho@gmail.com ");
+
+
+
+					}
 					return Json(new { success = result });
 				}
 				return Json(new { success = false, errorMessage = "\nTrạng thái đơn hàng không hợp lệ!" });
@@ -290,7 +294,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					var result = await _orderService.Update(order);
                     if (order.Email != null)
                     {
-                        await _EmailSender.SendEmailAsync(order.Email, $"Đơn hàng {order.Id}", $"Đơn hàng của bạn {statusId.StatusName}");
+                        await _EmailSender.SendEmailAsync(order.Email, $"Shop trẻ thơ", $"Đơn hàng {order.Code} của bạn {statusId.StatusName}" +
+                                                    $"hỗ trợ xin vui lòng liên hệ : Trần Đức Duy - bookshoptretho@gmail.com ");
                     }
                     return Json(new { success = result });
 				}
@@ -353,7 +358,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					var result = await _orderService.Update(order);
                     if (order.Email != null)
                     {
-                        await _EmailSender.SendEmailAsync(order.Email, $"Đơn hàng {order.Id}", $"Đơn hàng của bạn {statusId.StatusName}");
+                        await _EmailSender.SendEmailAsync(order.Email, $"Shop trẻ thơ", $"Đơn hàng {order.Code} của bạn {statusId.StatusName}" +
+                                                    $"hỗ trợ xin vui lòng liên hệ : Trần Đức Duy - bookshoptretho@gmail.com ");
                     }
                     return Json(new { success = result });
 				}
@@ -408,7 +414,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					var result = await _orderService.Update(order);
                     if (order.Email != null)
                     {
-                        await _EmailSender.SendEmailAsync(order.Email, $"Đơn hàng {order.Id}", $"Đơn hàng của bạn {statusId.StatusName}");
+                        await _EmailSender.SendEmailAsync(order.Email, $"Shop trẻ thơ", $"Đơn hàng {order.Code} của bạn {statusId.StatusName}" +
+                                                    $"hỗ trợ xin vui lòng liên hệ : Trần Đức Duy - bookshoptretho@gmail.com ");
                     }
                     return Json(new { success = result });
 				}
@@ -482,7 +489,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 						}
                         if (order.Email != null)
                         {
-                            await _EmailSender.SendEmailAsync(order.Email, $"Đơn hàng {order.Id}", $"Đơn hàng của bạn {statusId.StatusName}");
+                            await _EmailSender.SendEmailAsync(order.Email, $"Shop trẻ thơ", $"Đơn hàng {order.Code} của bạn {statusId.StatusName}" +
+                                                        $"hỗ trợ xin vui lòng liên hệ : Trần Đức Duy - bookshoptretho@gmail.com ");
                         }
                         return Json(new { success = result });
 					}
@@ -525,7 +533,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 				}
                 if (order.Email != null)
                 {
-                    await _EmailSender.SendEmailAsync(order.Email, $"Đơn hàng {order.Id}", $"Đơn hàng của bạn {statusId.StatusName}");
+                    await _EmailSender.SendEmailAsync(order.Email, $"Shop trẻ thơ", $"Đơn hàng {order.Code} của bạn {statusId.StatusName}" +
+                                                $"hỗ trợ xin vui lòng liên hệ : Trần Đức Duy - bookshoptretho@gmail.com ");
                 }
                 return Json(new { success = result });
 			}
@@ -548,7 +557,8 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 					var result = await _orderService.Update(order);
                     if (order.Email != null)
                     {
-                        await _EmailSender.SendEmailAsync(order.Email, $"Đơn hàng {order.Id}", $"Đơn hàng của bạn {statusId.StatusName}");
+                        await _EmailSender.SendEmailAsync(order.Email, $"Shop trẻ thơ", $"Đơn hàng {order.Code} của bạn {statusId.StatusName}" +
+                                                    $"hỗ trợ xin vui lòng liên hệ : Trần Đức Duy - bookshoptretho@gmail.com ");
                     }
                     return Json(new { success = result });
 				}

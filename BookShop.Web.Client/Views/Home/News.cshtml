@@ -1,0 +1,194 @@
+﻿@using BookShop.BLL.ConfigurationModel.NewsModel;
+
+@model List<NewsViewModel>
+@{
+    ViewData["Title"] = "Tin tức";
+}
+<style>
+    .title {
+        color: #222;
+        font-weight: 700;
+        text-align: justify;
+        padding: 20px 0 10px 0;
+        cursor: pointer;
+        font-size: 20px;
+    }
+
+        .title:hover {
+            color: #25a0e2;
+            text-align: justify;
+        }
+
+    .short-infor {
+        text-align: justify;
+        color: #888;
+    }
+
+    .thumbnail img {
+        width: 100%;
+    }
+
+    .thumbnail {
+        padding: 20px;
+    }
+
+    .title-category {
+        color: #222;
+        font-weight: 700;
+        text-align: justify;
+        padding: 20px 0 0 0;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+        .title-category:hover {
+            color: #25a0e2;
+            text-align: justify;
+        }
+</style>
+@if (Model.Count < 0)
+{
+    <p>Hiện chưa có bài viết nào</p>
+}
+else
+{
+
+    <div class="container">
+        <div class="row">
+            <div class="col-7">
+                @foreach (var item in Model.Take(4))
+                {
+                    <div class="row new-infor">
+                        <div class="col-5 thumbnail">
+                            <img width="230px" height="153px" src="~/img/blog/@item.Img" />
+                        </div>
+                        <div class="col-7">
+                            <div class="title">
+                                <a asp-action="DetailsNew" asp-controller="Home" asp-route-id="@item.Id">@item.Title</a>
+                            </div>
+                            <div class="short-infor">
+                                @item.Description
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @*
+            <div class="row new-infor">
+            <div class="col-5 thumbnail">
+            <img src="https://cdnphoto.dantri.com.vn/7uOcGXN5H-fLi8sVpHVmeIxmEsg=/zoom/378_252/2024/01/14/ttg1-16674742319591431933173-3220-170497544736823675628-68-0-1068-1600-crop-17049754539441644632482-crop-1705216026902.jpeg" />
+            </div>
+            <div class="col-7">
+            <div class="title">
+            Thủ tướng dự hội nghị của WEF - Khẳng định
+            vai trò tại các diễn đàn đa phương
+            </div>
+            <div class="short-infor">
+            Các chuyên gia Thụy Sĩ cho biết chuyến công
+            tác của Thủ tướng Phạm Minh Chính dự Hội
+            nghị Thường niên của WEF là dịp để Việt Nam
+            khẳng định đóng góp và vai trò tại các diễn
+            đàn đa phương.
+            </div>
+            </div>
+            </div>
+
+            <div class="row new-infor">
+            <div class="col-5 thumbnail">
+            <img src="https://cdnphoto.dantri.com.vn/7uOcGXN5H-fLi8sVpHVmeIxmEsg=/zoom/378_252/2024/01/14/ttg1-16674742319591431933173-3220-170497544736823675628-68-0-1068-1600-crop-17049754539441644632482-crop-1705216026902.jpeg" />
+            </div>
+            <div class="col-7">
+            <div class="title">
+            Thủ tướng dự hội nghị của WEF - Khẳng định
+            vai trò tại các diễn đàn đa phương
+            </div>
+            <div class="short-infor">
+            Các chuyên gia Thụy Sĩ cho biết chuyến công
+            tác của Thủ tướng Phạm Minh Chính dự Hội
+            nghị Thường niên của WEF là dịp để Việt Nam
+            khẳng định đóng góp và vai trò tại các diễn
+            đàn đa phương.
+            </div>
+            </div>
+            </div>
+
+            <div class="row new-infor">
+            <div class="col-5 thumbnail">
+            <img src="https://cdnphoto.dantri.com.vn/7uOcGXN5H-fLi8sVpHVmeIxmEsg=/zoom/378_252/2024/01/14/ttg1-16674742319591431933173-3220-170497544736823675628-68-0-1068-1600-crop-17049754539441644632482-crop-1705216026902.jpeg" />
+            </div>
+            <div class="col-7">
+            <div class="title">
+            Thủ tướng dự hội nghị của WEF - Khẳng định
+            vai trò tại các diễn đàn đa phương
+            </div>
+            <div class="short-infor">
+            Các chuyên gia Thụy Sĩ cho biết chuyến công
+            tác của Thủ tướng Phạm Minh Chính dự Hội
+            nghị Thường niên của WEF là dịp để Việt Nam
+            khẳng định đóng góp và vai trò tại các diễn
+            đàn đa phương.
+            </div>
+            </div>
+            </div>
+
+            *@
+            </div>
+
+            <div class="col-4 offset-md-1">
+                @foreach (var item in Model.Skip(4).Take(4).ToList())
+                {
+                    <div class="row new-infor-category">
+                        <div class="col-7">
+                            <div class="title-category">
+                                <a asp-action="DetailsNew" asp-controller="Home" asp-route-id="@item.Id">@item.Title</a>
+                            </div>
+                        </div>
+                        <div class="col-5 thumbnail">
+                            <img width="143px" height="95px" src="~/img/blog/@item.Img" />
+                        </div>
+                    </div>
+                }
+
+
+                @*  <div class="row new-infor-category">
+            <div class="col-7">
+            <div class="title-category">
+            Thủ tướng dự hội nghị của WEF - Khẳng định
+            vai trò tại các diễn đàn đa phương
+            </div>
+            </div>
+            <div class="col-5 thumbnail">
+            <img src="https://cdnphoto.dantri.com.vn/7uOcGXN5H-fLi8sVpHVmeIxmEsg=/zoom/378_252/2024/01/14/ttg1-16674742319591431933173-3220-170497544736823675628-68-0-1068-1600-crop-17049754539441644632482-crop-1705216026902.jpeg" />
+            </div>
+            </div>
+
+            <div class="row new-infor-category">
+            <div class="col-7">
+            <div class="title-category">
+            Thủ tướng dự hội nghị của WEF - Khẳng định
+            vai trò tại các diễn đàn đa phương
+            </div>
+            </div>
+            <div class="col-5 thumbnail">
+            <img src="https://cdnphoto.dantri.com.vn/7uOcGXN5H-fLi8sVpHVmeIxmEsg=/zoom/378_252/2024/01/14/ttg1-16674742319591431933173-3220-170497544736823675628-68-0-1068-1600-crop-17049754539441644632482-crop-1705216026902.jpeg" />
+            </div>
+            </div>
+
+            <div class="row new-infor-category">
+            <div class="col-7">
+            <div class="title-category">
+            Thủ tướng dự hội nghị của WEF - Khẳng định
+            vai trò tại các diễn đàn đa phương
+            </div>
+            </div>
+            <div class="col-5 thumbnail">
+            <img src="https://cdnphoto.dantri.com.vn/7uOcGXN5H-fLi8sVpHVmeIxmEsg=/zoom/378_252/2024/01/14/ttg1-16674742319591431933173-3220-170497544736823675628-68-0-1068-1600-crop-17049754539441644632482-crop-1705216026902.jpeg" />
+            </div>
+            </div> *@
+            </div>
+        </div>
+    </div>
+
+}
+<partial name="_Paging" model="@ViewBag.pagingmodel" />
+<br />

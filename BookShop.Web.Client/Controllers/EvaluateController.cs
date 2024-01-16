@@ -10,27 +10,36 @@ namespace BookShop.Web.Client.Controllers
     {
 
         private readonly IEvaluateService Evaluate;
+        private readonly IOrderDetailService _OrderDetails;
 
-        public EvaluateController(IEvaluateService evaluate)
+        public EvaluateController(IEvaluateService evaluate, IOrderDetailService orderDetails )
         {
             Evaluate = evaluate;
+            _OrderDetails = orderDetails;
         }
+        [TempData]
+        public string StatusMessage { get; set; }
 
-        public IActionResult Index()
+		public IActionResult Index()
         {
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> ReplyComment(CreateEvaluateModel model)
         {
+
             var comment = new CreateEvaluateModel()
             {
                 Id_Parents = model.Id_Parents,
                 Content = model.Content,
-                Point = 5,
+                Point = model.Point,
                 Id_User = model.Id_User,
                 Id_Product = model.Id_Product
             };
+            if (model.Point==null)
+            {
+                comment.Point = 5;
+            }
             var statusadd = await Evaluate.Add(comment);
             if (!statusadd)
             {
@@ -39,16 +48,34 @@ namespace BookShop.Web.Client.Controllers
             return Redirect($"/Home/ChiTietSanPham/{model.Id_Product}");
         }
 
-        [HttpPost]
+        [HttpPost]      
         public async Task<IActionResult> CreateComment(CreateEvaluateModel Comment)
         {
-            Comment.Point =5;
+
+            if (string.IsNullOrEmpty(Comment.Content))
+            {
+                StatusMessage = "Không được để trống nội dung";
+				return Redirect($"/Home/ChiTietSanPham/{Comment.Idsp}");
+			}
+			if (Comment.Point == null|| Comment.Point==0)
+			{
+				Comment.Point = 5;
+			}
+			var orderdetails= (await _OrderDetails.GetAll()).Where(x => x.Id_User == Comment.Id_User&&x.Id_Product==Comment.Idsp).FirstOrDefault();
+            if (orderdetails==null)
+            {
+                return Content("đã có lỗi xảy ra");
+            }
+            Comment.Id_User = orderdetails.Id_User;
+            Comment.Id_Product = orderdetails.Id;
+          
+            //	Comment.Point =5;
             var statusadd = await Evaluate.Add(Comment);
             if (!statusadd)
             {
                 return Content("đã có lỗi xảy ra");
             }
-            return Redirect($"/Home/ChiTietSanPham/{Comment.Id_Product}");
+            return Redirect($"/Home/ChiTietSanPham/{Comment.Idsp}");
         }
     }
 }

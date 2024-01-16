@@ -29,10 +29,10 @@ namespace BookShop.Web.Client.Controllers
 			return _userManager.GetUserAsync(HttpContext.User);
 		}
 		// GET: CartController
-		public ActionResult Index()
-		{
-			return View();
-		}
+		//public ActionResult Index()
+		//{
+		//	return View();
+		//}
 
         // GET: CartController/Details/5
         public async Task<IActionResult> CartDetails()
@@ -47,12 +47,18 @@ namespace BookShop.Web.Client.Controllers
                 if (cartCheck == null)
                 {
                     await _cartService.Add(new CartViewModel() { Id_User = user.Id });
-                }
+				}
 
-                detail = await _cartDetailService.GetByCart(user.Id);
+				detail = await _cartDetailService.GetByCart(user.Id);
+				foreach(var item in detail)
+				{
+					var product = await _productService.GetById(item.Id_Product);
+					item.NewPrice = product.NewPrice;
+					item.TotalPrice = item.Quantity * item.NewPrice;
+				}
 
-                // Set IsSelected to true for all items initially
-                foreach (var item in detail)
+				// Set IsSelected to true for all items initially
+				foreach (var item in detail)
                 {
                     item.IsSelected = true;
                     item.IsCanceled = false;
@@ -64,6 +70,14 @@ namespace BookShop.Web.Client.Controllers
                 if (!string.IsNullOrEmpty(customCartChar))
                 {
                     detail = JsonConvert.DeserializeObject<List<CartDetailViewModel>>(customCartChar);
+					foreach(var item in detail)
+                    {
+                        var product = await _productService.GetById(item.Id_Product);
+						item.NewPrice = product.NewPrice;
+						item.TotalPrice = item.Quantity * item.NewPrice;
+						item.SoLuongKho = product.Quantity;
+						item.ImgProductCartDetail = product.ImgUrl;
+                    }
                 }
                 else
                 {
@@ -110,7 +124,7 @@ namespace BookShop.Web.Client.Controllers
 						Quantity = quantity,
 					};
 					await _cartDetailService.Add(cpc);
-					return Json(new { success = true });
+					return Json(new { success = true, max = product.Quantity });
 				}
 				else
 				{
@@ -120,7 +134,7 @@ namespace BookShop.Web.Client.Controllers
 					};
 					if (upc.Quantity > product.Quantity)
 					{
-						return Json(new { success = false, errorMessage = "Số lượng vượt quá số lượng tồn kho" });
+						return Json(new { success = false, max = product.Quantity, errorMessage = "Số lượng vượt quá số lượng tồn kho" });
 					}
 					await _cartDetailService.Update(pc.Id, upc);
 					return Json(new { success = true });
@@ -140,7 +154,7 @@ namespace BookShop.Web.Client.Controllers
 						pc.Quantity += quantity;
 						pc.TotalPrice = product.Price * pc.Quantity;
 						HttpContext.Session.SetString("sessionCart", JsonConvert.SerializeObject(customCart));
-						return Json(new { success = true });
+						return Json(new { success = true, max = product.Quantity });
 					}
 				}
 				pc = new CartDetailViewModel()
@@ -158,27 +172,94 @@ namespace BookShop.Web.Client.Controllers
 				};
 				customCart.Add(pc);
 				HttpContext.Session.SetString("sessionCart", JsonConvert.SerializeObject(customCart));
-				return Json(new { success = true });
+				return Json(new { success = true, max = product.Quantity });
 			}
 		}
 
 		// POST: CartController/Edit/5
-		[HttpPost]
-		public async Task<IActionResult> EditCart(int id, int quantity) // truyền id cart detail (không phải idUser) và số lượng trên thẻ input
+		//[HttpPost]
+		public async Task<IActionResult> EditCart(int id, int quantity)
 		{
-			try
+			var user = await GetCurrentUserAsync();
+			var product = await _productService.GetById(id);
+			if (product == null) return Json(new { success = false, errorMessage = "Không tìm thấy sản phẩm" });
+			if (user != null) // có đăng nhập
 			{
-				var itemCart = await _cartDetailService.GetById(id);
-				if(itemCart != null) {
-					itemCart.Quantity = quantity!=(int)quantity?1:quantity;
-					var result = await _cartDetailService.Update(id, new UpdateCartDetailModel { Quantity = itemCart.Quantity });
-					return Json(new { success = result });
+				var cartCheck = await _cartService.GetByUser(user.Id);
+				if (cartCheck == null)
+				{
+					await _cartService.Add(new CartViewModel() { Id_User = user.Id, });
 				}
-				return Json(new { success = false, message = "không tìm thấy item" });
+				var userId = user.Id;
+				var cart = await _cartService.GetByUser(userId);
+				if (cart == null)
+				{
+					cart = new CartViewModel()
+					{
+						Id_User = userId,
+					};
+					await _cartService.Add(cart);
+				}
+				var pc = (await _cartDetailService.GetByCart(userId)).FirstOrDefault(p => p.Id_Product == product.Id);
+				if (pc == null)
+				{
+					var cpc = new CreateCartDetailModel()
+					{
+						Id_User = userId,
+						Id_Product = product.Id,
+
+						Quantity = quantity,
+					};
+					await _cartDetailService.Add(cpc);
+					return Json(new { success = true, max = product.Quantity });
+				}
+				else
+				{
+					var upc = new UpdateCartDetailModel()
+					{
+						Quantity = quantity,
+					};
+					if (upc.Quantity > product.Quantity)
+					{
+						return Json(new { success = false, max = product.Quantity, errorMessage = "Số lượng vượt quá số lượng tồn kho" });
+					}
+					await _cartDetailService.Update(pc.Id, upc);
+					return Json(new { success = true });
+				}
 			}
-			catch (Exception ex)
+			else // không đăng nhập
 			{
-				return Json(new { success = false, errorMessage = ex });
+				var customCartChar = HttpContext.Session.GetString("sessionCart");
+				var customCart = new List<CartDetailViewModel>();
+				var pc = new CartDetailViewModel();
+				if (!string.IsNullOrEmpty(customCartChar))
+				{
+					customCart = JsonConvert.DeserializeObject<List<CartDetailViewModel>>(customCartChar);
+					pc = customCart.FirstOrDefault(x => x.Id_Product == product.Id);
+					if (pc != null)
+					{
+						pc.Quantity = quantity;
+						pc.TotalPrice = product.Price * pc.Quantity;
+						HttpContext.Session.SetString("sessionCart", JsonConvert.SerializeObject(customCart));
+						return Json(new { success = true, max = product.Quantity });
+					}
+				}
+				pc = new CartDetailViewModel()
+				{
+					Id_Product = product.Id,
+					Quantity = quantity,
+					ProductName = product.Name,
+					ProductPrice = product.Price,
+					Status = product.Status,
+					CreatedDate = DateTime.Now,
+					TotalPrice = product.Price * quantity,
+					ImgProductCartDetail = product.ImgUrl,
+					SoLuongKho = product.Quantity
+
+				};
+				customCart.Add(pc);
+				HttpContext.Session.SetString("sessionCart", JsonConvert.SerializeObject(customCart));
+				return Json(new { success = true, max = product.Quantity });
 			}
 		}
 
