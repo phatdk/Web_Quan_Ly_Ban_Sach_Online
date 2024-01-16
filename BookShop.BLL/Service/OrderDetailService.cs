@@ -52,7 +52,25 @@ namespace BookShop.BLL.Service
 			catch (Exception ex) { return false; }
 		}
 
-		public async Task<OrderDetailViewModel> GetById(int id)
+        public async Task<List<OrderDetailViewModel>> GetAll()
+        {
+			var listOrderDetails = await _orderDetailRepository.GetAllAsync();
+			var list = from x in listOrderDetails
+					   select new OrderDetailViewModel()
+					   {
+						   Id = x.Id,
+						   Id_Product = x.Id_Product,
+						   Id_Order = x.Id_Order,
+						   Id_User = x.UserId,
+						   Quantity = x.Quantity,
+						   Price = x.Price,
+					   };
+
+
+            return list.ToList();
+        }
+
+        public async Task<OrderDetailViewModel> GetById(int id)
 		{
 			var details = await _orderDetailRepository.GetByIdAsync(id);
 			return new OrderDetailViewModel()

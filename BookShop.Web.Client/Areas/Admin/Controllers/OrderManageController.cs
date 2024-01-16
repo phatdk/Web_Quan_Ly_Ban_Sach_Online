@@ -17,7 +17,7 @@ using System;
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	[Authorize(Roles = "Admin")]
+	[Authorize(Roles = "Admin,Staff")]
 	public class OrderManageController : Controller
 	{
 		private List<OrderViewModel> _orders;

@@ -10,8 +10,8 @@ using System.Text;
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
-    public class EvaluateController : Controller
+	[Authorize(Roles = "Admin,Staff")]
+	public class EvaluateController : Controller
     {
         private readonly IEvaluateService _evaluateService;
         private List<EvaluateViewModel> _evaluateList;
