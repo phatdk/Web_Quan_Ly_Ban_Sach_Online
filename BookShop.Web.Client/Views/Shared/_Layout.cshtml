@@ -233,19 +233,23 @@
 				</div>
 				<div class="option">
 					<ul>
+						<li>
+							<a class="text-dark" asp-area="" asp-controller="Home" asp-action="News"> <i class="fa fa-shopping-cart" style="color:#999999"></i> Tin tức </a>
+						</li>
 						@if (!isAdmin)
 						{
-							<li>
+							@* <li>
 								<a class="text-dark" asp-area="" asp-controller="Cart" asp-action="CartDetails"><i class="fa fa-bell" style="color:#999999"></i> Thông báo </a>
-							</li>
+							</li> *@
 							<li>
 								<a class="text-dark" asp-area="" asp-controller="Home" asp-action="Danhsachyeuthich"> <i class="fas fa-heart" style="color:#C92127"></i> Yêu thích </a>
 							</li>
 							<li>
 								<a class="text-dark" asp-area="" asp-controller="Cart" asp-action="CartDetails"> <i class="fa fa-shopping-cart" style="color:#999999"></i> Giỏ hàng </a>
 							</li>
+							
 						}
-
+						
 						<li>
 							<div class="text-dark">
 								@{

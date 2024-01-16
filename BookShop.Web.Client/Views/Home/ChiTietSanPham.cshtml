@@ -346,7 +346,7 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
 				@foreach (var item in Model.Comment.Where(x => x.Id_Parents == null))
 				{
 					var userComment = UserManager.Users.FirstOrDefault(x => x.Id == item.Id_User);
-					var ComentChild = await _Comment.GetNestedComments(item.Id);
+					//var ComentChild = await _Comment.GetComments(item.Id);
 					<div class=" comment-container d-flex flex-start">
 						@if (userComment != null)
 						{
@@ -370,12 +370,12 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
 									<p class="mb-1">
 										@userComment.UserName<span class="small">- @item.CreatedDate.ToShortDateString()</span>
 									</p>
-									@if (isAdmin)
+									@* @if (isAdmin)
 									{
 										<a>
 											<button type="button" class="btn-sm btn-primary replyButton">Trả lời</button>
 										</a>
-									}
+									} *@
 
 
 								</div>
@@ -417,23 +417,25 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
 									@item.Content
 								</p>
 							</div>
-							@if (userLogin != null)
-							{
-								<form class="replyForm" asp-action="ReplyComment" asp-controller="Evaluate" method="post">
-									<div class="form-group">
-										<input name="Id_User" hidden value="@userLogin.Id" class="form-control" />
-										<input name="Id_Parents" hidden value="@item.Id" class="form-control" />
-										<input name="Id_Product" hidden value="@Model.Id" class="form-control" />
-										<div class="mb-3">
-											<label for="comment">Trả lời user @userComment.UserName</label>
-											<textarea class="form-control" name="Content" id="comment" rows="3"></textarea>
-										</div>
-									</div>
-									<button type="submit" id="confirmCancel" class="btn btn-primary">Gửi bình luận</button>
-								</form>
-							}
+							@{
+								// @if (userLogin != null)
+								// {
+								// 	<form class="replyForm" asp-action="ReplyComment" asp-controller="Evaluate" method="post">
+								// 		<div class="form-group">
+								// 			<input name="Id_User" hidden value="@userLogin.Id" class="form-control" />
+								// 			<input name="Id_Parents" hidden value="@item.Id" class="form-control" />
+								// 			<div class="mb-3">
+								// 				@* <label for="comment">Trả lời user @userComment.UserName</label> *@
+								// 				<textarea class="form-control" name="Content" id="comment" rows="3"></textarea>
+								// 			</div>
+								// 		</div>
+								// 		<button type="submit" id="confirmCancel" class="btn btn-primary">Gửi bình luận</button>
+								// 	</form>
+								// }
+							} 
+							
 
-							@if (ComentChild.Count > 0)
+							@* @if (ComentChild.Count > 0)
 							{
 								foreach (var chill in ComentChild)
 								{
@@ -474,7 +476,7 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
 
 								}
 
-							}
+							} *@
 
 
 						</div>
@@ -489,8 +491,8 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
 
 		@if (userLogin != null)
 		{
-			if (await _Comment.CheckUserExitsBill(userLogin.Id, Model.Id))
-			{
+			@* if (await _Comment.CheckUserExitsBill(userLogin.Id, Model.Id))
+			{ *@
 
 				<form class="rating">
 					<label>
@@ -523,19 +525,20 @@ border-left: none; border-right: none;border-top:none; border-radius: 0px; text-
 						<span class="icon">★</span>
 						<span class="icon">★</span>
 					</label>
+
 				</form>
 
 				<form asp-action="CreateComment" asp-controller="Evaluate" method="post">
 					<input name="Id_User" hidden value="@userLogin.Id" class="form-control" />
-					<input name="Id_Product" hidden value="@Model.Id" class="form-control" />
-					<input type="hidden" name="Point" id="ratingInput" value="5" />
+				@* 	<input name="Id_Product" hidden value="@Model.Id" class="form-control" /> *@
+					<input type="hidden" name="Point" id="ratingInput" />
 					<div class="mb-3">
 						<label for="comment">Bình luận của bạn:</label>
 						<textarea class="form-control" name="Content" id="comment" rows="3"></textarea>
 					</div>
 					<button type="submit" class="btn btn-primary">Gửi bình luận</button>
 				</form>
-			}
+			//}
 		}
 	</div>
 </div>

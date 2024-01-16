@@ -380,16 +380,16 @@ namespace BookShop.BLL.Service
 				Type = product.Type,
 				CollectionId = product.Id_Collection,
 				CollectionName = product.Id_Collection != null ? (await _collectionBookRepository.GetAllAsync()).Where(x => x.Id == product.Id_Collection).FirstOrDefault().Name : "",
-				Comment = (await _CommentRepository.GetAllAsync()).Where(x => x.Id_Product == id).Select(x => new ConfigurationModel.EvaluateModel.EvaluateViewModel()
-				{
-					Point = x.Point,
-					Content = x.Content,
-					CreatedDate = DateTime.Now,
-					Id_Product = x.Id_Product,
-					Id_User = x.Id_User,
-					Id_Parents = x.Id_Parents,
-					Id = x.Id
-				}).ToList(),
+				//Comment = (await _CommentRepository.GetAllAsync()).Where(x => x.Id_Product == id).Select(x => new ConfigurationModel.EvaluateModel.EvaluateViewModel()
+				//{
+				//	Point = x.Point,
+				//	Content = x.Content,
+				//	CreatedDate = DateTime.Now,
+				//	Id_Product = x.Id_Product,
+				//	Id_User = x.Id_User,
+				//	Id_Parents = x.Id_Parents,
+				//	Id = x.Id
+				//}).ToList(),
 				bookViewModels = new List<BookViewModel>(),
 				imageViewModels = new List<ImageViewModel>(),
 				authorModels = new List<ConfigurationModel.AuthorModel.AuthorModel>(),

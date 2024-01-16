@@ -11,6 +11,7 @@ namespace BookShop.BLL.IService
     public interface IEvaluateService
     {
         Task<double> GetSta(int idpro);
+        Task<List<EvaluateViewModel>> GetComments(int IdProduct);
         Task<bool> CheckUserExitsBill(int userId, int productId);
         Task<List<EvaluateViewModel>> GetNestedComments(int parentId);
         public Task<List<EvaluateViewModel>> GetAll();
