@@ -7,27 +7,40 @@
     <title>Thống kê</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
-
-        /* CSS styles for the table */
-            table {
-                  border-collapse: collapse;
-                  width: 100%;
-
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
         }
 
-            th, td {
-                  padding: 8px;
-                  text-align: left;
-                  border: 1px solid #ddd;
-
+        .statistics-container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
         }
 
-            th {
-                  background-color: #f2f2f2;
-
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
         }
 
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
     </style>
+    <script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" ></script>
+
     <script>
         $(document).ready(function () {
             $.ajax({
@@ -47,9 +60,13 @@
                     var invoice = data[i];
                     var row = $("<tr>");
 
+                    // Chuyển đổi ngày tạo thành định dạng ngày tháng năm giờ
+                    var createdDate = new Date(invoice.createdDate);
+                    var formattedDate = createdDate.toLocaleString();
+
                     // Add invoice data to table cells
                     $("<td>").text(invoice.id).appendTo(row);
-                    $("<td>").text(invoice.createdDate).appendTo(row);
+                    $("<td>").text(formattedDate).appendTo(row);
                     $("<td>").text(invoice.total).appendTo(row);
 
                     row.appendTo(table);
@@ -58,6 +75,9 @@
                 $(".high-value-invoices").append(table);
             });
         });
+    </script>
+
+    <!-- ... (rest of your HTML) ... -->
     </script>
 </head>
 <body>

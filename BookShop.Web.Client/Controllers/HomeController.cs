@@ -26,27 +26,72 @@ namespace BookShop.Web.Client.Controllers
 		private readonly ICategoryService _categoryService;
 		private readonly UserManager<Userr> _userManager;
 		private readonly PointNPromotionSerVice _pointNPromotionSerVice;
+		private readonly INewsService _NewService;
+		private readonly IEvaluateService _EvaluateService;
 		private readonly ProductPreviewService _productPreviewService;
+		private readonly IPromotionService _promotionService;
 
-		public HomeController(ILogger<HomeController> logger, IProductService productService, IWishListService wishListService, ICategoryService categoryService, UserManager<Userr> userManager)
-		{
-			_logger = logger;
-			_wishList = new List<WishListViewModel>();
-			_products = new List<ProductViewModel>();
-			_product = new ProductViewModel();
-			_categoryService = categoryService;
-			_productService = productService;
-			_WishListService = wishListService;
-			_userManager = userManager;
-			_pointNPromotionSerVice = new PointNPromotionSerVice();
-			_productPreviewService = new ProductPreviewService();
-		}
+    public HomeController(ILogger<HomeController> logger, IProductService productService, IWishListService wishListService, ICategoryService categoryService, UserManager<Userr> userManager, IPromotionService promotionService, INewsService newService = null, IEvaluateService evaluateService = null)
+    {
+        _logger = logger;
+        _wishList = new List<WishListViewModel>();
+        _products = new List<ProductViewModel>();
+        _product = new ProductViewModel();
+        _categoryService = categoryService;
+        _productService = productService;
+        _WishListService = wishListService;
+        _userManager = userManager;
+        _pointNPromotionSerVice = new PointNPromotionSerVice();
+        _NewService = newService;
+        _productPreviewService = new ProductPreviewService();
+        _EvaluateService = evaluateService;
+        _promotionService = promotionService;
+    }
 
-		public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index()
 		{
 			return View();
 		}
-		public async Task<IActionResult> SachMoi()
+		public async Task<IActionResult> News([FromQuery(Name = "p")] int currentPages)
+		{
+			var ListBlog = (await _NewService.GetAll()).ToList();
+            int pagesize = 8;
+            if (pagesize <= 0)
+            {
+                pagesize = 8;
+            }
+            int countPages = (int)Math.Ceiling((double)ListBlog.Count() / pagesize);
+            if (currentPages > countPages)
+            {
+                currentPages = countPages;
+            }
+            if (currentPages < 1)
+            {
+                currentPages = 1;
+            }
+
+            var pagingmodel = new PagingModel()
+            {
+                currentpage = currentPages,
+                countpages = countPages,
+                generateUrl = (int? p) => Url.Action("News", "Home", new { p = p, pagesize = pagesize })
+            };
+            ViewBag.pagingmodel = pagingmodel;
+            ListBlog = ListBlog.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
+            return View(ListBlog);
+		}
+		public async Task<IActionResult> DetailsNew(int id)
+		{
+			var blog = await _NewService.GetById(id);
+			if (blog==null)
+			{
+				return NotFound();
+			}
+			return View(blog);
+			return View();
+		}
+
+        public async Task<IActionResult> SachMoi()
 		{
 			_products = await _productService.GetDanhMuc("Cổ điển");
 
@@ -66,12 +111,30 @@ namespace BookShop.Web.Client.Controllers
 			_products = await _productService.GetDanhMuc("Nuôi dạy con");
 
 			var product1 = _products.OrderByDescending(c => c.CreatedDate).ToList();
-			var top10Products1 = product1.Take(7).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+			var top10Products1 = product1.Take(12).GroupBy(c => c.Id).Select(group => group.First()).ToList();
 			return Json(new { data = top10Products1 });
+		}
+        public async Task<IActionResult> SanPhamSale()
+        {
+            _products = (await _productService.GetAll()).Where(c=>c.Saleoff > 0).ToList();
+
+            var product1 = _products.OrderByDescending(c => c.CreatedDate).ToList();
+            var top10Products1 = product1.Take(12).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+            return Json(new { data = top10Products1 });
+        }
+
+		public async Task<IActionResult> PhieuGiamGia()
+		{
+			var pro = (await _promotionService.GetAll()).Where(c=>c.NameType == "Phiếu khuyến mãi phát hành mã").ToList();
+			
+			var product1 = pro.OrderByDescending(c => c.CreatedDate).ToList();
+			var top4 = product1.Take(4).GroupBy(c => c.Id).Select(group => group.First()).ToList();
+			return Json(new { data = top4 });
 		}
 		public async Task<IActionResult> ChiTietSanPham(int id)
 		{
 			var product = await _productService.GetByIdAndCommnet(id);
+			product.Comment = await _EvaluateService.GetComments(id); 
 			if (product != null)
 			{
 				return View(product);

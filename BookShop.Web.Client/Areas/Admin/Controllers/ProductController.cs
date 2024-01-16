@@ -15,7 +15,7 @@ using static NuGet.Packaging.PackagingConstants;
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	[Authorize(Roles = "Admin")]
+	[Authorize(Roles = "Admin,Staff")]
 	public class ProductController : Controller
 	{
 		List<ProductViewModel> _listProduct;
