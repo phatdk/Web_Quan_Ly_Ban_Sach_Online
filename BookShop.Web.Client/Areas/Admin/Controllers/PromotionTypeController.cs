@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Staff")]
     public class PromotionTypeController : Controller
 	{
 		IPromotionTypeService _promotionTypeService;

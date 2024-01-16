@@ -2,13 +2,15 @@
 using BookShop.BLL.IService;
 using BookShop.BLL.Service;
 using BookShop.DAL.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers
 {
-    public class CollectionBook : Controller
+	[Authorize(Roles = "Admin,Staff")]
+	public class CollectionBook : Controller
     {
         public ICollectionService _CollectionSerVice;
         public IProductBookService _ProductBookService;
