@@ -3,482 +3,507 @@
 @model BookShop.BLL.ConfigurationModel.OrderModel.OrderViewModel
 
 @{
-	ViewData["Title"] = "Chi tiết đơn hàng";
-	Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
-	int total = 0;
+    ViewData["Title"] = "Chi tiết đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_adminLayout.cshtml";
+    int total = 0;
 }
 
 <div>
-	<h4>Chi tiết đơn hàng</h4>
-	<hr />
-	<div class="row">
-		<h4 class="d-flex text-center justify-content-center col-12">---Thông Tin Đơn Hàng---</h4> <hr />
-		<div class="col-7 border-end mb-5">
-			<div class="form-group">
-				<label class="form-label">Mã đơn hàng: <strong>@Model.Code</strong></label>
-			</div>
-			<div class="form-group">
-				<label class="form-label">Khách hàng: <strong>@Model.NameUser</strong></label><span>&ensp; | &ensp;</span>
-				<label class="form-label">Mã: <strong>@Model.UserCode</strong></label>
-			</div>
-			<div class="form-group">
-				<label class="form-label">Người nhận: <strong>@Model.Receiver</strong></label>
-			</div>
-			<div class="form-group">
-				<label class="form-label">Email: <strong>@Model.Email</strong></label><span>&ensp; | &ensp;</span>
-				<label class="form-label">Điện thoại: <strong>@Model.Phone</strong></label>
-			</div>
-			<div class="form-group">
-				<label class="form-label">Địa chỉ nhận hàng: <strong>@Model.Address</strong></label>
-			</div>
-			<div class="form-group">
-				<label class="form-label">Ghi chú của khách hàng: <strong>@Model.Description</strong></label>
-			</div>
-			<div class="form-group">
-				@{
-					var orderType = Model.IsOnlineOrder == true ? "Đơn hàng Online" : "Đơn hàng Offline";
-				}
-				<label class="form-label">loại đơn: <strong>@orderType</strong></label>
-			</div>
-			<div class="form-group">
-				<label class="form-label">Kích thước (L*W*H): <strong>@Model.Length * @Model.Width * @Model.Height (cm)</strong></label>
-			</div>
-			<div class="form-group">
-				<label class="form-label">Cân nặng: <strong>@Model.Weight (g)</strong></label>
-			</div>
-			<div class="form-group">
-				<label class="form-label">Giá trị đơn hàng: <strong class="text-danger">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Total)</strong></label>
-			</div>
-			<div class="form-group ms-3">
-				<label class="form-label">Điểm sử dụng: <strong>@Model.PointUsed</strong> Point</label><span>&ensp; | &ensp;</span>
-				<label class="form-label">Số tiền giảm: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.PointAmount)</strong> đ</label>
-			</div>
-			<div class="form-group ms-3">
-				<label class="form-label">
-					Khuyến mãi sử dụng:
-					@foreach (var item in Model.orderPromotions)
-					{
-						<br />
-						<label class="form-label ms-3">Tên: <strong>@item.NamePromotion</strong></label>
-						<span>&ensp; | &ensp;</span>
-						<label class="form-label">Số tiền giảm: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.TotalReduct)</strong></label>
-					}
-				</label>
-			</div>
-			<div class="form-group ms-3">
-				<label class="form-label">Phí giao hàng: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Shipfee)</strong></label>
-			</div>
-			<div class="form-group">
-				<label class="form-label">Số tiền thanh toán: <strong class="text-danger">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.TotalPayment)</strong></label>
-			</div>
-		</div>
-		<div class="col-5 mb-5">
-			<ul class="ps-0" style="list-style: none" id="menuDetail">
-				@foreach (var item in Model.orderDetails)
-				{
-					total += (item.Price * item.Quantity);
-					<li class="row">
-						<div class="col-3 position-relative">
-							<img class="bg-light" src="@item.Img" style="width: 100%; z-index: 0" />
-							<span class="badge" style="color: orange; position: absolute; top: 0; right: 15px; background-color: gray">@item.Quantity</span>
-						</div>
-						<span class="col-6">@item.NameProduct</span>
-						<span class="col-3">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)</span>
-					</li>
-				}
-			</ul>
-			<table id="tableDetail" hidden>
-				<thead>
-					<tr class="row">
-						<th></th>
-						<th class="col-5">Tên sách</th>
-						<th class="col-2">Số lượng</th>
-						<th class="col-3">Hành động</th>
-					</tr>
-				</thead>
-				<tbody id="listDetail">
-				</tbody>
-			</table>
-		</div>
-		<hr />
-		<h4 class="d-flex text-center justify-content-center col-12">---Thông Tin Quản Lý---</h4> <hr />
-		<div class="col-7 border-end">
-			<div class="form-group">
-				<label class="form-label">Nhân viên tiếp nhận: <strong>@Model.NameStaff</strong></label><span>&ensp; | &ensp;</span>
-				<label class="form-label">Mã: <strong>@Model.StaffCode</strong></label>
-			</div>
-			<div class="form-group">
-				<label class="form-label">Trạng thái đơn hàng: <strong>@Model.StatusName</strong></label>
-			</div>
-			<div class="form-group">
-				<label class="form-label">
-					Trạng thái thanh toán:
-					@foreach (var item in Model.orderPayments)
-					{
-						var statusPayment = item.Status == 1 ? "Đã thanh toán" : "Chưa thanh toán";
-						<br />
-						<label class="form-label ms-3">Phương thức: <strong>@item.NamePaymentForm</strong></label>
-						<span>&ensp; | &ensp;</span>
-						<label class="form-label">Trạng thái: <strong>@statusPayment</strong></label>
-					}
-				</label>
-			</div>
-			<div class="form-group">
-				<label class="form-label">Ngày tạo: <strong>@Model.CreatedDate</strong></label>
-			</div>
-			<div class="form-group">
-				<label class="form-label">Ngày xác nhận: <strong>@Model.AcceptDate</strong></label>
-			</div>
-			<div class="form-group">
-				<label class="form-label">Ngày giao: <strong>@Model.DeliveryDate</strong></label>
-			</div>
-			<div class="form-group">
-				<label class="form-label">Ngày nhận: <strong>@Model.ReceiveDate</strong></label>
-			</div>
-			<div class="form-group">
-				<label class="form-label">Ngày thanh toán: <strong>@Model.PaymentDate</strong></label>
-			</div>
-		</div>
-		<div class="col-5">
-			<div class="form-group">
-				<label class="form-label">Lần thay đổi gần nhất: <strong>@Model.ModifiDate</strong></label>
-			</div>
-			<details>
-				<summary>Ghi chú thay đổi</summary>
-				<div id="modifiNote" style="background-color: #E0E0E0; max-height: 250px; overflow-y: auto; padding: 3px; border: 1px solid black;"></div>
-			</details>
-			@if (Model.returnOrders != null)
-			{
-				<div class="form-group">
-					Phiếu trả hàng
-					@{
-						var index = 0;
-						foreach (var item in Model.returnOrders)
-						{
-							var statusReturn = item.Status == 1 ? "Chưa xử lý" : "Đã xử lý";
-							var statusColor = item.Status == 1 ? "danger" : "success";
-							index++;
-							<details class="ms-3">
-								<summary class="text-@statusColor">Phiếu trả hàng +@index</summary>
-								<div class="p-2 border-3 border-@statusColor">
-									Ngày tạo: <label class="form-label text-decoration-underline">@item.CreatedDate</label><br />
-									Ghi chú: <span>@item.Notes</span><br />
-									Trạng thái: <strong class="text-@statusColor">@statusReturn</strong>
-								</div>
-							</details>
-						}
-					}
-				</div>
-			}
-			<div id="textModify" hidden>
-				<label>Ghi chú</label>
-				<textarea id="modifyChange" class="form-control" rows="5"></textarea>
-				<label class="text-danger" id="valid" hidden></label>
-			</div>
-		</div>
-	</div>
+    <h4>Chi tiết đơn hàng</h4>
+    <hr />
+    <div class="row" id="invoice">
+        <h4 class="d-flex text-center justify-content-center col-12">---Thông Tin Đơn Hàng---</h4> <hr />
+        <div class="col-7 border-end mb-5">
+            <div class="form-group">
+                <label class="form-label">Mã đơn hàng: <strong>@Model.Code</strong></label>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Khách hàng: <strong>@Model.NameUser</strong></label><span>&ensp; | &ensp;</span>
+                <label class="form-label">Mã: <strong>@Model.UserCode</strong></label>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Người nhận: <strong>@Model.Receiver</strong></label>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Email: <strong>@Model.Email</strong></label><span>&ensp; | &ensp;</span>
+                <label class="form-label">Điện thoại: <strong>@Model.Phone</strong></label>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Địa chỉ nhận hàng: <strong>@Model.Address</strong></label>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Ghi chú của khách hàng: <strong>@Model.Description</strong></label>
+            </div>
+            <div class="form-group">
+                @{
+                    var orderType = Model.IsOnlineOrder == true ? "Đơn hàng Online" : "Đơn hàng Offline";
+                }
+                <label class="form-label">loại đơn: <strong>@orderType</strong></label>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Kích thước (L*W*H): <strong>@Model.Length * @Model.Width * @Model.Height (cm)</strong></label>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Cân nặng: <strong>@Model.Weight (g)</strong></label>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Giá trị đơn hàng: <strong class="text-danger">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Total)</strong></label>
+            </div>
+            <div class="form-group ms-3">
+                <label class="form-label">Điểm sử dụng: <strong>@Model.PointUsed</strong> Point</label><span>&ensp; | &ensp;</span>
+                <label class="form-label">Số tiền giảm: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.PointAmount)</strong> đ</label>
+            </div>
+            <div class="form-group ms-3">
+                <label class="form-label">
+                    Khuyến mãi sử dụng:
+                    @foreach (var item in Model.orderPromotions)
+                    {
+                        <br />
+                        <label class="form-label ms-3">Tên: <strong>@item.NamePromotion</strong></label>
+                        <span>&ensp; | &ensp;</span>
+                        <label class="form-label">Số tiền giảm: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.TotalReduct)</strong></label>
+                    }
+                </label>
+            </div>
+            <div class="form-group ms-3">
+                <label class="form-label">Phí giao hàng: <strong>@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.Shipfee)</strong></label>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Số tiền thanh toán: <strong class="text-danger">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", Model.TotalPayment)</strong></label>
+            </div>
+        </div>
+        <div class="col-5 mb-5">
+            <ul class="ps-0" style="list-style: none" id="menuDetail">
+                @foreach (var item in Model.orderDetails)
+                {
+                    total += (item.Price * item.Quantity);
+                    <li class="row">
+                        <div class="col-3 position-relative">
+                            <img class="bg-light" src="@item.Img" style="width: 100%; z-index: 0" />
+                            <span class="badge" style="color: orange; position: absolute; top: 0; right: 15px; background-color: gray">@item.Quantity</span>
+                        </div>
+                        <span class="col-6">@item.NameProduct</span>
+                        <span class="col-3">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.Price)</span>
+                    </li>
+                }
+            </ul>
+            <table id="tableDetail" hidden>
+                <thead>
+                    <tr class="row">
+                        <th></th>
+                        <th class="col-5">Tên sách</th>
+                        <th class="col-2">Số lượng</th>
+                        <th class="col-3">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="listDetail">
+                </tbody>
+            </table>
+        </div>
+        <hr />
+    </div>
+    <div class="row">
+    <h4 class="d-flex text-center justify-content-center col-12">---Thông Tin Quản Lý---</h4> <hr />
+    <div class="col-7 border-end">
+        <div class="form-group">
+            <label class="form-label">Nhân viên tiếp nhận: <strong>@Model.NameStaff</strong></label><span>&ensp; | &ensp;</span>
+            <label class="form-label">Mã: <strong>@Model.StaffCode</strong></label>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Trạng thái đơn hàng: <strong>@Model.StatusName</strong></label>
+        </div>
+        <div class="form-group">
+            <label class="form-label">
+                Trạng thái thanh toán:
+                @foreach (var item in Model.orderPayments)
+                {
+                    var statusPayment = item.Status == 1 ? "Đã thanh toán" : "Chưa thanh toán";
+                    <br />
+                    <label class="form-label ms-3">Phương thức: <strong>@item.NamePaymentForm</strong></label>
+                    <span>&ensp; | &ensp;</span>
+                    <label class="form-label">Trạng thái: <strong>@statusPayment</strong></label>
+                }
+            </label>
+        </div>
+        <div class="form-group" id="khanh">
+            <label class="form-label">Ngày tạo: <strong>@Model.CreatedDate</strong></label>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Ngày xác nhận: <strong>@Model.AcceptDate</strong></label>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Ngày giao: <strong>@Model.DeliveryDate</strong></label>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Ngày nhận: <strong>@Model.ReceiveDate</strong></label>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Ngày thanh toán: <strong>@Model.PaymentDate</strong></label>
+        </div>
+    </div>
+    <div class="col-5">
+        <div class="form-group">
+            <label class="form-label">Lần thay đổi gần nhất: <strong>@Model.ModifiDate</strong></label>
+        </div>
+        <details>
+            <summary>Ghi chú thay đổi</summary>
+            <div id="modifiNote" style="background-color: #E0E0E0; max-height: 250px; overflow-y: auto; padding: 3px; border: 1px solid black;"></div>
+        </details>
+        @if (Model.returnOrders != null)
+        {
+            <div class="form-group">
+                Phiếu trả hàng
+                @{
+                    var index = 0;
+                    foreach (var item in Model.returnOrders)
+                    {
+                        var statusReturn = item.Status == 1 ? "Chưa xử lý" : "Đã xử lý";
+                        var statusColor = item.Status == 1 ? "danger" : "success";
+                        index++;
+                        <details class="ms-3">
+                            <summary class="text-@statusColor">Phiếu trả hàng +@index</summary>
+                            <div class="p-2 border-3 border-@statusColor">
+                                Ngày tạo: <label class="form-label text-decoration-underline">@item.CreatedDate</label><br />
+                                Ghi chú: <span>@item.Notes</span><br />
+                                Trạng thái: <strong class="text-@statusColor">@statusReturn</strong>
+                            </div>
+                        </details>
+                    }
+                }
+            </div>
+        }
+        <div id="textModify" hidden>
+            <label>Ghi chú</label>
+            <textarea id="modifyChange" class="form-control" rows="5"></textarea>
+            <label class="text-danger" id="valid" hidden></label>
+        </div>
+    </div>
+</div>
 </div>
 <div>
-	<a href="@Url.Action("Index", "OrderManage")" class="btn btn-outline-info"><i class="fa-solid fa-arrow-left"></i> Trở lại</a>
-	<button class="btn btn-outline-success" id="acceptOrder" hidden onclick="AcceptOrder()">Xác nhận đơn hàng</button>
-	<button class="btn btn-outline-success" id="deliveryOrder" hidden onclick="DeliveryOrder()">Xác nhận giao hàng</button>
-	<button class="btn btn-outline-success" id="completeOrder" hidden onclick="SuccessOrder()">Xác nhận hoàn thành đơn hàng</button>
-	<button class="btn btn-outline-warning" id="returnOrder" hidden onclick="ReturnOrder()">Xác nhận trả hàng</button>
-	<button class="btn btn-outline-warning" id="waitHandleReturn" hidden onclick="WaitHandleReturn()">Xác nhận hàng đã trả về</button>
-	<button class="btn btn-outline-success" id="completeReturn" hidden onclick="SuccessReturn()">Xác nhận xử lý hoàn tất</button>
-	<button class="btn btn-outline-danger" id="cancelOrder" hidden onclick="CancelOrder()">Xác nhận hủy đơn</button>
-	<button class="btn btn-outline-success" id="closeOrder" hidden onclick="CloseOrder()">Xác nhận đóng đơn</button>
-	@* <a href="@Url.Action("Edit", "OrderManage", new { id = Model.Id })" id="modifyOrder" hidden class="btn btn-outline-warning"> Chỉnh sửa</a> *@
+    <a href="@Url.Action("Index", "OrderManage")" class="btn btn-outline-info"><i class="fa-solid fa-arrow-left"></i> Trở lại</a>
+    <button class="btn btn-outline-success" id="acceptOrder" hidden onclick="AcceptOrder()">Xác nhận đơn hàng</button>
+    <button class="btn btn-outline-success" id="deliveryOrder" hidden onclick="DeliveryOrder()">Xác nhận giao hàng</button>
+    <button class="btn btn-outline-success" id="completeOrder" hidden onclick="SuccessOrder()">Xác nhận hoàn thành đơn hàng</button>
+    <button class="btn btn-outline-warning" id="returnOrder" hidden onclick="ReturnOrder()">Xác nhận trả hàng</button>
+    <button class="btn btn-outline-warning" id="waitHandleReturn" hidden onclick="WaitHandleReturn()">Xác nhận hàng đã trả về</button>
+    <button class="btn btn-outline-success" id="completeReturn" hidden onclick="SuccessReturn()">Xác nhận xử lý hoàn tất</button>
+    <button class="btn btn-outline-danger" id="cancelOrder" hidden onclick="CancelOrder()">Xác nhận hủy đơn</button>
+    <button class="btn btn-outline-success" id="closeOrder" hidden onclick="CloseOrder()">Xác nhận đóng đơn</button>
+    <button class="btn btn-warning" id="inhoadon" hidden onclick="InHoaDon(@Model.Id)">In Hóa Đơn</button>
+    @* <a href="@Url.Action("Edit", "OrderManage", new { id = Model.Id })" id="modifyOrder" hidden class="btn btn-outline-warning"> Chỉnh sửa</a> *@
 
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
 <script type="text/javascript">
-	document.addEventListener('DOMContentLoaded', function () {
-		// Giải mã Unicode và thêm xuống dòng
-		var decodedText = decodeUnicode("@Model.ModifiNotes");
-		// Thêm ký tự xuống dòng vào đúng vị trí
-		decodedText = decodedText.replace(/&#xA;/g, '\n<br>');
-		// Hiển thị kết quả
-		document.getElementById('modifiNote').innerHTML = decodedText;
-	});
-	// Hàm giải mã Unicode
-	function decodeUnicode(text) {
-		return text.replace(/&#x(\w{4});/g, function (match, hex) {
-			return String.fromCharCode(parseInt(hex, 16));
-		});
-	}
+    document.addEventListener('DOMContentLoaded', function () {
+        // Giải mã Unicode và thêm xuống dòng
+        var decodedText = decodeUnicode("@Model.ModifiNotes");
+        // Thêm ký tự xuống dòng vào đúng vị trí
+        decodedText = decodedText.replace(/&#xA;/g, '\n<br>');
+        // Hiển thị kết quả
+        document.getElementById('modifiNote').innerHTML = decodedText;
+    });
+    // Hàm giải mã Unicode
+    function decodeUnicode(text) {
+        return text.replace(/&#x(\w{4});/g, function (match, hex) {
+            return String.fromCharCode(parseInt(hex, 16));
+        });
+    }
 </script>
 <script type="text/javascript">
-	function checkStatus() {
-		switch (@Model.Status) {
-			case 1:
-				document.getElementById('acceptOrder').removeAttribute('hidden');
-				// document.getElementById('modifyOrder').removeAttribute('hidden');
-				document.getElementById('cancelOrder').removeAttribute('hidden');
-				document.getElementById('textModify').removeAttribute('hidden');
-				break;
-			case 2:
-				document.getElementById('deliveryOrder').removeAttribute('hidden');
-				document.getElementById('cancelOrder').removeAttribute('hidden');
-				document.getElementById('textModify').removeAttribute('hidden');
-				break;
-			case 3:
-				document.getElementById('completeOrder').removeAttribute('hidden');
-				document.getElementById('returnOrder').removeAttribute('hidden');
-				break;
-			case 4:
-				document.getElementById('closeOrder').removeAttribute('hidden');
-				break;
-			case 5:
-				document.getElementById('waitHandleReturn').removeAttribute('hidden');
-				break;
-			case 6:
-				document.getElementById('completeReturn').removeAttribute('hidden');
-				document.getElementById('completeReturn').setAttribute('disabled', 'disabled');
-				document.getElementById('menuDetail').setAttribute('hidden', 'hidden');
-				document.getElementById('tableDetail').removeAttribute('hidden');
-				LoadDetailToTable();
-				break;
-			case 7:
-				document.getElementById('acceptOrder').removeAttribute('hidden');
-				break;
-			case 8:
-				break;
-			case 9:
-				break;
-			case 0:
-				break;
-			default:
-				break;
-		}
-	}
-	$(document).ready(function () {
-		checkStatus();
-	})
+    function InHoaDon(id) {
+        var url = "@Url.Action("InHoaDon", "OrderManage")?id=" + id
+        window.location.href = url;
+    }
+    function checkStatus() {
+        switch (@Model.Status) {
+            case 1:
+                document.getElementById('acceptOrder').removeAttribute('hidden');
+                // document.getElementById('modifyOrder').removeAttribute('hidden');
+                document.getElementById('cancelOrder').removeAttribute('hidden');
+                document.getElementById('textModify').removeAttribute('hidden');
+                break;
+            case 2:
+                document.getElementById('deliveryOrder').removeAttribute('hidden');
+                document.getElementById('cancelOrder').removeAttribute('hidden');
+                document.getElementById('textModify').removeAttribute('hidden');
+                document.getElementById('inhoadon').removeAttribute('hidden');
+                break;
+            case 3:
+                document.getElementById('completeOrder').removeAttribute('hidden');
+                document.getElementById('returnOrder').removeAttribute('hidden');
+                document.getElementById('inhoadon').removeAttribute('hidden');
+                break;
+            case 4:
+                document.getElementById('closeOrder').removeAttribute('hidden');
+                document.getElementById('inhoadon').removeAttribute('hidden');
+                break;
+            case 5:
+                document.getElementById('waitHandleReturn').removeAttribute('hidden');
+                break;
+            case 6:
+                document.getElementById('completeReturn').removeAttribute('hidden');
+                document.getElementById('completeReturn').setAttribute('disabled', 'disabled');
+                document.getElementById('menuDetail').setAttribute('hidden', 'hidden');
+                document.getElementById('tableDetail').removeAttribute('hidden');
+                LoadDetailToTable();
+                break;
+            case 7:
+                document.getElementById('acceptOrder').removeAttribute('hidden');
+                break;
+            case 8:
+                
+                break;
+            case 9:
+                break;
+            case 0:
+                break;
+            default:
+                
+                break;
+        }
+    }
+    $(document).ready(function () {
+        checkStatus();
+    })
 
-	function AcceptOrder() {
-		$.ajax({
-			url: '/Admin/OrderManage/AcceptOrder',
-			type: 'POST',
-			data: { id: @Model.Id },
-			success: function (result) {
-				if (result.success) {
-					alert('Xác nhận thành công.');
-					location.reload();
-				} else {
-					alert('Xác nhận thất bại: ' + result.errorMessage);
-				}
-			},
-			error: function (error) {
-				alert('Có lỗi xảy ra: ' + error.responseText);
-			}
-		});
-	}
+    function AcceptOrder() {
+        $.ajax({
+            url: '/Admin/OrderManage/AcceptOrder',
+            type: 'POST',
+            data: { id: @Model.Id },
+            success: function (result) {
+                if (result.success) {
+                    alert('Xác nhận thành công.');
+                    location.reload();
+                } else {
+                    alert('Xác nhận thất bại: ' + result.errorMessage);
+                }
+            },
+            error: function (error) {
+                alert('Có lỗi xảy ra: ' + error.responseText);
+            }
+        });
+    }
 
-	function DeliveryOrder() {
-		$.ajax({
-			url: '/Admin/OrderManage/DeliveryOrder',
-			type: 'POST',
-			data: { id: @Model.Id },
-			success: function (result) {
-				if (result.success) {
-					alert('Xác nhận giao hàng thành công.');
-					location.reload();
-				} else {
-					alert('Xác nhận thất bại: ' + result.errorMessage);
-				}
-			},
-			error: function (error) {
-				alert('Có lỗi xảy ra: ' + error.responseText);
-			}
-		});
-	}
+    function DeliveryOrder() {
+        $.ajax({
+            url: '/Admin/OrderManage/DeliveryOrder',
+            type: 'POST',
+            data: { id: @Model.Id },
+            success: function (result) {
+                if (result.success) {
+                    alert('Xác nhận giao hàng thành công.');
+                    location.reload();
+                } else {
+                    alert('Xác nhận thất bại: ' + result.errorMessage);
+                }
+            },
+            error: function (error) {
+                alert('Có lỗi xảy ra: ' + error.responseText);
+            }
+        });
+    }
 
-	function SuccessOrder() {
-		$.ajax({
-			url: '/Admin/OrderManage/SuccessOrder',
-			type: 'POST',
-			data: { id: @Model.Id },
-			success: function (result) {
-				if (result.success) {
-					alert('Xác nhận hoàn thành đơn hàng thành công.');
-					location.reload();
-				} else {
-					alert('Xác nhận thất bại: ' + result.errorMessage);
-				}
-			},
-			error: function (error) {
-				alert('Có lỗi xảy ra: ' + error.responseText);
-			}
-		});
-	}
+    function SuccessOrder() {
+        $.ajax({
+            url: '/Admin/OrderManage/SuccessOrder',
+            type: 'POST',
+            data: { id: @Model.Id },
+            success: function (result) {
+                if (result.success) {
+                    alert('Xác nhận hoàn thành đơn hàng thành công.');
+                    location.reload();
+                } else {
+                    alert('Xác nhận thất bại: ' + result.errorMessage);
+                }
+            },
+            error: function (error) {
+                alert('Có lỗi xảy ra: ' + error.responseText);
+            }
+        });
+    }
 
-	function ReturnOrder() {
-		var modifyChange = document.getElementById('modifyChange').value;
-		if (modifyChange.trim() === "") {
-			document.getElementById('valid').innerHTML = "*Hãy thêm ghi chú về lý do trả hàng";
-			document.getElementById('valid').removeAttribute('hidden');
-		}
-		else {
-			document.getElementById('valid').setAttribute('hidden', 'hidden');
-			$.ajax({
-				url: '/Admin/OrderManage/ReturnOrder',
-				type: 'POST',
-				data: { id: @Model.Id, modifyChange: modifyChange },
-				success: function (result) {
-					if (result.success) {
-						alert('Xác nhận trả hàng thành công.');
-						location.reload();
-					} else {
-						alert('Xác nhận thất bại: ' + result.errorMessage);
-					}
-				},
-				error: function (error) {
-					alert('Có lỗi xảy ra: ' + error.responseText);
-				}
-			});
-		}
-	}
+    function ReturnOrder() {
+        var modifyChange = document.getElementById('modifyChange').value;
+        if (modifyChange.trim() === "") {
+            document.getElementById('valid').innerHTML = "*Hãy thêm ghi chú về lý do trả hàng";
+            document.getElementById('valid').removeAttribute('hidden');
+        }
+        else {
+            document.getElementById('valid').setAttribute('hidden', 'hidden');
+            $.ajax({
+                url: '/Admin/OrderManage/ReturnOrder',
+                type: 'POST',
+                data: { id: @Model.Id, modifyChange: modifyChange },
+                success: function (result) {
+                    if (result.success) {
+                        alert('Xác nhận trả hàng thành công.');
+                        location.reload();
+                    } else {
+                        alert('Xác nhận thất bại: ' + result.errorMessage);
+                    }
+                },
+                error: function (error) {
+                    alert('Có lỗi xảy ra: ' + error.responseText);
+                }
+            });
+        }
+    }
+    function InHD() {
+        var modifyChange = document.getElementById('modifyChange').value;
+        if (modifyChange.trim() === "") {
+            document.getElementById('valid').innerHTML = "*Thêm ghi chú cách xử lý đơn hàng trả về";
+            document.getElementById('valid').removeAttribute('hidden');
+        }
+        else {
+            function InHoaDon(id) {
+                var url = "@Url.Action("InHoaDon", "OrderManage")?id=" + id
+                window.location.href = url;
+            }
+        }
+    }
+    function WaitHandleReturn() {
+        $.ajax({
+            url: '/Admin/OrderManage/WaitHandleReturn',
+            type: 'POST',
+            data: { id: @Model.Id },
+            success: function (result) {
+                if (result.success) {
+                    alert('Xác nhận hàng đã trả về đến nơi.');
+                    location.reload();
+                } else {
+                    alert('Xác nhận thất bại: ' + result.errorMessage);
+                }
+            },
+            error: function (error) {
+                alert('Có lỗi xảy ra: ' + error.responseText);
+            }
+        });
+    }
 
-	function WaitHandleReturn() {
-		$.ajax({
-			url: '/Admin/OrderManage/WaitHandleReturn',
-			type: 'POST',
-			data: { id: @Model.Id },
-			success: function (result) {
-				if (result.success) {
-					alert('Xác nhận hàng đã trả về đến nơi.');
-					location.reload();
-				} else {
-					alert('Xác nhận thất bại: ' + result.errorMessage);
-				}
-			},
-			error: function (error) {
-				alert('Có lỗi xảy ra: ' + error.responseText);
-			}
-		});
-	}
+    var myAction = {};
+    var condition = 0;
+    function HandleReturn(id) {
+        let confi = "xác nhận trả hàng về kho?";
+        var action = 0;
+        var detail = document.getElementById('detail-' + id);
+        action = Number(document.getElementById('details-' + id).value);
+        myAction[id] = action;
+        let count = 0;
+        for (const key in myAction) {
+            count++;
+        }
 
-	var myAction = {};
-	var condition = 0;
-	function HandleReturn(id) {
-		let confi = "xác nhận trả hàng về kho?";
-		var action = 0;
-		var detail = document.getElementById('detail-' + id);
-		action = Number(document.getElementById('details-' + id).value);
-		myAction[id] = action;
-		let count = 0;
-		for (const key in myAction) {
-			count++;
-		}
+        if (quantity = count) {
+            document.getElementById('completeReturn').removeAttribute('disabled');
+        }
+        else {
+            document.getElementById('completeReturn').setAttribute('disabled', 'disabled');
+        }
+    }
+    function LoadDetailToTable() {
+        $.ajax({
+            url: '/Admin/OrderManage/GetDetails',
+            type: 'GET',
+            data: { id: @Model.Id },
+            success: function (data) {
+                var detailsList = $("#listDetail");
+                detailsList.empty();
+                data.forEach(function (item) {
+                    condition++;
+                    var orderRow =
+                        '<tr class="row">' +
+                        '<td class="col-5"><label>' + item.nameProduct + '</label></td>' +
+                        '<td class="col-2"><label>' + item.quantity + '</label></td>' +
+                        '<td class="col-5">' +
+                        '<select id="details-' + item.id_Product + '" onchange="HandleReturn(' + item.id_Product + ')">' +
+                        '<option value="" selected disabled>--Sellect action--</option>' +
+                        '<option value="1">Hàng có thể trả về kho</option>' +
+                        '<option value="0">Hàng lỗi cần xử lý</option>' +
+                        '</select>' +
+                        '</td>' +
+                        '</tr>';
+                    detailsList.append(orderRow);
+                });
+            },
+            error: function (error) {
+                alert('Có lỗi xảy ra: ' + error.responseText);
+            }
+        });
+    }
 
-		if (quantity = count) {
-			document.getElementById('completeReturn').removeAttribute('disabled');
-		}
-		else {
-			document.getElementById('completeReturn').setAttribute('disabled', 'disabled');
-		}
-	}
-	function LoadDetailToTable() {
-		$.ajax({
-			url: '/Admin/OrderManage/GetDetails',
-			type: 'GET',
-			data: { id: @Model.Id },
-			success: function (data) {
-				var detailsList = $("#listDetail");
-				detailsList.empty();
-				data.forEach(function (item) {
-					condition++;
-					var orderRow =
-						'<tr class="row">' +
-						'<td class="col-5"><label>' + item.nameProduct + '</label></td>' +
-						'<td class="col-2"><label>' + item.quantity + '</label></td>' +
-						'<td class="col-5">' +
-						'<select id="details-' + item.id_Product + '" onchange="HandleReturn(' + item.id_Product + ')">' +
-						'<option value="" selected disabled>--Sellect action--</option>' +
-						'<option value="1">Hàng có thể trả về kho</option>' +
-						'<option value="0">Hàng lỗi cần xử lý</option>' +
-						'</select>' +
-						'</td>' +
-						'</tr>';
-					detailsList.append(orderRow);
-				});
-			},
-			error: function (error) {
-				alert('Có lỗi xảy ra: ' + error.responseText);
-			}
-		});
-	}
+    function SuccessReturn() {
+        var modifyChange = document.getElementById('modifyChange').value;
+        if (modifyChange.trim() === "") {
+            document.getElementById('valid').innerHTML = "*Thêm ghi chú cách xử lý đơn hàng trả về";
+            document.getElementById('valid').removeAttribute('hidden');
+        }
+        else {
+            document.getElementById('valid').setAttribute('hidden', 'hidden');
+            $.ajax({
+                url: '/Admin/OrderManage/SuccessReturn',
+                type: 'POST',
+                data: { id: @Model.Id, modifyChange: modifyChange, myAction: myAction },
+                success: function (result) {
+                    if (result.success) {
+                        alert('Xác nhận xủ lý hàng trả thành công.');
+                        location.reload();
+                    } else {
+                        alert('Xác nhận thất bại: ' + result.errorMessage);
+                    }
+                },
+                error: function (error) {
+                    alert('Có lỗi xảy ra: ' + error.responseText);
+                }
+            });
+        }
+    }
 
-	function SuccessReturn() {
-		var modifyChange = document.getElementById('modifyChange').value;
-		if (modifyChange.trim() === "") {
-			document.getElementById('valid').innerHTML = "*Thêm ghi chú cách xử lý đơn hàng trả về";
-			document.getElementById('valid').removeAttribute('hidden');
-		}
-		else {
-			document.getElementById('valid').setAttribute('hidden', 'hidden');
-			$.ajax({
-				url: '/Admin/OrderManage/SuccessReturn',
-				type: 'POST',
-				data: { id: @Model.Id, modifyChange: modifyChange, myAction: myAction },
-				success: function (result) {
-					if (result.success) {
-						alert('Xác nhận xủ lý hàng trả thành công.');
-						location.reload();
-					} else {
-						alert('Xác nhận thất bại: ' + result.errorMessage);
-					}
-				},
-				error: function (error) {
-					alert('Có lỗi xảy ra: ' + error.responseText);
-				}
-			});
-		}
-	}
+    function CancelOrder() {
+        var modifyChange = document.getElementById('modifyChange').value;
+        if (modifyChange.trim() === "") {
+            document.getElementById('valid').innerHTML = "*Hãy thêm lý do hủy đơn";
+            document.getElementById('valid').removeAttribute('hidden');
+        }
+        else {
+            document.getElementById('valid').setAttribute('hidden', 'hidden');
+            $.ajax({
+                url: '/Admin/OrderManage/CancelOrder',
+                type: 'POST',
+                data: { id: @Model.Id, modifyChange: modifyChange },
+                success: function (result) {
+                    if (result.success) {
+                        alert('Xác nhận hủy đơn hàng thành công.');
+                        location.reload();
+                    } else {
+                        alert('Xác nhận thất bại: ' + result.errorMessage);
+                    }
+                },
+                error: function (error) {
+                    alert('Có lỗi xảy ra: ' + error.responseText);
+                }
+            });
+        }
+    }
 
-	function CancelOrder() {
-		var modifyChange = document.getElementById('modifyChange').value;
-		if (modifyChange.trim() === "") {
-			document.getElementById('valid').innerHTML = "*Hãy thêm lý do hủy đơn";
-			document.getElementById('valid').removeAttribute('hidden');
-		}
-		else {
-			document.getElementById('valid').setAttribute('hidden', 'hidden');
-			$.ajax({
-				url: '/Admin/OrderManage/CancelOrder',
-				type: 'POST',
-				data: { id: @Model.Id, modifyChange: modifyChange },
-				success: function (result) {
-					if (result.success) {
-						alert('Xác nhận hủy đơn hàng thành công.');
-						location.reload();
-					} else {
-						alert('Xác nhận thất bại: ' + result.errorMessage);
-					}
-				},
-				error: function (error) {
-					alert('Có lỗi xảy ra: ' + error.responseText);
-				}
-			});
-		}
-	}
-
-	function CloseOrder() {
-		$.ajax({
-			url: '/Admin/OrderManage/CloseOrder',
-			type: 'POST',
-			data: { id: @Model.Id },
-			success: function (result) {
-				if (result.success) {
-					alert('Xác nhận đóng đơn hàng thành công.');
-					location.reload();
-				} else {
-					alert('Xác nhận thất bại: ' + result.errorMessage);
-				}
-			},
-			error: function (error) {
-				alert('Có lỗi xảy ra: ' + error.responseText);
-			}
-		});
-	}
+    function CloseOrder() {
+        $.ajax({
+            url: '/Admin/OrderManage/CloseOrder',
+            type: 'POST',
+            data: { id: @Model.Id },
+            success: function (result) {
+                if (result.success) {
+                    alert('Xác nhận đóng đơn hàng thành công.');
+                    location.reload();
+                } else {
+                    alert('Xác nhận thất bại: ' + result.errorMessage);
+                }
+            },
+            error: function (error) {
+                alert('Có lỗi xảy ra: ' + error.responseText);
+            }
+        });
+    }
 </script>

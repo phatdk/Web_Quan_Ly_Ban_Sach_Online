@@ -24,489 +24,489 @@ using System.Text.RegularExpressions;
 
 namespace BookShop.Web.Client.Areas.Admin.Controllers.QuanLiBanHangOffline
 {
-	[Area("Admin")]
-	[Authorize(Roles = "Admin,Staff")]
-	public class OfflineSaleController : Controller
-	{
-		private readonly IOrderService _orderService;
-		private readonly IOrderDetailService _orderDetailService;
-		private readonly IProductService _productService;
-		private readonly IProductBookService _productBookService;
-		private readonly IUserService _userService;
-		private readonly IStatusOrderService _statusService;
-		private readonly IPaymentFormService _paymentFormService;
-		private readonly IOrderPromotionService _orderPromotionService;
-		private readonly IOrderPaymentService _orderPaymentService;
-		private readonly IBookService _bookService;
-		private readonly IPromotionService _promotionService;
-		private readonly UserManager<Userr> _userManager;
-		private readonly ProductPreviewService _productPreviewService;
-		private readonly PointNPromotionSerVice _pointNPromotionService;
+    [Area("Admin")]
+    [Authorize(Roles = "Admin,Staff")]
+    public class OfflineSaleController : Controller
+    {
+        private readonly IOrderService _orderService;
+        private readonly IOrderDetailService _orderDetailService;
+        private readonly IProductService _productService;
+        private readonly IProductBookService _productBookService;
+        private readonly IUserService _userService;
+        private readonly IStatusOrderService _statusService;
+        private readonly IPaymentFormService _paymentFormService;
+        private readonly IOrderPromotionService _orderPromotionService;
+        private readonly IOrderPaymentService _orderPaymentService;
+        private readonly IBookService _bookService;
+        private readonly IPromotionService _promotionService;
+        private readonly UserManager<Userr> _userManager;
+        private readonly ProductPreviewService _productPreviewService;
+        private readonly PointNPromotionSerVice _pointNPromotionService;
 
-		public OfflineSaleController(IOrderService orderService, IOrderDetailService orderDetailService, IProductService productService, IProductBookService productBookService, IUserService userService, UserManager<Userr> userManager, IStatusOrderService statusOrderService, IPaymentFormService paymentFormService, IOrderPaymentService orderPaymentService, IBookService bookService, IPromotionService promotionService, IOrderPromotionService orderPromotionService)
-		{
-			_orderService = orderService;
-			_orderDetailService = orderDetailService;
-			_productService = productService;
-			_productBookService = productBookService;
-			_userService = userService;
-			_userManager = userManager;
-			_statusService = statusOrderService;
-			_paymentFormService = paymentFormService;
-			_orderPaymentService = orderPaymentService;
-			_bookService = bookService;
-			_promotionService = promotionService;
-			_orderPromotionService = orderPromotionService;
+        public OfflineSaleController(IOrderService orderService, IOrderDetailService orderDetailService, IProductService productService, IProductBookService productBookService, IUserService userService, UserManager<Userr> userManager, IStatusOrderService statusOrderService, IPaymentFormService paymentFormService, IOrderPaymentService orderPaymentService, IBookService bookService, IPromotionService promotionService, IOrderPromotionService orderPromotionService)
+        {
+            _orderService = orderService;
+            _orderDetailService = orderDetailService;
+            _productService = productService;
+            _productBookService = productBookService;
+            _userService = userService;
+            _userManager = userManager;
+            _statusService = statusOrderService;
+            _paymentFormService = paymentFormService;
+            _orderPaymentService = orderPaymentService;
+            _bookService = bookService;
+            _promotionService = promotionService;
+            _orderPromotionService = orderPromotionService;
 
-			_productPreviewService = new ProductPreviewService();
-			_pointNPromotionService = new PointNPromotionSerVice();
-			_orderPromotionService = orderPromotionService;
-		}
+            _productPreviewService = new ProductPreviewService();
+            _pointNPromotionService = new PointNPromotionSerVice();
+            _orderPromotionService = orderPromotionService;
+        }
 
-		// GET: OfflineSaleController
-		public ActionResult Index()
-		{
-			return View();
-		}
+        // GET: OfflineSaleController
+        public ActionResult Index()
+        {
+            return View();
+        }
 
-		public async Task<IActionResult> GetWaitingOrder()
-		{
-			var listOrder = (await _orderService.GetAll()).Where(x => x.Status == 0).OrderByDescending(x => x.CreatedDate).ToList();
-			var newList = listOrder == null ? new List<OrderViewModel>() : listOrder;
-			foreach (var order in newList)
-			{
-				var user = await _userService.GetById(order.Id_User);
-				if (user.Code.Equals("KH0000000")) order.Receiver = order.Receiver + "<br />(Vẵng lai)";
-			}
-			return Json(newList);
-		}
+        public async Task<IActionResult> GetWaitingOrder()
+        {
+            var listOrder = (await _orderService.GetAll()).Where(x => x.Status == 0).OrderByDescending(x => x.CreatedDate).ToList();
+            var newList = listOrder == null ? new List<OrderViewModel>() : listOrder;
+            foreach (var order in newList)
+            {
+                var user = await _userService.GetById(order.Id_User);
+                if (user.Code.Equals("KH0000000")) order.Receiver = order.Receiver + "<br />(Vẵng lai)";
+            }
+            return Json(newList);
+        }
 
-		public async Task<IActionResult> ClearTemporary()
-		{
-			HttpContext.Session.Remove("sessionOrder");
-			return Json(new { success = true });
-		}
+        public async Task<IActionResult> ClearTemporary()
+        {
+            HttpContext.Session.Remove("sessionOrder");
+            return Json(new { success = true });
+        }
 
-		public async Task<IActionResult> GetDetails(int id)
-		{
-			var order = await _orderService.GetById(id);
-			if (order == null)
-			{
-				order = new OrderViewModel();
-				var user = (await _userService.GetAll()).Where(x => x.Code.Equals("KH0000000")).FirstOrDefault();
-				order.Id_User = user.Id;
-				order.NameUser = user.Name;
-				order.UserCode = user.Code;
-			}
-			var sessionDetails = HttpContext.Session.GetString("sessionOrder");
-			if (string.IsNullOrEmpty(sessionDetails))
-			{
-				var details = await _orderDetailService.GetByOrder(id);
-				HttpContext.Session.SetString("sessionOrder", JsonConvert.SerializeObject(details));
-				sessionDetails = HttpContext.Session.GetString("sessionOrder");
-			}
-			var data = JsonConvert.DeserializeObject<List<OrderDetailViewModel>>(sessionDetails);
-			int total = 0;
-			foreach (var item in data)
-			{
-				total += item.Price * item.Quantity;
-			}
-			return Json(new { order = order, details = data, total = total });
-		}
+        public async Task<IActionResult> GetDetails(int id)
+        {
+            var order = await _orderService.GetById(id);
+            if (order == null)
+            {
+                order = new OrderViewModel();
+                var user = (await _userService.GetAll()).Where(x => x.Code.Equals("KH0000000")).FirstOrDefault();
+                order.Id_User = user.Id;
+                order.NameUser = user.Name;
+                order.UserCode = user.Code;
+            }
+            var sessionDetails = HttpContext.Session.GetString("sessionOrder");
+            if (string.IsNullOrEmpty(sessionDetails))
+            {
+                var details = await _orderDetailService.GetByOrder(id);
+                HttpContext.Session.SetString("sessionOrder", JsonConvert.SerializeObject(details));
+                sessionDetails = HttpContext.Session.GetString("sessionOrder");
+            }
+            var data = JsonConvert.DeserializeObject<List<OrderDetailViewModel>>(sessionDetails);
+            int total = 0;
+            foreach (var item in data)
+            {
+                total += item.Price * item.Quantity;
+            }
+            return Json(new { order = order, details = data, total = total });
+        }
 
-		public async Task<IActionResult> GetProducts(string? keyWord)
-		{
-			var list = (await _productService.GetAll()).Where(x => x.Status == 1 && x.Type == 1).OrderByDescending(x => x.CreatedDate).ToList();
-			if (!string.IsNullOrEmpty(keyWord))
-			{
-				list = list.Where(x => x.Name.ToLower().Contains(keyWord.ToLower())).OrderByDescending(x => x.CreatedDate).ToList();
-			}
-			var pageSize = 50;
-			double totalPage = (double)list.Count / pageSize;
-			list = list.Take(pageSize).ToList();
-			return Json(new { data = list });
-		}
+        public async Task<IActionResult> GetProducts(string? keyWord)
+        {
+            var list = (await _productService.GetAll()).Where(x => x.Status == 1 && x.Type == 1).OrderByDescending(x => x.CreatedDate).ToList();
+            if (!string.IsNullOrEmpty(keyWord))
+            {
+                list = list.Where(x => x.Name.ToLower().Contains(keyWord.ToLower())).OrderByDescending(x => x.CreatedDate).ToList();
+            }
+            var pageSize = 50;
+            double totalPage = (double)list.Count / pageSize;
+            list = list.Take(pageSize).ToList();
+            return Json(new { data = list });
+        }
 
-		public async Task<IActionResult> GetUser(string keyWord)
-		{
-			var user = new UserModel();
-			if (!string.IsNullOrEmpty(keyWord))
-			{
-				var userList = (await _userService.GetAll()).Where(x => x.Status == 1);
-				user = userList.Where(
-					x => x.Email.ToLower().Equals(keyWord.ToLower())
-					|| x.Code.ToLower().Equals(keyWord.ToLower())
-					).FirstOrDefault();
-			}
-			return Json(user);
-		}
+        public async Task<IActionResult> GetUser(string keyWord)
+        {
+            var user = new UserModel();
+            if (!string.IsNullOrEmpty(keyWord))
+            {
+                var userList = (await _userService.GetAll()).Where(x => x.Status == 1);
+                user = userList.Where(
+                    x => x.Email.ToLower().Equals(keyWord.ToLower())
+                    || x.Code.ToLower().Equals(keyWord.ToLower())
+                    ).FirstOrDefault();
+            }
+            return Json(user);
+        }
 
-		public async Task<IActionResult> CheckActivePromotion(int total)
-		{
-			var promotions = (await _pointNPromotionService.GetActivePromotion()).Where(x => x.NameType.Equals("Phiếu khuyến mãi áp dụng tự động"));
-			var validPromotions = new List<PromotionViewModel>();
-			foreach (var item in promotions)
-			{
-				if (item.Condition <= total)
-				{
-					validPromotions.Add(item);
-				}
-			}
-			var usePromotion = validPromotions.OrderByDescending(x => x.Condition).ThenBy(x => x.CreatedDate).FirstOrDefault();
-			if (usePromotion != null)
-			{
-				if (usePromotion.PercentReduct != null && usePromotion.PercentReduct > 0)
-				{
-					usePromotion.TotalReduct = Convert.ToInt32(Math.Floor(Convert.ToDouble((total / 100) * usePromotion.PercentReduct)));
-					if (usePromotion.TotalReduct > usePromotion.ReductMax)
-					{
-						usePromotion.TotalReduct = usePromotion.ReductMax;
-					}
-				}
-				else usePromotion.TotalReduct = Convert.ToInt32(usePromotion.AmountReduct);
-			}
-			return Json(usePromotion);
-		}
+        public async Task<IActionResult> CheckActivePromotion(int total)
+        {
+            var promotions = (await _pointNPromotionService.GetActivePromotion()).Where(x => x.NameType.Equals("Phiếu khuyến mãi áp dụng tự động"));
+            var validPromotions = new List<PromotionViewModel>();
+            foreach (var item in promotions)
+            {
+                if (item.Condition <= total)
+                {
+                    validPromotions.Add(item);
+                }
+            }
+            var usePromotion = validPromotions.OrderByDescending(x => x.Condition).ThenBy(x => x.CreatedDate).FirstOrDefault();
+            if (usePromotion != null)
+            {
+                if (usePromotion.PercentReduct != null && usePromotion.PercentReduct > 0)
+                {
+                    usePromotion.TotalReduct = Convert.ToInt32(Math.Floor(Convert.ToDouble((total / 100) * usePromotion.PercentReduct)));
+                    if (usePromotion.TotalReduct > usePromotion.ReductMax)
+                    {
+                        usePromotion.TotalReduct = usePromotion.ReductMax;
+                    }
+                }
+                else usePromotion.TotalReduct = Convert.ToInt32(usePromotion.AmountReduct);
+            }
+            return Json(usePromotion);
+        }
 
-		public async Task<IActionResult> AddProduct(int id, int orderId, int quantity)
-		{
-			// return Ok(id + orderId + quantity);
-			var sessionOrder = HttpContext.Session.GetString("sessionOrder");
-			var listDetails = new List<OrderDetailViewModel>();
-			var product = await _productService.GetById(id);
-			if (product == null) return Json(new { success = false, errorMessage = "Không tìm thấy sản phẩm" });
-			if (!string.IsNullOrEmpty(sessionOrder))
-			{
-				listDetails = JsonConvert.DeserializeObject<List<OrderDetailViewModel>>(sessionOrder);
-				var pd = listDetails.FirstOrDefault(x => x.Id_Product == product.Id);
-				if (pd != null)
-				{
-					pd.Quantity += quantity;
-					if (pd.Quantity <= 0)
-					{
-						listDetails.Remove(pd);
-					}
-					goto editquantity;
-				}
-			}
-			var detail = new OrderDetailViewModel()
-			{
-				Id_Product = product.Id,
-				Quantity = quantity,
-				NameProduct = product.Name,
-				Price = product.NewPrice,
-				Id_Order = orderId,
-			};
-			listDetails.Add(detail);
-		editquantity:
-			HttpContext.Session.SetString("sessionOrder", JsonConvert.SerializeObject(listDetails));
-			return Json(new { success = true });
-		}
+        public async Task<IActionResult> AddProduct(int id, int orderId, int quantity)
+        {
+            // return Ok(id + orderId + quantity);
+            var sessionOrder = HttpContext.Session.GetString("sessionOrder");
+            var listDetails = new List<OrderDetailViewModel>();
+            var product = await _productService.GetById(id);
+            if (product == null) return Json(new { success = false, errorMessage = "Không tìm thấy sản phẩm" });
+            if (!string.IsNullOrEmpty(sessionOrder))
+            {
+                listDetails = JsonConvert.DeserializeObject<List<OrderDetailViewModel>>(sessionOrder);
+                var pd = listDetails.FirstOrDefault(x => x.Id_Product == product.Id);
+                if (pd != null)
+                {
+                    pd.Quantity += quantity;
+                    if (pd.Quantity <= 0)
+                    {
+                        listDetails.Remove(pd);
+                    }
+                    goto editquantity;
+                }
+            }
+            var detail = new OrderDetailViewModel()
+            {
+                Id_Product = product.Id,
+                Quantity = quantity,
+                NameProduct = product.Name,
+                Price = product.NewPrice,
+                Id_Order = orderId,
+            };
+            listDetails.Add(detail);
+        editquantity:
+            HttpContext.Session.SetString("sessionOrder", JsonConvert.SerializeObject(listDetails));
+            return Json(new { success = true });
+        }
 
-		public async Task<string> GenerateCode(int length)
-		{
-			// Khởi tạo đối tượng Random
-			Random random = new Random();
+        public async Task<string> GenerateCode(int length)
+        {
+            // Khởi tạo đối tượng Random
+            Random random = new Random();
 
-			// Tạo một chuỗi các ký tự ngẫu nhiên
-			string characters = "0123456789";
-			string code = "";
-			for (int i = 0; i < length; i++)
-			{
-				code += characters[random.Next(characters.Length)];
-			}
-			var duplicate = (await _orderService.GetAll()).Where(c => c.Code.Equals(code));
-			if (!duplicate.Any())
-			{
-				return code;
-			}
-			return (await GenerateCode(length)).ToString();
-		}
+            // Tạo một chuỗi các ký tự ngẫu nhiên
+            string characters = "0123456789";
+            string code = "";
+            for (int i = 0; i < length; i++)
+            {
+                code += characters[random.Next(characters.Length)];
+            }
+            var duplicate = (await _orderService.GetAll()).Where(c => c.Code.Equals(code));
+            if (!duplicate.Any())
+            {
+                return code;
+            }
+            return (await GenerateCode(length)).ToString();
+        }
 
-		public async Task<ResultModel> SaveOrder(OrderViewModel request)
-		{
-			ResultModel resultModel = new ResultModel();
-			if (request.Id_User == 0)
-			{
-				var user = (await _userService.GetAll()).Where(x => x.Code.Equals("KH0000000")).FirstOrDefault();
-				request.Id_User = user.Id;
-				request.NameUser = user.Name;
-			}
-			if (string.IsNullOrEmpty(request.Receiver))
-			{
-				request.Receiver = request.NameUser;
-			}
-			if (request.Id != 0) // đơn đã được lưu trước đó
-			{
-				var order = await _orderService.GetById(request.Id);
-				order.Id_Status = request.Id_Status;
-				order.Id_User = request.Id_User;
-				order.Id_Staff = request.Id_Staff;
-				order.Id_Promotions = request.Id_Promotions;
-				order.Receiver = request.Receiver;
-				order.Email = request.Email;
-				order.Phone = request.Phone;
-				var result = await _orderService.Update(order);
-				if (result)
-				{
-					var sessionDetails = HttpContext.Session.GetString("sessionOrder");
-					if (!string.IsNullOrEmpty(sessionDetails))
-					{
-						var data = JsonConvert.DeserializeObject<List<OrderDetailViewModel>>(sessionDetails);
-						var details = await _orderDetailService.GetByOrder(request.Id);
-						foreach (var detail in details) // kiem tra cac phan tu cu 
-						{
-							for (var i = 0; i < data.Count(); i++)
-							{
-								if (detail.Id_Product == data[i].Id_Product)
-								{
-									if (detail.Quantity <= 0)
-									{
-										if (!await _orderDetailService.Delete(detail.Id))
-										{
-											resultModel.Message = "Lỗi khi loại bỏ sản phẩm cũ!";
-											goto skipAction1;
-										}
-									}
-									else if (detail.Quantity != data[i].Quantity)
-									{
-										detail.Quantity = data[i].Quantity;
-										detail.Price = data[i].Price;
-										if (!await _orderDetailService.Update(detail.Id, detail))
-										{
-											resultModel.Message = "Lỗi khi thay đổi số lượng sản phẩm cũ!";
-											goto skipAction1;
-										}
-									}
-									if (!await _productPreviewService.ChangeQuantity(data[i].Id_Product, detail.Quantity - data[i].Quantity))
-									{
-										resultModel.Message = "Lỗi khi thay đổi số lượng sản phẩm đăng bán!";
-										goto skipAction1;
-									}
-									data.RemoveAt(i);
-									goto skipSave;
-								}
-							}
-							await _orderDetailService.Delete(detail.Id);
-						skipSave:;
-						}
-						foreach (var item in data) // them phan tu moi
-						{
-							if (!await _orderDetailService.Add(new OrderDetailViewModel()
-							{
-								Id_Order = request.Id,
-								Id_User = request.Id_User,
-								Id_Product = item.Id_Product,
-								Price = item.Price,
-								Quantity = item.Quantity,
-							}))
-							{
-								resultModel.Message = "Lỗi khi thêm sản phẩm!";
-								goto skipAction1;
-							}
-							if (!await _productPreviewService.ChangeQuantity(item.Id_Product, -item.Quantity))
-							{
-								resultModel.Message = "Lỗi khi thay đổi số lượng sản phẩm đăng bán!";
-								goto skipAction1;
-							}
-						}
-						details = await _orderDetailService.GetByOrder(request.Id);
-						if (details.Count == 0) resultModel.Message = "Hiện chưa có sản phẩm nào trong đơn hàng!";
-					}
-					resultModel.Id = request.Id;
-					resultModel.Success = true;
-					return resultModel;
-				}
-			skipAction1:;
-				resultModel.Id = 0;
-				resultModel.Success = false;
-				return resultModel;
-			}
-			else // đơn chưa được lưu
-			{
-				var sessionDetails = HttpContext.Session.GetString("sessionOrder");
-				if (!string.IsNullOrEmpty(sessionDetails))
-				{
-					var data = JsonConvert.DeserializeObject<List<OrderDetailViewModel>>(sessionDetails);
-					if (data.Count > 0)
-					{
-						request.Code = "OF" + await GenerateCode(8);
-						var result = await _orderService.Add(request); // thêm mới đơn
-						if (result.Id != 0)
-						{
-							foreach (var item in data)
-							{
-								var od = new OrderDetailViewModel()
-								{
-									Id_Order = result.Id,
-									Id_User = request.Id_User,
-									Id_Product = item.Id_Product,
-									Price = item.Price,
-									Quantity = item.Quantity,
-								};
-								if (!await _orderDetailService.Add(od))
-								{
-									resultModel.Message = "Lỗi khi thêm sản phẩm!";
-									goto skipAction2;
-								}
-								if (!await _productPreviewService.ChangeQuantity(item.Id_Product, -item.Quantity))
-								{
-									resultModel.Message = "Lỗi khi thay đổi số lượng sản phẩm đăng bán!";
-									goto skipAction2; // giam so luong san pham
-								}
-							}
-							resultModel.Id = result.Id;
-							resultModel.Success = true;
-							return resultModel;
-						}
-					}
-					resultModel.Message = "Chưa có sản phẩm nào được chọn!";
-					goto skipAction2;
-				}
-				resultModel.Message = "Chưa có sản phẩm nào được chọn!";
-			skipAction2:;
-				resultModel.Id = 0;
-				resultModel.Success = false;
-				return resultModel;
-			}
-		}
+        public async Task<ResultModel> SaveOrder(OrderViewModel request)
+        {
+            ResultModel resultModel = new ResultModel();
+            if (request.Id_User == 0)
+            {
+                var user = (await _userService.GetAll()).Where(x => x.Code.Equals("KH0000000")).FirstOrDefault();
+                request.Id_User = user.Id;
+                request.NameUser = user.Name;
+            }
+            if (string.IsNullOrEmpty(request.Receiver))
+            {
+                request.Receiver = request.NameUser;
+            }
+            if (request.Id != 0) // đơn đã được lưu trước đó
+            {
+                var order = await _orderService.GetById(request.Id);
+                order.Id_Status = request.Id_Status;
+                order.Id_User = request.Id_User;
+                order.Id_Staff = request.Id_Staff;
+                order.Id_Promotions = request.Id_Promotions;
+                order.Receiver = request.Receiver;
+                order.Email = request.Email;
+                order.Phone = request.Phone;
+                var result = await _orderService.Update(order);
+                if (result)
+                {
+                    var sessionDetails = HttpContext.Session.GetString("sessionOrder");
+                    if (!string.IsNullOrEmpty(sessionDetails))
+                    {
+                        var data = JsonConvert.DeserializeObject<List<OrderDetailViewModel>>(sessionDetails);
+                        var details = await _orderDetailService.GetByOrder(request.Id);
+                        foreach (var detail in details) // kiem tra cac phan tu cu 
+                        {
+                            for (var i = 0; i < data.Count(); i++)
+                            {
+                                if (detail.Id_Product == data[i].Id_Product)
+                                {
+                                    if (detail.Quantity <= 0)
+                                    {
+                                        if (!await _orderDetailService.Delete(detail.Id))
+                                        {
+                                            resultModel.Message = "Lỗi khi loại bỏ sản phẩm cũ!";
+                                            goto skipAction1;
+                                        }
+                                    }
+                                    else if (detail.Quantity != data[i].Quantity)
+                                    {
+                                        detail.Quantity = data[i].Quantity;
+                                        detail.Price = data[i].Price;
+                                        if (!await _orderDetailService.Update(detail.Id, detail))
+                                        {
+                                            resultModel.Message = "Lỗi khi thay đổi số lượng sản phẩm cũ!";
+                                            goto skipAction1;
+                                        }
+                                    }
+                                    if (!await _productPreviewService.ChangeQuantity(data[i].Id_Product, detail.Quantity - data[i].Quantity))
+                                    {
+                                        resultModel.Message = "Lỗi khi thay đổi số lượng sản phẩm đăng bán!";
+                                        goto skipAction1;
+                                    }
+                                    data.RemoveAt(i);
+                                    goto skipSave;
+                                }
+                            }
+                            await _orderDetailService.Delete(detail.Id);
+                        skipSave:;
+                        }
+                        foreach (var item in data) // them phan tu moi
+                        {
+                            if (!await _orderDetailService.Add(new OrderDetailViewModel()
+                            {
+                                Id_Order = request.Id,
+                                Id_User = request.Id_User,
+                                Id_Product = item.Id_Product,
+                                Price = item.Price,
+                                Quantity = item.Quantity,
+                            }))
+                            {
+                                resultModel.Message = "Lỗi khi thêm sản phẩm!";
+                                goto skipAction1;
+                            }
+                            if (!await _productPreviewService.ChangeQuantity(item.Id_Product, -item.Quantity))
+                            {
+                                resultModel.Message = "Lỗi khi thay đổi số lượng sản phẩm đăng bán!";
+                                goto skipAction1;
+                            }
+                        }
+                        details = await _orderDetailService.GetByOrder(request.Id);
+                        if (details.Count == 0) resultModel.Message = "Hiện chưa có sản phẩm nào trong đơn hàng!";
+                    }
+                    resultModel.Id = request.Id;
+                    resultModel.Success = true;
+                    return resultModel;
+                }
+            skipAction1:;
+                resultModel.Id = 0;
+                resultModel.Success = false;
+                return resultModel;
+            }
+            else // đơn chưa được lưu
+            {
+                var sessionDetails = HttpContext.Session.GetString("sessionOrder");
+                if (!string.IsNullOrEmpty(sessionDetails))
+                {
+                    var data = JsonConvert.DeserializeObject<List<OrderDetailViewModel>>(sessionDetails);
+                    if (data.Count > 0)
+                    {
+                        request.Code = "OF" + await GenerateCode(8);
+                        var result = await _orderService.Add(request); // thêm mới đơn
+                        if (result.Id != 0)
+                        {
+                            foreach (var item in data)
+                            {
+                                var od = new OrderDetailViewModel()
+                                {
+                                    Id_Order = result.Id,
+                                    Id_User = request.Id_User,
+                                    Id_Product = item.Id_Product,
+                                    Price = item.Price,
+                                    Quantity = item.Quantity,
+                                };
+                                if (!await _orderDetailService.Add(od))
+                                {
+                                    resultModel.Message = "Lỗi khi thêm sản phẩm!";
+                                    goto skipAction2;
+                                }
+                                if (!await _productPreviewService.ChangeQuantity(item.Id_Product, -item.Quantity))
+                                {
+                                    resultModel.Message = "Lỗi khi thay đổi số lượng sản phẩm đăng bán!";
+                                    goto skipAction2; // giam so luong san pham
+                                }
+                            }
+                            resultModel.Id = result.Id;
+                            resultModel.Success = true;
+                            return resultModel;
+                        }
+                    }
+                    resultModel.Message = "Chưa có sản phẩm nào được chọn!";
+                    goto skipAction2;
+                }
+                resultModel.Message = "Chưa có sản phẩm nào được chọn!";
+            skipAction2:;
+                resultModel.Id = 0;
+                resultModel.Success = false;
+                return resultModel;
+            }
+        }
 
-		public async Task<bool> SuccessOfflineOrder(OrderViewModel request)
-		{
-			var order = await _orderService.GetById(request.Id);
-			var user = await _userService.GetById(order.Id_User);
-			var details = await _orderDetailService.GetByOrder(request.Id);
-			foreach (var item in details)
-			{
-				var detailProducts = await _productBookService.GetByProduct(item.Id_Product);
-				foreach (var item1 in detailProducts)
-				{
-					var book = await _bookService.GetById(item1.Id_Book);
-					if (book.Quantity >= item.Quantity)
-					{
-						await _bookService.ChangeQuantity(book.Id, -item.Quantity); // giam so luong sach trong kho
-					}
-					else return false;
-				}
-				order.Total += item.Quantity * item.Price; // tinh tien
-			}
+        public async Task<bool> SuccessOfflineOrder(OrderViewModel request)
+        {
+            var order = await _orderService.GetById(request.Id);
+            var user = await _userService.GetById(order.Id_User);
+            var details = await _orderDetailService.GetByOrder(request.Id);
+            foreach (var item in details)
+            {
+                var detailProducts = await _productBookService.GetByProduct(item.Id_Product);
+                foreach (var item1 in detailProducts)
+                {
+                    var book = await _bookService.GetById(item1.Id_Book);
+                    if (book.Quantity >= item.Quantity)
+                    {
+                        await _bookService.ChangeQuantity(book.Id, -item.Quantity); // giam so luong sach trong kho
+                    }
+                    else return false;
+                }
+                order.Total += item.Quantity * item.Price; // tinh tien
+            }
 
-			order.TotalPayment = order.Total;
-			if (request.Id_Promotions != null)
-			{
-				foreach (var item in request.Id_Promotions)
-				{
-					var promotion = await _promotionService.GetById(Convert.ToInt32(item));
-					var opro = new OrderPromotionViewModel()
-					{
-						Id_Order = order.Id,
-						Id_Promotion = item,
-					};
-					var checkpromotion = await _orderPromotionService.Add(opro);
-					if (checkpromotion)
-					{
-						if (promotion.PercentReduct != null)
-						{
-							var amount = Convert.ToInt32(Math.Floor(Convert.ToDouble((order.Total / 100) * promotion.PercentReduct)));
-							if (amount > promotion.ReductMax) amount = promotion.ReductMax;
-							order.TotalPayment -= amount;
-						}
-						else order.TotalPayment -= Convert.ToInt32(promotion.AmountReduct);
-					}
-					else return false;
-				}
-			}
-			var paymentId = (await _paymentFormService.GetAll()).Where(x => x.Name.Equals("Thanh toán tại quầy")).First().Id;
-			var opay = new CreateOrderPaymentModel()
-			{
-				Id_Order = order.Id,
-				Id_Payment = paymentId,
-				paymentAmount = order.TotalPayment,
-				Status = 1,
-			};
-			if (!await _orderPaymentService.Add(opay)) return false; // lưu phương thức thanh toán
-			if (!user.Code.Equals("KH0000000"))
-			{
-				int point = Convert.ToInt32(Math.Floor(Convert.ToDouble(order.Total / 20000))); // 20k = 1 điểm
-				if (point > 0)
-				{
-					var history = new PointTranHistoryViewModel()
-					{
-						PointUserd = point,
-						Id_User = user.Id,
-						Id_Order = order.Id,
-					};
-					if (!await _pointNPromotionService.Accumulate(order.Id_User, point, history)) return false; // lưu lịch sử tích điểm
-				}
-			}
-			return true;
-		}
+            order.TotalPayment = order.Total;
+            if (request.Id_Promotions != null)
+            {
+                foreach (var item in request.Id_Promotions)
+                {
+                    var promotion = await _promotionService.GetById(Convert.ToInt32(item));
+                    var opro = new OrderPromotionViewModel()
+                    {
+                        Id_Order = order.Id,
+                        Id_Promotion = item,
+                    };
+                    var checkpromotion = await _orderPromotionService.Add(opro);
+                    if (checkpromotion)
+                    {
+                        if (promotion.PercentReduct != null)
+                        {
+                            var amount = Convert.ToInt32(Math.Floor(Convert.ToDouble((order.Total / 100) * promotion.PercentReduct)));
+                            if (amount > promotion.ReductMax) amount = promotion.ReductMax;
+                            order.TotalPayment -= amount;
+                        }
+                        else order.TotalPayment -= Convert.ToInt32(promotion.AmountReduct);
+                    }
+                    else return false;
+                }
+            }
+            var paymentId = (await _paymentFormService.GetAll()).Where(x => x.Name.Equals("Thanh toán tại quầy")).First().Id;
+            var opay = new CreateOrderPaymentModel()
+            {
+                Id_Order = order.Id,
+                Id_Payment = paymentId,
+                paymentAmount = order.TotalPayment,
+                Status = 1,
+            };
+            if (!await _orderPaymentService.Add(opay)) return false; // lưu phương thức thanh toán
+            if (!user.Code.Equals("KH0000000"))
+            {
+                int point = Convert.ToInt32(Math.Floor(Convert.ToDouble(order.Total / 20000))); // 20k = 1 điểm
+                if (point > 0)
+                {
+                    var history = new PointTranHistoryViewModel()
+                    {
+                        PointUserd = point,
+                        Id_User = user.Id,
+                        Id_Order = order.Id,
+                    };
+                    if (!await _pointNPromotionService.Accumulate(order.Id_User, point, history)) return false; // lưu lịch sử tích điểm
+                }
+            }
+            return true;
+        }
 
-		// GET: OfflineSaleController/Create
-		public async Task<IActionResult> CreateOfflineOrder()
-		{
-			HttpContext.Session.Remove("sessionOrder");
-			var staff = await _userManager.GetUserAsync(HttpContext.User);
-			if (staff != null)
-			{
-				ViewBag.Users = (await _userService.GetAll()).Where(x => x.Status == 1).ToList();
-				var createModel = new OrderViewModel();
-				var user = (await _userService.GetAll()).Where(x => x.Code.Equals("KH0000000")).FirstOrDefault();
-				createModel.Id_User = user.Id;
-				createModel.NameUser = user.Name;
-				createModel.UserCode = user.Code;
-				ViewBag.Staff = staff;
-				return View(createModel);
-			}
-			return Redirect("/login");
-		}
+        // GET: OfflineSaleController/Create
+        public async Task<IActionResult> CreateOfflineOrder()
+        {
+            HttpContext.Session.Remove("sessionOrder");
+            var staff = await _userManager.GetUserAsync(HttpContext.User);
+            if (staff != null)
+            {
+                ViewBag.Users = (await _userService.GetAll()).Where(x => x.Status == 1).ToList();
+                var createModel = new OrderViewModel();
+                var user = (await _userService.GetAll()).Where(x => x.Code.Equals("KH0000000")).FirstOrDefault();
+                createModel.Id_User = user.Id;
+                createModel.NameUser = user.Name;
+                createModel.UserCode = user.Code;
+                ViewBag.Staff = staff;
+                return View(createModel);
+            }
+            return Redirect("/login");
+        }
 
-		// POST: OfflineSaleController/Create
-		[HttpPost]
-		public async Task<IActionResult> CreateOfflineOrder(OrderViewModel request)
-		{
-			try
-			{
-				request.Id_Status = (await _statusService.GetAll()).Where(x => x.Status == 4).FirstOrDefault().Id;
-				var result = await SaveOrder(request);
-				if (result.Id != 0 && string.IsNullOrEmpty(result.Message))
-				{
-					request.Id = result.Id;
-					var success = await SuccessOfflineOrder(request);
-					if (success)
-					{
-						await ClearTemporary();
-						return Json(new { success = true, message = "Thanh toán thành công!" });
-					}
-					return Json(new { success = false, errorMessage = "Thanh toán thất bại\n Có lỗi trong quá trình hoàn thành đơn hàng!" });
-				}
-				return Json(new { success = false, errorMessage = "Thanh toán thất bại: " + result.Message });
+        // POST: OfflineSaleController/Create
+        [HttpPost]
+        public async Task<IActionResult> CreateOfflineOrder(OrderViewModel request)
+        {
+            try
+            {
+                request.Id_Status = (await _statusService.GetAll()).Where(x => x.Status == 4).FirstOrDefault().Id;
+                var result = await SaveOrder(request);
+                if (result.Id != 0 && string.IsNullOrEmpty(result.Message))
+                {
+                    request.Id = result.Id;
+                    var success = await SuccessOfflineOrder(request);
+                    if (success)
+                    {
+                        await ClearTemporary();
+                        return Json(new { success = true, idOrder = request.Id, message = "Thanh toán thành công!" });
+                    }
+                    return Json(new { success = false, errorMessage = "Thanh toán thất bại\n Có lỗi trong quá trình hoàn thành đơn hàng!" });
+                }
+                return Json(new { success = false, errorMessage = "Thanh toán thất bại: " + result.Message });
 
-			}
-			catch
-			{
-				return Json(new { success = false, errorMessage = "Xuất hiện lỗi ở đâu đó!" });
-			}
-		}
+            }
+            catch
+            {
+                return Json(new { success = false, errorMessage = "Xuất hiện lỗi ở đâu đó!" });
+            }
+        }
 
-		public async Task<IActionResult> SaveTemprory(OrderViewModel request)
-		{
-			try
-			{
-				request.Id_Status = (await _statusService.GetAll()).Where(x => x.Status == 0).FirstOrDefault().Id;
-				request.Id_Promotions = null;
-				var result = await SaveOrder(request);
-				if (result.Success)
-				{
-					await ClearTemporary();
-					return Json(new { success = true, message = "Lưu thành công: " + result.Message });
-				}
-				return Json(new { success = false, errorMessage = "Lưu thất bại: " + result.Message });
-			}
-			catch
-			{
-				return Json(new { success = false, errorMessage = "Xuất hiện lỗi ở đâu đó" });
-			}
-		}
-	}
+        public async Task<IActionResult> SaveTemprory(OrderViewModel request)
+        {
+            try
+            {
+                request.Id_Status = (await _statusService.GetAll()).Where(x => x.Status == 0).FirstOrDefault().Id;
+                request.Id_Promotions = null;
+                var result = await SaveOrder(request);
+                if (result.Success)
+                {
+                    await ClearTemporary();
+                    return Json(new { success = true, message = "Lưu thành công: " + result.Message });
+                }
+                return Json(new { success = false, errorMessage = "Lưu thất bại: " + result.Message });
+            }
+            catch
+            {
+                return Json(new { success = false, errorMessage = "Xuất hiện lỗi ở đâu đó" });
+            }
+        }
+    }
 }

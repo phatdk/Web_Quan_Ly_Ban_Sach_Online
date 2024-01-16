@@ -1,53 +1,87 @@
-﻿<style>
-    /* Add table styling here, if desired */
-    table {
-        border-collapse: collapse;
-        width: 100%;
-    }
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách thống kê sách</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
 
-    th, td {
-        padding: 8px;
-        text-align: left;
-        border: 1px solid #ddd;
-    }
+        .title {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #333;
+            color: #fff;
+        }
 
-    th {
-        background-color: #f2f2f2;
-    }
-</style>
+        #book-details {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
 
-<div class="title">Sách</div>
-<div id="book-details" class="sales-details">
-    <table>
-        <thead>
-            <tr>
-                <th>Mã Sách</th>
-                <th>Tựa Sách</th>
-                <th>Tên Sản Phẩm</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-</div>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
 
-<script>
-    $(document).ready(function () {
-        $.ajax({
-            url: "/Admin/Gembox/GetProductBook"
-        }).done(function (data) {
-            var tableBody = $("#book-details table tbody");
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
 
-            for (var i = 0; i < data.length; i++) {
-                var book = data[i];
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
 
-                var row = $("<tr>");
-                $("<td>").text(book.id).appendTo(row);
-                $("<td>").text(book.bookTitle).appendTo(row);
-                $("<td>").text(book.productName).appendTo(row);
+    <div class="title">Danh sách thống kê sách</div>
 
-                row.appendTo(tableBody);
-            }
+    <div id="book-details" class="sales-details">
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã Sách</th>
+                    <th>Tựa Sách</th>
+                    <th>Tên Sản Phẩm</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: "/Admin/Gembox/GetProductBook"
+            }).done(function (data) {
+                var tableBody = $("#book-details table tbody");
+
+                for (var i = 0; i < data.length; i++) {
+                    var book = data[i];
+
+                    var row = $("<tr>");
+                    $("<td>").text(book.id).appendTo(row);
+                    $("<td>").text(book.bookTitle).appendTo(row);
+                    $("<td>").text(book.productName).appendTo(row);
+
+                    row.appendTo(tableBody);
+                }
+            });
         });
-    });
-</script>
+    </script>
+
+</body>
+</html>

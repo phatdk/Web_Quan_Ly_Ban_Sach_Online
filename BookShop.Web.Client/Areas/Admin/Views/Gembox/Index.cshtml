@@ -217,7 +217,19 @@
 </head>
 
 <body>
+
+
     <div class="home-content1">
+
+
+        <p>      </p>
+        <div class="sales-boxes">
+            <div class="recent-sales box">
+                @await Html.PartialAsync("Chart")
+            </div>
+        </div>
+
+        <p>     </p>
         <div class="overview-boxes">
             <div class="box">
                 <div class="right-side">
@@ -226,7 +238,7 @@
                     <div class="indicator">
                     </div>
                 </div>
-                <i class='bx bxs-cart' style="font-size: 50px;"></i>
+                <i class='bx bxs-cart' style="font-size: 50px; color: blue;"></i>
             </div>
             <div class="box">
                 <div class="right-side">
@@ -235,7 +247,7 @@
                     <div class="indicator">
                     </div>
                 </div>
-                <i class='bx bxs-cart-add' style="font-size: 50px"></i>
+                <i class='bx bxs-cart-add' style="font-size: 50px; color: green;"></i>
             </div>
 
             <div class="box">
@@ -247,16 +259,11 @@
                         <span class="text">Down From Today</span> *@
                     </div>
                 </div>
-                <i class='bx bxs-cart-download' style="font-size:50px"></i>
+                <i class='bx bxs-cart-download' style="font-size:50px; color:red;"></i>
             </div>
         </div>
 
-        <p>      </p>
-        <div class="sales-boxes">
-            <div class="recent-sales box">
-                @await Html.PartialAsync("Chart")
-            </div>
-        </div>
+     
 
         <p>      </p>
 
@@ -302,7 +309,7 @@
 
                 </div>
                 <div class="button">
-                    <a href="#">Xem Tất Cả</a>
+                    <a href="/Admin/Gembox/GetAllTopsale">Xem Tất Cả</a>
                 </div>
             </div>
 

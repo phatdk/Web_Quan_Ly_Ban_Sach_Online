@@ -276,7 +276,51 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
         {
             return View();
         }
+        public async Task<IActionResult> GetTopsale()
+        {
+            var orders = await _OrderService.GetAll();
 
+            var productSales = new Dictionary<int, int>();
+            foreach (var order in orders)
+            {
+                var orderDetails = await _orderdettailservices.GetByOrder(order.Id);
+                // Cập nhật số lượng bán cho từng sản phẩm
+                foreach (var orderDetail in orderDetails)
+                {
+                    productSales.TryGetValue(orderDetail.Id_Product, out var quantity);
+                    productSales[orderDetail.Id_Product] = quantity + orderDetail.Quantity;
+                }
+            }
+
+            // Lấy danh sách sản phẩm bán chạy
+            var topSellingProducts = productSales.OrderByDescending(x => x.Value)
+                                                 .Select(x => new TopSalingProduct
+                                                 {
+                                                     Id = x.Key,
+                                                     QuantitySold = x.Value
+                                                 })
+                                                 .ToList();
+
+
+
+            foreach (var product in topSellingProducts)
+            {
+                var productDetails = await _ProductService.GetById(product.Id);
+                product.TotalRevenue = productDetails.Price * product.QuantitySold;
+            }
+
+            foreach (var product in topSellingProducts)
+            {
+                var productDetails = await _ProductService.GetById(product.Id);
+                product.Name = productDetails.Name;
+                product.Price = productDetails.Price;
+            }
+            return Json(topSellingProducts);
+        }
+        public async Task<IActionResult> GetAllTopsale()
+        {
+            return View();
+        }
     }
 }
 

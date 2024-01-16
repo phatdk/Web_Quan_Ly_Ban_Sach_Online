@@ -14,49 +14,50 @@ using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace BookShop.Web.Client.Controllers
 {
-	public class HomeController : Controller
-	{
-		private readonly ILogger<HomeController> _logger;
-
-		private List<ProductViewModel> _products;
-		private List<WishListViewModel> _wishList;
-		private ProductViewModel _product;
-		private readonly IProductService _productService;
-		private readonly IWishListService _WishListService;
-		private readonly ICategoryService _categoryService;
-		private readonly UserManager<Userr> _userManager;
-		private readonly PointNPromotionSerVice _pointNPromotionSerVice;
-		private readonly INewsService _NewService;
-		private readonly IEvaluateService _EvaluateService;
-		private readonly ProductPreviewService _productPreviewService;
-		private readonly IPromotionService _promotionService;
-		private readonly IUserPromotionService _userPromotionService;
-
-		public HomeController(ILogger<HomeController> logger, IProductService productService, IUserPromotionService userPromotionService, IWishListService wishListService, ICategoryService categoryService, UserManager<Userr> userManager, IPromotionService promotionService, INewsService newService = null, IEvaluateService evaluateService = null)
+    public class HomeController : Controller
     {
-        _logger = logger;
-        _wishList = new List<WishListViewModel>();
-        _products = new List<ProductViewModel>();
-        _product = new ProductViewModel();
-        _categoryService = categoryService;
-        _productService = productService;
-        _WishListService = wishListService;
-        _userManager = userManager;
-			_userPromotionService = userPromotionService;
-			_pointNPromotionSerVice = new PointNPromotionSerVice();
-        _NewService = newService;
-        _productPreviewService = new ProductPreviewService();
-        _EvaluateService = evaluateService;
-        _promotionService = promotionService;
-    }
+        private readonly ILogger<HomeController> _logger;
 
-    public async Task<IActionResult> Index()
-		{
-			return View();
-		}
-		public async Task<IActionResult> News([FromQuery(Name = "p")] int currentPages)
-		{
-			var ListBlog = (await _NewService.GetAll()).ToList();
+
+        private List<ProductViewModel> _products;
+        private List<WishListViewModel> _wishList;
+        private ProductViewModel _product;
+        private readonly IProductService _productService;
+        private readonly IWishListService _WishListService;
+        private readonly ICategoryService _categoryService;
+        private readonly UserManager<Userr> _userManager;
+        private readonly PointNPromotionSerVice _pointNPromotionSerVice;
+        private readonly INewsService _NewService;
+        private readonly IEvaluateService _EvaluateService;
+        private readonly ProductPreviewService _productPreviewService;
+        private readonly IPromotionService _promotionService;
+        private readonly IUserPromotionService _userPromotionService;
+
+        public HomeController(ILogger<HomeController> logger, IProductService productService, IUserPromotionService userPromotionService, IWishListService wishListService, ICategoryService categoryService, UserManager<Userr> userManager, IPromotionService promotionService, INewsService newService = null, IEvaluateService evaluateService = null)
+        {
+            _logger = logger;
+            _wishList = new List<WishListViewModel>();
+            _products = new List<ProductViewModel>();
+            _product = new ProductViewModel();
+            _categoryService = categoryService;
+            _productService = productService;
+            _WishListService = wishListService;
+            _userManager = userManager;
+            _userPromotionService = userPromotionService;
+            _pointNPromotionSerVice = new PointNPromotionSerVice();
+            _NewService = newService;
+            _productPreviewService = new ProductPreviewService();
+            _EvaluateService = evaluateService;
+            _promotionService = promotionService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            return View();
+        }
+        public async Task<IActionResult> News([FromQuery(Name = "p")] int currentPages)
+        {
+            var ListBlog = (await _NewService.GetAll()).ToList();
             int pagesize = 8;
             if (pagesize <= 0)
             {
@@ -81,6 +82,7 @@ namespace BookShop.Web.Client.Controllers
             ViewBag.pagingmodel = pagingmodel;
             ListBlog = ListBlog.Skip((pagingmodel.currentpage - 1) * pagesize).Take(pagesize).ToList();
             return View(ListBlog);
+
 		}
 		public async Task<IActionResult> DetailsNew(int id)
 		{
@@ -93,9 +95,11 @@ namespace BookShop.Web.Client.Controllers
 			
 		}
 
+
         public async Task<IActionResult> SachMoi()
-		{
-			_products = await _productService.GetDanhMuc("Cổ điển");
+        {
+            _products = await _productService.GetDanhMuc("Cổ điển");
+
 
 			var product = _products.OrderByDescending(c => c.CreatedDate).ToList();
 			var top10Products = product.Take(10);
@@ -132,13 +136,15 @@ namespace BookShop.Web.Client.Controllers
 			return Json(new { data = top10Products1 });
 		}
 		public async Task<IActionResult> SanPhamSale()
+
         {
-            _products = (await _productService.GetAll()).Where(c=>c.Saleoff > 0).ToList();
+            _products = (await _productService.GetAll()).Where(c => c.Saleoff > 0).ToList();
 
             var product1 = _products.OrderByDescending(c => c.CreatedDate).ToList();
             var top10Products1 = product1.Take(12).GroupBy(c => c.Id).Select(group => group.First()).ToList();
             return Json(new { data = top10Products1 });
         }
+
 
 		public async Task<IActionResult> PhieuGiamGia()
 		{
@@ -182,114 +188,115 @@ namespace BookShop.Web.Client.Controllers
 		}
 
 
-		public async Task<IActionResult> ThemVaoYeuThich(int id)
-		{
-			var user = await GetCurrentUserAsync();
 
-			if (user == null)
-			{
-				return Json(new { success = false, errorMessage = "Bạn cần đăng nhập để thêm sẩn phẩm vào danh sách yêu thích" });
-			}
-			else
-			{
-				var wishlists = await _WishListService.GetByUserId(user.Id, id);
-				if (wishlists != true)
-				{
-					var wishlist = new CreateWishListModel()
-					{
-						Id_Product = id,
-						Id_User = user.Id,
-					};
+        public async Task<IActionResult> ThemVaoYeuThich(int id)
+        {
+            var user = await GetCurrentUserAsync();
 
-					try
-					{
-						await _WishListService.Add(wishlist);
-						return Json(new { success = true, errorMessage = "Đã thêm sản phẩm vào danh sách yêu thích" });
-					}
-					catch (Exception ex)
-					{
-						return Json(new { success = false, });
-					}
-				}
-				return Json(new { success = false, errorMessage = "Sản phẩm đã có trong danh sách yêu thích" });
-			}
-		}
+            if (user == null)
+            {
+                return Json(new { success = false, errorMessage = "Bạn cần đăng nhập để thêm sẩn phẩm vào danh sách yêu thích" });
+            }
+            else
+            {
+                var wishlists = await _WishListService.GetByUserId(user.Id, id);
+                if (wishlists != true)
+                {
+                    var wishlist = new CreateWishListModel()
+                    {
+                        Id_Product = id,
+                        Id_User = user.Id,
+                    };
 
-
-		public async Task<IActionResult> XoaYeuThich(int id)
-		{
-			var user = await GetCurrentUserAsync();
-			var delete = await _WishListService.Delete(user.Id, id);
-			if (delete)
-			{
-				return Json(new { success = true });
-			}
-			return Json(new { success = false });
-		}
+                    try
+                    {
+                        await _WishListService.Add(wishlist);
+                        return Json(new { success = true, errorMessage = "Đã thêm sản phẩm vào danh sách yêu thích" });
+                    }
+                    catch (Exception ex)
+                    {
+                        return Json(new { success = false, });
+                    }
+                }
+                return Json(new { success = false, errorMessage = "Sản phẩm đã có trong danh sách yêu thích" });
+            }
+        }
 
 
-		[HttpPost]
-		public async Task<ActionResult> TimKiemYeuThich(string keyword)
-		{
-			var user = await GetCurrentUserAsync();
-			var filteredWishlist = _WishListService.Timkiem(user.Id, keyword);
-			return PartialView("Danhsachyeuthich", filteredWishlist);
-		}
-
-		public async Task<IActionResult> Danhsachyeuthich()
-		{
-			return View();
-		}
-
-		public async Task<IActionResult> ExchangePromotion()
-		{
-			var user = await GetCurrentUserAsync();
-			var promotionList = (await _pointNPromotionSerVice.GetActivePromotion()).Where(x => x.NameType.Equals("Phiếu khuyến mãi điểm đổi"));
-			var activePromotions = new List<PromotionViewModel>();
-			foreach (var item in promotionList)
-			{
-				DateTime startTime = Convert.ToDateTime(item.StartDate);
-				DateTime endTime = Convert.ToDateTime(item.EndDate);
-				int result = DateTime.Now.CompareTo(startTime);
-				if (result >= 0 && endTime.CompareTo(DateTime.Now) >= 0)
-				{
-					activePromotions.Add(item);
-				}
-			}
-
-			ViewBag.Promotion = activePromotions;
-			return View();
-		}
+        public async Task<IActionResult> XoaYeuThich(int id)
+        {
+            var user = await GetCurrentUserAsync();
+            var delete = await _WishListService.Delete(user.Id, id);
+            if (delete)
+            {
+                return Json(new { success = true });
+            }
+            return Json(new { success = false });
+        }
 
 
-		[HttpGet]
-		public async Task<IActionResult> Getdata(int page, string? keyWord)
-		{
-			var user = await GetCurrentUserAsync();
-			_wishList = await _WishListService.GetByUser(user.Id);
-			if (keyWord != null)
-			{
-				_wishList = _wishList.Where(c => c.Name.Contains(keyWord)).ToList();
-			}
+        [HttpPost]
+        public async Task<ActionResult> TimKiemYeuThich(string keyword)
+        {
+            var user = await GetCurrentUserAsync();
+            var filteredWishlist = _WishListService.Timkiem(user.Id, keyword);
+            return PartialView("Danhsachyeuthich", filteredWishlist);
+        }
 
-			var listwish = _wishList.OrderByDescending(c => c.CreatedDate).ToList();
-			int pageSize = 10;
-			double totalPage = (double)listwish.Count / pageSize;
-			listwish = listwish.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-			return Json(new { data = listwish, page = page, max = Math.Ceiling(totalPage) });
-		}
-		public async Task<IActionResult> ListDanhMuc()
-		{
+        public async Task<IActionResult> Danhsachyeuthich()
+        {
+            return View();
+        }
 
-			var cate = (await _categoryService.GetAll()).Where(c => c.Status == 1);
-			var cateList = cate.OrderByDescending(c => c.CreatedDate).ToList();
+        public async Task<IActionResult> ExchangePromotion()
+        {
+            var user = await GetCurrentUserAsync();
+            var promotionList = (await _pointNPromotionSerVice.GetActivePromotion()).Where(x => x.NameType.Equals("Phiếu khuyến mãi điểm đổi"));
+            var activePromotions = new List<PromotionViewModel>();
+            foreach (var item in promotionList)
+            {
+                DateTime startTime = Convert.ToDateTime(item.StartDate);
+                DateTime endTime = Convert.ToDateTime(item.EndDate);
+                int result = DateTime.Now.CompareTo(startTime);
+                if (result >= 0 && endTime.CompareTo(DateTime.Now) >= 0)
+                {
+                    activePromotions.Add(item);
+                }
+            }
 
-			return Json(new { data = cateList });
-		}
-		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-		public IActionResult Error()
-		{
-			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-		}
-	}
+            ViewBag.Promotion = activePromotions;
+            return View();
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Getdata(int page, string? keyWord)
+        {
+            var user = await GetCurrentUserAsync();
+            _wishList = await _WishListService.GetByUser(user.Id);
+            if (keyWord != null)
+            {
+                _wishList = _wishList.Where(c => c.Name.Contains(keyWord)).ToList();
+            }
+
+            var listwish = _wishList.OrderByDescending(c => c.CreatedDate).ToList();
+            int pageSize = 10;
+            double totalPage = (double)listwish.Count / pageSize;
+            listwish = listwish.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            return Json(new { data = listwish, page = page, max = Math.Ceiling(totalPage) });
+        }
+        public async Task<IActionResult> ListDanhMuc()
+        {
+
+            var cate = (await _categoryService.GetAll()).Where(c => c.Status == 1);
+            var cateList = cate.OrderByDescending(c => c.CreatedDate).ToList();
+
+            return Json(new { data = cateList });
+        }
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
 }
