@@ -107,10 +107,8 @@ namespace BookShop.BLL.Service
 				obj.ISBN = requet.ISBN;
 				obj.Barcode = requet.Barcode;
 				obj.Title = requet.Title;
-				obj.Barcode = requet.Barcode;
 				obj.Description = requet.Description;
 				obj.Reader = requet.Reader;
-				obj.Barcode = requet.Barcode;
 				obj.CoverPrice = requet.Price;
 				obj.ImportPrice = requet.ImportPrice;
 				obj.Quantity = requet.Quantity;
@@ -124,7 +122,7 @@ namespace BookShop.BLL.Service
 				obj.Length = requet.Length;
 				obj.Status = requet.Status;
 				obj.Id_Supplier = requet.Id_Supplier;
-				obj.Img = requet.Img;
+				obj.Img = requet.Img != null? requet.Img : obj.Img;
 				await _bookRepository.UpdateAsync(obj.Id, obj);
 				var bookauthors = (await _bookAuthorRepository.GetAllAsync()).Where(x => x.Id_Book == obj.Id);
 				foreach (var item in bookauthors) // Loại bỏ phần tử không có và skip các phần tử đã có
