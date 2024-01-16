@@ -1,303 +1,282 @@
 ﻿@model IEnumerable<BookShop.BLL.ConfigurationModel.CartDetailModel.CartDetailViewModel>
 ﻿@using System.Globalization;
 @{
-    ViewData["Title"] = "Giỏ Hàng";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewData["Title"] = "Giỏ Hàng";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	int totalSum = 0;
+	bool isDisable = false;
+	string textCaution = "";
 }
 <style>
-    .giohangtong {
-        width: 100%;
-        margin-top: 20px;
-        background-color: white;
-        border-radius: 10px;
-        padding: 3%;
-    }
+	.giohangtong {
+		width: 100%;
+		margin-top: 20px;
+		background-color: white;
+		border-radius: 10px;
+		padding: 3%;
+	}
 
-        .giohangtong .table {
-            width: 100%;
-            border-collapse: collapse;
-            border: none;
-        }
+		.giohangtong .table {
+			width: 100%;
+			border-collapse: collapse;
+			border: none;
+		}
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		margin-top: 20px;
+	}
 
-    th, td {
-        padding: 3px;
-        text-align: left;
-    }
+	th, td {
+		padding: 3px;
+		text-align: left;
+	}
 
-    th {
-        background-color: #f2f2f2;
-    }
+	th {
+		background-color: #f2f2f2;
+	}
 
-    input[type="number"] {
-        width: 100px;
-        text-align: center;
-    }
+	input[type="number"] {
+		width: 100px;
+		text-align: center;
+	}
 
-    input[type="checkbox"] {
-        transform: scale(1.5);
-    }
+	input[type="checkbox"] {
+		transform: scale(1.5);
+	}
 
-    .nganggiohang {
-    }
+	.nganggiohang {
+	}
 
-    .tongketgiohang {
-        height: 35px;
-        display: flex;
-    }
+	.tongketgiohang {
+		height: 35px;
+		display: flex;
+	}
 
-        .tongketgiohang p {
-            margin-top: 2px;
-        }
+		.tongketgiohang p {
+			margin-top: 2px;
+		}
 
-    .thanhtoangiohang {
-        justify-content: flex-end;
-    }
+	.thanhtoangiohang {
+		justify-content: flex-end;
+	}
 
-    .thanhtoangiohang {
-        border: none;
-        border-radius: 7px;
-    }
+	.thanhtoangiohang {
+		border: none;
+		border-radius: 7px;
+	}
 
-        .thanhtoangiohang a {
-            border-radius: 5px;
-            border: 1px solid black;
-            padding: 5px 20px 5px 20px;
-            font-weight: 700;
-        }
+		.thanhtoangiohang a {
+			border-radius: 5px;
+			border: 1px solid black;
+			padding: 5px 20px 5px 20px;
+			font-weight: 700;
+		}
 
-            .thanhtoangiohang a:hover {
-                background-color: red;
-                color: white;
-                text-decoration: none;
-                font-weight: 700;
-                border-color:red;
-            }
+			.thanhtoangiohang a:hover {
+				background-color: red;
+				color: white;
+				text-decoration: none;
+				font-weight: 700;
+				border-color: red;
+			}
 
-    .item1 {
-        flex-grow: 2;
-    }
+	.item1 {
+		flex-grow: 2;
+	}
 
-    .tensanphamtronggiohang {
-        font-weight: 700;
-        font-size: 20px;
-        margin-bottom: 30px;
-    }
+	.tensanphamtronggiohang {
+		font-weight: 700;
+		font-size: 20px;
+		margin-bottom: 30px;
+	}
 
-    .nosanpham {
-        background-color: white;
-        text-align: center;
-        padding: 10px;
-    }
+	.nosanpham {
+		background-color: white;
+		text-align: center;
+		padding: 10px;
+	}
 
-    .thanhtiencss {
-        font-weight: 700;
-        font-size: 20px;
-    }
+	.thanhtiencss {
+		font-weight: 700;
+		font-size: 20px;
+	}
 
-    .anhsanphamogiohang {
-        height: 200px;
-        width: 160px;
-        margin-left: 15%;
-    }
+	.anhsanphamogiohang {
+		height: 200px;
+		width: 160px;
+		margin-left: 15%;
+	}
 
-    .anhsanphamogiohang1 {
-        margin-bottom: 15px;
-    }
+	.anhsanphamogiohang1 {
+		margin-bottom: 15px;
+	}
 
-    .giasptgh {
-        font-weight: 700;
-    }
+	.giasptgh {
+		font-weight: 700;
+	}
 
-    .khoi4 {
-        font-weight: 700;
-        color: red;
-    }
+	.khoi4 {
+		font-weight: 700;
+		color: red;
+	}
 
-    .saphethang {
-        font-weight: 500;
-        color: red;
-    }
+	.saphethang {
+		font-weight: 500;
+		color: red;
+	}
 
-    .conratnhieuhang {
-        font-weight: 500;
-    }
+	.conratnhieuhang {
+		font-weight: 500;
+	}
 
-    .themtired {
-        color: red;
-    }
-    .anproduct{
-        display:none;
-    }
+	.themtired {
+		color: red;
+	}
+
+	.anproduct {
+		display: none;
+	}
 </style>
 <h3>
-    GIỎ HÀNG (@Model.Count() Sản Phẩm)
+	GIỎ HÀNG (@Model.Count() Sản Phẩm)
 </h3>
 @if (Model.Count() > 0)
 {
-    <div class="giohangtong">
-        <table>
-            <tbody>
-                <tr class="nganggiohang anhsanphamogiohang1">
-                    <th class="khoi1"></th>
-                    <th class="khoi2"></th>
-                    <th class="khoi3">Số Lượng</th>
-                    <th>Thành Tiền</th>
-                    <th class="khoi5"></th>
-                </tr>
-                @foreach (var item in Model)
-                {
-                    <tr class="nganggiohang" data-id="@item.Id_Product">
-                        <td class="khoi1">
-                            <img class="anhsanphamogiohang" src="@item.ImgProductCartDetail" alt="Khánh Đang Fix Lỗi" />
-                        </td>
-                        <td class="khoi2">
-                            <div class="tensanphamtronggiohang">
-                                @item.ProductName
-                            </div>
-                            <div id="spd" class="giasptgh">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.NewPrice)</div>
-                        </td>
-                        <td class="khoi3">
-                            <input type="number" onkeydown="disableMinusKey(event)" oninput="changeZeroToOne(this)" id="@item.Id" onchange="EditCart('@item.Id')" value="@item.Quantity" max="@item.SoLuongKho" min="1" />
-                        </td>
-                        <td class="khoi4" id="totalsp">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.TotalPrice)</td>
-                        <td class="khoi5">
-                            <button class="btn text-danger" type="submit" onclick="removeProduct('@item.Id_Product')">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
-                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
-                                </svg>
-                            </button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <div>
-            <hr>
-            <div class="tongketgiohang">
-                <p class="thanhtiencss">Tổng số tiền: <span id="totalCost" class="themtired">@Model.Sum(x => x.Quantity > 0 ? x.ProductPrice:0) VNĐ</span></p>
-                <div class="item1"></div>
-                @if (Model.Count() > 0)
-                {
-                    <div class="thanhtoangiohang">
-                        <a asp-controller="Order" asp-action="CreateOnlineOrder">Mua</a>
-                    </div>
-                }
-                else
-                {
-                    <a asp-controller="Home" asp-action="G">Test</a>
-                }
-            </div>
-        </div>
-    </div>
+	<div class="giohangtong">
+		<table>
+			<tbody>
+				<tr class="nganggiohang anhsanphamogiohang1">
+					<th class="khoi1"></th>
+					<th class="khoi2"></th>
+					<th class="khoi3">Số Lượng</th>
+					<th>Thành Tiền</th>
+					<th class="khoi5"></th>
+				</tr>
+				@foreach (var item in Model)
+				{
+					if (item.Quantity > item.SoLuongKho)
+					{
+						textCaution = "text-danger";
+						isDisable = true;
+					}
+					else { textCaution = ""; }
+
+					<tr class="nganggiohang" data-id="@item.Id_Product">
+						<td class="khoi1">
+							<img class="anhsanphamogiohang" src="@item.ImgProductCartDetail" alt="Khánh Đang Fix Lỗi" />
+						</td>
+						<td class="khoi2">
+							<div class="tensanphamtronggiohang">
+								@item.ProductName
+							</div>
+							<div id="spd" class="giasptgh">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.NewPrice)</div>
+						</td>
+						<td class="khoi3">
+							<input type="number" id="cartItem_@item.Id_Product" onkeydown="checkInput(this)" oninput="debounceInput('@item.Id_Product')" value="@item.Quantity" max="@item.SoLuongKho" min="1" />
+							<span class="ms-2 @textCaution text-decoration-underline fw-bold">Còn lại @item.SoLuongKho sản phẩm</span>
+						</td>
+						<td class="khoi4"><span id="totalsp">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", item.TotalPrice)</span></td>
+						<td class="khoi5">
+							<button class="btn text-danger" type="submit" onclick="removeProduct('@item.Id_Product')">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+									<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+									<path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+								</svg>
+							</button>
+						</td>
+					</tr>
+					totalSum += item.TotalPrice;
+				}
+			</tbody>
+		</table>
+		<div>
+			<hr>
+			<div class="tongketgiohang">
+				<p class="thanhtiencss">Tổng số tiền: <span id="totalCost" class="themtired">@string.Format(new CultureInfo("vi-VN"), "{0:C0}", totalSum)</span></p>
+				<div class="item1"></div>
+				@if (Model.Count() > 0)
+				{
+					<div class="thanhtoangiohang">
+						<button class="btn btn-outline-danger" id="payment" disabled="@isDisable">Mua trong giỏ hàng</button>
+					</div>
+				}
+				else
+				{
+					<a asp-controller="Home" asp-action="G">Test</a>
+				}
+			</div>
+		</div>
+	</div>
 }
 else
 {
-    <div class="nosanpham">
-        <p>Chưa có sản phẩm nào</p>
-        <a asp-controller="Home" asp-action="Index">Về Trang Chủ</a>
-    </div>
+	<div class="nosanpham">
+		<p>Chưa có sản phẩm nào</p>
+		<a asp-controller="Home" asp-action="Index">Về Trang Chủ</a>
+	</div>
 }
+
+<script src="~/js/site.js"></script>
 @section scripts {
-    <script>
-        function changeZeroToOne(input) {
-            // Lấy giá trị từ ô nhập số
-            var inputValue = input.value;
-            // Nếu giá trị là 0, thay đổi thành 1
-            if (parseInt(inputValue, 10) === 0) {
-                input.value = 1;
-            }
-            // Lấy giá trị max đã định nghĩa trong input
-            var max = parseInt(input.getAttribute('max'), 10);
+	<script>
+		$(document).ready(function () {
+			$("#payment").click(function () {
+				// Chuyển hướng đến đường dẫn cụ thể khi nút được click
+				window.location.href = '/Order/CreateOnlineOrder';
+			});
+		});
+		function checkInput(input) {
+			if (input.value != '' && input.value != null) {
+				var intParse = parseInt(input.value);
+				var minValue = parseInt(input.min);
+				var maxValue = parseInt(input.max);
+				if (input.value < minValue) input.value = minValue;
+				else if (input.value > maxValue) input.value = maxValue;
+			}
+		}
+		function removeProduct(productId) {
+			$.ajax({
+				type: "POST",
+				url: "/Cart/RemoveProduct",
+				data: { id: productId },
+				headers: {
+					"Cache-Control": "no-cache, no-store, must-revalidate",
+					"Pragma": "no-cache",
+					"Expires": "0"
+				},
+				success: function (result) {
+					if (confirm('Bạn chấc chắn xóa sản phẩn này khỏi giỏ hàng')) {
+						window.location.href = '/Cart/CartDetails';
+					} else {
+						window.location.href = url;
+					}
+				},
+				error: function (error) {
+					console.error("Error removing product:", error);
+				}
+			});
+		}
+		let timer
 
-            // Kiểm tra xem giá trị có vượt quá max hay không
-            if (inputValue > max) {
-                // Nếu vượt quá, đặt giá trị thành max
-                input.value = max;
-            }
-            // Kiểm tra xem giá trị có rỗng hay không
-            //if (inputValue === '') {
-            //     Nếu rỗng, có thể thông báo lỗi hoặc xử lý theo ý muốn của bạn
-            //    alert('Vui lòng nhập giá trị vào ô nhập số.');
-            //}
-        }
-        function disableMinusKey(event) {
-            // Kiểm tra xem phím nào được nhấn
-            var keyPressed = event.key;
-
-            // Nếu phím là '-', hủy sự kiện (không cho phép nhập)
-            if (keyPressed === '-') {
-                event.preventDefault();
-            }
-        }
-    </script>
-    <script>
-        $(document).ready(function () {
-            updateTotalCost();
-            $('input[type="number"]').change(function () {
-                updateTotalCost();
-            });
-            function updateTotalCost() {
-                var totalCost = 0;
-                $('tbody tr').each(function () {
-                    var quantityInput = $(this).find('input[type="number"]');
-                    var productPrice = parseInt($(this).find('div[id="spd"]').text());
-                    var quantity = parseInt(quantityInput.val());
-                    if (!isNaN(quantity)) {
-                        var individualCost = quantity * productPrice;
-                        $(this).find('td:eq(3)').text(individualCost + " VNĐ");
-                        $(this).find('div[id="totalsp"]').text(individualCost + " VNĐ");
-                        totalCost += individualCost;
-                    }
-                });
-                $('#totalCost').text(totalCost + " VNĐ");
-            }
-
-        // });
-    </script>
-    <script type="text/javascript">
-        function removeProduct(productId) {
-            $.ajax({
-                type: "POST",
-                url: "/Cart/RemoveProduct",
-                data: { id: productId },
-                headers: {
-                    "Cache-Control": "no-cache, no-store, must-revalidate",
-                    "Pragma": "no-cache",
-                    "Expires": "0"
-                },
-                success: function (result) {
-                    if (confirm('Bạn chấc chắn xóa sản phẩn này khỏi giỏ hàng')) {
-                        window.location.href = '/Cart/CartDetails';
-                    } else {
-                        window.location.href =url;
-                    }
-                },
-                error: function (error) {
-                    console.error("Error removing product:", error);
-                }
-            });
-        }
-        function EditCart(productId) {
-            var quantity = document.getElementById(productId).value;
-            console.log(productId);
-            console.log(quantity);
-            $.ajax({
-                type: 'POST',
-                url: '/Cart/EditCart?id=' + productId +'&quantity=' + quantity,
-                success: function (result) {
-                },
-                error: function (error) {
-                    console.error("Error update quantity cart:", error);
-                }
-            });
-        }
-    </script>
+		function debounceInput(productId) {
+			var quantityInput = document.getElementById('cartItem_' + productId).value;
+			if (quantityInput != null && quantityInput != '') {
+				clearTimeout(timer)
+				timer = setTimeout(() => {
+					$.ajax({
+						type: 'POST',
+						url: '/Cart/EditCart',
+						data: { id: productId, quantity: quantityInput },
+						success: function (result) {
+							if (!result.success) alert(result.errorMessage)
+							else location.reload();
+						},
+					});
+				}, 400)
+			}
+		}
+	</script>
 
 }
