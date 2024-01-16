@@ -417,7 +417,8 @@ namespace BookShop.BLL.Service
 				var bookau = ba.Where(x => x.Id_Book == item.Id_Book);
 				foreach (var authorId in bookau) // tt tac gia
 				{
-					if ((obj.authorModels.Where(x => x.Id == authorId.Id_Author)) == null)
+					var check = obj.authorModels.Where(x => x.Id == authorId.Id_Author).ToList();
+					if (obj.authorModels.Where(x => x.Id == authorId.Id_Author).Count() == 0)
 					{
 						var author = await _authorRepository.GetByIdAsync(authorId.Id_Author);
 						if (author != null)
@@ -431,7 +432,7 @@ namespace BookShop.BLL.Service
 					}
 				}
 				var suplier = await _supplierRepository.GetByIdAsync(book.Id_Supplier);
-				if (obj.supplierModels.Where(x => x.Id == suplier.Id) == null)
+				if (obj.supplierModels.Where(x => x.Id == suplier.Id).Count() == 0)
 				{
 					obj.supplierModels.Add(new ConfigurationModel.SupplierModel.SupplierViewModel
 					{
@@ -439,13 +440,7 @@ namespace BookShop.BLL.Service
 						Name = suplier.Name,
 					});
 				}
-				foreach (var cover in obj.CoverBook)
-				{
-					if (!book.Cover.Equals(cover))
-					{
-						obj.CoverBook.Add(book.Cover);
-					}
-				}
+				if (obj.CoverBook.Where(x => x.Equals(book.Cover)).Count() == 0) obj.CoverBook.Add(book.Cover);
 			}
 
 			var image = (await _imageRepository.GetAllAsync()).Where(x => x.Id_Product == id).OrderBy(x => x.Index);
@@ -615,7 +610,7 @@ namespace BookShop.BLL.Service
 						 join g in (await _genretRepository.GetAllAsync()).DefaultIfEmpty() on bg.Id_Genre equals g.Id
 						 join sup in (await _supplierRepository.GetAllAsync()).DefaultIfEmpty() on b.Id_Supplier equals sup.Id
 
-						 where g.Id == gennerId || sup.Id == supplierId || a.Id == authorId 
+						 where g.Id == gennerId || sup.Id == supplierId || a.Id == authorId
 						 select new ProductViewModel()
 						 {
 							 Id = p.Id,
