@@ -397,7 +397,12 @@ namespace App.Areas.Identity.Controllers
 			//	string codese = HttpContext.Session.GetString("code");
 			//	code = codese;
 			//}
-			if (Id == 0) return Json(new { success = false, redirect = true });
+			if (Id == 0)
+			{
+				var user = await GetUser();
+				if(user == null) return Json(new { success = false, redirect = true });
+				Id = user.Id;
+			}
 			
 			var promotion = await _promotionService.GetByCode(code);
 			if(promotion == null) return Json(new {success =  false, message = "Mã khuyến mãi không tồn tại, vui lòng thử lại!" });
