@@ -89,14 +89,14 @@
             </ul>
             <table id="tableDetail" hidden>
                 <thead>
-                    <tr class="row">
+                    <tr class="row" class="w-100">
                         <th></th>
-                        <th class="col-5">Tên sách</th>
+                        <th class="col-5">Tên sản phẩm</th>
                         <th class="col-2">Số lượng</th>
                         <th class="col-3">Hành động</th>
                     </tr>
                 </thead>
-                <tbody id="listDetail">
+                <tbody id="listDetail" class="w-100">
                 </tbody>
             </table>
         </div>
@@ -212,80 +212,81 @@
     }
 </script>
 <script type="text/javascript">
-    function InHoaDon(id) {
+	function checkStatus() {
+		switch (@Model.Status) {
+			case 1:
+				document.getElementById('acceptOrder').removeAttribute('hidden');
+				// document.getElementById('modifyOrder').removeAttribute('hidden');
+				document.getElementById('cancelOrder').removeAttribute('hidden');
+				break;
+			case 2:
+				document.getElementById('deliveryOrder').removeAttribute('hidden');
+				document.getElementById('cancelOrder').removeAttribute('hidden');
+        document.getElementById('inhoadon').removeAttribute('hidden');
+				break;
+			case 3:
+				document.getElementById('completeOrder').removeAttribute('hidden');
+				document.getElementById('returnOrder').removeAttribute('hidden');
+				document.getElementById('textModify').removeAttribute('hidden');
+        document.getElementById('inhoadon').removeAttribute('hidden');
+				break;
+			case 4:
+				document.getElementById('closeOrder').removeAttribute('hidden');
+				document.getElementById('returnOrder').removeAttribute('hidden');
+				document.getElementById('textModify').removeAttribute('hidden');
+        document.getElementById('inhoadon').removeAttribute('hidden');
+				break;
+			case 5:
+				document.getElementById('waitHandleReturn').removeAttribute('hidden');
+				break;
+			case 6:
+				document.getElementById('completeReturn').removeAttribute('hidden');
+				document.getElementById('completeReturn').setAttribute('disabled', 'disabled');
+				document.getElementById('menuDetail').setAttribute('hidden', 'hidden');
+				document.getElementById('tableDetail').removeAttribute('hidden');
+				document.getElementById('textModify').removeAttribute('hidden');
+				LoadDetailToTable();
+				break;
+			case 7:
+				break;
+			case 8:
+				break;
+			case 9:
+        document.getElementById('inhoadon').removeAttribute('hidden');
+				break;
+			case 0:
+				break;
+			default:
+				break;
+		}
+	}
+	$(document).ready(function () {
+		checkStatus();
+	})
+  
+  function InHoaDon(id) {
         var url = "@Url.Action("InHoaDon", "OrderManage")?id=" + id
         window.location.href = url;
-    }
-    function checkStatus() {
-        switch (@Model.Status) {
-            case 1:
-                document.getElementById('acceptOrder').removeAttribute('hidden');
-                // document.getElementById('modifyOrder').removeAttribute('hidden');
-                document.getElementById('cancelOrder').removeAttribute('hidden');
-                document.getElementById('textModify').removeAttribute('hidden');
-                break;
-            case 2:
-                document.getElementById('deliveryOrder').removeAttribute('hidden');
-                document.getElementById('cancelOrder').removeAttribute('hidden');
-                document.getElementById('textModify').removeAttribute('hidden');
-                document.getElementById('inhoadon').removeAttribute('hidden');
-                break;
-            case 3:
-                document.getElementById('completeOrder').removeAttribute('hidden');
-                document.getElementById('returnOrder').removeAttribute('hidden');
-                document.getElementById('inhoadon').removeAttribute('hidden');
-                break;
-            case 4:
-                document.getElementById('closeOrder').removeAttribute('hidden');
-                document.getElementById('inhoadon').removeAttribute('hidden');
-                break;
-            case 5:
-                document.getElementById('waitHandleReturn').removeAttribute('hidden');
-                break;
-            case 6:
-                document.getElementById('completeReturn').removeAttribute('hidden');
-                document.getElementById('completeReturn').setAttribute('disabled', 'disabled');
-                document.getElementById('menuDetail').setAttribute('hidden', 'hidden');
-                document.getElementById('tableDetail').removeAttribute('hidden');
-                LoadDetailToTable();
-                break;
-            case 7:
-                document.getElementById('acceptOrder').removeAttribute('hidden');
-                break;
-            case 8:
-                
-                break;
-            case 9:
-                break;
-            case 0:
-                break;
-            default:
-                
-                break;
-        }
-    }
-    $(document).ready(function () {
-        checkStatus();
-    })
-
-    function AcceptOrder() {
-        $.ajax({
-            url: '/Admin/OrderManage/AcceptOrder',
-            type: 'POST',
-            data: { id: @Model.Id },
-            success: function (result) {
-                if (result.success) {
-                    alert('Xác nhận thành công.');
-                    location.reload();
-                } else {
-                    alert('Xác nhận thất bại: ' + result.errorMessage);
-                }
-            },
-            error: function (error) {
-                alert('Có lỗi xảy ra: ' + error.responseText);
-            }
-        });
-    }
+   }
+  
+	function AcceptOrder() {
+		$.ajax({
+			url: '/Admin/OrderManage/AcceptOrder',
+			type: 'POST',
+			data: { id: @Model.Id },
+			success: function (result) {
+				if (result.success) {
+					alert('Xác nhận thành công.');
+					location.reload();
+				} else {
+					alert('Xác nhận thất bại: ' + result.errorMessage);
+				}
+			},
+			error: function (error) {
+				alert('Có lỗi xảy ra: ' + error.responseText);
+			}
+		});
+	}
 
     function DeliveryOrder() {
         $.ajax({
