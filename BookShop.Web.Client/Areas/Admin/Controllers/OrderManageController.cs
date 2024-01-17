@@ -326,7 +326,7 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			var staff = await GetCurrentUserAsync();
 			if (staff != null)
 			{
-				if (order.Status == 3)
+				if (order.Status == 3 || order.Status == 4)
 				{
 					try
 					{

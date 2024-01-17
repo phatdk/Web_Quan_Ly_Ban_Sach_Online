@@ -87,16 +87,16 @@
 					</li>
 				}
 			</ul>
-			<table id="tableDetail" hidden>
+			<table id="tableDetail" class="w-100" hidden>
 				<thead>
 					<tr class="row">
 						<th></th>
-						<th class="col-5">Tên sách</th>
+						<th class="col-5">Tên sản phẩm</th>
 						<th class="col-2">Số lượng</th>
 						<th class="col-3">Hành động</th>
 					</tr>
 				</thead>
-				<tbody id="listDetail">
+				<tbody id="listDetail" class="w-100">
 				</tbody>
 			</table>
 		</div>
@@ -214,19 +214,20 @@
 				document.getElementById('acceptOrder').removeAttribute('hidden');
 				// document.getElementById('modifyOrder').removeAttribute('hidden');
 				document.getElementById('cancelOrder').removeAttribute('hidden');
-				document.getElementById('textModify').removeAttribute('hidden');
 				break;
 			case 2:
 				document.getElementById('deliveryOrder').removeAttribute('hidden');
 				document.getElementById('cancelOrder').removeAttribute('hidden');
-				document.getElementById('textModify').removeAttribute('hidden');
 				break;
 			case 3:
 				document.getElementById('completeOrder').removeAttribute('hidden');
 				document.getElementById('returnOrder').removeAttribute('hidden');
+				document.getElementById('textModify').removeAttribute('hidden');
 				break;
 			case 4:
 				document.getElementById('closeOrder').removeAttribute('hidden');
+				document.getElementById('returnOrder').removeAttribute('hidden');
+				document.getElementById('textModify').removeAttribute('hidden');
 				break;
 			case 5:
 				document.getElementById('waitHandleReturn').removeAttribute('hidden');
@@ -236,10 +237,10 @@
 				document.getElementById('completeReturn').setAttribute('disabled', 'disabled');
 				document.getElementById('menuDetail').setAttribute('hidden', 'hidden');
 				document.getElementById('tableDetail').removeAttribute('hidden');
+				document.getElementById('textModify').removeAttribute('hidden');
 				LoadDetailToTable();
 				break;
 			case 7:
-				document.getElementById('acceptOrder').removeAttribute('hidden');
 				break;
 			case 8:
 				break;
