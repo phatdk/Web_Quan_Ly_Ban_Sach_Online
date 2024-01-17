@@ -222,13 +222,6 @@
     <div class="home-content1">
 
 
-        <p>      </p>
-        <div class="sales-boxes">
-            <div class="recent-sales box">
-                @await Html.PartialAsync("Chart")
-            </div>
-        </div>
-
         <p>     </p>
         <div class="overview-boxes">
             <div class="box">
@@ -263,13 +256,20 @@
             </div>
         </div>
 
-     
+
 
         <p>      </p>
 
 
         @await Html.PartialAsync("GetOrderByStatus")
 
+
+        <p>      </p>
+        <div class="sales-boxes">
+            <div class="recent-sales box">
+                @await Html.PartialAsync("Chart")
+            </div>
+        </div>
 
 
 
@@ -303,7 +303,7 @@
                         <li class="topic">Tổng</li>
                         @foreach (var product in ViewBag.ProductList)
                         {
-                            <p>@product.TotalRevenue</p>
+                            <p>@product.TotalRevenue đ </p>
                         }
                     </ul>
 
@@ -336,7 +336,7 @@
             </div>
         </div>
         <button class="button" id="myButton">
-            <a asp-action="export" asp-controller="Gembox" download="D:\Study File\DATN\BookShop.Web.Client\wwwroot\exel\demothongke.xlsx">Tải xuống toàn bộ hóa đơn</a>
+            <a asp-action="export" asp-controller="Gembox" href="D:\Study File\DATN\BookShop.Web.Client\wwwroot\exel\thongke.xlsx" download="thongke.xlsx">Tải xuống toàn bộ hóa đơn</a>
         </button>
     </div>
 
