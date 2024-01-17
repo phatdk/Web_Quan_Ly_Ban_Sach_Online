@@ -149,20 +149,19 @@ namespace BookShop.Web.Client.Controllers
 		public async Task<IActionResult> PhieuGiamGia()
 		{
 			var user = await GetCurrentUserAsync();
-
 			var pro = (await _promotionService.GetAll()).Where(c => c.NameType == "Phiếu khuyến mãi phát hành mã").ToList();
-
-			var userPromotions = await _userPromotionService.GetByUser(user.Id);
-
-			foreach (var item in userPromotions)
-			{
-				var existingItem = pro.FirstOrDefault(c => c.Id == item.Id_Promotion);
-				if (existingItem != null)
-				{
-					pro.Remove(existingItem);
-				}
-			}
-
+            if (user != null)
+            {
+                var userPromotions = await _userPromotionService.GetByUser(user.Id);
+                foreach (var item in userPromotions)
+                {
+                    var existingItem = pro.FirstOrDefault(c => c.Id == item.Id_Promotion);
+                    if (existingItem != null)
+                    {
+                        pro.Remove(existingItem);
+                    }
+                }
+            }
 			var product1 = pro.OrderByDescending(c => c.CreatedDate).ToList();
 			var top4 = product1.Take(4).GroupBy(c => c.Id).Select(group => group.First()).ToList();
 
