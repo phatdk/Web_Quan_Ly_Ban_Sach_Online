@@ -472,10 +472,10 @@
 	</div>
 	<div class="col-sm-4">
 		<div class="i">
-			<a href="pnj-fhs?fhs_campaign=homepage_subbanner_1"><img width="100%" class="border_radius_normal" src="~/img/l1.png"></a>
+			<a href="javascript:"><img width="100%" class="border_radius_normal" src="~/img/l1.png"></a>
 		</div>
 		<div class="i c">
-			<a href="vnpay?fhs_campaign=homepage_subbanner_2"><img width="100%" class="border_radius_normal" src="~/img/l2.png"></a>
+			<a href="javascript:"><img width="100%" class="border_radius_normal" src="~/img/l2.png"></a>
 		</div>
 	</div>
 </div>
@@ -495,18 +495,13 @@
 </div>
 
 <div class="row cms-icon-menu listdsds">
-	<div class="dss">
+	@*<div class="dss">
 		<div>
 			<a href="#noidaycon"><img src="https://cdn0.fahasa.com/media/wysiwyg/Thang-07-2023/Icon_B2S_1.png" class="center"></a>
 		</div>
 		<div class="cms-icon-menu-item-name">Trở Lại<br>Trường Học</div>
-	</div>
-	<div class="dss">
-		<div>
-			<a href="/sale-thu-3?fhs_campaign=homepageicon"><img src="https://cdn0.fahasa.com/media/wysiwyg/Thang-09-2023/F3Thang9_120x120.png" class="center"></a>
-		</div>
-		<div class="cms-icon-menu-item-name">Sale Thứ 3</div>
-	</div>
+	</div>*@
+
 	<div class="dss">
 		<div>
 			<a href="#sale"><img src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Icon_FlashSale_Thuong_120x120.png" class="center"></a>
@@ -519,49 +514,39 @@
 		</div>
 		<div class="cms-icon-menu-item-name">Mã Giảm Giá</div>
 	</div>
+
+
 	<div class="dss">
 		<div>
-			<a href="/do-choi-trung-thu?fhs_campaign=homepageicon"><img src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/IconDoChoi_Thuong_120x120.png" class="center"></a>
-		</div>
-		<div class="cms-icon-menu-item-name">Đồ Chơi</div>
-	</div>
-	<div class="dss">
-		<div>
-			<a href="/binh-tay?fhs_campaign=homepageicon"><img src="https://cdn0.fahasa.com/media/wysiwyg/Thang-09-2023/Icon_NCC_BinhTayT9.png" class="center"></a>
-		</div>
-		<div class="cms-icon-menu-item-name">Bình Tây</div>
-	</div>
-	<div class="dss">
-		<div>
-			<a href="/trang-thieu-nhi?fhs_campaign=homepageicon"><img src="https://cdn0.fahasa.com/media/wysiwyg/Thang-09-2023/Icon_ThieuNhi_Thuong_120x120.png" class="center"></a>
+			<a href="#noidaycon"><img src="https://cdn0.fahasa.com/media/wysiwyg/Thang-09-2023/Icon_ThieuNhi_Thuong_120x120.png" class="center"></a>
 		</div>
 		<div class="cms-icon-menu-item-name">Thiếu Nhi</div>
 	</div>
 	<div class="dss">
 		<div>
-			<a href="/new-product?category=all&amp;sort=created_at&amp;fhs_campaign=homepageicon"><img src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Icon_SanPhamMoi_8px_1.png" class="center"></a>
+			<a href="#sanphammoi"><img src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Icon_SanPhamMoi_8px_1.png" class="center"></a>
 		</div>
 		<div class="cms-icon-menu-item-name">Sản Phẩm <br>Mới</div>
 	</div>
 	<div class="dss">
 		<div>
-			<a href="/nhap-hoi-manga-comic?fhs_campaign=homepageicon"><img src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Manga_Week_Hot.png" class="center"></a>
+			<a href="#manga"><img src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Manga_Week_Hot.png" class="center"></a>
 		</div>
 		<div class="cms-icon-menu-item-name">Manga</div>
 	</div>
 	<div class="dss">
 		<div>
-			<a href="/phien-cho-do-cu?fhs_campaign=homepageicon"><img src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Icon_PhienChoCu_8px_1.png" class="center"></a>
+			<a href="#bosanpham"><img src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Icon_PhienChoCu_8px_1.png" class="center"></a>
 		</div>
-		<div class="cms-icon-menu-item-name">Phiên Chợ<br>Sách cũ</div>
+		<div class="cms-icon-menu-item-name">Combo sản phẩm</div>
 	</div>
 </div>
 
 <!-- Danh muc flashsale -->
-<div class="flashsale">
+<div class="flashsale" id="sanphammoi">
 	<div class="flashsale-header">
 		<div class="col-12">
-			<p style="justify-content:center; display:flex; align-items: center;font-size:25px; font-weight: 700; color: black; height:50px">Sản phẩm bày bán</p>
+			<p style="justify-content:center; display:flex; align-items: center;font-size:25px; font-weight: 700; color: black; height:50px">Sản phẩm mới</p>
 		</div>
 	</div>
 	<div class="danhmuc-sach" id="listproduct">
@@ -607,6 +592,31 @@
 	</div>
 
 </div>
+<style>
+	.bosanpham{
+		border-radius: 15px;
+		background: white;
+		margin-top: 20px;
+	}
+</style>
+<div class="bosanpham" id="bosanpham">
+	<div class="brg">
+		<img src="~/img/Manga_LDP_Tagname_03.jpg" />
+	</div>
+	<div class="dm">
+		<span>Combo</span>
+	</div>
+	
+	<div class="listsanpham">
+
+		<div class="danhmuc-sach" id="listcombo">
+		</div>
+	</div>
+	<div class="xemthem">
+		<a href="javascript:" onclick="searchnangcao(13)">Xem Thêm</a>
+	</div>
+</div>
+
 <!-- Danh Muc San Pham-->
 <div class="danhmucsanpham">
 	<div class="dm">
@@ -619,6 +629,33 @@
 	</div>
 	<div class="xemthem">
 		<a href="javascript:" onclick="searchnangcao(4)">Xem Thêm</a>
+	</div>
+</div>
+<style>
+	.danhmucmanga{
+		border-radius: 15px;
+		background: white;
+		margin-top: 20px;
+	}
+
+	
+</style>
+<div class="danhmucmanga" id="manga">
+	<div class="brg">
+		<img src="~/img/Manga_LDP_Tagname_02.jpg" />
+	</div>
+	<div class="dm">
+		<span>Manga</span>
+	</div>
+	<img src="img/iconmanga.png" style="width:100px;height:120px;"/>
+	<div class="listsanpham">
+
+		<div class="danhmuc-sach" id="listmanga">
+
+		</div>
+	</div>
+	<div class="xemthem" style="padding-bottom:20px">
+		<a href="javascript:" onclick="searchnangcao(13)">Xem Thêm</a>
 	</div>
 </div>
 
@@ -660,9 +697,9 @@
 		<div class="phieugiam4cai" id="phieugiam">
 		</div>
 	</div>
-	<div class="xemthem">
+	@*<div class="xemthem">
 		<a href="javascript:" onclick="searchnangcao(4)">Xem Thêm</a>
-	</div>
+	</div>*@
 </div>
 <script src="~/js/site.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -674,6 +711,82 @@
 
 </script>
 <script>
+	$(document).ready(function () {
+		$.ajax({
+			url: '@Url.Action("DanhSachSanPhamCombo", "Home")',
+			type: 'GET',
+			success: function (data) {
+				console.log(data);
+				var listcategory = $("#listcombo");
+				listcategory.empty();
+				data.data.forEach(function (item) {
+					var categoryRow =
+						'<div class="testsp" onclick="ChiTietSanPham(' + item.id + ')">' +
+						'<div class="product-image">' +
+						'<div class="flashsale-image-container">' +
+						'<img src="' + item.imgUrl + '">' +
+						'</div>' +
+						'</div>' +
+						'<div class="ttsp">' +
+						'<h4>' + item.name + '</h4>' +
+						'</div>' +
+						'<div class="giaban">' + '<p>' +
+						formatPrice(item.newPrice) + '</p>';
+					if (item.saleoff > 0) {
+						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
+							'<div class="giabandau">' +
+							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>' +
+							'</div>';
+					}
+
+					listcategory.append(categoryRow);
+				});
+			},
+			error: function (error) {
+				console.log(error);
+			}
+		});
+	});
+	/*danh mục */
+	$(document).ready(function () {
+		$.ajax({
+			url: '@Url.Action("Manga", "Home")',
+			type: 'GET',
+			success: function (data) {
+				console.log(data);
+				var listcategory = $("#listmanga");
+				listcategory.empty();
+				data.data.forEach(function (item) {
+					var categoryRow =
+						'<div class="testsp" onclick="ChiTietSanPham(' + item.id + ')">' +
+						'<div class="product-image">' +
+						'<div class="flashsale-image-container">' +
+						'<img src="' + item.imgUrl + '">' +
+						'</div>' +
+						'</div>' +
+						'<div class="ttsp">' +
+						'<h4>' + item.name + '</h4>' +
+						'</div>' +
+						'<div class="giaban">' + '<p>' +
+						formatPrice(item.newPrice) + '</p>';
+					if (item.saleoff > 0) {
+						categoryRow += '<div class="km-sp">' + item.saleoff + "%" + '</div>' +
+							'<div class="giabandau">' +
+							'<div>' + '<p>' + formatPrice(item.price) + '</p>' + '</div>' +
+							'</div>';
+					}
+
+					listcategory.append(categoryRow);
+				});
+			},
+			error: function (error) {
+				console.log(error);
+			}
+		});
+	});
+
+
+
 	function searchnangcao(id) {
 		var url = "@Url.Action("Index","SearchAndFilter")?id=" + id;
 		window.location.href = url;
@@ -709,11 +822,17 @@
 					var categoryRow =
 						'<div class="pgg">' +
 						'<div class="left">' +
-						'<h4>' + item.name + '</h4>' +
-						'<p>' + " Giảm : " + item.percentReduct + "%" + '</p>' +
-						'<p>' + "Tối đa : " + formatPrice(item.reductMax) + '</p>' +
-						'<p>' + "Áp dụng với hóa đơn từ : " + formatPrice(item.condition) + '</p>' +
-						'</div>' +
+
+						'<h4>' + item.name + '</h4>';
+
+					if (item.percentReduct !== null) {
+						categoryRow += '<p>' + " Giảm : " + item.percentReduct + "%" + '</p>' +
+							'<p>' + "Tối đa : " + formatPrice(item.reductMax) + '</p>' +
+							'<p>' + "Áp dụng với hóa đơn từ : " + formatPrice(item.condition) + '</p>';
+					}
+
+					categoryRow += '</div>' +
+
 						'<div class="right">' +
 						'<p>' + formatDate(item.startDate) + '</p>' +
 						'<p style="font-size: 1.2em;font-weight: 700;color: #F39801; " id="code">' + item.code + '</p>' +
@@ -741,6 +860,7 @@
 				code: promoCodeText
 			},
 			success: function (data) {
+
 				if (data.success == true) {
 					alert(data.message);
 					window.location.reload();
@@ -754,6 +874,7 @@
 				else if (data.redirect == true) window.location.href = '/login';
 			},
 			error: function(error){
+
 
 			}
 		});

@@ -21,6 +21,7 @@ using BookShop.BLL.ConfigurationModel.PromotionModel;
 using BookShop.Web.Client.Services;
 using BookShop.BLL.ConfigurationModel.PointTranHistoryModel;
 using System.Drawing;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace App.Areas.Identity.Controllers
 {
@@ -399,8 +400,10 @@ namespace App.Areas.Identity.Controllers
 			//}
 			if (Id == 0)
 			{
+
 				var user = await GetUser();
 				if(user == null) return Json(new { success = false, redirect = true });
+
 				Id = user.Id;
 			}
 			

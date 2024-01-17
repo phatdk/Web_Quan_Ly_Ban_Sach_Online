@@ -106,7 +106,56 @@ namespace BookShop.Web.Client.Areas.Admin.Controllers
 			orders = orders.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 			return Json(new { data = orders, page = page, max = Math.Ceiling(totalPage) });
 		}
+		public async Task<IActionResult> InHoaDon(int id)
+		{
+            _order = await _orderService.GetById(id);
+            var details = await _orderDetailService.GetByOrder(id);
+            _order.orderDetails = details;
+            foreach (var item in details) // chi tiet don hang
+            {
+                var product = await _productService.GetById(item.Id_Product);
+                foreach (var itemProd in product.bookViewModels)
+                {
+                    _order.Weight += (itemProd.Weight * item.Quantity);
+                    _order.Width = _order.Width > itemProd.Widght ? _order.Width : itemProd.Widght;
+                    _order.Length = _order.Length > itemProd.Length ? _order.Length : itemProd.Length;
+                    _order.Height += (itemProd.Height * item.Quantity);
+                }
+                _order.Total += item.Quantity * item.Price;
+            }
+            _order.Weight = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Weight / 1000)));
+            _order.Width = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Width / 100)));
+            _order.Length = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Length / 100)));
+            _order.Height = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(_order.Height / 100)));
+            _order.TotalPayment = _order.Total + Convert.ToInt32(_order.Shipfee);
+            var promotions = await _orderPromotionService.GetByOrder(id);
+            _order.orderPromotions = promotions;
+            if (promotions != null) // thong tin khuyen mai
+            {
+                foreach (var promotion in promotions)
+                {
+                    if (promotion.PercentReduct != null)
+                    {
+                        promotion.TotalReduct = Convert.ToInt32(Math.Floor(Convert.ToDouble((_order.Total / 100) * promotion.PercentReduct)));
 
+                        if (promotion.TotalReduct > promotion.ReductMax) promotion.TotalReduct = promotion.ReductMax;
+                        _order.TotalPayment -= promotion.TotalReduct;
+                    }
+                    else
+                    {
+                        promotion.TotalReduct = Convert.ToInt32(promotion.AmountReduct);
+                        _order.TotalPayment -= promotion.TotalReduct;
+                    }
+                }
+            }
+            if (_order.IsUsePoint) // su dung diem
+            {
+                _order.TotalPayment -= Convert.ToInt32(_order.PointAmount);
+            }
+            _order.orderPayments = await _orderPaymentService.GetByOrder(id);
+            _order.returnOrders = await _returnOrderService.GetByOrder(id);
+            return View(_order);
+        }
 		// GET: OrderManageController/Details/5
 		public async Task<IActionResult> Details(int id)
 		{
